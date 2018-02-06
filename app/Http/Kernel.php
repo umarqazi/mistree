@@ -50,6 +50,12 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'admin' => \App\Http\Middleware\RedirectIfNotAdmin::class,
+        'admin.guest' => \App\Http\Middleware\RedirectIfAdmin::class,
+        'workshop' => \App\Http\Middleware\RedirectIfNotWorkshop::class,
+        'workshop.guest' => \App\Http\Middleware\RedirectIfWorkshop::class,
+        'customer' => \App\Http\Middleware\RedirectIfNotCustomer::class,
+        'customer.guest' => \App\Http\Middleware\RedirectIfCustomer::class,
         'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
