@@ -15,6 +15,23 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Routes for template by Adeel
+
+Route::get('/dashboard', function () {
+    return view('dashboard.dashboard');
+});
+
+Route::get('/login', function () {
+    return view('dashboard.login');
+});
+
+Route::get('/workshops', function () {
+    return view('workshops.index');
+}); 
+
+
+// Routes for Hesto Package by Haris
+
 Route::group(['prefix' => 'customer'], function () {
   Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'CustomerAuth\LoginController@login');
