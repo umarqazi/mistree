@@ -17,10 +17,24 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
-Route::post('registerCust', 'CustomersController@register');
-Route::post('loginCust', 'CustomersController@login');
-Route::post('recoverCust', 'CustomersController@recover');
 
-Route::group(['middleware' => ['jwt.auth']], function() {
-    Route::get('logoutCust', 'CustomersController@logout');
+Route::group(['prefix'=>'customer'], function() {
+	Route::post('register', 'CustomersController@register');
+	Route::post('login', 'CustomersController@login');
+	Route::post('recover', 'CustomersController@recover');    
+});
+Route::group(['middleware' => 'conf_guard:Customer'], function(){
+	Route::group(['prefix'=>'customer','middleware' => ['jwt.auth']], function() {  
+		Route::get('logout', 'CustomersController@logout');
+	});
+});
+Route::group(['prefix'=>'workshop'], function() {
+	Route::post('register', 'WorkshopsController@register');
+	Route::post('login', 'WorkshopsController@login');
+	Route::post('recover', 'WorkshopsController@recover');    
+});
+Route::group(['middleware' => 'conf_guard:Workshop'], function(){
+	Route::group(['prefix'=>'workshop','middleware' => ['jwt.auth']], function() {  
+		Route::get('logout', 'WorkshopsController@logout');
+	});
 });

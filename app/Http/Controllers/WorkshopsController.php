@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use Hash, DB, Config, Mail;
-use App\Customer;
+use App\Workshop;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Input;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
-class CustomersController extends Controller
+class WorkshopsController extends Controller
 {
     /**
      * Fetching Guard.
@@ -22,7 +22,7 @@ class CustomersController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard('customer');
+        return Auth::guard('workshop');
     }
 
     /**
@@ -34,11 +34,11 @@ class CustomersController extends Controller
      */
     public function __construct()
     {
-        $this->auth = app('auth')->guard('customer');
+        $this->auth = app('auth')->guard('workshop');
     }
 
     /**
-     * Display a listing of the customer.
+     * Display a listing of the workshop.
      *
      * @return \Illuminate\Http\Response
      */
@@ -48,7 +48,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * Show the form for creating a new customer.
+     * Show the form for creating a new workshop.
      *
      * @return \Illuminate\Http\Response
      */
@@ -58,7 +58,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * Store a newly created customer in storage.
+     * Store a newly created workshop in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -69,7 +69,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * Display the specified customer.
+     * Display the specified workshop.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -80,7 +80,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * Show the form for editing the specified customer.
+     * Show the form for editing the specified workshop.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -91,7 +91,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * Update the specified customer in storage.
+     * Update the specified workshop in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -103,7 +103,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * Remove the specified customer from storage.
+     * Remove the specified workshop from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -113,8 +113,9 @@ class CustomersController extends Controller
         //
     }
 
+
     /**
-     * API Register for new customer.
+     * API Register for new workshop.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -123,9 +124,8 @@ class CustomersController extends Controller
     {
         $rules = [
             'name' => 'required',
-            'email' => 'required|email|unique:customers',
+            'email' => 'required|email|unique:workshops',
             'password' => 'required|confirmed|min:6',
-
         ];
         $input = $request->only('name', 'email', 'password', 'password_confirmation');
         $validator = Validator::make($input, $rules);
@@ -141,12 +141,12 @@ class CustomersController extends Controller
         $name = $request->name;
         $email = $request->email;
         $password = $request->password;
-        $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1]);
+        $workshop = Workshop::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'card_number' => '', 'con_number' => '', 'type' => '', 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'geo_cord'=> '', 'team_slot' =>'', 'open_time' => '', 'close_time' => '', 'status' => 1]);
         // return $this->login($request);
         $verification_code = str_random(30); //Generate verification code
-        DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
+        DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         $subject = "Please verify your email address.";
-        Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
+        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
                 $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
                 $mail->to($email, $name);
@@ -161,7 +161,7 @@ class CustomersController extends Controller
     }
 
     /**
-     * API Login for customer, on success return JWT Auth token
+     * API Login for workshop, on success return JWT Auth token
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -174,8 +174,7 @@ class CustomersController extends Controller
             'password' => $request->password,
         ];
         try {
-            // Config::set('jwt.user' , "App\Customer");
-            Config::set('auth.providers.users.model', \App\Customer::class);
+            Config::set('auth.providers.users.model', \App\Workshop::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
                 return response()->json([
@@ -196,20 +195,20 @@ class CustomersController extends Controller
             ],Response::HTTP_OK);
         }
         // all good so return the token
-        $customer = Auth::user();
+        $workshop = Auth::user();
         // Config::set('jwt.user' , "App\User");
         // Config::set('auth.providers.users.model', \App\User::class);
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'success',
-            'body' => [ 'token' => $token , 'customer' => $customer ],
+            'body' => [ 'token' => $token , 'workshop' => $workshop ],
         ],Response::HTTP_OK);
     }
 
     /**
      * Log out
-     * Invalidate the token, so customer cannot use it anymore
+     * Invalidate the token, so workshop cannot use it anymore
      * They have to relogin to get a new token
      *
      * @param Request $request
@@ -217,7 +216,7 @@ class CustomersController extends Controller
     public function logout(Request $request) {
         $this->validate($request, ['token' => 'required']);
         try {
-            Config::set('auth.providers.users.model', \App\Customer::class);
+            Config::set('auth.providers.users.model', \App\Workshop::class);
             JWTAuth::invalidate($request->input('token'));
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -237,14 +236,14 @@ class CustomersController extends Controller
     }
 
     /**
-     * API Recover Password for new customer.
+     * API Recover Password for new workshop.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function recover(Request $request)
     {
-        $customer = Customer::where('email', $request->email)->first();
+        $workshop = Workshop::where('email', $request->email)->first();
         if (!$user) {
             $error_message = "Your email address was not found.";
             return response()->json([
@@ -284,10 +283,10 @@ class CustomersController extends Controller
      */
     public function verifyEmail($verification_code)
     {
-        $check = DB::table('customer_verifications')->where('token',$verification_code)->first();
+        $check = DB::table('workshop_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
-            $customer = Customer::find($check->user_id);
-            if($customer->is_verified == 1){
+            $workshop = Workshop::find($check->user_id);
+            if($workshop->is_verified == 1){
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -295,8 +294,8 @@ class CustomersController extends Controller
                     'body' => ''
                 ],Response::HTTP_OK);
             }
-            $customer->update(['is_verified' => 1]);
-            DB::table('customer_verifications')->where('token',$verification_code)->delete();
+            $workshop->update(['is_verified' => 1]);
+            DB::table('workshop_verifications')->where('token',$verification_code)->delete();
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
