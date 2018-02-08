@@ -25,11 +25,6 @@ Route::get('/login', function () {
     return view('dashboard.login');
 });
 
-Route::get('/workshops', function () {
-    return view('workshops.index');
-}); 
-
-
 // Routes for Hesto Package by Haris
 
 Route::group(['prefix' => 'customer'], function () {
@@ -63,9 +58,11 @@ Route::group(['prefix' => 'workshop'], function () {
 });
 
 Route::group(['prefix' => 'admin'], function () {
+
   Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'AdminAuth\LoginController@login');
   Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
+ 
 
   Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm')->name('register');
   Route::post('/register', 'AdminAuth\RegisterController@register');

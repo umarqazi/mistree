@@ -30,17 +30,24 @@
     <link href="{{asset('css/custom.css')}}" rel="stylesheet">
     <link href="{{asset('css/responsive.css')}}" rel="stylesheet">
 
+    <!-- Datatables -->
+    <link href="{{asset('css/dataTables.min.css')}}" rel="stylesheet" />
+
 </head>
 <body>
 
     <div class="wrapper-container">
-    @unless (Auth::check())
-        @yield('content_login')
-    @endunless
+
+        @if (Auth::check())
+        
         @include('partials.sidebar')
-     <div class="main-panel">
-        @yield('content')
-     </div>
+          <div class="main-panel">
+          @yield('content')
+          </div>
+        @else        
+            @yield('content_login')      
+        @endif
+
     </div> <!-- /Wrapper-container -->
     </div>  <!-- /wrapper  -->
 
@@ -53,7 +60,8 @@
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
     <script src="{{asset('js/paper-dashboard.js')}}"></script>
     <script src="{{asset('js/custom.js')}}"></script>
-	<script type="text/javascript">
+    <script src="{{asset('js/dataTables.min.js')}}"></script>
+	<!-- <script type="text/javascript">
     	$(document).ready(function(){
 
         	demo.initChartist();
@@ -68,6 +76,6 @@
             });
 
     	});
-	</script>
+	</script> -->
 </body>
 </html>
