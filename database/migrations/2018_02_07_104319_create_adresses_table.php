@@ -13,7 +13,7 @@ class CreateAdressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('address', function (Blueprint $table) {
+        Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('cust_id')->unsigned();
             $table->foreign('cust_id')->references('id')->on('customers')->onDelete('cascade');
