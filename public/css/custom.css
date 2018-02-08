@@ -102,7 +102,42 @@
 .btn-header {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px;}
 .btn-edit {display: inline-block; margin-top: -8px; margin-left: 10px;}
 
+.action-drop {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px; color: #fff; display: inline-block; width:auto;}
+
 .profile-detail h3 {margin: 0; font-size: 20px; font-weight: 600;}
 
+.card .title {font-weight: 600;}
 
+.card thead tr {background-color: #eee;}
+.card td .btn-header {width: 100%; clear: both; margin: 2px 0;}
+.card .control-label {margin-top: 10px;}
+
+.btn-add-services {color: #fff; background-color: #666; padding: 4px 20px 4px 16px; margin-bottom: 10px; margin-top: 6px; display: inline-block;}
+.btn-add-services:hover {color: #eee;}
+
+.profile-detail {padding-left: 120px; position: relative;}
+.profile-detail .company-logo {display: inline-block; max-width: 80px; position: absolute; left: 20px; top: 0;}
+
+#jsTable_wrapper #jsTable_length {margin-left: 20px;}
+.dataTables_filter {margin-right: 20px; margin-bottom: 10px;}
+
+.dataTables_filter input, #jsTable_length select {
+    border: 1px solid #ccc; 
+    padding-left: 30px;
+    background-color: #fffcf5;
+    border-radius: 4px;
+    color: #66615b;
+    font-size: 14px;
+    padding: 6px 18px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#jsTable_length select {padding: 6px 4px; margin-bottom: 10px;}
+
+.dataTables_info {margin-left: 14px;}
+
+.dataTables_paginate .paginate_button.current {border-radius: 4px; background-color: #eee; background-image: none !important; padding:4px 10px;}
+
+.dataTable th {border-bottom: 0 !important; background-color: #666 !important; color: #fff !important; font-size: 15px !important; font-weight: 600 !important;}
 

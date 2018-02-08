@@ -312,3 +312,10 @@ demo = {
     }
 
 }
+
+
+
+$(document).ready(function(){
+    $('#jsTable').DataTable();
+    $('.datepick').datepicker();
+});

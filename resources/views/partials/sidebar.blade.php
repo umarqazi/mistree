@@ -1,3 +1,4 @@
+
 <div class="wrapper">
 <div class="sidebar" data-background-color="white" data-active-color="danger">
 
@@ -44,6 +45,17 @@
                         <i class="ti-pencil-alt"></i>
                         <p>Balance Trail</p>
                     </a>
+                </li>
+                <li>
+                    <a href="{{ url('/admin/logout') }}"
+                        onclick="event.preventDefault();
+                                 document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
+
+                    <form id="logout-form" action="{{ url('/workshop/logout') }}" method="POST" style="display: none;">
+                        {{ csrf_field() }}
+                    </form>
                 </li>
             </ul>
     	</div>
