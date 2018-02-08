@@ -36,5 +36,6 @@ Route::group(['prefix'=>'workshop'], function() {
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 	Route::group(['prefix'=>'workshop','middleware' => ['jwt.auth']], function() {  
 		Route::get('logout', 'WorkshopsController@logout');
+		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
 	});
 });
