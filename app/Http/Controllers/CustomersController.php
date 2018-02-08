@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use JWTAuth;
 use Hash, DB, Config, Mail;
 use App\Customer;
+use App\Address;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -44,7 +45,8 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        //
+        $customers = Customer::all();
+        return View::make('customers.index')->with('customers', $customers);
     }
 
     /**
@@ -54,7 +56,7 @@ class CustomersController extends Controller
      */
     public function create()
     {
-        //
+        return View::make('customers.create');
     }
 
     /**
@@ -65,7 +67,34 @@ class CustomersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $rules = [
+            'name'      => 'required',
+            'email'     => 'required|email|unique:customers',
+            'password'  => 'required|confirmed|min:6',
+            'con_number'=> 'required',
+        ];
+        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
+        $validator = Validator::make($input, $rules);
+
+        if ($validator->fails()) {
+            return Redirect::to('customer/create')
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            // store
+            $customers = new Customers;
+            $customer->name       = Input::get('name');
+            $customer->email      = Input::get('email');
+            $customer->password   = Input::get('password');
+            $customer->con_number = Input::get('con_number');
+            $customer->status     = 1;
+            
+            $customer->save();
+
+            // redirect
+            Session::flash('message', 'Successfully created customer!');
+            return Redirect::to('customer');
+        }
     }
 
     /**
@@ -76,7 +105,10 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        //
+        $customers = Customers::find($id);
+
+        return View::make('customers.show')
+            ->with('customer', $customer);
     }
 
     /**
@@ -87,7 +119,10 @@ class CustomersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $customer = Customer::find($id);
+
+        return View::make('customers.edit')
+            ->with('customer', $customer);
     }
 
     /**
@@ -99,7 +134,33 @@ class CustomersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'name'      => 'required',
+            'email'     => 'required|email|unique:customers',
+            'password'  => 'required|confirmed|min:6',
+            'con_number'=> 'required',
+        ];
+        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
+        $validator = Validator::make($input, $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('customers/' . $id . '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            // store
+            $customer = Customer::find($id);
+            $customer->name       = Input::get('name');
+            $customer->email      = Input::get('email');
+            $customer->password   = Input::get('password');
+            $customer->con_number = Input::get('con_number');
+            $customer->save();
+
+            // redirect
+            Session::flash('message', 'Successfully updated customer!');
+            return Redirect::to('customers');
+        }
     }
 
     /**
@@ -110,7 +171,13 @@ class CustomersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // delete
+        $customer = Customers::find($id);
+        $customers->delete();
+
+        // redirect
+        Session::flash('message', 'Successfully deleted the customer!');
+        return Redirect::to('customers');
     }
 
     /**
@@ -122,12 +189,12 @@ class CustomersController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name' => 'required',
-            'email' => 'required|email|unique:customers',
-            'password' => 'required|confirmed|min:6',
-
+            'name'      => 'required',
+            'email'     => 'required|email|unique:customers',
+            'password'  => 'required|confirmed|min:6',
+            'con_number'=> 'required',
         ];
-        $input = $request->only('name', 'email', 'password', 'password_confirmation');
+        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -139,9 +206,10 @@ class CustomersController extends Controller
                 ],Response::HTTP_OK);
         }
         $name = $request->name;
+        $con_number = $request->con_number;
         $email = $request->email;
         $password = $request->password;
-        $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1]);
+        $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1, 'con_number' => $con_number]);
         // return $this->login($request);
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
@@ -310,5 +378,80 @@ class CustomersController extends Controller
             'message' => 'Verification code is invalid.',
             'body' => ''
         ],Response::HTTP_OK);
+    }
+
+    /**
+     * API Register store data of new customer.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function regStoreData(Request $request)
+    {
+         // read more on validation at http://laravel.com/docs/validation
+        $rules = array(
+            'cust_id'               => 'required',
+            'address_type'          => 'required',
+            'address_house_no'      => 'required',
+            'address_street_no'     => 'required',
+            'address_block'         => 'required',
+            'address_area'          => 'required',
+            'address_town'          => 'required',
+            'address_city'          => 'required'
+
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Invalid Details!',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        } else {
+            //customer
+            $customer = Customer::findOrFail($request->cust_id);
+            //address
+            $address = new Address;
+            $address->cust_id       =  $request->cust_id;
+            $address->type          =  $request->address_type;
+            $address->house_no      =  $request->address_house_no;
+            $address->street_no     =  $request->address_street_no;
+            $address->block         =  $request->address_block;
+            $address->area          =  $request->address_area;
+            $address->town          =  $request->address_town;
+            $address->city          =  $request->address_city;
+            $address->status        = 1;
+            $address->save();
+            //car
+            $cars = $request->get('cars');
+            if($cars != ''){
+                $data = [];
+                foreach($cars as $car) {
+                    // $img        = $car->file('picture');
+                    // $img_name   = time().'.'.getClientOriginalExtension();
+                    // Image::make($img)->save();
+                    $data[] = [
+                        'cust_id'       => $request->cust_id,
+                        'type'          => $car->type,
+                        'maker'         => $car->maker,
+                        'number'        => $car->number,
+                        'insurance'     => $car->insurance,
+                        'millage'       => $car->millage,
+                        // 'picture'       => $img_name,
+                        'status'        => $car->status
+                    ];
+                }
+                Cars::insert($data);    
+            }        
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Details Added!',
+                'body' => ''
+            ],Response::HTTP_OK);
+        }
     }
 }
