@@ -44,7 +44,7 @@ class WorkshopsController extends Controller
      */
     public function index()
     {
-        //
+        dd('workshop das');
     }
 
     /**

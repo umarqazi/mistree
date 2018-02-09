@@ -23,7 +23,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="workshops.html">
+                    <a href="{{url('admin/workshops')}}">
                         <i class="ti-view-list-alt"></i>
                         <p>Workshops</p>
                     </a>
