@@ -55,6 +55,8 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/password/reset', 'WorkshopAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
   Route::get('/verify/{verification_code}', 'WorkshopAuth@verifyWorkshop');
+
+  Route::resource('/', 'WorkshopsController');
 });
 
 Route::group(['prefix' => 'admin'], function () {
