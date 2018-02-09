@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use JWTAuth;
 use Hash, DB, Config, Mail;
 use App\Car;
+use App\CustCar;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class CarsController extends Controller
      */
     public function index(Request $request)
     {
-        // get all the nerds
+        // get all the nerds ->toJson()
         $cars = Car::all();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
@@ -30,7 +31,7 @@ class CarsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => '',
-                'body' => $cars
+                'body' => [ 'cars' => $cars ]
             ],Response::HTTP_OK);
         }
         else{
@@ -142,6 +143,7 @@ class CarsController extends Controller
             $car->maker      = Input::get('maker');
             $car->model      = Input::get('model');
             $car->year       = Input::get('year');
+            $car->picture       = Input::get('picture');
             $car->save();
 
             // redirect
@@ -166,26 +168,5 @@ class CarsController extends Controller
         Session::flash('message', 'Successfully deleted the car!');
         return Redirect::to('cars');
     }
-
-    /**
-     * Assign a specific car to owner.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function assignCar($id)
-    {
-       
-    }
-
-    /**
-     * Unassign a specific car to owner.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function unassignCar($id)
-    {
-       
-    }
+    
 }
