@@ -18,4 +18,9 @@ class Address extends Model
         'cust_id', 'ws_id','admin_id', 'type', 'house_no', 'street_no', 'block', 'area', 'town', 'city', 'geo_cord', 'status',
     ];
 
+    public function customer()
+	{
+	    return $this->belongsTo('App\Customer', 'cust_id');
+	}
+	
 }
