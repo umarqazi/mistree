@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use Hash, DB, Config, Mail;
+use Illuminate\Support\Facades\Redirect;
 use App\Car;
-use App\CustCar;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -169,4 +169,73 @@ class CarsController extends Controller
         return Redirect::to('cars');
     }
     
+
+    /**
+     * Assign a specific car to owner.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function assignCar()
+    {
+       $rules = array(
+            'car_id'       => 'required',
+            'cust_id'      => 'required',
+            'millage'      => 'required',
+            'vehicle_no'   => 'required',
+            'insurance'    => 'required'
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => $validator,
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+        } else {
+            // store
+            $car      = Car::find($request->car_id);
+            $customer = Customer::find($request->custmer_id);
+            $customer->cars()->attach([$car => ['mileage' => $request->mileage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'status' => $request->status]]);
+
+            return response()->json([
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => $validator,
+                'body'          => '' 
+            ],Response::HTTP_OK);
+        }
+        
+    }
+
+    /**
+     * Unassign a specific car to owner.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function unassignCar($car_id, $customer_id)
+    {
+       // delete
+        $customer = Customer::find($customer_id);
+        $customer->cars()->dettach($car_id);
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Car deleted!!',
+            'body'          => '' 
+        ],Response::HTTP_OK);
+    }
+
+    /**
+     * Fetch customer's to car.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustCar($id)
+    {
+       //  
+    }  
 }
