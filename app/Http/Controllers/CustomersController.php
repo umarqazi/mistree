@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use Hash, DB, Config, Mail;
+use Illuminate\Support\Facades\Redirect;
 use App\Customer;
 use App\Address;
 use Illuminate\Http\Response;
@@ -105,7 +106,7 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        $customers = Customers::find($id);
+        $customer = Customer::find($id);
 
         return View::make('customers.show')
             ->with('customer', $customer);
