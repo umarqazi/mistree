@@ -17,4 +17,12 @@ class Car extends Model
     protected $fillable = [
         'type', 'maker', 'model', 'year', 'status', 'picture'
     ];
+
+    // protected $fillable = [
+    //     'type', 'maker', 'model', 'year', 'status', 'picture'
+    // ];
+    public function customers()
+    {
+        return $this->belongsToMany('App\Customer');
+    }
 }
