@@ -41,7 +41,7 @@ class CreateAdressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('address');
-        $table->dropForeign('address_user_id_foreign');
+        Schema::dropIfExists('addresses');
+        $table->dropForeign('addresses_user_id_foreign');
     }
 }
