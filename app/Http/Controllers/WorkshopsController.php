@@ -50,7 +50,6 @@ class WorkshopsController extends Controller
 
         // get all the workshops
         $workshops = Workshop::all();
-        // dd($workshops);
         // load the view and pass the nerds
         return View::make('workshop.index')
             ->with('workshops', $workshops);
