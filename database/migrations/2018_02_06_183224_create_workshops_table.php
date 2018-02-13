@@ -24,7 +24,7 @@ class CreateWorkshopsTable extends Migration
             $table->string('pic1',45);
             $table->string('pic2',45);
             $table->string('pic3',45);
-            $table->string('geo_cord',45);
+            $table->string('geo_cord',45)->nullable();
             $table->string('team_slot',45);
             $table->string('open_time',45);
             $table->string('close_time',45);
