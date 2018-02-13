@@ -72,6 +72,8 @@ Route::group(['prefix' => 'admin'], function () {
   //  Web portal
   Route::resource('customers', 'CustomersController');
   Route::resource('workshops', 'WorkshopsController');
+  Route::resource('services', 'ServicesController');
+
   // Route::get('workshops/create', 'WorkshopsController@create');
   // Route::post('workshops/store', 'WorkshopsController@store');
 

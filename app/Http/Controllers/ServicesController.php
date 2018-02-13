@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Service
+use App\Service;
 use DB, View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Redirect;
+use Session;
 
 class ServicesController extends Controller
 {
@@ -21,12 +23,14 @@ class ServicesController extends Controller
      */
     public function index()
     {
+        // dd('services');
         // get all the services
         $services = Service::all();
 
+        // dd($services);
         // load the view and pass the services
         return View::make('services.index')
-            ->with('services', $nerds);
+            ->with('services', $services);
     }
 
     /**
@@ -36,7 +40,8 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        return View::make('services.create');
+        $services = Service::all();
+        return View::make('services.create')->with('services', $services);
     }
 
     /**
@@ -51,18 +56,18 @@ class ServicesController extends Controller
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
             'name'              => 'required',
-            'parent_id'         => 'required|numeric',            
+            // 'parent_id'         => 'required|numeric',            
             'loyalty_points'    => 'required|numeric',            
         );
 
-        $inputs = $request->only('name', 'parent_id', 'loyalty_points');
+        $inputs = $request->only('name','loyalty_points');
 
         $validator = Validator::make($inputs, $rules);
 
         // process the login
         if ($validator->fails()) {
             return Redirect::to('services/create')
-                ->withErrors($validator)                
+                ->withErrors($validator);               
         } else {
             // store
             $service = new Service;
@@ -75,8 +80,9 @@ class ServicesController extends Controller
 
             // redirect
             Session::flash('message', 'Successfully created service!');
-            return Redirect::to('services');
+            return Redirect::to('admin/services');
     }
+}
 
     /**
      * Display the specified resource.
@@ -132,7 +138,7 @@ class ServicesController extends Controller
         // process the login
         if ($validator->fails()) {
             return Redirect::to('services/'. $id .'/edit')
-                ->withErrors($validator)                
+                ->withErrors($validator);                
         } else {
             $service = Service::find($id);
             // update            
@@ -145,6 +151,7 @@ class ServicesController extends Controller
             Session::flash('message', 'Successfully updated the Service!');
             return Redirect::to('services');
     }
+}
 
     /**
      * Remove the specified resource from storage.
