@@ -15,11 +15,11 @@ class CreateAdressesTable extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('cust_id')->nullable();
+            $table->integer('cust_id')->unsigned();
             $table->foreign('cust_id')->references('id')->on('customers')->onDelete('cascade');
-            $table->integer('admin_id')->nullable();
+            $table->integer('admin_id')->unsigned();
             $table->foreign('admin_id')->references('id')->on('admins')->onDelete('cascade');
-            $table->integer('ws_id')->nullable();
+            $table->integer('ws_id')->unsigned();
             $table->foreign('ws_id')->references('id')->on('workshops')->onDelete('cascade');
             $table->string('type',45);
             $table->string('house_no',45);
@@ -41,7 +41,9 @@ class CreateAdressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('address');
-        $table->dropForeign('address_user_id_foreign');
+        Schema::dropIfExists('addresses');
+        $table->dropForeign('addresses_cust_id_foreign');
+        $table->dropForeign('addresses_ws_id_foreign');
+        $table->dropForeign('addresses_admin_id_foreign');
     }
 }

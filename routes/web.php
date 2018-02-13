@@ -52,7 +52,6 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
   Route::get('/verify/{verification_code}', 'WorkshopAuth@verifyWorkshop');
 
-  Route::resource('/', 'WorkshopsController');
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -73,5 +72,8 @@ Route::group(['prefix' => 'admin'], function () {
   //  Web portal
   Route::resource('customers', 'CustomersController');
   Route::resource('workshops', 'WorkshopsController');
+  // Route::get('workshops/create', 'WorkshopsController@create');
+  // Route::post('workshops/store', 'WorkshopsController@store');
+
 
 });
