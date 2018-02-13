@@ -38,7 +38,7 @@
 
     <div class="wrapper-container">
 
-        @if (Auth::check())
+        @if (Auth::guard('admin')->check())
         
         @include('partials.sidebar')
           <div class="main-panel">
