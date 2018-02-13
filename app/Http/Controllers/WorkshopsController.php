@@ -105,6 +105,34 @@ class WorkshopsController extends Controller
         $address = Address::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'ws_id' => $workshop->id, 'cust_id' => NULL ,'admin_id' => NULL, 'geo_cord' => NULL, 'status' => 1 ]);
 
         //Insert Services data from request
+
+        $services = $request->services;
+        if(!empty($services)){
+            foreach($services as $service){
+                $speicality = new WorkshopSepcialty;
+
+                $speicality->service_id = $service->service_id;
+                $speicality->service_rate = $service->service_rate;
+                $speicality->service_time = $service->service_time;
+                $speicality->workshop_id = $workshop->id;
+
+                $speicality->save();
+            }
+        }
+
+        // $email = $request->email;
+        // $name = $request->name;
+        // return $this->login($request);
+        // $verification_code = str_random(30); //Generate verification code
+        // DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        // $subject = "Please verify your email address.";
+        // Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
+        //     function($mail) use ($email, $name, $subject){
+        //         $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+        //         $mail->to($email, $name);
+        //         $mail->subject($subject);
+        //     });        
+
         // $services = $request->services;
         // if(!empty($services)){
         //     foreach($services as $service){
@@ -133,6 +161,7 @@ class WorkshopsController extends Controller
             });  
 
         return Redirect::to('admin/workshops');      
+
     }
 
     /**
@@ -177,18 +206,10 @@ class WorkshopsController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name'              => 'required',
-            // 'email'             => 'required|email|unique:workshops',
+            'name'              => 'required',            
             'password'          => 'required|confirmed|min:6',
             'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',                                
-            // 'address_type'      => 'required',
-            // 'address_house_no'  => 'required',
-            // 'address_street_no' => 'required',
-            // 'address_block'     => 'required',
-            // 'address_area'      => 'required',
-            // 'address_town'      => 'required',
-            // 'address_city'      => 'required',            
+            'con_number'        => 'required|numeric|min:11',                                                    
         ];  
 
         $input = $request->only('name', 'password', 'password_confirmation', 'card_number', 'con_number');
@@ -214,7 +235,7 @@ class WorkshopsController extends Controller
         $workshop->team_slot        = Input::get('team_slot');
         $workshop->open_time        = Input::get('open_time');
         $workshop->close_time       = Input::get('close_time');
-        $workshop->status           = '';
+        $workshop->status           = 1;
         $workshop->save();                
 
         // redirect
@@ -253,18 +274,10 @@ class WorkshopsController extends Controller
             'email'             => 'required|email|unique:workshops',
             'password'          => 'required|confirmed|min:6',
             'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',            
-            // 'status'            => 'required|alpha',            
-            'address_type'      => 'required',
-            'address_house_no'  => 'required',
-            'address_street_no' => 'required',
-            'address_block'     => 'required',
-            'address_area'      => 'required',
-            'address_town'      => 'required',
-            'address_city'      => 'required',            
+            'con_number'        => 'required|numeric|min:11'                                            
         ];        
 
-        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'card_number', 'con_number');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -277,10 +290,7 @@ class WorkshopsController extends Controller
         }       
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => '', 'is_approved' => 0]);        
-
-        //Insert Address data from request
-        $address = Address::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'ws_id' => $workshop->id, 'cust_id' => '','admin_id' => '', 'geo_cord' => '' ]);
+        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);                
 
         //Insert Services data from request
         $services = $request->services;
@@ -325,6 +335,15 @@ class WorkshopsController extends Controller
   
     public function login(Request $request)
     {   
+        $check = Workshop::select('is_approved')->where('email', $request->email)->get();
+        if($check->is_approved == 0){                
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Workshop is not approved by the admin',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+        }
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
@@ -530,5 +549,67 @@ class WorkshopsController extends Controller
         return Redirect::to('workshops');
 
 
+    }
+
+    /**
+     * API Register store data of new customer.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function profileUpdate(Request $request, $id, $address_id)
+    {
+        $request_workshop = $request->workshop;
+        $workshop = Workshop::find($id);
+        $workshop->fill($request_workshop);
+        if($address_id != ''){
+            $request_address = $request->address;
+            $address = Address::find($id);
+            $address->fill($request_address);
+        }else{
+            $rules = array(
+                'address_type'          => 'required',
+                'address_house_no'      => 'required',
+                'address_street_no'     => 'required',
+                'address_block'         => 'required',
+                'address_area'          => 'required',
+                'address_town'          => 'required',
+                'address_city'          => 'required'
+            );
+            $validator = Validator::make($request->all(), $rules);
+
+            // process the login
+            if ($validator->fails()) {
+                return response([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Invalid Details!',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+            } else {
+                $address = new Address;
+                $address->cust_id       =  '';
+                $address->ws_id         =  $id;
+                $address->admin_id      =  '';
+                $address->type          =  $request->address_type;
+                $address->house_no      =  $request->address_house_no;
+                $address->street_no     =  $request->address_street_no;
+                $address->block         =  $request->address_block;
+                $address->area          =  $request->address_area;
+                $address->town          =  $request->address_town;
+
+
+                $address->city          =  $request->address_city;
+                $address->status        = 1;
+                $address->save(); 
+            }
+        }
+        //address   
+        return response([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Details Added!',
+            'body' => ''
+        ],Response::HTTP_OK);
     }
 }
