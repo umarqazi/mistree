@@ -50,11 +50,12 @@ class ServicesController extends Controller
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'       => 'required',
-            'parent_id'      => 'required|numeric',            
+            'name'              => 'required',
+            'parent_id'         => 'required|numeric',            
+            'loyalty_points'    => 'required|numeric',            
         );
 
-        $inputs = $request->only('name', 'parent_id');
+        $inputs = $request->only('name', 'parent_id', 'loyalty_points');
 
         $validator = Validator::make($inputs, $rules);
 
@@ -67,6 +68,8 @@ class ServicesController extends Controller
             $service = new Service;
             $service->name           = Input::get('name');
             $service->parent_id      = Input::get('parent_id');            
+            $service->loyalty_points = Input::get('loyalty_points');            
+            $service->image          = '';            
             $service->status         = 1;            
             $service->save();
 

@@ -15,6 +15,6 @@ class Service extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id', 'status'
+        'name', 'parent_id', 'status', 'image', 'loyalty_points'
     ];
 }
