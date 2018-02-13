@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use Hash, DB, Config, Mail, View;
+use Illuminate\Support\Facades\Redirect;
 use App\Workshop;
 use App\Address;
 use App\WorkshopSepcialty;
@@ -46,11 +47,12 @@ class WorkshopsController extends Controller
      */
     public function index()
     {
+
         // get all the workshops
         $workshops = Workshop::all();
-
+        // dd($workshops);
         // load the view and pass the nerds
-        return View::make('workshops.index')
+        return View::make('workshop.index')
             ->with('workshops', $workshops);
     }
 
@@ -61,7 +63,7 @@ class WorkshopsController extends Controller
      */
     public function create()
     {
-        return View::make('workshops.create');
+        return View::make('workshop.create');
     }
 
     /**
@@ -71,14 +73,13 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
         $rules = [
             'name'              => 'required',
             'email'             => 'required|email|unique:workshops',
             'password'          => 'required|confirmed|min:6',
             'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',            
-            // 'status'            => 'required|alpha',            
+            'con_number'        => 'required|numeric|min:11',      
             'address_type'      => 'required',
             'address_house_no'  => 'required',
             'address_street_no' => 'required',
@@ -92,44 +93,46 @@ class WorkshopsController extends Controller
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
-            return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => $validator->messages(),
-                    'body' => $request->all()
-                ],Response::HTTP_OK);
+            return Redirect::to('admin/workshops/create')
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
         }       
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => '', 'is_approved' => 0]);        
+        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
 
         //Insert Address data from request
-        $address = Address::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'ws_id' => $workshop->id, 'cust_id' => '','admin_id' => '', 'geo_cord' => '' ]);
+        $address = Address::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'ws_id' => $workshop->id, 'cust_id' => NULL ,'admin_id' => NULL, 'geo_cord' => NULL, 'status' => 1 ]);
 
         //Insert Services data from request
-        $services = $request->services;
-        if(!empty($services)){
-            foreach($services as $service){
-                $speicality = new WorkshopSepcialty;
+        // $services = $request->services;
+        // if(!empty($services)){
+        //     foreach($services as $service){
+        //         $speicality = new WorkshopSepcialty;
 
-                $speicality->service_id = $service->service_id;
-                $speicality->service_rate = $service->service_rate;
-                $speicality->service_time = $service->service_time;
-                $speicality->workshop_id = $workshop->id;
+        //         $speicality->service_id = $service->service_id;
+        //         $speicality->service_rate = $service->service_rate;
+        //         $speicality->service_time = $service->service_time;
+        //         $speicality->workshop_id = $workshop->id;
 
-                $speicality->save();
-            }
-        }
+        //         $speicality->save();
+        //     }
+        // }
         // return $this->login($request);
         $verification_code = str_random(30); //Generate verification code
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+
+        $name = $request->name;
+        $email = $request->email;
         $subject = "Please verify your email address.";
         Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
                 $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-                $mail->to($request->email, $request->name);
+                $mail->to($email, $name);
                 $mail->subject($subject);
-            });        
+            });  
+
+        return Redirect::to('admin/workshops');      
     }
 
     /**
