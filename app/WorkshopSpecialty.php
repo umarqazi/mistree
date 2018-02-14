@@ -18,6 +18,16 @@ class WorkshopSpecialty extends Model
         'workshop_id', 'service_id', 'service_rate', 'service_time' 
     ];
 
+    public function workshop()
+    {
+        return $this->belongsTo('App\Workshop');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo('App\Service');
+    }
+
 
 
     

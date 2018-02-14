@@ -17,4 +17,9 @@ class Service extends Model
     protected $fillable = [
         'name', 'parent_id', 'status', 'image', 'loyalty_points'
     ];
+
+    public function workshopspecialty()
+    {
+        return $this->hasOne('App\WorkshopSpecialty');
+    }
 }
