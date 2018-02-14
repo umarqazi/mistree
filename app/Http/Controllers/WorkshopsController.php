@@ -50,7 +50,6 @@ class WorkshopsController extends Controller
 
         // get all the workshops
         $workshops = Workshop::all();
-        // dd($workshops);
         // load the view and pass the nerds
         return View::make('workshop.index')
             ->with('workshops', $workshops);
@@ -102,7 +101,7 @@ class WorkshopsController extends Controller
         $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
 
         //Insert Address data from request
-        $address = Address::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'ws_id' => $workshop->id, 'cust_id' => NULL ,'admin_id' => NULL, 'geo_cord' => NULL, 'status' => 1 ]);
+        $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
 
         //Insert Services data from request
 
@@ -119,6 +118,7 @@ class WorkshopsController extends Controller
                 $speicality->save();
             }
         }
+        return Redirect::to('admin/workshops');      
 
         // $email = $request->email;
         // $name = $request->name;
@@ -147,21 +147,18 @@ class WorkshopsController extends Controller
         //     }
         // }
         // return $this->login($request);
-        $verification_code = str_random(30); //Generate verification code
-        DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        // $verification_code = str_random(30); //Generate verification code
+        // DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
 
-        $name = $request->name;
-        $email = $request->email;
-        $subject = "Please verify your email address.";
-        Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });  
-
-        return Redirect::to('admin/workshops');      
-
+        // $name = $request->name;
+        // $email = $request->email;
+        // $subject = "Please verify your email address.";
+        // Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
+        //     function($mail) use ($email, $name, $subject){
+        //         $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+        //         $mail->to($email, $name);
+        //         $mail->subject($subject);
+        //     });  
     }
 
     /**
@@ -307,15 +304,15 @@ class WorkshopsController extends Controller
             }
         }
         // return $this->login($request);
-        $verification_code = str_random(30); //Generate verification code
-        DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        $subject = "Please verify your email address.";
-        Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-                $mail->to($request->email, $request->name);
-                $mail->subject($subject);
-            });
+        // $verification_code = str_random(30); //Generate verification code
+        // DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        // $subject = "Please verify your email address.";
+        // Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
+        //     function($mail) use ($email, $name, $subject){
+        //         $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+        //         $mail->to($request->email, $request->name);
+        //         $mail->subject($subject);
+        //     });
 
 
         return response()->json([
@@ -564,7 +561,7 @@ class WorkshopsController extends Controller
         $workshop->fill($request_workshop);
         if($address_id != ''){
             $request_address = $request->address;
-            $address = Address::find($id);
+            $address = WorkshopAddress::find($id);
             $address->fill($request_address);
         }else{
             $rules = array(
@@ -587,18 +584,14 @@ class WorkshopsController extends Controller
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             } else {
-                $address = new Address;
-                $address->cust_id       =  '';
-                $address->ws_id         =  $id;
-                $address->admin_id      =  '';
+                $address = new WorkshopAddress;                
+                $address->workshop_id   =  $id;                
                 $address->type          =  $request->address_type;
                 $address->house_no      =  $request->address_house_no;
                 $address->street_no     =  $request->address_street_no;
                 $address->block         =  $request->address_block;
                 $address->area          =  $request->address_area;
                 $address->town          =  $request->address_town;
-
-
                 $address->city          =  $request->address_city;
                 $address->status        = 1;
                 $address->save(); 

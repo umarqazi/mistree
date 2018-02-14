@@ -29,7 +29,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="campaign.html">
+                    <a href="{{url('admin/services')}}">
                         <i class="ti-panel"></i>
                         <p>Services</p>
                     </a>
