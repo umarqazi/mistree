@@ -99,7 +99,7 @@
 .clear40 {clear: both; line-height: 40px; height: 40px; font-size: 0;}
 .clear80 {clear: both; line-height: 80px; height: 80px; font-size: 0;}
 
-.btn-header {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px;}
+.btn-header {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px; display: inline-block;}
 .btn-edit {display: inline-block; margin-top: -8px; margin-left: 10px;}
 
 .action-drop {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px; color: #fff; display: inline-block; width:auto;}
@@ -141,3 +141,65 @@
 
 .dataTable th {border-bottom: 0 !important; background-color: #666 !important; color: #fff !important; font-size: 15px !important; font-weight: 600 !important;}
 
+.tbl-contained #jsTable_wrapper #jsTable_length {margin-left: 0px;}
+.tbl-contained .dataTables_filter {margin-right: 0px;}
+
+table.dataTable tfoot th, table.dataTable tfoot td {border-top: 1px solid #ccc; border-bottom: 1px solid #ccc;}
+table.dataTable.no-footer {border-bottom: 1px solid #ccc;}
+
+.top-shift {padding-top: 11px;}
+.right-shift {margin-right: 10px;}
+
+.actions {color: #999;}
+.actions a {color: #333; margin: 0 4px; font-weight: 600;}
+
+/*.content {clear: both; display: table; width: 100%; width: 100%;}*/
+
+form {display: table; width: 100%; clear: both;}
+form .form-group {margin-bottom: 0px;} 
+.chosen-choices {
+    border: 1px solid #CCC5B9 !important;
+    background-color: #fffcf5 !important;
+    border-radius: 4px;
+    color: #66615b;
+    font-size: 14px;
+    padding: 5px 10px 7px 7px !important;
+    height: 40px !important;
+    box-shadow: none !important;
+    display: block !important;
+    width: 100% !important;
+    background-image: none !important;
+}
+
+.child-box-wrap {
+    border-radius: 4px;
+    border: 1px solid #CCC5B9 !important;
+    background-color: #fffcf5 !important;
+    padding: 10px;
+    display: table;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.nwrapper {width:400px; display: inline-block; margin: 0 auto;}
+
+.nid-wrap {
+    background-color: #eee;
+    border-color: 1px solid #ccc;
+    margin-bottom: 10px;
+    max-width: 400px;
+    height: 200px;
+    line-height: 200px;
+    align-items:center;
+    display: flex;
+    text-align: center;
+}
+
+.nid-wrap img {
+    max-height: 200px;
+    width: auto;
+    margin: 0 auto;
+    display: inline-block;
+}
+
+#imgInp1, #imgInp2 {background-color:#eee; display:inline-block; width:auto;}
