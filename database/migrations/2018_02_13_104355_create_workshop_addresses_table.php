@@ -38,5 +38,8 @@ class CreateWorkshopAddressesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('workshop_addresses');
+        Schema::table('workshop_addresses', function (Blueprint $table) {
+            $table->dropForeign('workshop_addresses_customer_id_foreign');
+        });
     }
 }
