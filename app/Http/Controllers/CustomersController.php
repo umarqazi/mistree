@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
-use Hash, DB, Config, Mail;
+
 use Illuminate\Support\Facades\Redirect;
+use Hash, DB, Config, Mail, View;
 use App\Customer;
 use App\Address;
 use Illuminate\Http\Response;
@@ -47,7 +48,7 @@ class CustomersController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        return View::make('customers.index')->with('customers', $customers);
+        return View::make('customer.index')->with('customers', $customers);
     }
 
     /**

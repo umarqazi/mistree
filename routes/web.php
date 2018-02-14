@@ -15,6 +15,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Routes for template by Adeel
+
+Route::get('/dashboard', function () {
+    return view('dashboard.dashboard');
+});
+
+// Routes for Hesto Package by Haris
+
 Route::group(['prefix' => 'customer'], function () {
   Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'CustomerAuth\LoginController@login');
@@ -43,12 +51,15 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/password/reset', 'WorkshopAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
   Route::get('/verify/{verification_code}', 'WorkshopAuth@verifyWorkshop');
+
 });
 
 Route::group(['prefix' => 'admin'], function () {
+
   Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'AdminAuth\LoginController@login');
   Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
+ 
 
   Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm')->name('register');
   Route::post('/register', 'AdminAuth\RegisterController@register');
@@ -57,4 +68,12 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/password/reset', 'AdminAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'AdminAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'AdminAuth\ResetPasswordController@showResetForm');
+
+  //  Web portal
+  Route::resource('customers', 'CustomersController');
+  Route::resource('workshops', 'WorkshopsController');
+  // Route::get('workshops/create', 'WorkshopsController@create');
+  // Route::post('workshops/store', 'WorkshopsController@store');
+
+
 });

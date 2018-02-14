@@ -1,0 +1,143 @@
+.icon-section {
+    margin: 0 0 3em;
+    clear: both;
+    overflow: hidden;
+}
+
+.icon-container {
+    width: 240px;
+    padding: .7em 0;
+    float: left;
+    position: relative;
+    text-align: left;
+}
+
+.icon-container [class^="ti-"],
+.icon-container [class*=" ti-"] {
+    color: #000;
+    position: absolute;
+    margin-top: 3px;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+.icon-container:hover [class^="ti-"],
+.icon-container:hover [class*=" ti-"] {
+    font-size: 2.2em;
+    margin-top: -5px;
+}
+
+.icon-container:hover .icon-name {
+    color: #000;
+}
+
+.icon-name {
+    color: #aaa;
+    margin-left: 35px;
+    font-size: .8em;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+.icon-container:hover .icon-name {
+    margin-left: 45px;
+}
+
+.places-buttons .btn {
+    margin-bottom: 30px
+}
+
+.sidebar .nav > li.active-pro {
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+}
+
+.sidebar .nav > li.active-pro a {
+    background: rgba(255, 255, 255, 0.14);
+    opacity: 1;
+    color: #FFFFFF;
+}
+
+.table-upgrade td:nth-child(2),
+.table-upgrade td:nth-child(3) {
+    text-align: center;
+}
+
+/* custom css */
+
+.user_forms {
+    max-width: 850px;
+    padding: 0 15px;
+    margin: 0 auto;
+}
+
+.forgot {
+    display: block;
+    margin-bottom: 30px;
+}
+
+.login-signup .main-panel {width: calc(100%); float: none;}
+.login-signup .card {padding: 12px 40px 20px 40px;}
+.login-signup .card form [class*="col-"]:first-child {padding-left: 15px; padding-right: 15px;}
+.login-signup .card form [class*="col-"]:last-child {padding-left: 15px; padding-right: 15px;}
+.login-signup .main-panel .content {padding: 30px 15px; min-height: calc(100% - 67px);}
+.login-signup h2 {font-size: 26px;}
+
+.logo img {max-width: 144px !important;}
+.sidebar .logo, .off-canvas-sidebar .logo {padding: 4px 0px;}
+
+.search .form-control {border: 1px solid #ccc; min-width: 260px; padding-left: 30px;}
+
+.search .from-group {position: relative;}
+.search .from-group .ti-search {position: absolute; left: 10px; top: 11px;}
+
+.clear {clear: both; line-height: 0; height:0; font-size: 0;}
+.clear5 {clear: both; line-height: 5px; height:5px; font-size: 0;}
+.clear10 {clear: both; line-height: 10px; height: 10px; font-size: 0;}
+.clear20 {clear: both; line-height: 20px; height: 20px; font-size: 0;}
+.clear40 {clear: both; line-height: 40px; height: 40px; font-size: 0;}
+.clear80 {clear: both; line-height: 80px; height: 80px; font-size: 0;}
+
+.btn-header {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px;}
+.btn-edit {display: inline-block; margin-top: -8px; margin-left: 10px;}
+
+.action-drop {background-color: #666; color: #fff; padding: 2px 14px; font-size: 13px; color: #fff; display: inline-block; width:auto;}
+
+.profile-detail h3 {margin: 0; font-size: 20px; font-weight: 600;}
+
+.card .title {font-weight: 600;}
+
+.card thead tr {background-color: #eee;}
+.card td .btn-header {width: 100%; clear: both; margin: 2px 0;}
+.card .control-label {margin-top: 10px;}
+
+.btn-add-services {color: #fff; background-color: #666; padding: 4px 20px 4px 16px; margin-bottom: 10px; margin-top: 6px; display: inline-block;}
+.btn-add-services:hover {color: #eee;}
+
+.profile-detail {padding-left: 120px; position: relative;}
+.profile-detail .company-logo {display: inline-block; max-width: 80px; position: absolute; left: 20px; top: 0;}
+
+#jsTable_wrapper #jsTable_length {margin-left: 20px;}
+.dataTables_filter {margin-right: 20px; margin-bottom: 10px;}
+
+.dataTables_filter input, #jsTable_length select {
+    border: 1px solid #ccc; 
+    padding-left: 30px;
+    background-color: #fffcf5;
+    border-radius: 4px;
+    color: #66615b;
+    font-size: 14px;
+    padding: 6px 18px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+#jsTable_length select {padding: 6px 4px; margin-bottom: 10px;}
+
+.dataTables_info {margin-left: 14px;}
+
+.dataTables_paginate .paginate_button.current {border-radius: 4px; background-color: #eee; background-image: none !important; padding:4px 10px;}
+
+.dataTable th {border-bottom: 0 !important; background-color: #666 !important; color: #fff !important; font-size: 15px !important; font-weight: 600 !important;}
+
