@@ -45,12 +45,7 @@ class WorkshopAddressesController extends Controller
      */
     public function show($id)
     {
-        // get the address
-        $nerd = Nerd::find($id);
-
-        // show the view and pass the nerd to it
-        return View::make('nerds.show')
-            ->with('nerd', $nerd);
+        //
     }
 
     /**
