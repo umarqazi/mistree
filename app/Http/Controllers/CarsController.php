@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use JWTAuth;
 use Hash, DB, Config, Mail;
+use Illuminate\Support\Facades\Redirect;
 use App\Car;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class CarsController extends Controller
      */
     public function index(Request $request)
     {
-        // get all the nerds
+        // get all the nerds ->toJson()
         $cars = Car::all();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
@@ -30,7 +31,7 @@ class CarsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => '',
-                'body' => $cars
+                'body' => [ 'cars' => $cars ]
             ],Response::HTTP_OK);
         }
         else{
@@ -51,10 +52,9 @@ class CarsController extends Controller
     /**
      * Store a newly created cars in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store()
     {
         $rules = array(
             'type'       => 'required',
@@ -117,11 +117,10 @@ class CarsController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update($id)
     {
         $rules = array(
             'type'       => 'required',
@@ -144,6 +143,7 @@ class CarsController extends Controller
             $car->maker      = Input::get('maker');
             $car->model      = Input::get('model');
             $car->year       = Input::get('year');
+            $car->picture       = Input::get('picture');
             $car->save();
 
             // redirect
@@ -168,16 +168,44 @@ class CarsController extends Controller
         Session::flash('message', 'Successfully deleted the car!');
         return Redirect::to('cars');
     }
+    
 
     /**
      * Assign a specific car to owner.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function assignCar($id)
+    public function assignCar()
     {
-       
+       $rules = array(
+            'car_id'       => 'required',
+            'cust_id'      => 'required',
+            'millage'      => 'required',
+            'vehicle_no'   => 'required',
+            'insurance'    => 'required'
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => $validator,
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+        } else {
+            // store
+            $car      = Car::find($request->car_id);
+            $customer = Customer::find($request->custmer_id);
+            $customer->cars()->attach([$car => ['mileage' => $request->mileage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'status' => $request->status]]);
+
+            return response()->json([
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => $validator,
+                'body'          => '' 
+            ],Response::HTTP_OK);
+        }
+        
     }
 
     /**
@@ -186,8 +214,28 @@ class CarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function unassignCar($id)
+    public function unassignCar($car_id, $customer_id)
     {
-       
+       // delete
+        $customer = Customer::find($customer_id);
+        $customer->cars()->dettach($car_id);
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Car deleted!!',
+            'body'          => '' 
+        ],Response::HTTP_OK);
     }
+
+    /**
+     * Fetch customer's to car.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustCar($id)
+    {
+       //  
+    }  
 }
