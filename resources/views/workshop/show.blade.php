@@ -148,7 +148,7 @@
 												</tr>
 											</thead>
 											@php 
-												$specialty = $workshop->service 							
+												$specialty = $workshop->service								
 											@endphp						
 
 						                    <tbody>
@@ -159,7 +159,7 @@
 						                        	<td>{{ $spec->pivot->service_time }}</td>	
 						                        	<td>						                        	
 						                        		<a href="{{url('admin/edit-workshop-service/'.$spec->pivot->id)}}" class="btn btn-header">Edit</a>
-                                						<a href="{{ url('admin/workshops/create') }}" class="btn btn-header ">Delete</a>
+                                						<a href="{{ url('admin/delete-workshop-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
                                 					</td>	                        	
 						                        </tr>
 						                        @endforeach	                        

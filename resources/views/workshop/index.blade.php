@@ -15,14 +15,6 @@
                                 <h4 class="title">Registered Workshops</h4>
                                 <p class="category">List of all registered workshops.</p>
                             </div>
-                            <!-- <div class="col-md-6">
-                                <div class="pull-right search">
-                                    <div class="from-group">
-                                        <i class="ti-search"></i>
-                                        <input type="text" class="form-control" placeholder="Search by ID, Name, Location">
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="clear20"></div>
                         <div class="row">

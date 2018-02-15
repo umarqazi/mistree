@@ -18,8 +18,10 @@
                             <div class="clear10"></div><div class="clear5"></div>                            
                             <div class="col-md-12">
                                 <div class="row">
-                                    <form method="POST" action="{{ url('admin/update-workshop-service') }}">
-                                    <input type="hidden" value="PATCH" name="_method">
+                                    <form method="POST" action="{{ url('admin/update-workshop-service/')}}">
+                                    <!-- <input type="hidden" value="PATCH" name="_method"> -->
+                                    <input type="hidden" value="{{$workshop_service->workshop_id}}" name="workshop_id">
+                                    <input type="hidden" value="{{$workshop_service->service_id}}" name="exit_id">
                                     {{ csrf_field() }}
                                         <div class="col-sm-4">
                                             <div class="child-box-wrap">

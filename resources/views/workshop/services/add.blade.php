@@ -35,7 +35,7 @@
                                       <div class="col-md-12">
                                         <div class="form-group">
                                           <label class="control-label">Select Service</label>
-                                          <select class="form-control border-input" name="service_id[]">
+                                          <select class="form-control border-input" name="service_id[]" required>
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}</option>
@@ -47,11 +47,11 @@
                                     <div class="row">
                                       <div class="col-md-6">
                                         <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]">
+                                        <input type="text" class="form-control border-input" name="service_rate[]" required>
                                       </div>
                                       <div class="col-md-6">
                                         <label class="control-label">Enter Time</label>
-                                          <input type="time" class="form-control border-input" name="service_time[]">
+                                          <input type="time" class="form-control border-input" name="service_time[]" required>
                                       </div>                                        
                                     </div>
                                   </div>

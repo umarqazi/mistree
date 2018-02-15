@@ -43,7 +43,7 @@ class Workshop extends Authenticatable
         return $this->hasOne('App\WorkshopAddress');
     }
 
-    public function services()
+    public function service()
     {
         return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time');
     }

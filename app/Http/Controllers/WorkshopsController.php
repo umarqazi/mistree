@@ -47,8 +47,10 @@ class WorkshopsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
+
         // get all the workshops
         $workshops = Workshop::all();
         // load the view and pass the nerds
@@ -627,6 +629,7 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
 
+
     public function editWorkshopService($id){
         $services = Service::all();
         $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
@@ -634,8 +637,11 @@ class WorkshopsController extends Controller
 
     }
 
-    public function updateWorkshopService(Request $request){
-        dd($request);
+    public function updateWorkshopService(Request $request){        
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->service()->updateExistingPivot($request->exit_id, ['service_id' => $request->service_id, 'service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        $workshop = Workshop::find($request->workshop_id);
+        return View::make('workshop.show', ['workshop' => $workshop]);
 
     }
 
@@ -647,9 +653,44 @@ class WorkshopsController extends Controller
 
     public function storeWorkshopService(Request $request){        
         $workshop = Workshop::find($request->workshop_id);
-        for($i = 0;)
-        $workshop->services()->save($role, ['expires' => $expires]);        
-        return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
+        $service = $request->service_id; 
+        $rate = $request->service_rate;
+        $time = $request->service_time;       
+        for($i = 0; $i<count($service); $i++){            
+            $workshop->service()->attach($service[$i], ['service_rate' => $rate[$i] , 'service_time' => $time[$i] ]);
+        }
+        $workshop = Workshop::find($request->workshop_id);        
+        // show the view and pass the workshop to it
+        return View::make('workshop.show', ['workshop' => $workshop]);
+    }
+
+    public function deleteWorkshopService($workshop_id, $service_id){
+        $workshop = Workshop::find($workshop_id);
+        $workshop->service()->detach($service_id);
+        $workshop = Workshop::find($workshop_id);        
+        // show the view and pass the workshop to it
+        return View::make('workshop.show', ['workshop' => $workshop]);
     }
     
+
+    public function show_history()
+    {
+        // dd('history');
+
+        return View::make('workshop.history');
+    }
+
+    public function show_customers()
+    {
+        // dd('customers');
+        return View::make('workshop.customers');
+    }
+
+    public function show_requests()
+    {
+        dd('requests');
+
+        return View::make('workshop.requests');
+    }
+
 }
