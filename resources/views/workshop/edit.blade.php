@@ -11,9 +11,9 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                  <form method="POST" action="{{ url('admin/workshops/') }}/{{$workshop->id}}">
-                    <input type="hidden"  value="PUT" name="_method">
-                    {!! csrf_field() !!}
+                  <form method="POST" action="{{ url('admin/workshops/'.$workshop->id) }}">
+                    <input type="hidden"  value="PATCH" name="_method">
+                    {{ csrf_field() }}
                       <div class="header">
                           <div class="row">
                               <div class="col-md-12">
@@ -178,71 +178,15 @@
                               <div class="row">                                                   
                                 <div class="col-md-12 text-center">
                                   <div class="form-group">
-                                    <button class="btn btn-header btn-back-1">Back</button>
-                                    <button class="btn btn-header btn-next-2">Next</button>
-                                  </div>
-                                </div>
-                              </div>
-
-                            </div>                                          
-                          </div>
-
-
-
-
-                          <!--###############################################--> 
-                          <div class="cn-section-3">
-
-                            <div class="content">                                            
-                              <div class="row services-row">                                  
-                                @php $specialty = $workshop->specialty @endphp
-                                @foreach($specialty as $spec)
-                                <div class="col-sm-4">
-                                  <div class="child-box-wrap">
-                                    <div class="row">
-
-                                      <div class="col-md-12">
-                                        <div class="form-group">
-                                          <label class="control-label">Select Service</label>
-                                          <select class="form-control border-input" name="service_id[]">
-                                            <option value="" disabled selected>Select Service</option>
-                                            @foreach ($services as $service)
-                                            <option value="{{$service->id}}" @if($service->id == $spec->service_id ) selected @endif>{{ $service->name }}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]" value="{{$spec->service_rate}}">
-                                      </div>
-                                      <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
-                                          <input type="time" class="form-control border-input" name="service_time[]" value="{{$spec->service_time}}">
-                                      </div>                                        
-                                    </div>
-                                  </div>
-                                </div>
-                                @endforeach                                
-
-                              </div>
-                              <!-- End Row -->
-
-                              <div class="row text-center">  
-                                <div class="col-md-12">
-                                  <div class="form-group">
                                     <button type="button" class="btn btn-header">Cancel</button>
-                                    <button type="button" class="btn btn-header btn-back-2">Back</button>
-                                    <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
+                                    <button class="btn btn-header btn-back-1">Back</button>
                                     <input type="submit" value="Update" class="btn btn-header">
                                   </div>
                                 </div>
                               </div>
 
-                            </div>                        
-                          </div>   
+                            </div>                                          
+                          </div>  
                   </form>           
                 </div>
 

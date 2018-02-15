@@ -43,9 +43,9 @@ class Workshop extends Authenticatable
         return $this->hasOne('App\WorkshopAddress');
     }
 
-    public function specialty()
+    public function service()
     {
-        return $this->hasMany('App\WorkshopSpecialty');
+        return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time');
     }
 
     public function sendPasswordResetNotification($token)

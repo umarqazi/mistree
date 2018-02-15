@@ -15,11 +15,11 @@ class Service extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id', 'status', 'image', 'loyalty_points'
+        'name', 'parent_id', 'status', 'image', 'loyalty_points', 
     ];
 
-    public function workshopspecialty()
+    public function workshop()
     {
-        return $this->hasOne('App\WorkshopSpecialty');
+        return $this->belongsToMany('App\Workshop');
     }
 }

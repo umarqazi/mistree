@@ -201,9 +201,10 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {           
         $rules = [
             'name'              => 'required',                        
+            'owner_name'        => 'required',
             'card_number'       => 'required|numeric|min:13',
             'con_number'        => 'required|numeric|min:11',
             'address_type'      => 'required',
@@ -215,20 +216,20 @@ class WorkshopsController extends Controller
             'address_city'      => 'required' 
         ];  
 
-        $input = $request->only('name', 'email', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+        $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             return Redirect::to('admin/workshops/' . $id . '/edit')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
+                // ->withInput(Input::except('password'));
         } 
 
          // Update workshop
         $workshop = Workshop::find($id);
 
-        $workshop->name             = Input::get('name');
-        // $workshop->password         = Input::get('password');
+        $workshop->name             = Input::get('name');        
+        $workshop->owner_name       = Input::get('owner_name');  
         $workshop->card_number      = Input::get('card_number');
         $workshop->con_number       = Input::get('con_number');
         $workshop->type             = Input::get('type');
@@ -240,11 +241,24 @@ class WorkshopsController extends Controller
         $workshop->open_time        = Input::get('open_time');
         $workshop->close_time       = Input::get('close_time');
         $workshop->status           = 1;
-        $workshop->save();                
+        $workshop->save();   
+
+        // Update Workshop Address
+        $address = WorkshopAddress::find($workshop->address->id);
+
+        $address->type              = Input::get('address_type');
+        $address->house_no          = Input::get('address_house_no');
+        $address->street_no         = Input::get('address_street_no');
+        $address->block             = Input::get('address_block');
+        $address->area              = Input::get('address_area');
+        $address->town              = Input::get('address_town');
+        $address->city              = Input::get('address_city');
+        $address->town              = Input::get('address_town');                
+        $address->save();
 
         // redirect
-        Session::flash('message', 'Successfully updated Workshop!');
-        return Redirect::to('admins/workshops');
+        // Session::flash('message', 'Successfully updated Workshop!');
+        return Redirect::to('admin/workshops');
     }
 
     /**
@@ -612,4 +626,17 @@ class WorkshopsController extends Controller
             'body' => ''
         ],Response::HTTP_OK);
     }
+
+    public function editWorkshopService($id){
+        $services = Service::all();
+        $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
+        return View::make('workshop.services.edit')->with('workshop_service', $workshop_service)->with('services',$services);            
+
+    }
+
+    public function updateWorkshopService(Request $request){
+        dd($request);
+
+    }
+    
 }
