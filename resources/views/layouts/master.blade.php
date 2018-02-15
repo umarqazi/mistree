@@ -52,6 +52,16 @@
             @yield('content_login')      
         @endif
 
+        @if (Auth::guard('workshop')->check())
+        
+        @include('partials.sidebar_workshop')
+          <div class="main-panel">
+          @yield('content')
+          </div>
+        @else        
+            @yield('content_login')      
+        @endif
+
     </div> <!-- /Wrapper-container -->
     </div>  <!-- /wrapper  -->
 

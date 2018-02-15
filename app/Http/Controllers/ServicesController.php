@@ -108,12 +108,13 @@ class ServicesController extends Controller
      */
     public function edit($id)
     {
+        // dd($id);
         // get the service
         $service = Service::find($id);
-
+        $services = Service::all();
+        // dd($service);
         // show the view and pass the service to it
-        return View::make('services.edit')
-            ->with('service', $service);
+        return View::make('services.edit', compact('service','services'));
     }
 
     /**
@@ -125,6 +126,8 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
+        // die();
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
@@ -143,15 +146,14 @@ class ServicesController extends Controller
             $service = Service::find($id);
             // update            
             $service->name           = $request->name;
-            $service->parent_id      = $request->parent_id;            
-            $service->status         = 1;            
+            $service->parent_id      = $request->parent_id;
             $service->save();
 
             // redirect
             Session::flash('message', 'Successfully updated the Service!');
-            return Redirect::to('services');
+            return Redirect::to('admin/services');
+        }
     }
-}
 
     /**
      * Remove the specified resource from storage.

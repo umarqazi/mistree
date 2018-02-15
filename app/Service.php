@@ -17,4 +17,19 @@ class Service extends Model
     protected $fillable = [
         'name', 'parent_id', 'status', 'image', 'loyalty_points'
     ];
+
+    public function parent($parent_id) {
+        // return $this->hasMany('Service','parent_id');
+        return Service::find($parent_id);
+    }
+
+    // public function parent() {
+    //     return $this->belongsTo('Service','parent_id');
+    // }
+
+    // public function children()
+    //     {
+    //         return $this->hasMany('Service', 'parent_id');
+    //     }
+
 }
