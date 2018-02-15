@@ -15,8 +15,14 @@ class Service extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id', 'status', 'image', 'loyalty_points'
+        'name', 'parent_id', 'status', 'image', 'loyalty_points', 
     ];
+
+
+    public function workshop()
+    {
+        return $this->belongsToMany('App\Workshop');
+    }
 
     public function parent($parent_id) {
         // return $this->hasMany('Service','parent_id');
@@ -31,5 +37,4 @@ class Service extends Model
     //     {
     //         return $this->hasMany('Service', 'parent_id');
     //     }
-
 }
