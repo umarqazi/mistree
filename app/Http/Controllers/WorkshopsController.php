@@ -48,8 +48,6 @@ class WorkshopsController extends Controller
 
     public function index()
     {
-        echo 'here';
-
         // get all the workshops
         $workshops = Workshop::all();
         // load the view and pass the nerds

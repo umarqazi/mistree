@@ -17,7 +17,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="customers.html">
+                    <a href="{{url('admin/customers')}}">
                         <i class="ti-user"></i>
                         <p>Customers</p>
                     </a>
