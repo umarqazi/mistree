@@ -13,7 +13,7 @@ class AddWorkshopColumns extends Migration
      */
     public function up()
     {
-        Schema::table('services', function($table) {
+        Schema::table('workshops', function($table) {
             $table->string('owner_name')->nullable();
             $table->string('cnic_image')->nullable();
         });
@@ -26,7 +26,7 @@ class AddWorkshopColumns extends Migration
      */
     public function down()
     {
-         Schema::table('services', function($table) {
+         Schema::table('workshops', function($table) {
             $table->dropColumn('owner_name');
             $table->dropColumn('cnic_image');
         });

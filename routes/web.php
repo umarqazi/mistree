@@ -9,7 +9,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+*/  
 
 Route::get('/', function () {
     return view('welcome');
@@ -78,8 +78,18 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('workshops', 'WorkshopsController');
   Route::resource('services', 'ServicesController');
 
+  Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
+  Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
+  Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
+  Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
+  Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
+  
+
+
   // Route::get('workshops/create', 'WorkshopsController@create');
   // Route::post('workshops/store', 'WorkshopsController@store');
 
 
 });
+
+
