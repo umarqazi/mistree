@@ -1,0 +1,55 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Mistri APIs",
+        "version": "1.0.0"
+    },
+    "basePath": "/",
+    "paths": {
+        "/customer/register": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Register customer",
+                "operationId": "register",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "customerId",
+                        "in": "path",
+                        "description": "Target customer.",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "filter",
+                        "in": "query",
+                        "description": "Filter results based on query string value.",
+                        "required": false,
+                        "type": "string",
+                        "enum": [
+                            "active",
+                            "expired",
+                            "scheduled"
+                        ]
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {}
+}
