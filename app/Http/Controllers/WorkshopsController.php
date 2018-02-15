@@ -47,6 +47,7 @@ class WorkshopsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
         // get all the workshops
@@ -626,7 +627,6 @@ class WorkshopsController extends Controller
             'body' => ''
         ],Response::HTTP_OK);
     }
-
     public function editWorkshopService($id){
         $services = Service::all();
         $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
@@ -638,5 +638,24 @@ class WorkshopsController extends Controller
         dd($request);
 
     }
-    
+
+    public function show_history()
+    {
+        // dd('history');
+
+        return View::make('workshop.history');
+    }
+
+    public function show_customers()
+    {
+        // dd('customers');
+        return View::make('workshop.customers');
+    }
+
+    public function show_requests()
+    {
+        dd('requests');
+
+        return View::make('workshop.requests');
+    }
 }

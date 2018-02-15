@@ -17,9 +17,9 @@ Route::get('/', function () {
 
 // Routes for template by Adeel
 
-Route::get('/dashboard', function () {
-    return view('dashboard.dashboard');
-});
+// Route::get('/dashboard', function () {
+//     return view('dashboard.dashboard');
+// });
 
 // Routes for Hesto Package by Haris
 
@@ -51,6 +51,10 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/password/reset', 'WorkshopAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
   Route::get('/verify/{verification_code}', 'WorkshopAuth@verifyWorkshop');
+
+  Route::get('/history', 'WorkshopsController@show_history');
+  Route::get('/customers', 'WorkshopsController@show_customers');
+  Route::get('/requests', 'WorkshopsController@show_requests');
 
 });
 
