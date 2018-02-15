@@ -74,7 +74,11 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('workshops', 'WorkshopsController');
   Route::resource('services', 'ServicesController');
   Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
-  // Route::post('/update-workshop-service', 'WorkshopsController@updateWorkshopService');
+  Route::post('/update-workshop-service', 'WorkshopsController@updateWorkshopService');
+  Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
+  Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
+  
+  
   
 
   // Route::get('workshops/create', 'WorkshopsController@create');
@@ -82,3 +86,4 @@ Route::group(['prefix' => 'admin'], function () {
 
 
 });
+

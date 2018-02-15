@@ -638,5 +638,18 @@ class WorkshopsController extends Controller
         dd($request);
 
     }
+
+    public function addWorkshopService($workshop){
+        $workshop = Workshop::find($workshop);
+        $services = Service::all();        
+        return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
+    }
+
+    public function storeWorkshopService(Request $request){        
+        $workshop = Workshop::find($request->workshop_id);
+        for($i = 0;)
+        $workshop->services()->save($role, ['expires' => $expires]);        
+        return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
+    }
     
 }

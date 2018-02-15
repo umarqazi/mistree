@@ -34,7 +34,7 @@
                                 <div class="clear10"></div><div class="clear5"></div>
                                 <div class="text-right">
                                 	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
-                                	<a href="{{ url('admin/workshops/create') }}" class="btn btn-header btn-export">Add Services</a>
+                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
                                 </div>
                             </div>
                         </div>
