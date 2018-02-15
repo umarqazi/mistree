@@ -59,7 +59,7 @@
 						                        	<td>Workshop Name</td>
 						                        	<td>{{ $workshop->name }}</td>
 						                        	<td>Owner Name</td>
-						                        	<td>{{ $workshop->owner_name}}</td>
+						                        	<td>{{ $workshop->owner_name }}</td>
 						                        </tr>
 						                        <tr> 
 						                        	<td>Email</td>
