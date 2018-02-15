@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
+use Session;
 use Hash, DB, Config, Mail, View;
 use Illuminate\Support\Facades\Redirect;
 use App\Workshop;
-use App\Address;
-use App\WorkshopSepcialty;
+use App\Service;
+use App\WorkshopAddress;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -45,14 +46,13 @@ class WorkshopsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
-
         // get all the workshops
         $workshops = Workshop::all();
         // load the view and pass the nerds
-        return View::make('workshop.index')
-            ->with('workshops', $workshops);
+        return View::make('workshop.index')->with('workshops', $workshops);
     }
 
     /**
@@ -61,8 +61,9 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        return View::make('workshop.create');
+    {   
+        $services = Service::all();        
+        return View::make('workshop.create', ['services' => $services]);
     }
 
     /**
@@ -73,8 +74,10 @@ class WorkshopsController extends Controller
      */
     public function store(Request $request)
     {        
+        // dd($request);
         $rules = [
             'name'              => 'required',
+            'owner_name'              => 'required',
             'email'             => 'required|email|unique:workshops',
             'password'          => 'required|confirmed|min:6',
             'card_number'       => 'required|numeric|min:13',
@@ -85,10 +88,10 @@ class WorkshopsController extends Controller
             'address_block'     => 'required',
             'address_area'      => 'required',
             'address_town'      => 'required',
-            'address_city'      => 'required',            
+            'address_city'      => 'required'            
         ];        
 
-        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -98,67 +101,35 @@ class WorkshopsController extends Controller
         }       
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
+        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
 
         //Insert Address data from request
         $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
 
-        //Insert Services data from request
+        //Insert Services data from request        
+        $service_ids = $request->service_id;
+        $service_rates = $request->service_rate;
+        $service_times = $request->service_time;    
+        // if(!empty($service_ids)){
+        //     for($i = 0 ; $i<count($service_ids) ; $i++ ){
+        //         $speicality = new WorkshopSpecialty;
 
-        $services = $request->services;
-        if(!empty($services)){
-            foreach($services as $service){
-                $speicality = new WorkshopSepcialty;
-
-                $speicality->service_id = $service->service_id;
-                $speicality->service_rate = $service->service_rate;
-                $speicality->service_time = $service->service_time;
-                $speicality->workshop_id = $workshop->id;
-
-                $speicality->save();
-            }
-        }
-        return Redirect::to('admin/workshops');      
-
-        // $email = $request->email;
-        // $name = $request->name;
-        // return $this->login($request);
-        // $verification_code = str_random(30); //Generate verification code
-        // DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        // $subject = "Please verify your email address.";
-        // Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
-        //     function($mail) use ($email, $name, $subject){
-        //         $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-        //         $mail->to($email, $name);
-        //         $mail->subject($subject);
-        //     });        
-
-        // $services = $request->services;
-        // if(!empty($services)){
-        //     foreach($services as $service){
-        //         $speicality = new WorkshopSepcialty;
-
-        //         $speicality->service_id = $service->service_id;
-        //         $speicality->service_rate = $service->service_rate;
-        //         $speicality->service_time = $service->service_time;
+        //         $speicality->service_id = $service_ids[$i];
+        //         $speicality->service_rate = $service_rates[$i];
+        //         $speicality->service_time = $service_times[$i];
         //         $speicality->workshop_id = $workshop->id;
 
         //         $speicality->save();
         //     }
-        // }
-        // return $this->login($request);
-        // $verification_code = str_random(30); //Generate verification code
-        // DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        // }        
+        if(!empty($service_ids)){
+            for($i = 0; $i<count($service_ids); $i++){            
+                $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
+            }
+        }
+        return Redirect::to('admin/workshops');      
 
-        // $name = $request->name;
-        // $email = $request->email;
-        // $subject = "Please verify your email address.";
-        // Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
-        //     function($mail) use ($email, $name, $subject){
-        //         $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-        //         $mail->to($email, $name);
-        //         $mail->subject($subject);
-        //     });  
+ 
     }
 
     /**
@@ -168,13 +139,11 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
+    {        
         // get the workshop
-        $workshop = Workshop::find($id);
-
+        $workshop = Workshop::find($id);        
         // show the view and pass the workshop to it
-        return View::make('workshops.show')
-            ->with('workshop', $workshop);
+        return View::make('workshop.show', ['workshop' => $workshop]);
     }
 
     /**
@@ -187,10 +156,9 @@ class WorkshopsController extends Controller
     {
         // get the workshop
         $workshop = Workshop::find($id);
-
+        $services = Service::all();
         // show the edit form and pass the workshop        
-        return View::make('workshops.edit')
-            ->with('workshop', $workshop);            
+        return View::make('workshop.edit')->with('workshop', $workshop)->with('services',$services);            
     }
 
     /**
@@ -201,27 +169,35 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
+    {           
         $rules = [
-            'name'              => 'required',            
-            'password'          => 'required|confirmed|min:6',
+            'name'              => 'required',                        
+            'owner_name'        => 'required',
             'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',                                                    
+            'con_number'        => 'required|numeric|min:11',
+            'address_type'      => 'required',
+            'address_house_no'  => 'required',
+            'address_street_no' => 'required',
+            'address_block'     => 'required',
+            'address_area'      => 'required',
+            'address_town'      => 'required',
+            'address_city'      => 'required' 
         ];  
 
-        $input = $request->only('name', 'password', 'password_confirmation', 'card_number', 'con_number');
+        $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
-            return Redirect::to('workshops/' . $id . '/edit')
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+            return Redirect::to('admin/workshops/' . $id . '/edit')
+                ->withErrors($validator);
+                // ->withInput(Input::except('password'));
         } 
 
          // Update workshop
         $workshop = Workshop::find($id);
 
-        $workshop->name             = Input::get('name');
-        $workshop->password         = Input::get('password');
+        $workshop->name             = Input::get('name');        
+        $workshop->owner_name       = Input::get('owner_name');  
         $workshop->card_number      = Input::get('card_number');
         $workshop->con_number       = Input::get('con_number');
         $workshop->type             = Input::get('type');
@@ -233,11 +209,24 @@ class WorkshopsController extends Controller
         $workshop->open_time        = Input::get('open_time');
         $workshop->close_time       = Input::get('close_time');
         $workshop->status           = 1;
-        $workshop->save();                
+        $workshop->save();   
+
+        // Update Workshop Address
+        $address = WorkshopAddress::find($workshop->address->id);
+
+        $address->type              = Input::get('address_type');
+        $address->house_no          = Input::get('address_house_no');
+        $address->street_no         = Input::get('address_street_no');
+        $address->block             = Input::get('address_block');
+        $address->area              = Input::get('address_area');
+        $address->town              = Input::get('address_town');
+        $address->city              = Input::get('address_city');
+        $address->town              = Input::get('address_town');                
+        $address->save();
 
         // redirect
-        Session::flash('message', 'Successfully updated Workshop!');
-        return Redirect::to('workshops');
+        // Session::flash('message', 'Successfully updated Workshop!');
+        return Redirect::to('admin/workshops');
     }
 
     /**
@@ -605,4 +594,71 @@ class WorkshopsController extends Controller
             'body' => ''
         ],Response::HTTP_OK);
     }
+
+    public function editWorkshopService($id){
+        $services = Service::all();
+        $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
+        return View::make('workshop.services.edit')->with('workshop_service', $workshop_service)->with('services',$services);            
+
+    }
+
+    public function updateWorkshopService(Request $request){        
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->service()->updateExistingPivot($request->exit_id, ['service_id' => $request->service_id, 'service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        $workshop = Workshop::find($request->workshop_id);
+        return View::make('workshop.show', ['workshop' => $workshop]);
+
+    }
+
+    public function addWorkshopService($workshop){
+        $workshop = Workshop::find($workshop);
+        $services = Service::all();        
+        return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
+    }
+
+    public function storeWorkshopService(Request $request){        
+        $workshop = Workshop::find($request->workshop_id);
+        $service = $request->service_id; 
+        $rate = $request->service_rate;
+        $time = $request->service_time;       
+        for($i = 0; $i<count($service); $i++){            
+            $workshop->service()->attach($service[$i], ['service_rate' => $rate[$i] , 'service_time' => $time[$i] ]);
+        }
+        $workshop = Workshop::find($request->workshop_id);        
+        // show the view and pass the workshop to it
+        return View::make('workshop.show', ['workshop' => $workshop]);
+    }
+
+    public function deleteWorkshopService($workshop_id, $service_id){
+        $workshop = Workshop::find($workshop_id);
+        $workshop->service()->detach($service_id);
+        $workshop = Workshop::find($workshop_id);        
+        // show the view and pass the workshop to it
+        return View::make('workshop.show', ['workshop' => $workshop]);
+    }
+
+    
+
+
+
+    public function show_history()
+    {
+        // dd('history');
+
+        return View::make('workshop.history');
+    }
+
+    public function show_customers()
+    {
+        // dd('customers');
+        return View::make('workshop.customers');
+    }
+
+    public function show_requests()
+    {
+        dd('requests');
+
+        return View::make('workshop.requests');
+    }
+
 }

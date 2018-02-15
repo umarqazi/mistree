@@ -11,39 +11,27 @@
 
             <ul class="nav">
                 <li class="active">
-                    <a href="dashboard.html">
+                    <a href="{{url('workshop/home')}}">
                         <i class="ti-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
                 <li>
-                    <a href="{{url('admin/customers')}}">
+                    <a href="{{url('workshop/history')}}">
+                        <i class="ti-view-list-alt"></i>
+                        <p>Work History</p>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{url('workshop/customers')}}">
                         <i class="ti-user"></i>
                         <p>Customers</p>
                     </a>
                 </li>
                 <li>
-                    <a href="{{url('admin/workshops')}}">
-                        <i class="ti-view-list-alt"></i>
-                        <p>Workshops</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{url('admin/services')}}">
+                    <a href="{{url('workshop/requests')}}">
                         <i class="ti-panel"></i>
-                        <p>Services</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="notifications.html">
-                        <i class="ti-comment-alt"></i>
-                        <p>Notifications</p>
-                    </a>
-                </li>
-                <li>
-                    <a href="balance.html">
-                        <i class="ti-pencil-alt"></i>
-                        <p>Balance Trail</p>
+                        <p>Requests</p>
                     </a>
                 </li>
                 <li>
@@ -53,7 +41,7 @@
                         <i class="ti-power-off"></i><p>Logout</p>
                     </a>
 
-                    <form id="logout-form" action="{{ url('/admin/logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ url('/workshop/logout') }}" method="POST" style="display: none;">
                         {{ csrf_field() }}
                     </form>
                 </li>

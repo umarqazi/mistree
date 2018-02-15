@@ -34,8 +34,8 @@
                             <tr role="row" class="odd">
                                 <td class="sorting_1">{{$value->id}}</td>
                                 <td>{{$value->name}}</td>
-                                <td class="text-center">{{$value->parent_id}}</td>
-                                <td><a href="#">Edit</a></td>
+                                <td class="text-center">{{$value->parent($value->parent_id)->name}}</td>
+                                <td><a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}">Edit</a></td>
                             </tr>
                         @endforeach
                         </tbody>
