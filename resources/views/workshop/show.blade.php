@@ -34,7 +34,7 @@
                                 <div class="clear10"></div><div class="clear5"></div>
                                 <div class="text-right">
                                 	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
-                                	<a href="{{ url('admin/workshops/create') }}" class="btn btn-header btn-export">Add Services</a>
+                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
                                 </div>
                             </div>
                         </div>
@@ -148,7 +148,7 @@
 												</tr>
 											</thead>
 											@php 
-												$specialty = $workshop->service 							
+												$specialty = $workshop->service								
 											@endphp						
 
 						                    <tbody>
@@ -159,7 +159,7 @@
 						                        	<td>{{ $spec->pivot->service_time }}</td>	
 						                        	<td>						                        	
 						                        		<a href="{{url('admin/edit-workshop-service/'.$spec->pivot->id)}}" class="btn btn-header">Edit</a>
-                                						<a href="{{ url('admin/workshops/create') }}" class="btn btn-header ">Delete</a>
+                                						<a href="{{ url('admin/delete-workshop-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
                                 					</td>	                        	
 						                        </tr>
 						                        @endforeach	                        
