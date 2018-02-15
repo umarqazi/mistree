@@ -7,6 +7,7 @@ use Hash, DB, Config, Mail, View;
 use Illuminate\Support\Facades\Redirect;
 use App\Workshop;
 use App\Address;
+use App\Service;
 use App\WorkshopSepcialty;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -62,7 +63,8 @@ class WorkshopsController extends Controller
      */
     public function create()
     {
-        return View::make('workshop.create');
+        $services = Service::all();
+        return View::make('workshop.create')->with('services',$services);
     }
 
     /**

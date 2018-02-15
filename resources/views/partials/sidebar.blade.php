@@ -50,10 +50,10 @@
                     <a href="{{ url('/admin/logout') }}"
                         onclick="event.preventDefault();
                                  document.getElementById('logout-form').submit();">
-                        Logout
+                        <i class="ti-power-off"></i><p>Logout</p>
                     </a>
 
-                    <form id="logout-form" action="{{ url('/workshop/logout') }}" method="POST" style="display: none;">
+                    <form id="logout-form" action="{{ url('/admin/logout') }}" method="POST" style="display: none;">
                         {{ csrf_field() }}
                     </form>
                 </li>
