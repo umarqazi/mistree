@@ -176,8 +176,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        //
+        // JWT
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+        // Swagger
+        L5Swagger\L5SwaggerServiceProvider::class,
 
     ],
 
