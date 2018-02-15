@@ -38,5 +38,4 @@ class Service extends Model
     //         return $this->hasMany('Service', 'parent_id');
     //     }
 
-
 }

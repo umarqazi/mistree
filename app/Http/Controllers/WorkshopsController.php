@@ -50,7 +50,6 @@ class WorkshopsController extends Controller
 
     public function index()
     {
-
         // get all the workshops
         $workshops = Workshop::all();
         // load the view and pass the nerds
@@ -629,7 +628,6 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
 
-
     public function editWorkshopService($id){
         $services = Service::all();
         $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
@@ -671,7 +669,10 @@ class WorkshopsController extends Controller
         // show the view and pass the workshop to it
         return View::make('workshop.show', ['workshop' => $workshop]);
     }
+
     
+
+
 
     public function show_history()
     {
