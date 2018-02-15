@@ -15,14 +15,6 @@
                                 <h4 class="title">Registered Workshops</h4>
                                 <p class="category">List of all registered workshops.</p>
                             </div>
-                            <!-- <div class="col-md-6">
-                                <div class="pull-right search">
-                                    <div class="from-group">
-                                        <i class="ti-search"></i>
-                                        <input type="text" class="form-control" placeholder="Search by ID, Name, Location">
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="clear20"></div>
                         <div class="row">
@@ -50,7 +42,8 @@
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 207px;">Area</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Balance</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Leads</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">&nbsp;</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Actions</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Details</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -62,7 +55,8 @@
                                     <td>{{ $value->area }}</td>
                                     <td>{{23*($key+1) }}</td>
                                     <td>{{ 2*($key+1) }}</td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td><a href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a></td>
+                                    <td><a href="{{url('admin/workshops/'. $value->id)}}"><button type="button" class="btn btn-header">View Details</button></a></td>
                                 </tr>
                                  @endforeach
                             </tbody>

@@ -49,6 +49,7 @@ class CustomersController extends Controller
     {
         $customers = Customer::all();
         return View::make('customer.index')->with('customers', $customers);
+        // return View::make('customer.index');
     }
 
     /**

@@ -9,7 +9,7 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 |
-*/
+*/  
 
 Route::get('/', function () {
     return view('welcome');
@@ -17,9 +17,9 @@ Route::get('/', function () {
 
 // Routes for template by Adeel
 
-Route::get('/dashboard', function () {
-    return view('dashboard.dashboard');
-});
+// Route::get('/dashboard', function () {
+//     return view('dashboard.dashboard');
+// });
 
 // Routes for Hesto Package by Haris
 
@@ -52,6 +52,10 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
   Route::get('/verify/{verification_code}', 'WorkshopAuth@verifyWorkshop');
 
+  Route::get('/history', 'WorkshopsController@show_history');
+  Route::get('/customers', 'WorkshopsController@show_customers');
+  Route::get('/requests', 'WorkshopsController@show_requests');
+
 });
 
 Route::group(['prefix' => 'admin'], function () {
@@ -74,8 +78,18 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('workshops', 'WorkshopsController');
   Route::resource('services', 'ServicesController');
 
+  Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
+  Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
+  Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
+  Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
+  Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
+  
+
+
   // Route::get('workshops/create', 'WorkshopsController@create');
   // Route::post('workshops/store', 'WorkshopsController@store');
 
 
 });
+
+

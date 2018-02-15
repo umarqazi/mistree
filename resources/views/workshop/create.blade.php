@@ -13,11 +13,11 @@
                 <div class="card">
 
                   <form method="POST" action="{{ url('admin/workshops') }}">
-
+                    {!! csrf_field() !!}
                       <div class="header">
                           <div class="row">
                               <div class="col-md-12">
-                                  <h4 class="title">Workshop Management - Create New</h4>
+                                  <h4 class="title">Workshop Management - Create New</h4> 
                               </div>
                           </div>
                       </div>
@@ -73,8 +73,8 @@
                                 <label class="control-label">Type</label>
                                 <select name="type" class="form-control border-input" required="required">
                                   <option value="">Please Select</option>
-                                  <option value="1">Authorized</option>
-                                  <option value="2">UnAuthorized</option>
+                                  <option value="authorized">Authorized</option>
+                                  <option value="unauthorized">UnAuthorized</option>
                                 </select>
                               </div>
 
@@ -102,13 +102,13 @@
                               <div class="form-group">      
                                 <label class="control-label">Profile Picture</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" id="imgInp1" class="form-control" name="profile_pic">
+                                <input type="file" id="profile_picture" class="form-control" name="profile_pic">
                               </div>
 
                               <div class="form-group">      
                                 <label class="control-label">CNIC Picture</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" id="imgInp1" class="form-control" name="cnic_image">
+                                <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
                               </div>
                             </div>
                           </div>                                                                                                     
@@ -204,7 +204,10 @@
                                         <div class="form-group">
                                           <label class="control-label">Select Service</label>
                                           <select class="form-control border-input" name="service_id[]">
-                                            <option value="">Select Service</option>
+                                            <option value="" disabled selected>Select Service</option>
+                                            @foreach ($services as $service)
+                                            <option value="{{$service->id}}">{{ $service->name }}</option>
+                                            @endforeach
                                           </select>
                                         </div>
                                       </div>
@@ -229,7 +232,10 @@
                                         <div class="form-group">
                                           <label class="control-label">Select Service</label>
                                           <select class="form-control border-input" name="service_id[]">
-                                            <option value="">Select Service</option>
+                                            <option value="" disabled selected>Select Service</option>
+                                            @foreach ($services as $service)
+                                            <option value="{{$service->id}}">{{ $service->name }}</option>
+                                            @endforeach
                                           </select>
                                         </div>
                                       </div>
@@ -255,7 +261,10 @@
                                         <div class="form-group">
                                           <label class="control-label">Select Service</label>
                                           <select class="form-control border-input" name="service_id[]">
-                                            <option value="">Select Service</option>
+                                            <option value="" disabled selected>Select Service</option>
+                                            @foreach ($services as $service)
+                                            <option value="{{$service->id}}">{{ $service->name }}</option>
+                                            @endforeach
                                           </select>
                                         </div>
                                       </div>
@@ -277,21 +286,18 @@
                               <!-- End Row -->
 
                               <div class="row text-center">  
-                                <div class="col-md-12 text-center">
+                                <div class="col-md-12">
                                   <div class="form-group">
-                                    <button class="btn btn-header">Cancel</button>
-                                    <button class="btn btn-header btn-back-2">Back</button>
+                                    <button type="button" class="btn btn-header">Cancel</button>
+                                    <button type="button" class="btn btn-header btn-back-2">Back</button>
+                                    <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
                                     <input type="submit" value="Update" class="btn btn-header">
                                   </div>
                                 </div>
                               </div>
 
                             </div>                        
-                          </div>
-
-
-                          
-
+                          </div>   
                   </form>           
                 </div>
 
@@ -302,7 +308,10 @@
 </div>
 
 <script>
-  
+  function addmoreServices(event){
+    event.preventDefault();
+    $(".services-row").append('<div class="col-sm-4"><div class="child-box-wrap"><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service</label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="time" class="form-control border-input" name="service_time[]"></div></div></div></div>');
+  }
 </script>
-
+@include('partials.footer')
 @endsection
