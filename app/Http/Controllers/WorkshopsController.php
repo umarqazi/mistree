@@ -45,8 +45,10 @@ class WorkshopsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function index()
     {
+        echo 'here';
 
         // get all the workshops
         $workshops = Workshop::all();
@@ -610,5 +612,25 @@ class WorkshopsController extends Controller
             'message' => 'Details Added!',
             'body' => ''
         ],Response::HTTP_OK);
+    }
+
+    public function show_history()
+    {
+        // dd('history');
+
+        return View::make('workshop.history');
+    }
+
+    public function show_customers()
+    {
+        // dd('customers');
+        return View::make('workshop.customers');
+    }
+
+    public function show_requests()
+    {
+        dd('requests');
+
+        return View::make('workshop.requests');
     }
 }
