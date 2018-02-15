@@ -314,8 +314,82 @@ demo = {
 }
 
 
+$(".chosen-select").chosen({width: "100%"});
+
+$('.cn-section-2').hide();
+$('.cn-section-3').hide();
 
 $(document).ready(function(){
+    
+
+    $(".btn-next-1").click(function(event){
+      event.preventDefault();
+      $('.cn-section-1').hide();
+      $('.cn-section-2').show();
+      $('.cn-section-3').hide();
+    });
+
+    $(".btn-next-2").click(function(event){
+      event.preventDefault();
+      $('.cn-section-1').hide();
+      $('.cn-section-2').hide();
+      $('.cn-section-3').show();
+    });
+
+    $(".btn-back-1").click(function(event){
+      event.preventDefault();
+      $('.cn-section-1').show();
+      $('.cn-section-2').hide();
+      $('.cn-section-3').hide();
+    });
+
+    $(".btn-back-2").click(function(event){
+      event.preventDefault();
+      $('.cn-section-1').hide();
+      $('.cn-section-2').show();
+      $('.cn-section-3').hide();
+    });
+
+
+  
+    
+    $('.file1').hide();
+    $('.file2').hide();
+  
+    function readURL1(input){
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#file1').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $("#imgInp1").change(function() {
+      $('.file1').show();
+      readURL1(this);
+    });
+
+
+    function readURL2(input){
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          $('#file2').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+    $("#imgInp2").change(function() {
+      $('.file2').show();
+      readURL2(this);
+    });
+
+
+
+
     $('#jsTable').DataTable();
-    $('.datepick').datepicker();
+    $('.datepick').datepicker();    
+
+
 });

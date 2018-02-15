@@ -30,6 +30,15 @@ class Customer extends Authenticatable
         'password', 'remember_token',
     ];
 
+    public function cars()
+    {
+        return $this->belongsToMany('App\Car');
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany('App\Address');
+    }
     /**
      * Send the password reset notification.
      *
