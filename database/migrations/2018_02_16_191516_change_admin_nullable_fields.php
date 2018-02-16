@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddNullableFields extends Migration
+class ChangeAdminNullableFields extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class AddNullableFields extends Migration
      */
     public function up()
     {
-        
-
         Schema::table('admins', function($table) {
-            $table->string('con_number',45)->nullable()->change();
-            $table->string('status')->nullable()->change();
-        });
-
-          
+                  $table->string('picture',45)->nullable()->change();
+              });
     }
 
     /**
@@ -30,13 +25,9 @@ class AddNullableFields extends Migration
      */
     public function down()
     {
-          Schema::table('admins', function($table) {
-
-             $table->string('con_number',45);
-             $table->string('status');
-         });
-
-
+         Schema::table('admins', function($table) {
+            $table->string('picture',45);
+        });
 
     }
 }
