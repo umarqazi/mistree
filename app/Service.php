@@ -24,10 +24,9 @@ class Service extends Model
         return $this->belongsToMany('App\Workshop');
     }
 
-    public function parent($parent_id) {
-        // return $this->hasMany('Service','parent_id');
-        return Service::find($parent_id);
-    }
+    // public function parent($parent_id) {
+        // return Service::find($parent_id);
+    // }
 
     // public function parent() {
     //     return $this->belongsTo('Service','parent_id');
