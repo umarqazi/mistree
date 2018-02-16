@@ -17,7 +17,6 @@ class AddNullableFields extends Migration
 
         Schema::table('admins', function($table) {
             $table->string('con_number',45)->nullable()->change();
-            $table->string('picture',45)->nullable()->change();
             $table->string('status')->nullable()->change();
         });
 
@@ -34,7 +33,6 @@ class AddNullableFields extends Migration
           Schema::table('admins', function($table) {
 
              $table->string('con_number',45);
-             $table->string('picture',45);
              $table->string('status');
          });
 
