@@ -18,7 +18,7 @@
                         </div>
                     </div>
                     <div class="clear20"></div>
-                    <form method="POST" action="{{ url('admin/services') }}"> 
+                    <form method="POST" action="{{ url('admin/services') }}" enctype="multipart/form-data"> 
                       {{ csrf_field() }}
                       <div class="content">      
                           <div class="row">

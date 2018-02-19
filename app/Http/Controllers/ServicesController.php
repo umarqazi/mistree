@@ -13,6 +13,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 class ServicesController extends Controller
 {
@@ -23,10 +25,9 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        // dd('services');
         // get all the services
         $services = Service::all();
-
+        
         // dd($services);
         // load the view and pass the services
         return View::make('services.index')
@@ -52,6 +53,10 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
+
+      $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
+      $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
@@ -74,15 +79,15 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->parent_id      = Input::get('parent_id');            
             $service->loyalty_points = Input::get('loyalty_points');            
-            $service->image          = '';            
+            $service->image          = $img_path;           
             $service->status         = 1;            
             $service->save();
 
             // redirect
             Session::flash('message', 'Successfully created service!');
             return Redirect::to('admin/services');
+        }
     }
-}
 
     /**
      * Display the specified resource.
