@@ -83,6 +83,12 @@ Route::group(['prefix' => 'admin'], function () {
   Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
   Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
   Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
+
+  Route::get('/activate-customer/{id}', 'CustomersController@activateCustomer');
+  Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
+  Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
+  Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
+  
   
 
 

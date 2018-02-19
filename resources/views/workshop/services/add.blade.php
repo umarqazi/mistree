@@ -51,7 +51,7 @@
                                       </div>
                                       <div class="col-md-6">
                                         <label class="control-label">Enter Time</label>
-                                          <input type="time" class="form-control border-input" name="service_time[]" required>
+                                          <input type="text" class="form-control border-input" name="service_time[]" required>
                                       </div>                                        
                                     </div>
                                   </div>
@@ -79,7 +79,7 @@
                                       </div>
                                       <div class="col-md-6">
                                         <label class="control-label">Enter Time</label>
-                                          <input type="time" class="form-control border-input" name="service_time[]">
+                                          <input type="text" class="form-control border-input" name="service_time[]">
                                       </div>                                        
                                     </div>
                                   </div>
@@ -108,7 +108,7 @@
                                       </div>
                                       <div class="col-md-6">
                                         <label class="control-label">Enter Time</label>
-                                          <input type="time" class="form-control border-input" name="service_time[]">
+                                          <input type="text" class="form-control border-input" name="service_time[]">
                                       </div>                                        
                                     </div>
                                   </div>
@@ -138,7 +138,7 @@
 <script>
   function addmoreServices(event){
     event.preventDefault();
-    $(".services-row").append('<div class="col-sm-4"><div class="child-box-wrap"><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service</label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="time" class="form-control border-input" name="service_time[]"></div></div></div></div>');
+    $(".services-row").append('<div class="col-sm-4"><div class="child-box-wrap"><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service</label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
   }
 </script>
 

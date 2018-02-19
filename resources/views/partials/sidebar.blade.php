@@ -10,25 +10,25 @@
             </div>
 
             <ul class="nav">
-                <li class="active">
-                    <a href="dashboard.html">
+                <li {{{ (Request::is('admin/home') ? 'class=active' : '') }}}>
+                    <a href="{{url('admin/home')}}">
                         <i class="ti-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li>
+                <li  @if(Request::is('admin/customers/*') || Request::is('admin/customers')) class="active" @endif >
                     <a href="{{url('admin/customers')}}">
                         <i class="ti-user"></i>
                         <p>Customers</p>
                     </a>
                 </li>
-                <li>
+                <li @if(Request::is('admin/workshops/*') || Request::is('admin/workshops')) class="active" @endif>
                     <a href="{{url('admin/workshops')}}">
                         <i class="ti-view-list-alt"></i>
                         <p>Workshops</p>
                     </a>
                 </li>
-                <li>
+                <li  @if(Request::is('admin/services/*') || Request::is('admin/services')) class="active" @endif >
                     <a href="{{url('admin/services')}}">
                         <i class="ti-panel"></i>
                         <p>Services</p>

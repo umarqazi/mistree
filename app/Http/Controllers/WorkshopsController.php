@@ -73,8 +73,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
-        // dd($request);
+    {                
         $rules = [
             'name'              => 'required',
             'owner_name'              => 'required',
@@ -528,13 +527,16 @@ class WorkshopsController extends Controller
         //Approve Workshop
         $workshop = Workshop::find($id);
         $workshop->is_approved       = 1;
-        $workshop->save();
+        $workshop->save();        
+        return Redirect::to('admin/workshops');
+    }
 
-        // redirect
-        Session::flash('message', 'Successfully Approved the Workshop!');
-        return Redirect::to('workshops');
-
-
+    public function undoWorkshopApproval($id){
+        //Approve Workshop
+        $workshop = Workshop::find($id);
+        $workshop->is_approved       = 0;
+        $workshop->save();                
+        return Redirect::to('admin/workshops');
     }
 
     /**

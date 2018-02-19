@@ -31,7 +31,7 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => $password ?: $password = bcrypt('secret'),
         'remember_token' => str_random(10),
-        'con_number' => str_random(6);
-        'status' => 'Active';
+        'con_number' => str_random(6),
+        'status' => 0,
     ];
 });
