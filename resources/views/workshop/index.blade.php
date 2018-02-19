@@ -42,8 +42,8 @@
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 207px;">Area</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Balance</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Leads</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Status</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Actions</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Details</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,12 +51,25 @@
                                 <tr role="row" class="odd">
                                     <td class="sorting_1">{{ $value->id }}</td>
                                     <td>{{ $value->name }}</td>
-                                    <td>{{ $value->name }}</td>
-                                    <td>{{ $value->area }}</td>
+                                    <td>{{ $value->owner_name }}</td>
+                                    <td>{{ $value->address->area }}</td>
                                     <td>{{23*($key+1) }}</td>
                                     <td>{{ 2*($key+1) }}</td>
-                                    <td><a href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a></td>
-                                    <td><a href="{{url('admin/workshops/'. $value->id)}}"><button type="button" class="btn btn-header">View Details</button></a></td>
+                                    <td>
+                                        @if($value->is_approved == 0)
+                                            Not Approved
+                                        @else
+                                            Approved
+                                        @endif</a>                                    
+                                    <td>
+                                        @if($value->is_approved == 0)
+                                            <a href="{{url('admin/approve-workshop/'.$value->id)}}" class="btn btn-header btn-export">Approve</a>
+                                        @else
+                                            <a href="{{url('admin/undo-approval-workshop/'.$value->id)}}" class="btn btn-header btn-export">Undo Approval</a>
+                                        @endif</a>
+                                        <a class= "btn btn-header" href="{{url('admin/workshops/'. $value->id)}}">View Details</a>
+                                        <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a></td>
+                                    </td>
                                 </tr>
                                  @endforeach
                             </tbody>

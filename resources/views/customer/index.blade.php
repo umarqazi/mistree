@@ -38,8 +38,19 @@
                                     <td>{{ $value->name }}</td>
                                     <td>{{ $value->email }}</td>
                                     <td>{{ $value->con_number }}</td>
-                                    <td>{{ $value->status }}</td>
-                                    <td><a href="#">Edit</a></td>
+                                    <td>@if($value->status == 0)
+                                            Inactive
+                                        @else
+                                            Active
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($value->status == 0)
+                                            <a href="{{url('admin/activate-customer/'.$value->id)}}" class="btn btn-header btn-export">Activate</a>
+                                        @else
+                                            <a href="{{url('admin/deactivate-customer/'.$value->id)}}" class="btn btn-header btn-export">Deactivate</a>
+                                        @endif</a>
+                                    </td>
                                 </tr>
                              @endforeach                                                                
                             </tbody>

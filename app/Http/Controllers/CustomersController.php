@@ -531,4 +531,16 @@ class CustomersController extends Controller
             'body' => ''
         ],Response::HTTP_OK);
     }
+
+    public function activateCustomer($id){        
+        $customer = Customer::where('id', '=', $id)->first();
+        $customer->update(['status' => 1]);        
+        return Redirect::to('/admin/customers');
+    }
+
+    public function deactivateCustomer($id){        
+        $customer = Customer::where('id', '=', $id)->first();
+        $customer->update(['status' => 0]);        
+        return Redirect::to('/admin/customers');
+    }
 }

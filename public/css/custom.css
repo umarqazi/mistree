@@ -109,7 +109,7 @@
 .card .title {font-weight: 600;}
 
 .card thead tr {background-color: #eee;}
-.card td .btn-header {width: 100%; clear: both; margin: 2px 0;}
+.card td .btn-header {width: 100%; clear: both; margin: 2px 0; display:block;}
 .card .control-label {margin-top: 10px;}
 
 .btn-add-services {color: #fff; background-color: #666; padding: 4px 20px 4px 16px; margin-bottom: 10px; margin-top: 6px; display: inline-block;}
@@ -203,3 +203,7 @@ form .form-group {margin-bottom: 0px;}
 }
 
 #imgInp1, #imgInp2 {background-color:#eee; display:inline-block; width:auto;}
+
+.sidebar-wrapper .nav li.active a{
+    border-left : 5px solid #ed1c24;
+}

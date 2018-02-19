@@ -45,7 +45,7 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="control-label">Enter Time</label>
-                                                        <input type="time" class="form-control border-input" name="service_time" value="{{$workshop_service->service_time}}">
+                                                        <input type="text" class="form-control border-input" name="service_time" value="{{$workshop_service->service_time}}">
                                                     </div>                                        
                                                 </div>
                                             </div>
