@@ -1,9 +1,8 @@
 @extends('layouts.master')
-@section('title', 'Create New Workshop')
+@section('title', 'Edit Service')
 @section('content')
 
 @include('partials.header')
-
 <div class="content">
     <div class="container-fluid">
         <div class="row">
@@ -17,7 +16,7 @@
                         </div>
                     </div>
                     <div class="clear20"></div>
-                    <form method="POST" action="{{ url('admin/services/') }}{{"/".$service->id}}"> 
+                    <form method="POST" action="{{ url('admin/services/') }}{{'/'.$service->id}}" enctype="multipart/form-data"> 
                       {{ csrf_field() }}
                       <div class="content">      
                           <div class="row">
@@ -30,7 +29,7 @@
 
                                   <div class="form-group">  
                                     <label class="control-label">Loyalty Points</label>
-                                    <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty_points" required="required">
+                                    <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty_points">
                                     <input type="hidden"  value="PUT" name="_method"">
                                   </div>
 
@@ -51,6 +50,12 @@
                                   <div class="form-group">  
                                     <label class="control-label">Image</label>
                                     <input type="file" value="{{ $service->image }}" name="image">
+                                    <br>
+                                    @if($service->image)
+                                    <img src="{{ $service->image }}" width="80px" height="80px">
+                                    @else
+                                            <br>
+                                    @endif
                                   </div> 
 
                                   <div class="form-group">  
