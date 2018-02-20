@@ -41,11 +41,11 @@ class CreateAdressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
         Schema::table('addresses', function (Blueprint $table) {
             $table->dropForeign('addresses_cust_id_foreign');
             $table->dropForeign('addresses_ws_id_foreign');
             $table->dropForeign('addresses_admin_id_foreign');
         });
+        Schema::dropIfExists('addresses');
     }
 }

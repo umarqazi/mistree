@@ -43,11 +43,11 @@ class CreateCarsTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cars');
-        Schema::dropIfExists('customer_car');
         Schema::table('customer_car', function (Blueprint $table) {
             $table->dropForeign('customer_car_customer_id_foreign');
             $table->dropForeign('customer_car_car_id_foreign');
         });
+        Schema::dropIfExists('cars');
+        Schema::dropIfExists('customer_car');
     }
 }
