@@ -16,6 +16,13 @@
                     {!! csrf_field() !!}
                       <div class="header">
                           <div class="row">
+                            @if ($errors->any())
+                              <div class="row text-center alert alert-danger">
+                                @foreach($errors->all() as $error)
+                                  <div><span class="manadatory">{{ $error }}</span></div>
+                                @endforeach                        
+                              </div>
+                            @endif
                               <div class="col-md-12">
                                   <h4 class="title">{{$workshop->name}}</h4> 
                                   <p>Add Services</p>
@@ -26,89 +33,42 @@
 						
 
                             <div class="content">                                            
-                              <div class="row services-row">                                  
-                                
-                                <div class="col-sm-4">
-                                  <div class="child-box-wrap">
-                                    <div class="row">
-
-                                      <div class="col-md-12">
-                                        <div class="form-group">
-                                          <label class="control-label">Select Service</label>
-                                          <select class="form-control border-input" name="service_id[]" required>
-                                            <option value="" disabled selected>Select Service</option>
-                                            @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]" required>
-                                      </div>
-                                      <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
-                                          <input type="text" class="form-control border-input" name="service_time[]" required>
-                                      </div>                                        
-                                    </div>
-                                  </div>
-                                </div>
-                                <div class="col-sm-4">
-                                  <div class="child-box-wrap">
-                                    <div class="row">
-
-                                      <div class="col-md-12">
-                                        <div class="form-group">
-                                          <label class="control-label">Select Service</label>
-                                          <select class="form-control border-input" name="service_id[]">
-                                            <option value="" disabled selected>Select Service</option>
-                                            @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]">
-                                      </div>
-                                      <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
-                                          <input type="text" class="form-control border-input" name="service_time[]">
-                                      </div>                                        
-                                    </div>
-                                  </div>
-                                </div>
-
+                              <div class="row services-row">                      
                                 <div class="col-md-4">
                                   <div class="child-box-wrap">
                                     <div class="row">
 
                                       <div class="col-md-12">
                                         <div class="form-group">
-                                          <label class="control-label">Select Service</label>
+                                          <label class="control-label">Select Service <span class="manadatory">*</span></label>
                                           <select class="form-control border-input" name="service_id[]">
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}</option>
                                             @endforeach
                                           </select>
+                                          @if ($errors->has('service_id'))
+                                              <span class="help-block">
+                                                  <strong class="manadatory">{{ $errors->first('service_id') }}</strong>
+                                              </span>
+                                          @endif
                                         </div>
                                       </div>
                                     </div>
                                     <div class="row">
                                       <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]">
+                                        <label class="control-label">Service Rate <span class="manadatory">*</span></label>
+                                        <input type="text" class="form-control border-input" name="service_rate[]" >
+                                        @if ($errors->has('service_rate'))
+                                            <span class="help-block">
+                                                <strong class="manadatory">{{ $errors->first('service_rate') }}</strong>
+                                            </span>
+                                        @endif
                                       </div>
                                       <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
+                                        <label class="control-label">Enter Time <span class="manadatory">*</span></label>
                                           <input type="text" class="form-control border-input" name="service_time[]">
+                                          
                                       </div>                                        
                                     </div>
                                   </div>

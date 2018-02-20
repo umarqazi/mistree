@@ -16,21 +16,41 @@ use Session;
 
 class ServicesController extends Controller
 {
+     /**
+     * @SWG\Get(
+     *   path="/api/workshop/getServices",
+     *   summary="All Services for Workshop",
+     *   operationId="select services",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+    /**
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        // dd('services');
+    public function index(Request $request)
+    {        
         // get all the services
-        $services = Service::all();
-
-        // dd($services);
-        // load the view and pass the services
-        return View::make('services.index')
+        $services = Service::all();        
+        $reqFrom = $request->header('Content-Type');
+        if( $reqFrom == 'application/json'){
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'all services',
+                'body' => [ 'services' => $services ]
+            ],Response::HTTP_OK);
+        }
+        else{
+            // load the view and pass the services
+            return View::make('services.index')
             ->with('services', $services);
+        }                 
     }
 
     /**
@@ -55,8 +75,7 @@ class ServicesController extends Controller
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required',
-            // 'parent_id'         => 'required|numeric',            
+            'name'              => 'required',            
             'loyalty_points'    => 'required|numeric',            
         );
 
