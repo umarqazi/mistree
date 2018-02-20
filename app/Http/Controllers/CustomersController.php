@@ -233,7 +233,6 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -308,7 +307,6 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -361,7 +359,7 @@ class CustomersController extends Controller
      * @param Request $request
      */
     /**
-     * @SWG\Get(
+     * @SWG\Post(
      *   path="/api/customer/logout",
      *   summary="Logout customer",
      *   operationId="logout",
@@ -375,7 +373,6 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -423,7 +420,6 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -470,7 +466,7 @@ class CustomersController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/customer/verifyEmail",
+     *   path="/api/customer/verify-email",
      *   summary="Verify Customer Email",
      *   operationId="verifyEmail",
      *   produces={"application/json"},
@@ -492,7 +488,6 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -501,7 +496,7 @@ class CustomersController extends Controller
     {
         $check = DB::table('customer_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
-            $customer = Customer::find($check->user_id);
+            $customer = Customer::find($check->id);
             if($customer->is_verified == 1){
                 return response()->json([
                     'http-status' => Response::HTTP_OK,

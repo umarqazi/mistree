@@ -25,7 +25,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/customer/getCars",
+     *   path="/api/customer/get-cars",
      *   summary="Get All Cars",
      *   operationId="getCars",
      *   produces={"application/json"},
@@ -40,7 +40,6 @@ class CarsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -201,7 +200,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/customer/add_customer_car",
+     *   path="/api/customer/add-customer-car",
      *   summary="Add customer's car",
      *   operationId="add_customer_car",
      *   produces={"application/json"},
@@ -249,7 +248,6 @@ class CarsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -317,7 +315,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/customer/remove_customer_car",
+     *   path="/api/customer/remove-ustomer-car",
      *   summary="Delete customer's car",
      *   operationId="remove_customer_car",
      *   produces={"application/json"},
@@ -351,7 +349,6 @@ class CarsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
@@ -391,11 +388,37 @@ class CarsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/get-cust-car",
+     *   summary="Get customer's car",
+     *   operationId="getCustCar",
+     *   produces={"application/json"},
+     *   tags={"Cars"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="customer_id",
+     *     in="query",
+     *     description="Customer Id",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
     public function getCustCar($customer_id)
     {
        $rules = array(
             'custmer_id'        => 'required',
-        $validator  = Validator::make($request->all(), $rules);
+        $validator  = Validator::make($customer_id, $rules);
         if ($validator->fails()) {
             return response()->json([
                     'http-status' => Response::HTTP_OK,
