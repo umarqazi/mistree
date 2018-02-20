@@ -6,7 +6,164 @@
     },
     "basePath": "/",
     "paths": {
-        "/customer/register": {
+        "/api/customer/getCars": {
+            "get": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Get All Cars",
+                "operationId": "getCars",
+                "consumes": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/add_customer_car": {
+            "post": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Add customer's car",
+                "operationId": "add_customer_car",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "formData",
+                        "description": "Car Id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "customer_id",
+                        "in": "formData",
+                        "description": "Customer Id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "millage",
+                        "in": "formData",
+                        "description": "Millage",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "vehicle_no",
+                        "in": "formData",
+                        "description": "Vehicle Number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "insurance",
+                        "in": "formData",
+                        "description": "Insurance",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/remove_customer_car": {
+            "post": {
+                "tags": [
+                    "Cars"
+                ],
+                "summary": "Delete customer's car",
+                "operationId": "remove_customer_car",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "car_id",
+                        "in": "formData",
+                        "description": "Car Id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "vehicle_no",
+                        "in": "formData",
+                        "description": "Vechile No.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "customer_id",
+                        "in": "formData",
+                        "description": "Customer Id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/register": {
             "post": {
                 "tags": [
                     "Customers"
@@ -18,23 +175,186 @@
                 ],
                 "parameters": [
                     {
-                        "name": "customerId",
-                        "in": "path",
-                        "description": "Target customer.",
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Customer Name",
                         "required": true,
-                        "type": "integer"
+                        "type": "string"
                     },
                     {
-                        "name": "filter",
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Customer Email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Customer Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "description": "Customer Password Confirmation",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "con_number",
+                        "in": "formData",
+                        "description": "Customer Contact Number",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/login": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Login customer",
+                "operationId": "login",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Customer Email",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Customer Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/logout": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Logout customer",
+                "operationId": "logout",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
                         "in": "query",
-                        "description": "Filter results based on query string value.",
-                        "required": false,
-                        "type": "string",
-                        "enum": [
-                            "active",
-                            "expired",
-                            "scheduled"
-                        ]
+                        "description": "Auth Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/recover": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Recover Customer Password",
+                "operationId": "recover",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Customer Email",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/verifyEmail": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Verify Customer Email",
+                "operationId": "verifyEmail",
+                "consumes": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "verification_code",
+                        "in": "query",
+                        "description": "Verification Code",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
