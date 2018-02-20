@@ -11,7 +11,7 @@
                         <h2>Login</h2>
                         <div class="card">
                             <div class="content">
-                                <form method="POST" action="{{ url('/workshop/login') }}">
+                                <form method="POST" action="{{ url('/login') }}">
                                 {{ csrf_field() }}
   
                                     <div class="row">
