@@ -47,11 +47,10 @@
                                 <td class="text-center">{{$value->parent_id}}</td>
                                 <td>
                                     <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
-                                    <form method="delete" action="admin/services/{{ $value->id }}">
-                                        <div class="form-group">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                           <button type="submit" class="btn btn-header btn-export">Delete
-                                           </button> 
+                                     <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
+                                     <input name="_method" type="hidden" value="DELETE">
+                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                     <input class="btn btn-header btn-export" type="submit" value="Delete">
                                      </form>
                                 </td>
                             </tr>

@@ -25,10 +25,11 @@ class ServicesController extends Controller
      */
     public function index()
     {
-        // get all the services
-        $services = Service::all();
+        // get all the services wit status Active
+        // $services = Service::all();
         
-        // dd($services);
+        $services = Service::where('status', '=', 1)->get();
+        
         // load the view and pass the services
         return View::make('services.index')
             ->with('services', $services);
@@ -186,13 +187,14 @@ class ServicesController extends Controller
     public function destroy($id)
     {
         // delete
+        // dd($id);
         $service = Service::find($id);
         $service->status = 0;
-        $service->save();
+        $service->update();
         // $service->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
-        return Redirect::to('services');
+        return Redirect::to('admin/services');
     }
 }
