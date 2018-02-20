@@ -663,13 +663,110 @@ class WorkshopsController extends Controller
         return View::make('workshop.requests');
     }
     /**
-     * Show the form for creating a new workshop.
+     * Searching a workshop.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+     /**
+     * @SWG\Post(
+     *   path="/api/customer/search-workshop",
+     *   summary="Search Workshop",
+     *   operationId="searchByWorkshop",
+     *   produces={"application/json"},
+     *   tags={"Workshop"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="name",
+     *     in="formData",
+     *     description="Workshop Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="type",
+     *     in="formData",
+     *     description="Workshop Type",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="sercice_name",
+     *     in="formData",
+     *     description="Sercice Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_block",
+     *     in="formData",
+     *     description="Workshop Address Block",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_area",
+     *     in="formData",
+     *     description="Workshop Address Area",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_town",
+     *     in="formData",
+     *     description="Workshop Address Town",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_city",
+     *     in="formData",
+     *     description="Workshop Address City",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function searchByWorkshop(Request $request)
     {   
-        $services = Service::all();        
-        return View::make('workshop.create', ['services' => $services]);
+        $workshops = Workshop::where('status', 1)->get();
+        if ($request->has('name')) {
+            $workshops = $workshops->where('name', $request->name);
+        }
+        if ($request->has('type')) {
+            $workshops = $workshops->where('type', $request->type);
+        }
+        // if ($request->has('geo_cord')) {
+        //     $workshops->where('geo_cord', $request->geo_cord);
+        // }
+        if ($request->has('sercice_name')) {
+            $workshops = $workshops->service()->where('services.name', $request->sercice_name);
+        }
+        if ($request->has('address_block')) {
+            $workshops = $workshops->address()->where('workshop_addresses.block', $request->address_block);
+        }
+        if ($request->has('address_area')) {
+            $workshops = $workshops->address()->where('workshop_addresses.area', $request->address_area);
+        }
+        if ($request->has('address_town')) {
+            $workshops = $workshops->address()->where('workshop_addresses.town', $request->address_town);
+        }
+        if ($request->has('address_city')) {
+            $workshops = $workshops->address()->where('workshop_addresses.city', $request->address_city);
+        }
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => '',
+            'body' => $workshops
+        ],Response::HTTP_OK);
     }
 }
