@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Create New Workshop')
+@section('title', 'Create New Service')
 @section('content')
 
 @include('partials.header')
@@ -31,7 +31,7 @@
 
                                   <div class="form-group">  
                                     <label class="control-label">Loyalty Points</label>
-                                    <input type="text" class="form-control border-input" name="loyalty_points" required="required">
+                                    <input type="text" class="form-control border-input" name="loyalty_points">
                                   </div>
 
                                   <div class="form-group">  

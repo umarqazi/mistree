@@ -53,16 +53,11 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-
-      $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-      $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required',
-            // 'parent_id'         => 'required|numeric',            
-            'loyalty_points'    => 'required|numeric',            
+            'name'              => 'required',            
+            'loyalty_points'    => 'numeric',            
         );
 
         $inputs = $request->only('name','loyalty_points');
@@ -76,10 +71,21 @@ class ServicesController extends Controller
         } else {
             // store
             $service = new Service;
+
+            if ($request->hasFile('image')) 
+            {
+                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
+                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $service->image          = $img_path;
+            }
+            else
+            {
+              $service->image          =  url('img/thumbnail.png');
+            }
+
             $service->name           = Input::get('name');
             $service->parent_id      = Input::get('parent_id');            
-            $service->loyalty_points = Input::get('loyalty_points');            
-            $service->image          = $img_path;           
+            $service->loyalty_points = Input::get('loyalty_points');                     
             $service->status         = 1;            
             $service->save();
 
@@ -131,10 +137,9 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
-        // die();
         // validate
         // read more on validation at http://laravel.com/docs/validation
+
         $rules = array(
             'name'       => 'required',
             'parent_id'      => 'required|numeric',            
@@ -150,6 +155,18 @@ class ServicesController extends Controller
         } else {
             $service = Service::find($id);
             // update            
+
+            if ($request->hasFile('image')) 
+            {
+                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
+                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $service->image          = $img_path;
+            }
+            else
+            {
+              $service->image          = $service->image;
+            }
+
             $service->name           = $request->name;
             $service->parent_id      = $request->parent_id;
             $service->save();
@@ -170,7 +187,9 @@ class ServicesController extends Controller
     {
         // delete
         $service = Service::find($id);
-        $service->delete();
+        $service->status = 0;
+        $service->save();
+        // $service->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
