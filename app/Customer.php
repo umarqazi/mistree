@@ -32,12 +32,12 @@ class Customer extends Authenticatable
 
     public function cars()
     {
-        return $this->belongsToMany('App\Car');
+        return $this->belongsToMany('App\Car')->withPivot('millage', 'vehicle_no', 'insurance', 'removed_at', 'status')->withTimestamps();
     }
 
     public function addresses()
     {
-        return $this->hasMany('App\Address');
+        return $this->hasMany('App\CustomerAddress');
     }
     /**
      * Send the password reset notification.
