@@ -26,7 +26,7 @@ class CreateCarsTables extends Migration
             $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
             $table->integer('car_id')->unsigned();
-            $table->foreign('car_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('car_id')->references('id')->on('cars')->onDelete('cascade');
             $table->string('millage',45);
             $table->string('vehicle_no',45);
             $table->string('insurance',45);
@@ -44,11 +44,11 @@ class CreateCarsTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cars');
-        Schema::dropIfExists('car_customer');
         Schema::table('car_customer', function (Blueprint $table) {
             $table->dropForeign('car_customer_customer_id_foreign');
             $table->dropForeign('car_customer_car_id_foreign');
         });
+        Schema::dropIfExists('cars');
+        Schema::dropIfExists('car_customer');
     }
 }

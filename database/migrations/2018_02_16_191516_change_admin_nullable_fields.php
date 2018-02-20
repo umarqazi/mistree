@@ -26,7 +26,7 @@ class ChangeAdminNullableFields extends Migration
     public function down()
     {
          Schema::table('admins', function($table) {
-            $table->string('picture',45);
+            $table->string('picture',45)->change();
         });
 
     }
