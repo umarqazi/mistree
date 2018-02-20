@@ -92,7 +92,7 @@ return [
             \Illuminate\Session\Middleware\StartSession::class,
             // \Illuminate\Session\Middleware\AuthenticateSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
+            //\App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
             'docs' => [],
@@ -236,9 +236,9 @@ return [
         |--------------------------------------------------------------------------
         */
 
-        //'request' => [
-        //  'TestMe' => 'testValue',
-        //],
+        'request' => [
+         'Content-Type' => 'application/json',
+        ],
 
     ],
 
@@ -248,7 +248,7 @@ return [
     |--------------------------------------------------------------------------
      */
     'constants' => [
-        'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://wmp.dev'),
+        'L5_SWAGGER_CONST_HOST' => env('L5_SWAGGER_CONST_HOST', 'http://127.0.0.1:8000'),
     ],
 
 ];
