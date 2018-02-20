@@ -174,9 +174,10 @@ class CustomersController extends Controller
      */
     public function destroy($id)
     {
-        // delete
+        // soft delete
         $customer = Customers::find($id);
-        $customers->delete();
+        $customer->status = 0;
+        $customer->save();
 
         // redirect
         Session::flash('message', 'Successfully deleted the customer!');
@@ -191,24 +192,44 @@ class CustomersController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/customer/register",
+     *   path="/api/customer/register",
      *   summary="Register customer",
      *   operationId="register",
      *   produces={"application/json"},
      *   tags={"Customers"},
      *   @SWG\Parameter(
-     *     name="customerId",
-     *     in="path",
-     *     description="Target customer.",
+     *     name="name",
+     *     in="formData",
+     *     description="Customer Name",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="filter",
-     *     in="query",
-     *     description="Filter results based on query string value.",
-     *     required=false,
-     *     enum={"active", "expired", "scheduled"},
+     *     name="email",
+     *     in="formData",
+     *     description="Customer Email",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Customer Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="formData",
+     *     description="Customer Password Confirmation",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="con_number",
+     *     in="formData",
+     *     description="Customer Contact Number",
+     *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
@@ -265,7 +286,33 @@ class CustomersController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-  
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/login",
+     *   summary="Login customer",
+     *   operationId="login",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="email",
+     *     in="formData",
+     *     description="Customer Email",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Customer Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
     public function login(Request $request)
     {
         $credentials = [
@@ -313,6 +360,26 @@ class CustomersController extends Controller
      *
      * @param Request $request
      */
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/logout",
+     *   summary="Logout customer",
+     *   operationId="logout",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
     public function logout(Request $request) {
         $this->validate($request, ['token' => 'required']);
         try {
@@ -340,6 +407,26 @@ class CustomersController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/recover",
+     *   summary="Recover Customer Password",
+     *   operationId="recover",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="email",
+     *     in="formData",
+     *     description="Customer Email",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
      */
     public function recover(Request $request)
     {
@@ -380,6 +467,35 @@ class CustomersController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/verifyEmail",
+     *   summary="Verify Customer Email",
+     *   operationId="verifyEmail",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   consumes={"application/xml", "application/json"},
+     *   produces={"application/xml", "application/json"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="verification_code",
+     *     in="query",
+     *     description="Verification Code",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
      */
     public function verifyEmail($verification_code)
     {
