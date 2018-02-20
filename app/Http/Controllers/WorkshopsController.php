@@ -662,5 +662,14 @@ class WorkshopsController extends Controller
 
         return View::make('workshop.requests');
     }
-
+    /**
+     * Show the form for creating a new workshop.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {   
+        $services = Service::all();        
+        return View::make('workshop.create', ['services' => $services]);
+    }
 }

@@ -21,17 +21,18 @@ class CreateCarsTables extends Migration
             $table->string('status',45);
             $table->timestamps();
         });
-        Schema::create('customer_car', function (Blueprint $table) {
+        Schema::create('car_customer', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('customer_id')->unsigned()->unsigned();
+            $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-            $table->integer('car_id')->unsigned()->nullable();
+            $table->integer('car_id')->unsigned();
             $table->foreign('car_id')->references('id')->on('customers')->onDelete('cascade');
             $table->string('millage',45);
             $table->string('vehicle_no',45);
             $table->string('insurance',45);
             $table->string('year',45);
             $table->string('status',45);
+            $table->timestamp('removed_at');
             $table->timestamps();
         });
     }
@@ -44,10 +45,10 @@ class CreateCarsTables extends Migration
     public function down()
     {
         Schema::dropIfExists('cars');
-        Schema::dropIfExists('customer_car');
-        Schema::table('customer_car', function (Blueprint $table) {
-            $table->dropForeign('customer_car_customer_id_foreign');
-            $table->dropForeign('customer_car_car_id_foreign');
+        Schema::dropIfExists('car_customer');
+        Schema::table('car_customer', function (Blueprint $table) {
+            $table->dropForeign('car_customer_customer_id_foreign');
+            $table->dropForeign('car_customer_car_id_foreign');
         });
     }
 }
