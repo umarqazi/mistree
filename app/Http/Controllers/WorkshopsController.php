@@ -420,8 +420,8 @@ class WorkshopsController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name'                           => 'required|alpha',
-            'owner_name'                     => 'required|alpha',
+            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
@@ -432,10 +432,10 @@ class WorkshopsController extends Controller
             'address_type'                   => 'required|alpha',
             'address_house_no'               => 'required|numeric',
             'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required|alpha_dash',
-            'address_area'                   => 'required|alpha_dash',
-            'address_town'                   => 'required|alpha_dash',
-            'address_city'                   => 'required|alpha',
+            'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'service_id.*'                   => 'required|integer',
             'service_rate.*'                 => 'required|integer',
             'service_time.*'                 => 'required|alpha_dash' 

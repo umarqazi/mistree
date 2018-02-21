@@ -17,8 +17,8 @@ class BookingService extends Migration
             $table->increments('id');
             $table->integer('booking_id')->unsigned();
             $table->foreign('booking_id')->references('id')->on('bookings');
-            $table->integer('workshop_service_id')->unsigned();
-            $table->foreign('workshop_service_id')->references('id')->on('workshop_service');
+            $table->integer('service_id')->unsigned();
+            $table->foreign('service_id')->references('id')->on('services');
             $table->timestamps();
         });
     }
@@ -30,7 +30,10 @@ class BookingService extends Migration
      */
     public function down()
     {   
-        $table->dropForeign('booking_service_booking_id_foreign');
+        Schema::table('booking_service', function(Blueprint $table){
+            $table->dropForeign('booking_service_booking_id_foreign');
+            $table->dropForeign('booking_service_service_id_foreign');
+        });
         Schema::dropIfExists('booking_service');
     }
 }
