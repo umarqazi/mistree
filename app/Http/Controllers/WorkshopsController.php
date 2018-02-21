@@ -1068,4 +1068,9 @@ class WorkshopsController extends Controller
             'body'          => $workshop_services 
         ],Response::HTTP_OK);   
     }
+
+    public function workshop_profile(){
+        $workshop = Auth::guard('workshop')->user();
+        return View::make('workshops.index')->with('workshop', $workshop);                       
+    }
 }
