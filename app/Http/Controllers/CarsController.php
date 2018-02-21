@@ -390,7 +390,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/customer/get-cust-car",
+     *   path="/api/customer/get-customer-car",
      *   summary="Get customer's car",
      *   operationId="getCustCar",
      *   produces={"application/json"},
@@ -418,6 +418,7 @@ class CarsController extends Controller
     {
        $rules = array(
             'custmer_id'        => 'required',
+        );
         $validator  = Validator::make($customer_id, $rules);
         if ($validator->fails()) {
             return response()->json([
