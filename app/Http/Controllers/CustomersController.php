@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Mail\Message;
 
 class CustomersController extends Controller
 {
@@ -249,6 +251,7 @@ class CustomersController extends Controller
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -275,7 +278,7 @@ class CustomersController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => $request->all()
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -322,6 +325,7 @@ class CustomersController extends Controller
             Config::set('auth.providers.users.model', \App\Customer::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -332,6 +336,7 @@ class CustomersController extends Controller
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -386,7 +391,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'success',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -427,13 +432,13 @@ class CustomersController extends Controller
     public function recover(Request $request)
     {
         $customer = Customer::where('email', $request->email)->first();
-        if (!$user) {
+        if (!$customer) {
             $error_message = "Your email address was not found.";
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $error_message,
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }
         try {
@@ -447,14 +452,14 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $error_message,
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'A reset email has been sent! Please check your email.',
-            'body' => ''
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -502,7 +507,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => 'Account already verified.',
-                    'body' => ''
+                    'body' => null
                 ],Response::HTTP_OK);
             }
             $customer->update(['is_verified' => 1]);
@@ -511,14 +516,14 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'You have successfully verified your email address.',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => false,
             'message' => 'Verification code is invalid.',
-            'body' => ''
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -573,7 +578,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Details Added!',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }
     }
@@ -639,7 +644,7 @@ class CustomersController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Details Added!',
-            'body' => ''
+            'body' => null
         ],Response::HTTP_OK);
     }
 
