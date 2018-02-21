@@ -270,40 +270,40 @@ class ServicesController extends Controller
      * )
      *
      */
-    public function searchService(Request $request)
-    {   
-        // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
-        /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
-        $services = Service::where('services.status', 1);
-        $service_ids = [];
-        if ($request->has('service_name')) {
-            $services = $services->where('name', 'LIKE', '%'.$request->service_name.'%');
-        }
-        if ($request->has('workshop_name')) {
-            // $workshops = $workshops->where('services.name', $request->service_name);
-            // $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', $request->service_name)->get()->pluck('workshop_id')->toArray();
-            // $workshops = $workshops->whereIn('id', $workshop_ids);
-            $workshop_ids = Db::table('workshop_service')->join('workshops', 'workshop_service.workshop_id', '=', 'workshops.id')->select('workshop_service.service_id')->where('workshops.name', 'LIKE', '%'.$request->service_name.'%')->get()->pluck('service_id')->toArray();
-            $services = $services->whereIn('id', $service_ids);
-        }
-        // if ($request->has('address_block')) {
-        //     // $workshops = $workshops->where('adress.block', $request->address_block);
-        //     $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
-        // }
-        // if ($request->has('address_area')) {
-        //     $workshops = $workshops->where('address.area', 'LIKE', '%'.$request->address_area.'%');
-        // }
-        // if ($request->has('address_town')) {
-        //     $workshops = $workshops->where('address.town', 'LIKE', '%'.$request->address_town.'%');
-        // }
-        // if ($request->has('address_city')) {
-        //     $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
-        // }
-        return response()->json([
-            'http-status' => Response::HTTP_OK,
-            'status' => true,
-            'message' => '',
-            'body' => $services->get()
-        ],Response::HTTP_OK);
-    }
+    // public function searchService(Request $request)
+    // {   
+    //     // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
+    //     /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
+    //     $services = Service::where('status', 1)->with('workhops');
+    //     $service_ids = [];
+    //     if ($request->has('service_name')) {
+    //         $services = $services->where('name', 'LIKE', '%'.$request->service_name.'%');
+    //     }
+    //     if ($request->has('workshop_name')) {
+    //         // $workshops = $workshops->where('services.name', $request->service_name);
+    //         // $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', $request->service_name)->get()->pluck('workshop_id')->toArray();
+    //         // $workshops = $workshops->whereIn('id', $workshop_ids);
+    //         $service_ids = Db::table('workshop_service')->join('workshops', 'workshop_service.workshop_id', '=', 'workshops.id')->select('workshop_service.service_id')->where('workshops.name', 'LIKE', '%'.$request->workshop_name.'%')->get()->pluck('service_id')->toArray();
+    //         $services = $services->whereIn('id', $service_ids);
+    //     }
+    //     // if ($request->has('address_block')) {
+    //     //     // $workshops = $workshops->where('adress.block', $request->address_block);
+    //     //     $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
+    //     // }
+    //     // if ($request->has('address_area')) {
+    //     //     $workshops = $workshops->where('address.area', 'LIKE', '%'.$request->address_area.'%');
+    //     // }
+    //     // if ($request->has('address_town')) {
+    //     //     $workshops = $workshops->where('address.town', 'LIKE', '%'.$request->address_town.'%');
+    //     // }
+    //     // if ($request->has('address_city')) {
+    //     //     $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
+    //     // }
+    //     return response()->json([
+    //         'http-status' => Response::HTTP_OK,
+    //         'status' => true,
+    //         'message' => '',
+    //         'body' => $services->get()
+    //     ],Response::HTTP_OK);
+    // }
 }
