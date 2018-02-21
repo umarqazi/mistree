@@ -50,7 +50,7 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'WorkshopAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
-  Route::get('/verify/{verification_code}', 'WorkshopAuth@verifyWorkshop');
+  Route::get('/verify/{verification_code}', 'WorkshopsController@verifyEmail');
 
   Route::get('/history', 'WorkshopsController@show_history');
   Route::get('/customers', 'WorkshopsController@show_customers');

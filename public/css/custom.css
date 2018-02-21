@@ -207,3 +207,7 @@ form .form-group {margin-bottom: 0px;}
 .sidebar-wrapper .nav li.active a{
     border-left : 5px solid #ed1c24;
 }
+
+.manadatory{
+    color : #FF0000;
+}
