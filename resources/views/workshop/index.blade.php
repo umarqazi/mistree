@@ -52,7 +52,11 @@
                                     <td class="sorting_1">{{ $value->id }}</td>
                                     <td>{{ $value->name }}</td>
                                     <td>{{ $value->owner_name }}</td>
+                                    @if($value->address)
                                     <td>{{ $value->address->area }}</td>
+                                    @else
+                                    <td></td>
+                                    @endif
                                     <td>{{23*($key+1) }}</td>
                                     <td>{{ 2*($key+1) }}</td>
                                     <td>
