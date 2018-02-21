@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Mail\Message;
 
 class WorkshopsController extends Controller
 {
@@ -337,6 +339,7 @@ class WorkshopsController extends Controller
             Config::set('auth.providers.users.model', \App\Workshop::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -347,6 +350,7 @@ class WorkshopsController extends Controller
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -470,7 +474,12 @@ class WorkshopsController extends Controller
             'body' => ''
         ],Response::HTTP_OK);
     }
-
+    /**
+     * Registration Store Data
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function regStoreData(Request $request){
         $this->validate($request, ['token' => 'required']);
         try {
@@ -523,6 +532,12 @@ class WorkshopsController extends Controller
 
     }
 
+    /**
+     *  Approve Workshop
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function approveWorkshop($id){
         //Approve Workshop
         $workshop = Workshop::find($id);
@@ -531,6 +546,12 @@ class WorkshopsController extends Controller
         return Redirect::to('admin/workshops');
     }
 
+    /**
+     *  Unapprove Workshop
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function undoWorkshopApproval($id){
         //Approve Workshop
         $workshop = Workshop::find($id);
@@ -543,6 +564,8 @@ class WorkshopsController extends Controller
      * API Register store data of new customer.
      *
      * @param Request $request
+     * @param $id
+     * @param $address_id
      * @return \Illuminate\Http\JsonResponse
      */
     public function profileUpdate(Request $request, $id, $address_id)
@@ -597,6 +620,12 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
 
+    /**
+     *  Edit Workshop Service View
+     *
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function editWorkshopService($id){
         $services = Service::all();
         $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
@@ -604,6 +633,12 @@ class WorkshopsController extends Controller
 
     }
 
+    /**
+     *  Update Workshop Service
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateWorkshopService(Request $request){        
         $workshop = Workshop::find($request->workshop_id);
         $workshop->service()->updateExistingPivot($request->exit_id, ['service_id' => $request->service_id, 'service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
@@ -612,12 +647,24 @@ class WorkshopsController extends Controller
 
     }
 
+    /**
+     *  Add Workshop Service
+     *
+     * @param $workshop
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function addWorkshopService($workshop){
         $workshop = Workshop::find($workshop);
         $services = Service::all();        
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
     }
 
+    /**
+     *  Store Workshop Service
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function storeWorkshopService(Request $request){        
         $workshop = Workshop::find($request->workshop_id);
         $service = $request->service_id; 
@@ -631,6 +678,13 @@ class WorkshopsController extends Controller
         return View::make('workshop.show', ['workshop' => $workshop]);
     }
 
+    /**
+     *  Delete Workshop Service
+     *
+     * @param $workshop_id
+     * @param $service_id
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteWorkshopService($workshop_id, $service_id){
         $workshop = Workshop::find($workshop_id);
         $workshop->service()->detach($service_id);
@@ -639,29 +693,36 @@ class WorkshopsController extends Controller
         return View::make('workshop.show', ['workshop' => $workshop]);
     }
 
-    
-
-
-
+    /**
+     *  Show History Workshop 
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show_history()
     {
-        // dd('history');
-
         return View::make('workshop.history');
     }
 
+    /**
+     *  Show Customers Workshop 
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show_customers()
     {
-        // dd('customers');
         return View::make('workshop.customers');
     }
 
+    /**
+     *  Show Requests 
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function show_requests()
     {
-        dd('requests');
-
         return View::make('workshop.requests');
     }
+    
     /**
      * Searching a workshop.
      *
@@ -735,14 +796,14 @@ class WorkshopsController extends Controller
      * )
      *
      */
-    public function searchByWorkshop(Request $request)
+    public function searchWorkshop(Request $request)
     {   
         // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
         /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
-        $workshops = Workshop::where('workshops.status', 1)->with('services')->with('address')->get();
+        $workshops = Workshop::where('workshops.status', 1)->with('services')->with('address');
         $workshop_ids = [];
         if ($request->has('name')) {
-            $workshops = $workshops->where('name', $request->name);
+            $workshops = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
         if ($request->has('type')) {
             $workshops = $workshops->where('type', $request->type);
@@ -751,27 +812,28 @@ class WorkshopsController extends Controller
         //     $workshops->where('geo_cord', $request->geo_cord);
         // }
         if ($request->has('service_name')) {
-            $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', $request->service_name)->get()->pluck('workshop_id')->toArray();
+            // $workshops = $workshops->where('services.name', $request->service_name);
+            $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', 'LIKE', '%'.$request->service_name.'%')->get()->pluck('workshop_id')->toArray();
             $workshops = $workshops->whereIn('id', $workshop_ids);
         }
         if ($request->has('address_block')) {
             // $workshops = $workshops->where('adress.block', $request->address_block);
-            $workshops = $workshops->where('address.block', $request->address_block );
+            $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
         }
         if ($request->has('address_area')) {
-            $workshops = $workshops->where('address.area', $request->address_area);
+            $workshops = $workshops->where('address.area', 'LIKE', '%'.$request->address_area.'%');
         }
         if ($request->has('address_town')) {
-            $workshops = $workshops->where('address.town', $request->address_town);
+            $workshops = $workshops->where('address.town', 'LIKE', '%'.$request->address_town.'%');
         }
         if ($request->has('address_city')) {
-            $workshops = $workshops->where('address.city', $request->address_city);
+            $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => '',
-            'body' => $workshops
+            'body' => $workshops->get()
         ],Response::HTTP_OK);
     }
 }
