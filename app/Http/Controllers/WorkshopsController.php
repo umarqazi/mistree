@@ -79,23 +79,28 @@ class WorkshopsController extends Controller
     public function store(Request $request)
     {                
         $rules = [
-            'name'              => 'required',
-            'owner_name'              => 'required',
-            'email'             => 'required|email|unique:workshops',
-            'password'          => 'required|confirmed|min:6',
-            'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',      
-            'address_type'      => 'required',
-            'address_house_no'  => 'required',
-            'address_street_no' => 'required',
-            'address_block'     => 'required',
-            'address_area'      => 'required',
-            'address_town'      => 'required',
-            'address_city'      => 'required'            
-        ];   
-          
-    
-        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',
+            'email'                          => 'required|email|unique:workshops',
+            'password'                       => 'required|confirmed|min:8',
+            'password_confirmation'          => 'required',
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
+            'open_time'                      => 'required',
+            'close_time'                     => 'required',
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|alpha_dash',
+            'address_area'                   => 'required|alpha_dash',
+            'address_town'                   => 'required|alpha_dash',
+            'address_city'                   => 'required|alpha',
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
+        ];        
+
+        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time', 'service_time', 'service_id', 'service_rate');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -142,20 +147,6 @@ class WorkshopsController extends Controller
         $service_ids = $request->service_id;
         $service_rates = $request->service_rate;
         $service_times = $request->service_time;    
-        // if(!empty($service_ids)){
-        //     for($i = 0 ; $i<count($service_ids) ; $i++ ){
-        //         $speicality = new WorkshopSpecialty;
-
-        //         $speicality->service_id = $service_ids[$i];
-        //         $speicality->service_rate = $service_rates[$i];
-        //         $speicality->service_time = $service_times[$i];
-        //         $speicality->workshop_id = $workshop->id;
-
-        //         $speicality->save();
-        //     }
-        // }  
-
-   
         if(!empty($service_ids)){
             for($i = 0; $i<count($service_ids); $i++){            
                 $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
@@ -180,10 +171,21 @@ class WorkshopsController extends Controller
                    $images->workshop_id = $workshop->id;
                    $images->save();
               }
-        }  
-        return Redirect::to('admin/workshops');      
+        }       
 
- 
+        $name = $request->name;        
+        $email = $request->email;        
+        $subject = "Please verify your email address.";
+        $verification_code = str_random(30); //Generate verification code         
+        DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email, $name);
+                $mail->subject($subject);
+            });
+
+        return Redirect::to('admin/workshops');       
     }
 
     /**
@@ -225,20 +227,22 @@ class WorkshopsController extends Controller
     public function update(Request $request, $id)
     {           
         $rules = [
-            'name'              => 'required',                        
-            'owner_name'        => 'required',
-            'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',
-            'address_type'      => 'required',
-            'address_house_no'  => 'required',
-            'address_street_no' => 'required',
-            'address_block'     => 'required',
-            'address_area'      => 'required',
-            'address_town'      => 'required',
-            'address_city'      => 'required' 
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
+            'open_time'                      => 'required',
+            'close_time'                     => 'required',
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|alpha_dash',
+            'address_area'                   => 'required|alpha_dash',
+            'address_town'                   => 'required|alpha_dash',
+            'address_city'                   => 'required|alpha'
         ];  
 
-        $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+        $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -305,8 +309,7 @@ class WorkshopsController extends Controller
         $address->city              = Input::get('address_city');
         $address->town              = Input::get('address_town');                
         $address->save();
-
-        // redirect
+        
         // Session::flash('message', 'Successfully updated Workshop!');
         return Redirect::to('admin/workshops');
     }
@@ -327,8 +330,166 @@ class WorkshopsController extends Controller
         Session::flash('message', 'Successfully deleted the Workshop!');
         return Redirect::to('workshops');      
     }
-
-
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/register",
+     *   summary="Register Workshop",
+     *   operationId="register",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Name of Workshop",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="owner_name",
+     *     in="query",
+     *     description="Owner Name",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="email",
+     *     in="query",
+     *     description="Workshop Email Address",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="query",
+     *     description="Workshop Login Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="query",
+     *     description="Workshop Confirm Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="card_number",
+     *     in="query",
+     *     description="Workshop CNIC card Number",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="con_number",
+     *     in="query",
+     *     description="Workshop Contact Number",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="type",
+     *     in="query",
+     *     description="Workshop Type",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="team_slot",
+     *     in="query",
+     *     description="Workshop Team Slots",
+     *     required=false,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="open_time",
+     *     in="query",
+     *     description="Workshop Opening Time",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="close_time",
+     *     in="query",
+     *     description="Workshop Closing Time",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_city",
+     *     in="query",
+     *     description="Workshop Address City",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_block",
+     *     in="query",
+     *     description="Workshop Address Block",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_town",
+     *     in="query",
+     *     description="Workshop Address Town",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_area",
+     *     in="query",
+     *     description="Workshop Address Area",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_type",
+     *     in="query",
+     *     description="Workshop Address Type",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_house_no",
+     *     in="query",
+     *     description="Workshop House No",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_street_no",
+     *     in="query",
+     *     description="Workshop Street No",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_id",
+     *     in="query",
+     *     description="Workshop selected service Ids in array",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_rate",
+     *     in="query",
+     *     description="Workshop Service rates associated to each service id in array",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_time",
+     *     in="query",
+     *     description="Workshop Service rates associated to each service id in array",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
     /**
      * API Register for new workshop.
      *
@@ -338,14 +499,28 @@ class WorkshopsController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name'              => 'required',
-            'email'             => 'required|email|unique:workshops',
-            'password'          => 'required|confirmed|min:6',
-            'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11'                                            
+            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
+            'email'                          => 'required|email|unique:workshops',
+            'password'                       => 'required|confirmed|min:8',
+            'password_confirmation'          => 'required',
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
+            'open_time'                      => 'required',
+            'close_time'                     => 'required',
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];        
-
-        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'card_number', 'con_number');
+        
+        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time', 'service_time', 'service_id', 'service_rate');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -355,26 +530,37 @@ class WorkshopsController extends Controller
                     'message' => $validator->messages(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
-        }       
-
+        }      
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);                
+        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
 
-        //Insert Services data from request
-        $services = $request->services;
-        if(!empty($services)){
-            foreach($services as $service){
-                $speicality = new WorkshopSepcialty;
+        //Insert Address data from request
+        $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
 
-                $speicality->service_id = $service->service_id;
-                $speicality->service_rate = $service->service_rate;
-                $speicality->service_time = $service->service_time;
-                $speicality->workshop_id = $workshop->id;
+        //Insert Services data from request        
+        $service_ids = $request->service_id;
+        $service_rates = $request->service_rate;
+        $service_times = $request->service_time;          
 
-                $speicality->save();
+        if(!empty($service_ids)){
+            for($i = 0; $i<count($service_ids); $i++){            
+                $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
             }
         }
 
+        $name = $request->name;
+        $con_number = $request->con_number;
+        $email = $request->email;        
+         // return $this->login($request);
+        $verification_code = str_random(30); //Generate verification code
+        DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        $subject = "Please verify your email address.";
+        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email, $name);
+                $mail->subject($subject);
+            });
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -384,6 +570,31 @@ class WorkshopsController extends Controller
     }
 
     /**
+     * @SWG\Post(
+     *   path="/api/workshop/login",
+     *   summary="Workshop Login",
+     *   operationId="login",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="email",
+     *     in="query",
+     *     description="Email of Workshop",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="query",
+     *     description="Workshop Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+    /**
      * API Login for workshop, on success return JWT Auth token
      *
      * @param Request $request
@@ -391,8 +602,8 @@ class WorkshopsController extends Controller
      */
   
     public function login(Request $request)
-    {   
-        $check = Workshop::select('is_approved')->where('email', $request->email)->get();
+    {           
+        $check = Workshop::select('is_approved')->where('email', $request->email)->first();        
         if($check->is_approved == 0){                
             return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -476,7 +687,7 @@ class WorkshopsController extends Controller
     public function recover(Request $request)
     {
         $workshop = Workshop::where('email', $request->email)->first();
-        if (!$user) {
+        if (!$workshop) {
             $error_message = "Your email address was not found.";
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -517,7 +728,7 @@ class WorkshopsController extends Controller
     {
         $check = DB::table('workshop_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
-            $workshop = Workshop::find($check->user_id);
+            $workshop = Workshop::find($check->ws_id);
             if($workshop->is_verified == 1){
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -543,58 +754,6 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
 
-    public function regStoreData(Request $request){
-        $this->validate($request, ['token' => 'required']);
-        try {
-            Config::set('auth.providers.users.model', \App\Workshop::class);
-            $rules = [
-                'card_number' => 'required',
-                'con_number' => 'required',
-                'type' => 'required',                
-                'open_time' => 'required',
-                'close_time' => 'required',
-                'address_type' => 'required',
-                'address_house_no' => 'required',
-                'address_street_no' => 'required',
-                'address_block' => 'required',
-                'address_area' => 'required',
-                'address_town' => 'required',
-                'address_city' => 'required',
-
-
-
-            ];
-            $input = $request->only('card_number', 'con_number', 'type', 'team_slot', 'open_time', 'close_time' , 'status', 'is_verified');
-
-            $validator = Validator::make($input, $rules);
-            if($validator->fails()) {                
-                return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => $validator->messages(),
-                        'body' => $request->all()
-                    ],Response::HTTP_OK);
-            }
-
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'success',
-                'body' => ''
-            ],Response::HTTP_OK);
-        } catch (JWTException $e) {
-
-            // something went wrong whilst attempting to encode the token
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => '',
-                'body' => $request->all()
-            ],Response::HTTP_OK);
-        }
-
-    }
-
     public function approveWorkshop($id){
         //Approve Workshop
         $workshop = Workshop::find($id);
@@ -612,60 +771,140 @@ class WorkshopsController extends Controller
     }
 
     /**
+     * @SWG\Get(
+     *   path="/api/workshop/getWorkshop/id",
+     *   summary="Get Workshop Details",
+     *   operationId="fetch detials",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Workshop details",
+     *     required=true,
+     *     type="integer"
+     *   ),    
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+    */     
+    public function getWorkshop($id){
+        $workshop = Workshop::find($id);
+        return response([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Workshop Details!',
+            'body' => $workshop
+        ],Response::HTTP_OK);
+    }
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/updateProfile",
+     *   summary="Update Workshop Details",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="name",
+     *     in="query",
+     *     description="Name of Workshop",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="owner_name",
+     *     in="query",
+     *     description="Owner Name",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Parameter(
+     *     name="card_number",
+     *     in="query",
+     *     description="Workshop CNIC card Number",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="con_number",
+     *     in="query",
+     *     description="Workshop Contact Number",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="type",
+     *     in="query",
+     *     description="Workshop Type",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="team_slot",
+     *     in="query",
+     *     description="Workshop Team Slots",
+     *     required=false,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="open_time",
+     *     in="query",
+     *     description="Workshop Opening Time",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="close_time",
+     *     in="query",
+     *     description="Workshop Closing Time",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    /**
      * API Register store data of new customer.
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function profileUpdate(Request $request, $id, $address_id)
+    public function profileUpdate(Request $request, $id)
     {
-        $request_workshop = $request->workshop;
-        $workshop = Workshop::find($id);
-        $workshop->fill($request_workshop);
-        if($address_id != ''){
-            $request_address = $request->address;
-            $address = WorkshopAddress::find($id);
-            $address->fill($request_address);
-        }else{
-            $rules = array(
-                'address_type'          => 'required',
-                'address_house_no'      => 'required',
-                'address_street_no'     => 'required',
-                'address_block'         => 'required',
-                'address_area'          => 'required',
-                'address_town'          => 'required',
-                'address_city'          => 'required'
-            );
-            $validator = Validator::make($request->all(), $rules);
+        // $request_workshop = $request->workshop;
+        $rules = [            
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',            
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
+            'open_time'                      => 'required',
+            'close_time'             
+        ];  
 
-            // process the login
-            if ($validator->fails()) {
-                return response([
+        $input = $request->only('name', 'owner_name', 'card_number', 'con_number');
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $request->offsetUnset('password');
+            return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => 'Invalid Details!',
+                    'message' => $validator->messages(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
-            } else {
-                $address = new WorkshopAddress;                
-                $address->workshop_id   =  $id;                
-                $address->type          =  $request->address_type;
-                $address->house_no      =  $request->address_house_no;
-                $address->street_no     =  $request->address_street_no;
-                $address->block         =  $request->address_block;
-                $address->area          =  $request->address_area;
-                $address->town          =  $request->address_town;
-                $address->city          =  $request->address_city;
-                $address->status        = 1;
-                $address->save(); 
-            }
         }
+        $workshop = Workshop::find($id);
+        $workshop->fill($request);        
         //address   
         return response([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'Details Added!',
-            'body' => ''
+            'message' => 'Details Updated!',
+            'body' => $request
         ],Response::HTTP_OK);
     }
 
@@ -676,11 +915,22 @@ class WorkshopsController extends Controller
 
     }
 
-    public function updateWorkshopService(Request $request){        
+    public function updateWorkshopService(Request $request){
+        $rules = [            
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required'                        
+            ];        
+        $input = $request->only('service_rate', 'service_time' );
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $workshop_service_id = $request->workshop_service_id ;            
+            return Redirect::to('admin/edit-workshop-service/'.$workshop_service_id)
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
+        }                 
         $workshop = Workshop::find($request->workshop_id);
-        $workshop->service()->updateExistingPivot($request->exit_id, ['service_id' => $request->service_id, 'service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
-        $workshop = Workshop::find($request->workshop_id);
-        return View::make('workshop.show', ['workshop' => $workshop]);
+        $workshop->service()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        return Redirect::to('admin/workshops/'.$request->workshop_id);               
 
     }
 
@@ -690,25 +940,35 @@ class WorkshopsController extends Controller
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
     }
 
-    public function storeWorkshopService(Request $request){        
+    public function storeWorkshopService(Request $request){
+        $rules = [
+            'service_id'      => 'required|unique_with:workshop_service,workshop_id',
+            'service_rate'    => 'required',            
+            'service_time'    => 'required'                        
+            ];
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $request->offsetUnset('password');
+            return Redirect::to('admin/add-workshop-service/'.$request->workshop_id)
+                ->withErrors($validator);                
+        }        
         $workshop = Workshop::find($request->workshop_id);
         $service = $request->service_id; 
         $rate = $request->service_rate;
         $time = $request->service_time;       
-        for($i = 0; $i<count($service); $i++){            
-            $workshop->service()->attach($service[$i], ['service_rate' => $rate[$i] , 'service_time' => $time[$i] ]);
-        }
-        $workshop = Workshop::find($request->workshop_id);        
-        // show the view and pass the workshop to it
-        return View::make('workshop.show', ['workshop' => $workshop]);
+        
+        $workshop->service()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        
+        return Redirect::to('admin/add-workshop-service/'.$workshop->id);               
     }
 
     public function deleteWorkshopService($workshop_id, $service_id){
         $workshop = Workshop::find($workshop_id);
-        $workshop->service()->detach($service_id);
-        $workshop = Workshop::find($workshop_id);        
+        $workshop->service()->detach($service_id);        
         // show the view and pass the workshop to it
-        return View::make('workshop.show', ['workshop' => $workshop]);
+        return Redirect::to('admin/workshops/'.$workshop->id);               
     }
 
     
@@ -735,13 +995,71 @@ class WorkshopsController extends Controller
         return View::make('workshop.requests');
     }
     /**
-     * Show the form for creating a new workshop.
+     * @SWG\Post(
+     *   path="/api/workshop/deleteWorkshopService",
+     *   summary="Delete Workshop Service",
+     *   operationId="delete",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="workshop id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_id",
+     *     in="path",
+     *     description="service id",
+     *     required=true,
+     *     type="integer"
+     *   ), 
+     @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
      *
-     * @return \Illuminate\Http\Response
      */
-    // public function create()
-    // {   
-    //     $services = Service::all();        
-    //     return View::make('workshop.create', ['services' => $services]);
-    // }
+    public function unassignService($workshop_id, $service_id){
+        // delete
+        $workshop = Workshop::find($workshop_id);
+        $workshop->service()->dettach($service_id);
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Workshop Service deleted!!',
+            'body'          => '' 
+        ],Response::HTTP_OK);
+    }
+    /**
+    * @SWG\Post(
+    *   path="/api/workshop/workshopServices",
+    *   summary="All services of Workshop",
+    *   operationId="fetch",
+    *   produces={"application/json"},
+    *   tags={"Workshops"},
+    *   @SWG\Parameter(
+    *     name="workshop_id",
+    *     in="path",
+    *     description="workshop id",
+    *     required=true,
+    *     type="integer"
+    *   ),    
+    *   @SWG\Response(response=200, description="successful operation"),
+    *   @SWG\Response(response=406, description="not acceptable"),
+    *   @SWG\Response(response=500, description="internal server error")
+    * )
+    */
+    public function allWorkshopServices($workshop_id){
+        $workshop = Workshop::find($workshop_id);
+        $workshop_services = $workshop->service;
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Workshop Services!!',
+            'body'          => $workshop_services 
+        ],Response::HTTP_OK);   
+    }
 }

@@ -15,6 +15,13 @@
                   <form method="POST" action="{{ url('admin/workshops') }}" enctype="multipart/form-data">
                     {!! csrf_field() !!}
                       <div class="header">
+                        {{-- @if ($errors->any())
+                          <div class="row text-center alert alert-danger">
+                            @foreach($errors->all() as $error)
+                              <div><span class="manadatory">{{ $error }}</span></div>
+                            @endforeach                        
+                          </div>
+                        @endif --}}
                           <div class="row">
                               <div class="col-md-12">
                                   <h4 class="title">Workshop Management - Create New</h4> 
@@ -32,43 +39,81 @@
                           <div class="row">
                             <div class="col-md-6">
                               <div class="form-group">
-                                <label class="control-label">Workshop Name</label>
-                                <input type="text" class="form-control border-input" name="name" required>
+                                <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="name">
+                                @if ($errors->has('name'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('name') }}</strong>
+                                    </span>
+                                @endif
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Owner Name</label>
-                                <input type="text" class="form-control border-input" name="owner_name" required>
+                                <label class="control-label">Owner Name <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="owner_name">
+                                @if ($errors->has('owner_name'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('owner_name') }}</strong>
+                                    </span>
+                                @endif
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Enter Email</label>
-                                <input type="email" class="form-control border-input" name="email" required>
+                                <label class="control-label">Enter Email <span class="manadatory">*</span></label>
+                                <input type="email" class="form-control border-input" name="email">
+                                @if ($errors->has('email'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('email') }}</strong>
+                                    </span>
+                                @endif
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Enter Passowrd</label>
-                                <input type="password" class="form-control border-input" name="password" required>
+                                <label class="control-label">Enter Passowrd <span class="manadatory">*</span></label>
+                                <input type="password" class="form-control border-input" name="password">
+                                @if ($errors->has('password'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('password') }}</strong>
+                                    </span>
+                                @endif
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Confirm Passowrd</label>
-                                <input type="password" class="form-control border-input" name="password_confirmation" required>
+                                <label class="control-label">Confirm Passowrd <span class="manadatory">*</span></label>
+                                <input type="password" class="form-control border-input" name="password_confirmation">
+                                @if ($errors->has('password_confirmation'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('password_confirmation') }}</strong>
+                                    </span>
+                                @endif
                               </div>  
 
                               <div class="form-group">
-                                <label class="control-label">Card Number</label>
-                                <input type="text" class="form-control border-input" name="card_number" required>
+                                <label class="control-label">Card Number <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="card_number">
+                                @if ($errors->has('card_number'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('card_number') }}</strong>
+                                    </span>
+                                @endif
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Contact Number</label>
-                                <input type="text" class="form-control border-input" name="con_number" required>
-                              </div>  
+                                <label class="control-label">Contact Number <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="con_number">
+                                @if ($errors->has('con_number'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('con_number') }}</strong>
+                                    </span>
+                                @endif
+                              </div>                          
+                            </div>
+
+                            <div class="col-md-6">
 
                               <div class="form-group">
                                 <label class="control-label">Type</label>
-                                <select name="type" class="form-control border-input" required="required">
+                                <select name="type" class="form-control border-input">
                                   <option value="">Please Select</option>
                                   <option value="authorized">Authorized</option>
                                   <option value="unauthorized">UnAuthorized</option>
@@ -77,7 +122,7 @@
 
                               <div class="form-group">
                                 <label class="control-label">Team Slot</label>
-                                <select name="team_slot" class="form-control border-input" required="required">
+                                <select name="team_slot" class="form-control border-input">
                                   <option value="">Please Select</option>
                                   <option value="1">1</option>
                                   <option value="2">2</option>
@@ -93,13 +138,23 @@
                               
 
                               <div class="form-group">                              
-                                <label class="control-label">Opening</label>
-                                <input type="time" class="form-control border-input" name="open_time" required="required">                                        
+                                <label class="control-label">Opening <span class="manadatory">*</span></label>
+                                <input type="time" class="form-control border-input" name="open_time">
+                                @if ($errors->has('open_time'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('open_time') }}</strong>
+                                    </span>
+                                @endif
                               </div>
 
                               <div class="form-group">                              
-                                <label class="control-label">Closing</label>
-                                <input type="time" class="form-control border-input" name="close_time" required="required">                                        
+                                <label class="control-label">Closing <span class="manadatory">*</span></label>
+                                <input type="time" class="form-control border-input" name="close_time">
+                                @if ($errors->has('close_time'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('close_time') }}</strong>
+                                    </span>
+                                @endif                                        
                               </div>
                               
                               <div class="form-group">      
@@ -153,23 +208,43 @@
                                 <div class="col-md-6">
 
                                   <div class="form-group">                              
-                                    <label class="control-label">City</label>
+                                    <label class="control-label">City <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_city">
+                                    @if ($errors->has('address_city'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_city') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Block</label>
+                                    <label class="control-label">Block <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_block">
+                                    @if ($errors->has('address_block'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_block') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Town</label>
+                                    <label class="control-label">Town <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_town">
+                                    @if ($errors->has('address_town'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_town') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Area</label>
+                                    <label class="control-label">Area <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_area">
+                                    @if ($errors->has('address_area'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_area') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
                                   
                                 </div>
@@ -177,18 +252,33 @@
                                 <div class="col-md-6">
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Address Type</label>
+                                    <label class="control-label">Address Type <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_type">
+                                    @if ($errors->has('address_type'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_type') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Building No</label>
+                                    <label class="control-label">Building No <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_house_no">
+                                    @if ($errors->has('address_house_no'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_house_no') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Street No</label>
+                                    <label class="control-label">Street No <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_street_no">
+                                    @if ($errors->has('address_street_no'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('address_street_no') }}</strong>
+                                      </span>
+                                    @endif
                                   </div>
 
                                 </div>
@@ -221,85 +311,44 @@
 
                                       <div class="col-md-12">
                                         <div class="form-group">
-                                          <label class="control-label">Select Service</label>
+                                          <label class="control-label">Select Service <span class="manadatory">*</span></label>
                                           <select class="form-control border-input" name="service_id[]">
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}</option>
                                             @endforeach
                                           </select>
+                                          @if ($errors->has('service_id'))
+                                            <span class="help-block">
+                                                <strong class="manadatory">{{ $errors->first('service_id') }}</strong>
+                                            </span>
+                                          @endif
                                         </div>
                                       </div>
                                     </div>
                                     <div class="row">
                                       <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
+                                        <label class="control-label">Service Rate <span class="manadatory">*</span></label>
                                         <input type="text" class="form-control border-input" name="service_rate[]">
+                                        @if ($errors->has('service_rate'))
+                                          <span class="help-block">
+                                              <strong class="manadatory">{{ $errors->first('service_rate') }}</strong>
+                                          </span>
+                                        @endif
                                       </div>
                                       <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
+                                        <label class="control-label">Enter Time <span class="manadatory">*</span></label>
                                           <input type="text" class="form-control border-input" name="service_time[]">
+                                          @if ($errors->has('service_time'))
+                                            <span class="help-block">
+                                                <strong class="manadatory">{{ $errors->first('service_time') }}</strong>
+                                            </span>
+                                          @endif
                                       </div>                                        
                                     </div>
                                   </div>
                                 </div>
-                                <div class="col-sm-4">
-                                  <div class="child-box-wrap">
-                                    <div class="row">
-
-                                      <div class="col-md-12">
-                                        <div class="form-group">
-                                          <label class="control-label">Select Service</label>
-                                          <select class="form-control border-input" name="service_id[]">
-                                            <option value="" disabled selected>Select Service</option>
-                                            @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]">
-                                      </div>
-                                      <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
-                                          <input type="text" class="form-control border-input" name="service_time[]">
-                                      </div>                                        
-                                    </div>
-                                  </div>
-                                </div>
-
-                                <div class="col-md-4">
-                                  <div class="child-box-wrap">
-                                    <div class="row">
-
-                                      <div class="col-md-12">
-                                        <div class="form-group">
-                                          <label class="control-label">Select Service</label>
-                                          <select class="form-control border-input" name="service_id[]">
-                                            <option value="" disabled selected>Select Service</option>
-                                            @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}</option>
-                                            @endforeach
-                                          </select>
-                                        </div>
-                                      </div>
-                                    </div>
-                                    <div class="row">
-                                      <div class="col-md-6">
-                                        <label class="control-label">Service Rate</label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]">
-                                      </div>
-                                      <div class="col-md-6">
-                                        <label class="control-label">Enter Time</label>
-                                          <input type="text" class="form-control border-input" name="service_time[]">
-                                      </div>                                        
-                                    </div>
-                                  </div>
-                                </div> 
+                                
 
                               </div>
                               <!-- End Row -->
@@ -310,7 +359,7 @@
                                     <button type="button" class="btn btn-header">Cancel</button>
                                     <button type="button" class="btn btn-header btn-back-2">Back</button>
                                     <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
-                                    <input type="submit" value="Update" class="btn btn-header">
+                                    <input type="submit" value="Save Workshop" class="btn btn-header">
                                   </div>
                                 </div>
                               </div>
