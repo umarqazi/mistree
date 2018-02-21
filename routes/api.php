@@ -27,7 +27,11 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 	Route::group(['prefix'=>'customer','middleware' => ['jwt.auth']], function() {  
 		Route::get('logout', 'CustomersController@logout');
 		Route::post('regStoreData', 'CustomersController@regStoreData');
+		Route::post('verifyEmail', 'CustomersController@verifyEmail');
+		
 		Route::get('getCars', 'CarsController@index');
+		Route::post('add_customer_car', 'CarsController@assignCar');
+		Route::post('remove_customer_car', 'CarsController@unassignCar');
 	});
 });
 Route::group(['prefix'=>'workshop'], function() {

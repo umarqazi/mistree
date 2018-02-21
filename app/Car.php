@@ -20,6 +20,6 @@ class Car extends Model
 
     public function customers()
     {
-        return $this->belongsToMany('App\Customer');
+        return $this->belongsToMany('App\Customer')->withPivot('millage', 'vehicle_no', 'insurance', 'removed_at', 'status')->withTimestamps();
     }
 }

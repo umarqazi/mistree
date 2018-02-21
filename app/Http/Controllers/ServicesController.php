@@ -13,6 +13,8 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Session;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
 
 class ServicesController extends Controller
 {
@@ -36,7 +38,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::all();        
+        $services = Service::where('status', '=', 1)->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -47,8 +49,8 @@ class ServicesController extends Controller
             ],Response::HTTP_OK);
         }
         else{
-            // load the view and pass the services
-            return View::make('services.index')
+        // load the view and pass the services
+        return View::make('services.index')
             ->with('services', $services);
         }                 
     }
@@ -76,7 +78,7 @@ class ServicesController extends Controller
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
             'name'              => 'required',            
-            'loyalty_points'    => 'required|numeric',            
+            'loyalty_points'    => 'numeric',            
         );
 
         $inputs = $request->only('name','loyalty_points');
@@ -90,18 +92,29 @@ class ServicesController extends Controller
         } else {
             // store
             $service = new Service;
+
+            if ($request->hasFile('image')) 
+            {
+                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
+                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $service->image          = $img_path;
+            }
+            else
+            {
+              $service->image          =  url('img/thumbnail.png');
+            }
+
             $service->name           = Input::get('name');
             $service->parent_id      = Input::get('parent_id');            
-            $service->loyalty_points = Input::get('loyalty_points');            
-            $service->image          = '';            
+            $service->loyalty_points = Input::get('loyalty_points');                     
             $service->status         = 1;            
             $service->save();
 
             // redirect
             Session::flash('message', 'Successfully created service!');
             return Redirect::to('admin/services');
+        }
     }
-}
 
     /**
      * Display the specified resource.
@@ -145,10 +158,9 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request);
-        // die();
         // validate
         // read more on validation at http://laravel.com/docs/validation
+
         $rules = array(
             'name'       => 'required',
             'parent_id'      => 'required|numeric',            
@@ -164,6 +176,18 @@ class ServicesController extends Controller
         } else {
             $service = Service::find($id);
             // update            
+
+            if ($request->hasFile('image')) 
+            {
+                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
+                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $service->image          = $img_path;
+            }
+            else
+            {
+              $service->image          = $service->image;
+            }
+
             $service->name           = $request->name;
             $service->parent_id      = $request->parent_id;
             $service->save();
@@ -183,11 +207,14 @@ class ServicesController extends Controller
     public function destroy($id)
     {
         // delete
+        // dd($id);
         $service = Service::find($id);
-        $service->delete();
+        $service->status = 0;
+        $service->update();
+        // $service->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
-        return Redirect::to('services');
+        return Redirect::to('admin/services');
     }
 }

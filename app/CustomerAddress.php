@@ -17,4 +17,9 @@ class CustomerAddress extends Model
     protected $fillable = [
         'customer_id', 'type', 'house_no', 'street_no', 'block', 'area', 'town', 'city', 'geo_cord', 'status'
     ];
+
+    public function customer()
+	{
+	    return $this->belongsTo('App\Customer');
+	}
 }

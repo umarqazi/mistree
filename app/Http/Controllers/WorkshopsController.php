@@ -915,7 +915,6 @@ class WorkshopsController extends Controller
 
         return View::make('workshop.requests');
     }
-
     /**
      * @SWG\Post(
      *   path="/api/workshop/deleteWorkshopService",
@@ -984,5 +983,4 @@ class WorkshopsController extends Controller
             'body'          => $workshop_services 
         ],Response::HTTP_OK);   
     }
-
 }
