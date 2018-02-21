@@ -169,14 +169,12 @@ class ServicesController extends Controller
         $inputs = $request->only('name', 'parent_id');
         $validator = Validator::make($inputs, $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('services/'. $id .'/edit')
                 ->withErrors($validator);                
         } else {
             $service = Service::find($id);
-            // update            
-
+         
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
@@ -187,7 +185,6 @@ class ServicesController extends Controller
             {
               $service->image          = $service->image;
             }
-
             $service->name           = $request->name;
             $service->parent_id      = $request->parent_id;
             $service->save();

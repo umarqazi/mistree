@@ -12,7 +12,7 @@
             <div class="col-md-12">
                 <div class="card">
 
-                  <form method="POST" action="{{ url('admin/workshops') }}">
+                  <form method="POST" action="{{ url('admin/workshops') }}" enctype="multipart/form-data">
                     {!! csrf_field() !!}
                       <div class="header">
                         {{-- @if ($errors->any())
@@ -131,6 +131,12 @@
                                  </select>
                               </div>
 
+                            </div>
+
+                            <div class="col-md-6">
+
+                              
+
                               <div class="form-group">                              
                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
                                 <input type="time" class="form-control border-input" name="open_time">
@@ -162,8 +168,27 @@
                                 <div class="clear"></div>                   
                                 <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
                               </div>
+
+                              <div class="form-group">      
+                                <label class="control-label">Workshop Picture 1:</label> 
+                                <div class="clear"></div>                   
+                                <input type="file" class="form-control" name="ws_images[]">
+                              </div>
+
+                              <div class="form-group">      
+                                <label class="control-label">Workshop Picture 2:</label> 
+                                <div class="clear"></div>                   
+                                <input type="file" class="form-control" name="ws_images[]">
+                              </div>
+
+                              <div class="form-group">      
+                                <label class="control-label">Workshop Picture 3:</label> 
+                                <div class="clear"></div>                   
+                                <input type="file" class="form-control" name="ws_images[]">
+                              </div>
                             </div>
-                          </div>                                                                                                     
+                          </div>  
+                                                                                                                            
                           <div class="row">
                             <div class="col-md-12 text-center">
                               <div class="form-group">                        
@@ -174,10 +199,7 @@
 
                         </div>                          
                       </div>
-
-
-
-                          
+                        
                           <!--###############################################--> 
                           <div class="cn-section-2">
 
@@ -240,7 +262,7 @@
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">House No <span class="manadatory">*</span></label>
+                                    <label class="control-label">Building No <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_house_no">
                                     @if ($errors->has('address_house_no'))
                                       <span class="help-block">

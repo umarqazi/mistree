@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                  <form method="POST" action="{{ url('admin/workshops/'.$workshop->id) }}">
+                  <form method="POST" action="{{ url('admin/workshops/'.$workshop->id) }}" enctype="multipart/form-data">
                     <input type="hidden"  value="PATCH" name="_method">
                     {{ csrf_field() }}
                       <div class="header">
@@ -140,12 +140,23 @@
                                 <label class="control-label">Profile Picture</label> 
                                 <div class="clear"></div>                   
                                 <input type="file" id="profile_picture" class="form-control" name="profile_pic">
+                                <br>
+                                @if($workshop->profile_pic)
+                                <img src="{{ $workshop->profile_pic }}" width="80px" height="80px">
+                                @else
+                                        <br>
+                                @endif
                               </div>
 
                               <div class="form-group">      
                                 <label class="control-label">CNIC Picture</label> 
                                 <div class="clear"></div>                   
                                 <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
+                                @if($workshop->cnic_image)
+                                <img src="{{ $workshop->cnic_image }}" width="80px" height="80px">
+                                @else
+                                        <br>
+                                @endif
                               </div>
                             </div>
                           </div>                                                                                                     

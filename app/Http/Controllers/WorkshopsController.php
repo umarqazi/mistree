@@ -7,6 +7,7 @@ use Session;
 use Hash, DB, Config, Mail, View;
 use Illuminate\Support\Facades\Redirect;
 use App\Workshop;
+use App\WorkshopImages;
 use App\Service;
 use App\WorkshopAddress;
 use Illuminate\Http\Response;
@@ -16,6 +17,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\File;
+
 
 class WorkshopsController extends Controller
 {
@@ -105,8 +109,36 @@ class WorkshopsController extends Controller
                 ->withInput(Input::except('password'));
         }       
 
+        if ($request->hasFile('profile_pic')) 
+        {
+            $ws_name = str_replace(' ', '_', $request->name);
+            $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
+           
+            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $profile_pic = $profile_pic_path;
+            // dd($profile_pic_path);
+        }
+        else
+        {
+          $profile_pic         =  url('img/thumbnail.png');
+        }
+
+        if ($request->hasFile('cnic_image')) 
+        {
+            $ws_name = str_replace(' ', '_', $request->name);
+            $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
+            $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $cnic_image = $cnic_pic_path;
+            // dd($profile_pic_path);
+        }
+        else
+        {
+          $cnic_image         =  '';
+        }
+
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
+        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => $profile_pic,'cnic_image' => $cnic_image, 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]); 
+
 
         //Insert Address data from request
         $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
@@ -115,12 +147,31 @@ class WorkshopsController extends Controller
         $service_ids = $request->service_id;
         $service_rates = $request->service_rate;
         $service_times = $request->service_time;    
-               
         if(!empty($service_ids)){
             for($i = 0; $i<count($service_ids); $i++){            
                 $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
             }
         }
+
+        if ($request->hasFile('ws_images')) 
+        {
+             $files = $request->file('ws_images');
+
+            foreach($files as $file)
+            {
+                $images = new WorkshopImages;
+               $ws_name = str_replace(' ', '_', $request->name);
+                   $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/ws_images', new File($file), 'public');  
+
+                   $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+
+                   $ws_pic = $ws_pic_path;
+
+                   $images->url = $ws_pic;
+                   $images->workshop_id = $workshop->id;
+                   $images->save();
+              }
+        }       
 
         $name = $request->name;        
         $email = $request->email;        
@@ -203,15 +254,43 @@ class WorkshopsController extends Controller
          // Update workshop
         $workshop = Workshop::find($id);
 
+        if ($request->hasFile('profile_pic')) 
+        {
+            $ws_name = str_replace(' ', '_', $request->name);
+            $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
+           
+            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $profile_pic = $profile_pic_path;
+            
+        }
+        else
+        {
+          $profile_pic         =  $workshop->profile_pic;
+        }
+
+
+        if ($request->hasFile('cnic_image')) 
+        {
+            $ws_name = str_replace(' ', '_', $request->name);
+            $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
+            $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $cnic_image = $cnic_pic_path;
+        }
+        else
+        {
+          $cnic_image         =  $workshop->cnic_image;
+        }
+
         $workshop->name             = Input::get('name');        
         $workshop->owner_name       = Input::get('owner_name');  
         $workshop->card_number      = Input::get('card_number');
         $workshop->con_number       = Input::get('con_number');
         $workshop->type             = Input::get('type');
-        $workshop->profile_pic      = '';
-        $workshop->pic1             = '';
-        $workshop->pic2             = '';
-        $workshop->pic3             = '';
+        $workshop->profile_pic      = $profile_pic;
+        $workshop->cnic_image      =  $cnic_image;
+        // $workshop->pic1             = '';
+        // $workshop->pic2             = '';
+        // $workshop->pic3             = '';
         $workshop->team_slot        = Input::get('team_slot');
         $workshop->open_time        = Input::get('open_time');
         $workshop->close_time       = Input::get('close_time');
