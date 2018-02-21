@@ -100,7 +100,7 @@ class WorkshopsController extends Controller
         }       
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
+        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);        
 
         //Insert Address data from request
         $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
@@ -696,7 +696,7 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="sercice_name",
+     *     name="service_name",
      *     in="formData",
      *     description="Sercice Name",
      *     required=false,
@@ -737,7 +737,14 @@ class WorkshopsController extends Controller
      */
     public function searchByWorkshop(Request $request)
     {   
-        $workshops = Workshop::where('status', 1)->get();
+        // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
+        /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
+        $workshops = Workshop::where('workshops.status', 1)->with('services')->with('address')->get();
+        $workshop_ids = [];
+        $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id', 'services.name')->where('services.name', 'Oil Change')->get();
+        echo "<pre>";
+        print_r($workshop_ids);
+        die();
         if ($request->has('name')) {
             $workshops = $workshops->where('name', $request->name);
         }
@@ -747,20 +754,21 @@ class WorkshopsController extends Controller
         // if ($request->has('geo_cord')) {
         //     $workshops->where('geo_cord', $request->geo_cord);
         // }
-        if ($request->has('sercice_name')) {
-            $workshops = $workshops->service()->where('services.name', $request->sercice_name);
+        if ($request->has('service_name')) {
+            $workshops = $workshops->where('services.name', $request->sercice_name);
         }
         if ($request->has('address_block')) {
-            $workshops = $workshops->address()->where('workshop_addresses.block', $request->address_block);
+            // $workshops = $workshops->where('adress.block', $request->address_block);
+            $workshops = $workshops->where('address.block', $request->address_block );
         }
         if ($request->has('address_area')) {
-            $workshops = $workshops->address()->where('workshop_addresses.area', $request->address_area);
+            $workshops = $workshops->where('address.area', $request->address_area);
         }
         if ($request->has('address_town')) {
-            $workshops = $workshops->address()->where('workshop_addresses.town', $request->address_town);
+            $workshops = $workshops->where('address.town', $request->address_town);
         }
         if ($request->has('address_city')) {
-            $workshops = $workshops->address()->where('workshop_addresses.city', $request->address_city);
+            $workshops = $workshops->where('address.city', $request->address_city);
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
