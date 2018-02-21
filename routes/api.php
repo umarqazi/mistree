@@ -32,8 +32,9 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::get('get-cars', 'CarsController@index');
 		Route::post('add-customer-car', 'CarsController@assignCar');
 		Route::post('remove-customer-car', 'CarsController@unassignCar');
-		Route::post('get-cust-car', 'CarsController@getCustCar');
-		Route::post('search-workshop', 'WorkshopsController@searchByWorkshop');
+		Route::post('get-customer-car', 'CarsController@getCustCar');
+		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
+		Route::post('search-service', 'ServicesController@searchService');
 	});
 });
 Route::group(['prefix'=>'workshop'], function() {
