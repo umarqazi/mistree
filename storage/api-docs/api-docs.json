@@ -104,7 +104,7 @@
                 }
             }
         },
-        "/api/customer/remove-ustomer-car": {
+        "/api/customer/remove-customer-car": {
             "post": {
                 "tags": [
                     "Cars"
@@ -341,7 +341,7 @@
                 }
             }
         },
-        "/api/customer/verifyEmail": {
+        "/api/customer/verify-email": {
             "get": {
                 "tags": [
                     "Customers"
@@ -415,7 +415,7 @@
                         "type": "string"
                     },
                     {
-                        "name": "sercice_name",
+                        "name": "service_name",
                         "in": "formData",
                         "description": "Sercice Name",
                         "required": false,
