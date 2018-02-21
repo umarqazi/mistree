@@ -275,7 +275,7 @@ class WorkshopsController extends Controller
         }       
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'pic1' => '', 'pic2' => '', 'pic3' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);                
+        $workshop = Workshop::create(['name' => $request->name, 'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => '', 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]);                
 
         //Insert Services data from request
         $services = $request->services;
@@ -741,10 +741,6 @@ class WorkshopsController extends Controller
         /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
         $workshops = Workshop::where('workshops.status', 1)->with('services')->with('address')->get();
         $workshop_ids = [];
-        $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id', 'services.name')->where('services.name', 'Oil Change')->get();
-        echo "<pre>";
-        print_r($workshop_ids);
-        die();
         if ($request->has('name')) {
             $workshops = $workshops->where('name', $request->name);
         }
@@ -755,7 +751,8 @@ class WorkshopsController extends Controller
         //     $workshops->where('geo_cord', $request->geo_cord);
         // }
         if ($request->has('service_name')) {
-            $workshops = $workshops->where('services.name', $request->sercice_name);
+            $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', $request->service_name)->get()->pluck('workshop_id')->toArray();
+            $workshops = $workshops->whereIn('id', $workshop_ids);
         }
         if ($request->has('address_block')) {
             // $workshops = $workshops->where('adress.block', $request->address_block);
