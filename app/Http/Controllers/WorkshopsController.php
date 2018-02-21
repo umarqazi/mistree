@@ -79,8 +79,8 @@ class WorkshopsController extends Controller
     public function store(Request $request)
     {                
         $rules = [
-            'name'                           => 'required|alpha',
-            'owner_name'                     => 'required|alpha',
+            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
@@ -91,16 +91,16 @@ class WorkshopsController extends Controller
             'address_type'                   => 'required|alpha',
             'address_house_no'               => 'required|numeric',
             'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required|alpha_dash',
-            'address_area'                   => 'required|alpha_dash',
-            'address_town'                   => 'required|alpha_dash',
-            'address_city'                   => 'required|alpha',
-            'service_id.*'                   => 'required|integer',
-            'service_rate.*'                 => 'required|integer',
-            'service_time.*'                 => 'required|alpha_dash' 
+            'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            // 'service_id.*'                   => 'required|integer',
+            // 'service_rate.*'                 => 'required|integer',
+            // 'service_time.*'                 => 'required|alpha_dash' 
         ];        
 
-        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time', 'service_time', 'service_id', 'service_rate');
+        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -227,8 +227,11 @@ class WorkshopsController extends Controller
     public function update(Request $request, $id)
     {           
         $rules = [
-            'name'                           => 'required|alpha',
-            'owner_name'                     => 'required|alpha',
+            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
+            'email'                          => 'required|email|unique:workshops',
+            'password'                       => 'required|confirmed|min:8',
+            'password_confirmation'          => 'required',
             'card_number'                    => 'required|digits:13',
             'con_number'                     => 'required|digits:11',
             'open_time'                      => 'required',
@@ -236,11 +239,14 @@ class WorkshopsController extends Controller
             'address_type'                   => 'required|alpha',
             'address_house_no'               => 'required|numeric',
             'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required|alpha_dash',
-            'address_area'                   => 'required|alpha_dash',
-            'address_town'                   => 'required|alpha_dash',
-            'address_city'                   => 'required|alpha'
-        ];  
+            'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            // 'service_id.*'                   => 'required|integer',
+            // 'service_rate.*'                 => 'required|integer',
+            // 'service_time.*'                 => 'required|alpha_dash' 
+        ];   
 
         $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
 
@@ -515,12 +521,12 @@ class WorkshopsController extends Controller
             'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            'service_id.*'                   => 'required|integer',
-            'service_rate.*'                 => 'required|integer',
-            'service_time.*'                 => 'required|alpha_dash' 
+            // 'service_id.*'                   => 'required|integer',
+            // 'service_rate.*'                 => 'required|integer',
+            // 'service_time.*'                 => 'required|alpha_dash' 
         ];        
         
-        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time', 'service_time', 'service_id', 'service_rate');
+        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -942,7 +948,7 @@ class WorkshopsController extends Controller
 
     public function storeWorkshopService(Request $request){
         $rules = [
-            'service_id'      => 'required|unique_with:workshop_service,workshop_id',
+            // 'service_id'      => 'required|unique_with:workshop_service,workshop_id',
             'service_rate'    => 'required',            
             'service_time'    => 'required'                        
             ];
