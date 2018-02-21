@@ -315,7 +315,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/customer/remove-ustomer-car",
+     *   path="/api/customer/remove-customer-car",
      *   summary="Delete customer's car",
      *   operationId="remove_customer_car",
      *   produces={"application/json"},
