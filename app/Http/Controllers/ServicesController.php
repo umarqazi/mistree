@@ -197,4 +197,113 @@ class ServicesController extends Controller
         Session::flash('message', 'Successfully deleted the Service!');
         return Redirect::to('admin/services');
     }
+    /**
+     * Searching a workshop.
+     *
+     * @return \Illuminate\Http\Response
+     */
+     /**
+     * @SWG\Post(
+     *   path="/api/customer/search-service",
+     *   summary="Search Service",
+     *   operationId="searchService",
+     *   produces={"application/json"},
+     *   tags={"Service"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_name",
+     *     in="formData",
+     *     description="Service Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_name",
+     *     in="formData",
+     *     description="Workshop Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_type",
+     *     in="formData",
+     *     description="Workshop Type",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_block",
+     *     in="formData",
+     *     description="Workshop Address Block",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_area",
+     *     in="formData",
+     *     description="Workshop Address Area",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_town",
+     *     in="formData",
+     *     description="Workshop Address Town",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_city",
+     *     in="formData",
+     *     description="Workshop Address City",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function searchService(Request $request)
+    {   
+        // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
+        /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
+        $services = Service::where('services.status', 1);
+        $service_ids = [];
+        if ($request->has('service_name')) {
+            $services = $services->where('name', 'LIKE', '%'.$request->service_name.'%');
+        }
+        if ($request->has('workshop_name')) {
+            // $workshops = $workshops->where('services.name', $request->service_name);
+            // $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', $request->service_name)->get()->pluck('workshop_id')->toArray();
+            // $workshops = $workshops->whereIn('id', $workshop_ids);
+            $workshop_ids = Db::table('workshop_service')->join('workshops', 'workshop_service.workshop_id', '=', 'workshops.id')->select('workshop_service.service_id')->where('workshops.name', 'LIKE', '%'.$request->service_name.'%')->get()->pluck('service_id')->toArray();
+            $services = $services->whereIn('id', $service_ids);
+        }
+        // if ($request->has('address_block')) {
+        //     // $workshops = $workshops->where('adress.block', $request->address_block);
+        //     $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
+        // }
+        // if ($request->has('address_area')) {
+        //     $workshops = $workshops->where('address.area', 'LIKE', '%'.$request->address_area.'%');
+        // }
+        // if ($request->has('address_town')) {
+        //     $workshops = $workshops->where('address.town', 'LIKE', '%'.$request->address_town.'%');
+        // }
+        // if ($request->has('address_city')) {
+        //     $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
+        // }
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => '',
+            'body' => $services->get()
+        ],Response::HTTP_OK);
+    }
 }
