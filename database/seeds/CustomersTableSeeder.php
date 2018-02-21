@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Model;
 
 class CustomersTableSeeder extends Seeder
 {
@@ -11,9 +12,15 @@ class CustomersTableSeeder extends Seeder
      */
     public function run()
     {
-    	factory(App\Customer::class, 5)->create([
-         'password' => bcrypt('password')
-        ]);
+    	Model::unguard();
+
+        factory(App\Customer::class, 5)->create([
+            'password' => bcrypt('customer')
+        ])->each(function($c){
+            $c->addresses()->save(factory(App\CustomerAddress::class)->make());
+        });
+
+        Model::reguard();
        
     }
 }

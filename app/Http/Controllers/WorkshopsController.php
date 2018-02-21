@@ -404,7 +404,7 @@ class WorkshopsController extends Controller
     public function recover(Request $request)
     {
         $workshop = Workshop::where('email', $request->email)->first();
-        if (!$user) {
+        if (!$workshop) {
             $error_message = "Your email address was not found.";
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -661,15 +661,5 @@ class WorkshopsController extends Controller
         dd('requests');
 
         return View::make('workshop.requests');
-    }
-    /**
-     * Show the form for creating a new workshop.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {   
-        $services = Service::all();        
-        return View::make('workshop.create', ['services' => $services]);
     }
 }
