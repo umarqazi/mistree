@@ -75,26 +75,25 @@ class WorkshopsController extends Controller
     public function store(Request $request)
     {                
         $rules = [
-            'name'                           => 'required',
-            'owner_name'                     => 'required',
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',
             'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:6',
+            'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
-            'card_number'                    => 'required|numeric|min:13',
-            'con_number'                     => 'required|numeric|min:11',
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'address_type'                   => 'required',
-            'address_house_no'               => 'required',
-            'address_street_no'              => 'required',
-            'address_block'                  => 'required',
-            'address_area'                   => 'required',
-            'address_town'                   => 'required',
-            'address_city'                   => 'required',
-            'service_id.*'                   => 'required',
-            'service_rate.*'                 => 'required',
-            'service_time.*'                 => 'required' 
-
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|alpha_dash',
+            'address_area'                   => 'required|alpha_dash',
+            'address_town'                   => 'required|alpha_dash',
+            'address_city'                   => 'required|alpha',
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];        
 
         $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time', 'service_time', 'service_id', 'service_rate');
@@ -122,6 +121,19 @@ class WorkshopsController extends Controller
                 $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
             }
         }
+
+        $name = $request->name;        
+        $email = $request->email;        
+        $subject = "Please verify your email address.";
+        $verification_code = str_random(30); //Generate verification code         
+        DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
+        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email, $name);
+                $mail->subject($subject);
+            });
+
         return Redirect::to('admin/workshops');       
     }
 
@@ -164,19 +176,19 @@ class WorkshopsController extends Controller
     public function update(Request $request, $id)
     {           
         $rules = [
-            'name'              => 'required',                        
-            'owner_name'        => 'required',
-            'card_number'       => 'required|numeric|min:13',
-            'con_number'        => 'required|numeric|min:11',
-            'open_time'         => 'required',
-            'close_time'        => 'required',
-            'address_type'      => 'required',
-            'address_house_no'  => 'required',
-            'address_street_no' => 'required',
-            'address_block'     => 'required',
-            'address_area'      => 'required',
-            'address_town'      => 'required',
-            'address_city'      => 'required' 
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
+            'open_time'                      => 'required',
+            'close_time'                     => 'required',
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|alpha_dash',
+            'address_area'                   => 'required|alpha_dash',
+            'address_town'                   => 'required|alpha_dash',
+            'address_city'                   => 'required|alpha'
         ];  
 
         $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
@@ -408,25 +420,25 @@ class WorkshopsController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name'                           => 'required',
-            'owner_name'                     => 'required',
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',
             'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:6',
+            'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
-            'card_number'                    => 'required|numeric|min:13',
-            'con_number'                     => 'required|numeric|min:11',
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'address_type'                   => 'required',
-            'address_house_no'               => 'required',
-            'address_street_no'              => 'required',
-            'address_block'                  => 'required',
-            'address_area'                   => 'required',
-            'address_town'                   => 'required',
-            'address_city'                   => 'required',
-            'service_id.*'                   => 'required',
-            'service_rate.*'                 => 'required',
-            'service_time.*'                 => 'required' 
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|alpha_dash',
+            'address_area'                   => 'required|alpha_dash',
+            'address_town'                   => 'required|alpha_dash',
+            'address_city'                   => 'required|alpha',
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];        
         
         $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time', 'service_time', 'service_id', 'service_rate');
@@ -637,7 +649,7 @@ class WorkshopsController extends Controller
     {
         $check = DB::table('workshop_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
-            $workshop = Workshop::find($check->user_id);
+            $workshop = Workshop::find($check->ws_id);
             if($workshop->is_verified == 1){
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -785,11 +797,13 @@ class WorkshopsController extends Controller
     public function profileUpdate(Request $request, $id)
     {
         // $request_workshop = $request->workshop;
-        $rules = [
-            'name'              => 'required',                        
-            'owner_name'        => 'required',
-            'card_number'       => 'required|numeric|min:13|max:15',
-            'con_number'        => 'required|numeric|min:7|max:13'            
+        $rules = [            
+            'name'                           => 'required|alpha',
+            'owner_name'                     => 'required|alpha',            
+            'card_number'                    => 'required|digits:13',
+            'con_number'                     => 'required|digits:11',
+            'open_time'                      => 'required',
+            'close_time'             
         ];  
 
         $input = $request->only('name', 'owner_name', 'card_number', 'con_number');
@@ -823,24 +837,20 @@ class WorkshopsController extends Controller
     }
 
     public function updateWorkshopService(Request $request){
-        $rules = [
-            'service_id'      => 'required|numeric',
+        $rules = [            
             'service_rate'    => 'required|numeric',            
             'service_time'    => 'required'                        
-            ];
-        $input = $request->only('service_id', 'service_rate', 'service_time' );
-
+            ];        
+        $input = $request->only('service_rate', 'service_time' );
         $validator = Validator::make($input, $rules);
-        if($validator->fails()) {                
-            return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => $validator->messages(),
-                    'body' => $request->all()
-                ],Response::HTTP_OK);
-        }            
+        if($validator->fails()) {
+            $workshop_service_id = $request->workshop_service_id ;            
+            return Redirect::to('admin/edit-workshop-service/'.$workshop_service_id)
+                ->withErrors($validator)
+                ->withInput(Input::except('password'));
+        }                 
         $workshop = Workshop::find($request->workshop_id);
-        $workshop->service()->updateExistingPivot($request->exit_id, ['service_id' => $request->service_id, 'service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        $workshop->service()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
         return Redirect::to('admin/workshops/'.$request->workshop_id);               
 
     }
@@ -853,9 +863,9 @@ class WorkshopsController extends Controller
 
     public function storeWorkshopService(Request $request){
         $rules = [
-            'service_id.*'      => 'required|numeric',
-            'service_rate.*'    => 'required|numeric',            
-            'service_time.*'    => 'required'                        
+            'service_id'      => 'required|unique_with:workshop_service,workshop_id',
+            'service_rate'    => 'required',            
+            'service_time'    => 'required'                        
             ];
         $input = $request->only('service_id', 'service_rate', 'service_time' );
 
@@ -869,10 +879,10 @@ class WorkshopsController extends Controller
         $service = $request->service_id; 
         $rate = $request->service_rate;
         $time = $request->service_time;       
-        for($i = 0; $i<count($service); $i++){            
-            $workshop->service()->attach($service[$i], ['service_rate' => $rate[$i] , 'service_time' => $time[$i] ]);
-        }
-        return Redirect::to('admin/workshops/'.$workshop->id);               
+        
+        $workshop->service()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        
+        return Redirect::to('admin/add-workshop-service/'.$workshop->id);               
     }
 
     public function deleteWorkshopService($workshop_id, $service_id){

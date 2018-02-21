@@ -187,15 +187,15 @@ class WorkshopAddressesController extends Controller
     public function update(Request $request, $id)
     {
         $address = WorkshopAddress::find($id);                
-        $rules = array(
-            'address_type'          => 'required',
-            'address_house_no'      => 'required',
-            'address_street_no'     => 'required',
-            'address_block'         => 'required',
-            'address_area'          => 'required',
-            'address_town'          => 'required',
-            'address_city'          => 'required'
-        );
+        $rules = [            
+            'address_type'                   => 'required|alpha',
+            'address_house_no'               => 'required|numeric',
+            'address_street_no'              => 'required|numeric',
+            'address_block'                  => 'required|alpha_dash',
+            'address_area'                   => 'required|alpha_dash',
+            'address_town'                   => 'required|alpha_dash',
+            'address_city'                   => 'required|alpha'
+            ];
 
         $input = $request->only('address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
 

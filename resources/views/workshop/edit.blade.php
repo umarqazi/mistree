@@ -15,13 +15,13 @@
                     <input type="hidden"  value="PATCH" name="_method">
                     {{ csrf_field() }}
                       <div class="header">
-                        @if ($errors->any())
+                        {{-- @if ($errors->any())
                           <div class="row text-center alert alert-danger">
                             @foreach($errors->all() as $error)
                               <div><span class="manadatory">{{ $error }}</span></div>
                             @endforeach                        
                           </div>
-                        @endif
+                        @endif --}} 
                           <div class="row">
                               <div class="col-md-12">
                                   <h4 class="title">Workshop Management - Update Workshop</h4> 

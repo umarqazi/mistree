@@ -15,13 +15,13 @@
                   <form method="POST" action="{{ url('admin/workshops') }}">
                     {!! csrf_field() !!}
                       <div class="header">
-                        @if ($errors->any())
+                        {{-- @if ($errors->any())
                           <div class="row text-center alert alert-danger">
                             @foreach($errors->all() as $error)
                               <div><span class="manadatory">{{ $error }}</span></div>
                             @endforeach                        
                           </div>
-                        @endif
+                        @endif --}}
                           <div class="row">
                               <div class="col-md-12">
                                   <h4 class="title">Workshop Management - Create New</h4> 
@@ -337,7 +337,7 @@
                                     <button type="button" class="btn btn-header">Cancel</button>
                                     <button type="button" class="btn btn-header btn-back-2">Back</button>
                                     <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
-                                    <input type="submit" value="Update" class="btn btn-header">
+                                    <input type="submit" value="Save Workshop" class="btn btn-header">
                                   </div>
                                 </div>
                               </div>
