@@ -96,16 +96,16 @@ class WorkshopsController extends Controller
             'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            // 'service_id.*'                   => 'required|integer',
-            // 'service_rate.*'                 => 'required|integer',
-            // 'service_time.*'                 => 'required|alpha_dash' 
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];        
 
         $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
-            return Redirect::to('admin/workshops/create')
+            return Redirect::back()
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         }       
@@ -160,16 +160,13 @@ class WorkshopsController extends Controller
             foreach($files as $file)
             {
                 $images = new WorkshopImages;
-               $ws_name = str_replace(' ', '_', $request->name);
-                   $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/ws_images', new File($file), 'public');  
-
-                   $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-
-                   $ws_pic = $ws_pic_path;
-
-                   $images->url = $ws_pic;
-                   $images->workshop_id = $workshop->id;
-                   $images->save();
+                $ws_name = str_replace(' ', '_', $request->name);
+                $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/ws_images', new File($file), 'public');
+                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $ws_pic = $ws_pic_path;
+                $images->url = $ws_pic;
+                $images->workshop_id = $workshop->id;
+                $images->save();
               }
         }       
 
@@ -229,9 +226,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:8',
-            'password_confirmation'          => 'required',
+            // 'email'                          => 'required|email|unique:workshops',
+            // 'password'                       => 'required|confirmed|min:8',
+            // 'password_confirmation'          => 'required',
             'card_number'                    => 'required|digits:13',
             'con_number'                     => 'required|digits:11',
             'open_time'                      => 'required',
@@ -243,9 +240,9 @@ class WorkshopsController extends Controller
             'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
             'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            // 'service_id.*'                   => 'required|integer',
-            // 'service_rate.*'                 => 'required|integer',
-            // 'service_time.*'                 => 'required|alpha_dash' 
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];   
 
         $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');

@@ -25,12 +25,22 @@
                                   <div class="form-group">  
                                     <label class="control-label">Service Name</label>
                                     <input type="text" class="form-control border-input" name="name" value="{{ $service->name }}" required="required">
+                                    @if ($errors->has('name'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('name') }}</strong>
+                                        </span>
+                                     @endif
                                   </div>
 
                                   <div class="form-group">  
                                     <label class="control-label">Loyalty Points</label>
                                     <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty_points">
                                     <input type="hidden"  value="PUT" name="_method"">
+                                    @if ($errors->has('loyalty_points'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('loyalty_points') }}</strong>
+                                        </span>
+                                     @endif
                                   </div>
 
                                   <div class="form-group">  

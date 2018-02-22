@@ -39,7 +39,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::where('status', '=', 1)->get();
+        $services = Service::all();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -78,18 +78,18 @@ class ServicesController extends Controller
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required',            
-            'loyalty_points'    => 'numeric',            
+            'name'              => 'required|unique:services|max:255',            
+            'loyalty_points'    => 'numeric',  
+            'image'             => 'mimes:jpeg,jpg,png',         
         );
-
+       // dd($request->royalty_points);
         $inputs = $request->only('name','loyalty_points');
 
         $validator = Validator::make($inputs, $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('services/create')
-                ->withErrors($validator);               
+            return Redirect::back()->withErrors($validator);               
         } else {
             // store
             $service = new Service;
@@ -163,16 +163,17 @@ class ServicesController extends Controller
         // read more on validation at http://laravel.com/docs/validation
 
         $rules = array(
-            'name'       => 'required',
-            'parent_id'      => 'required|numeric',            
+            'name'           => 'required|max:255',
+            'parent_id'      => 'required|numeric',           
+            'loyalty_points' => 'numeric',  
+            'image'          => 'mimes:jpeg,jpg,png',          
         );
 
-        $inputs = $request->only('name', 'parent_id');
+        $inputs = $request->only('name', 'parent_id','loyalty_points');
         $validator = Validator::make($inputs, $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('services/'. $id .'/edit')
-                ->withErrors($validator);                
+            return Redirect::back()->withErrors($validator);              
         } else {
             $service = Service::find($id);
          
@@ -188,6 +189,7 @@ class ServicesController extends Controller
             }
             $service->name           = $request->name;
             $service->parent_id      = $request->parent_id;
+            $service->loyalty_points = $request->loyalty_points;
             $service->save();
 
             // redirect
@@ -204,13 +206,10 @@ class ServicesController extends Controller
      */
     public function destroy($id)
     {
-        // delete
-        // dd($id);
         $service = Service::find($id);
-        $service->status = 0;
-        $service->update();
-        // $service->delete();
-
+        // $service->status = 0;
+        // $service->update();
+        $service->delete();
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
         return Redirect::to('admin/services');
