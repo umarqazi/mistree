@@ -149,7 +149,7 @@ class WorkshopsController extends Controller
         $service_times = $request->service_time;    
         if(!empty($service_ids)){
             for($i = 0; $i<count($service_ids); $i++){            
-                $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
+                $workshop->services()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
             }
         }
 
@@ -548,7 +548,7 @@ class WorkshopsController extends Controller
         $services = $request->services;
         if(!empty($service_ids)){
             foreach($services as $service){
-                $workshop->service()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
+                $workshop->services()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
             }
         }        
 
@@ -610,7 +610,7 @@ class WorkshopsController extends Controller
     public function login(Request $request)
     {           
         $check = Workshop::select('is_approved')->where('email', $request->email)->first();        
-        if($check->is_approved == 0){                
+        if((!empty($check)) && ($check->is_approved == 0)){  
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -945,7 +945,7 @@ class WorkshopsController extends Controller
     public function getWorkshop($id){
         $workshop = Workshop::find($id);
         $address = $workshop->address;
-        $service = $workshop->service;
+        $service = $workshop->services;
         return response([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -954,7 +954,7 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
     /**
-     * @SWG\Post(
+     * @SWG\post(
      *   path="/api/workshop/updateProfile/{workshop_id}",
      *   summary="Update Workshop Details",
      *   operationId="update",
@@ -1052,8 +1052,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function profileUpdate(Request $request, $id)
-    {        
-        dd('warya e');
+    {                
         $rules = [            
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -1076,13 +1075,26 @@ class WorkshopsController extends Controller
                 ],Response::HTTP_OK);
         }
         $workshop = Workshop::find($id);
-        $workshop->fill($request);        
-        //address   
+        $workshop->name             = $request->name;        
+        $workshop->owner_name       = $request->owner_name;  
+        $workshop->card_number      = $request->card_number;
+        $workshop->con_number       = $request->con_number;
+        $workshop->type             = $request->type;
+        // $workshop->profile_pic      = $profile_pic;
+        // $workshop->cnic_image      =  $cnic_image;
+        // $workshop->pic1             = '';
+        // $workshop->pic2             = '';
+        // $workshop->pic3             = '';
+        $workshop->team_slot        = $request->team_slot;
+        $workshop->open_time        = $request->open_time;
+        $workshop->close_time       = $request->close_time;        
+        $workshop->save();      
+        
         return response([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Details Updated!',
-            'body' => $request
+            'body' => $request->all()
         ],Response::HTTP_OK);
     }
 
@@ -1119,7 +1131,7 @@ class WorkshopsController extends Controller
                 ->withInput(Input::except('password'));
         }                 
         $workshop = Workshop::find($request->workshop_id);
-        $workshop->service()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
         return Redirect::to('admin/workshops/'.$request->workshop_id);               
 
     }
@@ -1161,7 +1173,7 @@ class WorkshopsController extends Controller
         $rate = $request->service_rate;
         $time = $request->service_time;       
         
-        $workshop->service()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
         
         return Redirect::to('admin/add-workshop-service/'.$workshop->id);               
     }
@@ -1175,7 +1187,7 @@ class WorkshopsController extends Controller
      */
     public function deleteWorkshopService($workshop_id, $service_id){
         $workshop = Workshop::find($workshop_id);
-        $workshop->service()->detach($service_id);        
+        $workshop->services()->detach($service_id);        
         // show the view and pass the workshop to it
         return Redirect::to('admin/workshops/'.$workshop->id);               
     }
@@ -1335,11 +1347,18 @@ class WorkshopsController extends Controller
     }
     /**
      * @SWG\Post(
-     *   path="/api/workshop/deleteWorkshopService",
+     *   path="/api/workshop/deleteWorkshopService/{workshop_id}/{service_id}",
      *   summary="Delete Workshop Service",
      *   operationId="delete",
      *   produces={"application/json"},
      *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="token",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Parameter(
      *     name="workshop_id",
      *     in="path",
@@ -1354,30 +1373,37 @@ class WorkshopsController extends Controller
      *     required=true,
      *     type="integer"
      *   ), 
-     *    @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      */
     public function unassignService($workshop_id, $service_id){
         // delete
-        $workshop = Workshop::find($workshop_id);
-        $workshop->service()->dettach($service_id);
+        $workshop = Workshop::find($workshop_id);        
+        $workshop->services()->detach($service_id);
 
         return response()->json([
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service deleted!!',
-            'body'          => '' 
+            'body'          => ''
         ],Response::HTTP_OK);
     }
     /**
     * @SWG\Get(
-    *   path="/api/workshop/workshopServices",
+    *   path="/api/workshop/workshopServices/{workshop_id}",
     *   summary="All services of Workshop",
     *   operationId="fetch",
     *   produces={"application/json"},
     *   tags={"Workshops"},
+    *   @SWG\Parameter(
+    *     name="token",
+    *     in="query",
+    *     description="token",
+    *     required=true,
+    *     type="string"
+    *   ),    
     *   @SWG\Parameter(
     *     name="workshop_id",
     *     in="path",
@@ -1385,14 +1411,14 @@ class WorkshopsController extends Controller
     *     required=true,
     *     type="integer"
     *   ),    
+
     *   @SWG\Response(response=200, description="successful operation"),
     *   @SWG\Response(response=406, description="not acceptable"),
     *   @SWG\Response(response=500, description="internal server error")
     * )
     */
     public function allWorkshopServices($workshop_id){
-        $workshop = Workshop::find($workshop_id);
-        $workshop_services = $workshop->service;
+        $workshop_services = Workshop::find($workshop_id)->services;        
         return response()->json([
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
