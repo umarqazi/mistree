@@ -544,21 +544,13 @@ class WorkshopsController extends Controller
         //Insert Address data from request
         $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
 
-        $services = $request->services;
-        foreach($services as $service){
-            $workshop->service()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
-        }
-
         //Insert Services data from request        
-        $service_ids = $request->service_id;
-        $service_rates = $request->service_rate;
-        $service_times = $request->service_time;          
-
+        $services = $request->services;
         if(!empty($service_ids)){
-            for($i = 0; $i<count($service_ids); $i++){            
-                $workshop->service()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
+            foreach($services as $service){
+                $workshop->service()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
             }
-        }
+        }        
 
         $name = $request->name;
         $con_number = $request->con_number;
