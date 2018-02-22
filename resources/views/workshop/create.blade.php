@@ -69,8 +69,8 @@
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Enter Passowrd <span class="manadatory">*</span></label>
-                                <input type="password" class="form-control border-input" name="password">
+                                <label class="control-label">Enter Password <span class="manadatory">*</span></label>
+                                <input type="password" id="password" class="form-control border-input" name="password">
                                 @if ($errors->has('password'))
                                     <span class="help-block">
                                         <strong class="manadatory">{{ $errors->first('password') }}</strong>
@@ -79,13 +79,14 @@
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Confirm Passowrd <span class="manadatory">*</span></label>
-                                <input type="password" class="form-control border-input" name="password_confirmation">
+                                <label class="control-label">Confirm Password <span class="manadatory">*</span></label>
+                                <input type="password" id="confirm_password" class="form-control border-input" name="password_confirmation">
                                 @if ($errors->has('password_confirmation'))
                                     <span class="help-block">
                                         <strong class="manadatory">{{ $errors->first('password_confirmation') }}</strong>
                                     </span>
                                 @endif
+                                <span id='message'></span>
                               </div>  
 
                               <div class="form-group">
@@ -246,14 +247,16 @@
                                       </span>
                                     @endif
                                   </div>
-                                  
                                 </div>
 
                                 <div class="col-md-6">
 
                                   <div class="form-group">                              
                                     <label class="control-label">Address Type <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_type">
+                                    <select class="form-control border-input" name="address_type"> 
+                                      <option value="Authorized"> Authorized </option>
+                                      <option value="UnAuthorized"> UnAuthorized </option>
+                                    </select>
                                     @if ($errors->has('address_type'))
                                       <span class="help-block">
                                           <strong class="manadatory">{{ $errors->first('address_type') }}</strong>
@@ -262,7 +265,7 @@
                                   </div>
 
                                   <div class="form-group">                              
-                                    <label class="control-label">Building No <span class="manadatory">*</span></label>
+                                    <label class="control-label">Shop No <span class="manadatory">*</span></label>
                                     <input type="text" class="form-control border-input" name="address_house_no">
                                     @if ($errors->has('address_house_no'))
                                       <span class="help-block">
@@ -374,6 +377,15 @@
     </div>
 
 </div>
+
+<script>
+    $('#password, #confirm_password').on('keyup', function () {
+      if ($('#password').val() == $('#confirm_password').val()) {
+        $('#message').html('Matching').css('color', 'green');
+      } else 
+        $('#message').html('Not Matching').css('color', 'red');
+    });
+</script>
 
 <script>
   function addmoreServices(event){
