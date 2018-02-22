@@ -16,7 +16,7 @@ class Workshop extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'card_number', 'con_number', 'type', 'profile_pic', 'pic1', 'pic2', 'pic3', 'geo_cord', 'team_slot', 'open_time', 'close_time','status', 'is_verified', 'owner_name', 'cnic_image'
+        'name', 'email', 'password', 'card_number', 'con_number', 'type', 'profile_pic', 'geo_cord', 'team_slot', 'open_time', 'close_time','status', 'is_verified', 'owner_name', 'cnic_image'
     ];
 
     /**
@@ -46,6 +46,11 @@ class Workshop extends Authenticatable
     public function services()
     {
         return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time');
+    }
+
+    public function images()
+    {
+        return $this->hasMany('App\WorkshopImages');
     }
 
     public function sendPasswordResetNotification($token)

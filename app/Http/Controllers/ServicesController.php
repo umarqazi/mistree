@@ -18,21 +18,41 @@ use Illuminate\Http\File;
 
 class ServicesController extends Controller
 {
+     /**
+     * @SWG\Get(
+     *   path="/api/workshop/getServices",
+     *   summary="All Services for Workshop",
+     *   operationId="select services",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+    /**
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        // get all the services wit status Active
-        // $services = Service::all();
-        
+    public function index(Request $request)
+    {        
+        // get all the services
         $services = Service::where('status', '=', 1)->get();
-        
+        $reqFrom = $request->header('Content-Type');
+        if( $reqFrom == 'application/json'){
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'all services',
+                'body' => [ 'services' => $services ]
+            ],Response::HTTP_OK);
+        }
+        else{
         // load the view and pass the services
         return View::make('services.index')
             ->with('services', $services);
+        }                 
     }
 
     /**
@@ -149,14 +169,12 @@ class ServicesController extends Controller
         $inputs = $request->only('name', 'parent_id');
         $validator = Validator::make($inputs, $rules);
 
-        // process the login
         if ($validator->fails()) {
             return Redirect::to('services/'. $id .'/edit')
                 ->withErrors($validator);                
         } else {
             $service = Service::find($id);
-            // update            
-
+         
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
@@ -167,7 +185,6 @@ class ServicesController extends Controller
             {
               $service->image          = $service->image;
             }
-
             $service->name           = $request->name;
             $service->parent_id      = $request->parent_id;
             $service->save();

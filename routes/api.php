@@ -39,12 +39,18 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 });
 Route::group(['prefix'=>'workshop'], function() {
 	Route::post('register', 'WorkshopsController@register');
+	Route::get('getServices', 'ServicesController@index');
 	Route::post('login', 'WorkshopsController@login');
 	Route::post('recover', 'WorkshopsController@recover');    
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 	Route::group(['prefix'=>'workshop','middleware' => ['jwt.auth']], function() {  
-		Route::post('logout', 'WorkshopsController@logout');
+		Route::get('logout', 'WorkshopsController@logout');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
+		Route::get('getWorkshop/{id}', 'WorkshopsController@getWorkshop');
+		Route::post('updateProfile', 'WorkshopsController@profileUpdate');
+		Route::resource('address', 'WorkshopAddressesController');
+		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');
+		Route::post('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
 	});
 });

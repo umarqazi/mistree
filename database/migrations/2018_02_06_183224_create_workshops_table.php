@@ -20,7 +20,7 @@ class CreateWorkshopsTable extends Migration
             $table->string('card_number',45);
             $table->string('con_number',45);
             $table->string('type',45);
-            $table->string('profile_pic',45);
+            $table->string('profile_pic',191);
             $table->string('pic1',45);
             $table->string('pic2',45);
             $table->string('pic3',45);
