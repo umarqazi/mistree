@@ -764,7 +764,14 @@ class WorkshopsController extends Controller
         //Approve Workshop
         $workshop = Workshop::find($id);
         $workshop->is_approved       = 1;
-        $workshop->save();        
+        $workshop->save();
+        $subject = "Conragulations! Your workshop has been approved.";
+           Mail::send('workshop.confirmationEmail', ['name' => $name],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email, $name);
+                $mail->subject($subject);
+            });        
         return Redirect::to('admin/workshops');
     }
 
