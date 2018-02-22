@@ -722,7 +722,7 @@ class WorkshopsController extends Controller
     {
         return View::make('workshop.requests');
     }
-    
+
     /**
      * Searching a workshop.
      *
@@ -734,7 +734,7 @@ class WorkshopsController extends Controller
      *   summary="Search Workshop",
      *   operationId="searchByWorkshop",
      *   produces={"application/json"},
-     *   tags={"Workshop"},
+     *   tags={"Workshops"},
      *   @SWG\Parameter(
      *     name="token",
      *     in="query",
@@ -800,7 +800,7 @@ class WorkshopsController extends Controller
     {   
         // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
         /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
-        $workshops = Workshop::where('workshops.status', 1)->with('services')->with('address');
+        $workshops = Workshop::where('workshops.status', 1)->with('address');
         $workshop_ids = [];
         if ($request->has('name')) {
             $workshops = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
@@ -813,11 +813,17 @@ class WorkshopsController extends Controller
         // }
         if ($request->has('service_name')) {
             // $workshops = $workshops->where('services.name', $request->service_name);
-            $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', 'LIKE', '%'.$request->service_name.'%')->get()->pluck('workshop_id')->toArray();
-            $workshops = $workshops->whereIn('id', $workshop_ids);
+            $service_names = explode(", ",$request->service_name);
+            foreach($service_names as $service_name){
+                 $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', 'LIKE', '%'.$service_name.'%')->get()->pluck('workshop_id')->toArray();
+                $workshops = $workshops->whereIn('id', $workshop_ids);
+            }
+
+            $workshops=$workshops->with(['services' => function($query) use ($service_names) {
+                $query->whereIn('name', $service_names);
+            }]);
         }
         if ($request->has('address_block')) {
-            // $workshops = $workshops->where('adress.block', $request->address_block);
             $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
         }
         if ($request->has('address_area')) {
@@ -829,11 +835,15 @@ class WorkshopsController extends Controller
         if ($request->has('address_city')) {
             $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
         }
+        $workshops = $workshops->get();
+        foreach ($workshops as $key =>$workshop) {
+            $workshops[$key]->est_rates = array_sum($workshops[$key]->services->pluck('pivot')->pluck('service_rate')->toArray());
+        }
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => '',
-            'body' => $workshops->get()
+            'body' => $workshops
         ],Response::HTTP_OK);
     }
 }
