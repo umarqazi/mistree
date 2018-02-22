@@ -49,9 +49,9 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::post('verifyEmail', 'WorkshopsController@verifyEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
 		Route::get('getWorkshop/{id}', 'WorkshopsController@getWorkshop');
-		Route::post('updateProfile/{id}', 'WorkshopsController@profileUpdate');
+		Route::patch('updateProfile/{id}', 'WorkshopsController@profileUpdate');
 		Route::resource('address', 'WorkshopAddressesController');
-		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');
-		Route::post('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
+		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');		
+		Route::get('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
 	});
 });
