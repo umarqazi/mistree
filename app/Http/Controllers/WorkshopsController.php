@@ -336,6 +336,13 @@ class WorkshopsController extends Controller
         Session::flash('message', 'Successfully deleted the Workshop!');
         return Redirect::to('workshops');      
     }
+    
+    /**
+     * API Register for new workshop.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     /**
      * @SWG\Post(
      *   path="/api/workshop/register",
@@ -345,148 +352,148 @@ class WorkshopsController extends Controller
      *   tags={"Workshops"},
      *   @SWG\Parameter(
      *     name="name",
-     *     in="query",
+     *     in="formData",
      *     description="Name of Workshop",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="owner_name",
-     *     in="query",
+     *     in="formData",
      *     description="Owner Name",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="email",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Email Address",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="password",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Login Password",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="password_confirmation",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Confirm Password",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="card_number",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop CNIC card Number",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="con_number",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Contact Number",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="type",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Type",
      *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="team_slot",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Team Slots",
      *     required=false,
      *     type="integer"
      *   ),
      *   @SWG\Parameter(
      *     name="open_time",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Opening Time",
      *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="close_time",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Closing Time",
      *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_city",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address City",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_block",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Block",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_town",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Town",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_area",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Area",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_type",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Type",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_house_no",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop House No",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_street_no",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Street No",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="service_id",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop selected service Ids in array",
      *     required=true,
      *     type="integer"
      *   ),
      *   @SWG\Parameter(
      *     name="service_rate",
-     *     in="query",
-     *     description="Workshop Service rates associated to each service id in array",
+     *     in="formData",
+     *     description="Workshop Service rates",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="service_time",
-     *     in="query",
-     *     description="Workshop Service rates associated to each service id in array",
+     *     in="formData",
+     *     description="Workshop Service times",
      *     required=true,
      *     type="string"
      *   ),
@@ -495,12 +502,6 @@ class WorkshopsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
-     */
-    /**
-     * API Register for new workshop.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
     public function register(Request $request)
     {
@@ -543,6 +544,11 @@ class WorkshopsController extends Controller
         //Insert Address data from request
         $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
 
+        $services = $request->services;
+        foreach($services as $service){
+            $workshop->service()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
+        }
+
         //Insert Services data from request        
         $service_ids = $request->service_id;
         $service_rates = $request->service_rate;
@@ -576,6 +582,13 @@ class WorkshopsController extends Controller
     }
 
     /**
+     * API Login for workshop, on success return JWT Auth token
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    
+    /**
      * @SWG\Post(
      *   path="/api/workshop/login",
      *   summary="Workshop Login",
@@ -584,14 +597,14 @@ class WorkshopsController extends Controller
      *   tags={"Workshops"},
      *   @SWG\Parameter(
      *     name="email",
-     *     in="query",
+     *     in="formData",
      *     description="Email of Workshop",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="password",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Password",
      *     required=true,
      *     type="string"
@@ -600,13 +613,8 @@ class WorkshopsController extends Controller
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
-    /**
-     * API Login for workshop, on success return JWT Auth token
      *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
      */
-  
     public function login(Request $request)
     {           
         $check = Workshop::select('is_approved')->where('email', $request->email)->first();        
@@ -664,6 +672,26 @@ class WorkshopsController extends Controller
      *
      * @param Request $request
      */
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/logout",
+     *   summary="Workshop Logout",
+     *   operationId="logout",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Auth Logout",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
     public function logout(Request $request) {
         $this->validate($request, ['token' => 'required']);
         try {
@@ -691,6 +719,26 @@ class WorkshopsController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/recover",
+     *   summary="Recover Workshop Password",
+     *   operationId="recover",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="email",
+     *     in="formData",
+     *     description="Workshop Email",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
      */
     public function recover(Request $request)
     {
@@ -731,6 +779,35 @@ class WorkshopsController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
+     */
+     /**
+     * @SWG\Get(
+     *   path="/api/workshop/verifyEmail",
+     *   summary="Verify Workshop Email",
+     *   operationId="verifyEmail",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   consumes={"application/xml", "application/json"},
+     *   produces={"application/xml", "application/json"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="verification_code",
+     *     in="query",
+     *     description="Verification Code",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
      */
     public function verifyEmail($verification_code)
     {
@@ -849,15 +926,22 @@ class WorkshopsController extends Controller
 
     /**
      * @SWG\Get(
-     *   path="/api/workshop/getWorkshop/id",
+     *   path="/api/workshop/getWorkshop/{id}",
      *   summary="Get Workshop Details",
-     *   operationId="fetch detials",
+     *   operationId="fetch",
      *   produces={"application/json"},
      *   tags={"Workshops"},
      *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
      *     name="id",
      *     in="path",
-     *     description="Workshop details",
+     *     description="Workshop ID",
      *     required=true,
      *     type="integer"
      *   ),    
@@ -868,74 +952,97 @@ class WorkshopsController extends Controller
     */     
     public function getWorkshop($id){
         $workshop = Workshop::find($id);
+        $address = $workshop->address;
+        $service = $workshop->service;
         return response([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Workshop Details!',
-            'body' => $workshop
+            'body' => ['workshop' => $workshop ],
         ],Response::HTTP_OK);
     }
     /**
      * @SWG\Post(
-     *   path="/api/workshop/updateProfile",
+     *   path="/api/workshop/updateProfile/{workshop_id}",
      *   summary="Update Workshop Details",
      *   operationId="update",
      *   produces={"application/json"},
      *   tags={"Workshops"},
      *   @SWG\Parameter(
-     *     name="name",
+     *     name="token",
      *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="name",
+     *     in="formData",
      *     description="Name of Workshop",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="owner_name",
-     *     in="query",
+     *     in="formData",
      *     description="Owner Name",
      *     required=true,
      *     type="string"
      *   ),     
      *   @SWG\Parameter(
      *     name="card_number",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop CNIC card Number",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="con_number",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Contact Number",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="type",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Type",
      *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="team_slot",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Team Slots",
      *     required=false,
      *     type="integer"
      *   ),
      *   @SWG\Parameter(
      *     name="open_time",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Opening Time",
      *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="close_time",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Closing Time",
      *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="_method",
+     *     in="formData",
+     *     description="Always give PATCH",
+     *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
@@ -953,18 +1060,18 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function profileUpdate(Request $request, $id)
-    {
-        // $request_workshop = $request->workshop;
+    {        
+        dd('warya e');
         $rules = [            
-            'name'                           => 'required|alpha',
-            'owner_name'                     => 'required|alpha',            
+            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'card_number'                    => 'required|digits:13',
             'con_number'                     => 'required|digits:11',
             'open_time'                      => 'required',
-            'close_time'             
+            'close_time'                     => 'required'
         ];  
 
-        $input = $request->only('name', 'owner_name', 'card_number', 'con_number');
+        $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'open_time', 'close_time');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -1255,7 +1362,7 @@ class WorkshopsController extends Controller
      *     required=true,
      *     type="integer"
      *   ), 
-     @SWG\Response(response=200, description="successful operation"),
+     *    @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
@@ -1273,7 +1380,7 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
     /**
-    * @SWG\Post(
+    * @SWG\Get(
     *   path="/api/workshop/workshopServices",
     *   summary="All services of Workshop",
     *   operationId="fetch",

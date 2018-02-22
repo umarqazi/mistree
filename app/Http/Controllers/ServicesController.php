@@ -18,7 +18,13 @@ use Illuminate\Http\File;
 
 class ServicesController extends Controller
 {
-     /**
+     
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    /**
      * @SWG\Get(
      *   path="/api/workshop/getServices",
      *   summary="All Services for Workshop",
@@ -29,11 +35,6 @@ class ServicesController extends Controller
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
-    /**
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {        

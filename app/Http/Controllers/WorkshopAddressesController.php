@@ -2,9 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use JWTAuth;
+use Session;
+use DB, Config, View;
 use Illuminate\Http\Request;
-use WorkshopAddress;
-use Workshop;
+use App\WorkshopAddress;
+use App\Workshop;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Input;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
+use Illuminate\Support\Facades\Storage;
 
 class WorkshopAddressesController extends Controller
 {
@@ -41,18 +51,25 @@ class WorkshopAddressesController extends Controller
 
     /**
     * @SWG\Get(
-    *   path="/api/workshop/address/id",
+    *   path="/api/workshop/address/{workshop_id}",
     *   summary="Workshop Address Details",
     *   operationId="fetch",
     *   produces={"application/json"},
     *   tags={"Workshops"},
+    *    @SWG\Parameter(
+    *     name="token",
+    *     in="query",
+    *     description="Token",
+    *     required=true,
+    *     type="string"
+    *   ),
     *   @SWG\Parameter(
     *     name="workshop_id",
     *     in="path",
     *     description="workshop id",
     *     required=true,
     *     type="integer"
-    *   ),    
+    *   ), 
     *   @SWG\Response(response=200, description="successful operation"),
     *   @SWG\Response(response=406, description="not acceptable"),
     *   @SWG\Response(response=500, description="internal server error")
@@ -63,9 +80,10 @@ class WorkshopAddressesController extends Controller
     * @return \Illuminate\Http\Response
     */
     public function show($workshop_id)
-    {   
-        $workshop = Workshop::find($id);
-        $address = $workshop->address;
+    {           
+        $workshop = Workshop::find($workshop_id);
+        $address = $workshop->address; 
+        
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -76,11 +94,18 @@ class WorkshopAddressesController extends Controller
 
      /**
     * @SWG\Get(
-    *   path="/api/workshop/address/id/edit",
+    *   path="/api/workshop/address/{address_id}/edit",
     *   summary="Workshop Address Details",
     *   operationId="fetch",
     *   produces={"application/json"},
     *   tags={"Workshops"},
+    *    @SWG\Parameter(
+    *     name="token",
+    *     in="query",
+    *     description="Token",
+    *     required=true,
+    *     type="string"
+    *   ),
     *   @SWG\Parameter(
     *     name="address_id",
     *     in="path",
@@ -110,11 +135,18 @@ class WorkshopAddressesController extends Controller
     }
     /**
      * @SWG\Post(
-     *   path="/api/workshop/address/id",
+     *   path="/api/workshop/address/{id}",
      *   summary="Update Workshop Address",
      *   operationId="update",
      *   produces={"application/json"},
      *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Parameter(
      *     name="id",
      *     in="path",
@@ -124,50 +156,57 @@ class WorkshopAddressesController extends Controller
      *   ),
      *   @SWG\Parameter(
      *     name="address_city",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address City",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_block",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Block",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_town",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Town",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_area",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Area",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_type",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Address Type",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_house_no",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop House No",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="address_street_no",
-     *     in="query",
+     *     in="formData",
      *     description="Workshop Street No",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="_method",
+     *     in="formData",
+     *     description="Required to update form",
      *     required=true,
      *     type="string"
      *   ),
@@ -188,13 +227,13 @@ class WorkshopAddressesController extends Controller
     {
         $address = WorkshopAddress::find($id);                
         $rules = [            
-            'address_type'                   => 'required|alpha',
+            'address_type'                   => 'required',
             'address_house_no'               => 'required|numeric',
             'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required|alpha_dash',
-            'address_area'                   => 'required|alpha_dash',
-            'address_town'                   => 'required|alpha_dash',
-            'address_city'                   => 'required|alpha'
+            'address_block'                  => 'required',
+            'address_area'                   => 'required',
+            'address_town'                   => 'required',
+            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u'
             ];
 
         $input = $request->only('address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
@@ -224,7 +263,7 @@ class WorkshopAddressesController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Address updated Successfully!',
-                    'body' => $request
+                    'body' => $request->all()
                 ],Response::HTTP_OK);               
     }
 
