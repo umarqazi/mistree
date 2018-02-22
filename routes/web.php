@@ -11,18 +11,7 @@
 |
 */  
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Routes for template by Adeel
-
-// Route::get('/dashboard', function () {
-//     return view('dashboard.dashboard');
-// });
-
-// Routes for Hesto Package by Haris
-
+// ========= Customer Routes Start ==================================================
 Route::group(['prefix' => 'customer'], function () {
   Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'CustomerAuth\LoginController@login');
@@ -35,15 +24,15 @@ Route::group(['prefix' => 'customer'], function () {
   Route::post('/password/reset', 'CustomerAuth\ResetPasswordController@reset')->name('password.email');
   Route::get('/password/reset', 'CustomerAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'CustomerAuth\ResetPasswordController@showResetForm');
-  Route::get('/verify/{verification_code}', 'CustomerAuth@verifyCustomer');
+  Route::get('/verify/{verification_code}', 'CustomersController@verifyEmail');
 });
-
-Route::group(['prefix' => 'workshop'], function () {
-  Route::get('/login', 'WorkshopAuth\LoginController@showLoginForm')->name('login');
+// ========= Customer Routes End ===================================================
+// ========= Worshop Routes Start ==================================================
+  Route::get('/', 'WorkshopAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'WorkshopAuth\LoginController@login');
   Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
-  Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
+  // Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
   Route::post('/register', 'WorkshopAuth\RegisterController@register');
 
   Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
@@ -57,7 +46,8 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/requests', 'WorkshopsController@show_requests');
 
   Route::get('/profile', 'WorkshopsController@workshop_profile');
-});
+// ========= Worshop Routes End ===================================================
+// ========= Admin Routes Start ===================================================
 
 Route::group(['prefix' => 'admin'], function () {
 
@@ -89,14 +79,9 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
   Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
   Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
+
+  // ========= Admin Routes End ==================================================
   
-  
-
-
-  // Route::get('workshops/create', 'WorkshopsController@create');
-  // Route::post('workshops/store', 'WorkshopsController@store');
-
-
 });
 
 

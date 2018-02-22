@@ -19,7 +19,7 @@ class Service extends Model
     ];
 
 
-    public function workshop()
+    public function workshops()
     {
         return $this->belongsToMany('App\Workshop');
     }
