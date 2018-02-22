@@ -382,88 +382,10 @@
                 }
             }
         },
-        "/api/customer/search-service": {
-            "post": {
-                "tags": [
-                    "Service"
-                ],
-                "summary": "Search Service",
-                "operationId": "searchService",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "service_name",
-                        "in": "formData",
-                        "description": "Service Name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "workshop_name",
-                        "in": "formData",
-                        "description": "Workshop Name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "workshop_type",
-                        "in": "formData",
-                        "description": "Workshop Type",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_block",
-                        "in": "formData",
-                        "description": "Workshop Address Block",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_area",
-                        "in": "formData",
-                        "description": "Workshop Address Area",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_town",
-                        "in": "formData",
-                        "description": "Workshop Address Town",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_city",
-                        "in": "formData",
-                        "description": "Workshop Address City",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
         "/api/customer/search-workshop": {
             "post": {
                 "tags": [
-                    "Workshop"
+                    "Workshops"
                 ],
                 "summary": "Search Workshop",
                 "operationId": "searchByWorkshop",
