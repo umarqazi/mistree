@@ -152,6 +152,7 @@
 											@endphp						
 
 						                    <tbody>
+						                    	@if($specialty)
 						                    	@foreach($specialty as $spec)
 						                        <tr> 
 						                        	<td>{{ $spec->name }}</td>
@@ -162,7 +163,8 @@
                                 						<a href="{{ url('admin/delete-workshop-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
                                 					</td>	                        	
 						                        </tr>
-						                        @endforeach	                        
+						                        @endforeach
+						                        @endif                      
 						                    </tbody>
 						                </table>
 					                </div>
