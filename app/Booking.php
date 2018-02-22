@@ -17,4 +17,16 @@ class Booking extends Model
     protected $fillable = [
         'customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'response', 'job_status',
     ];	
+
+    public function workshop()
+    {
+        return $this->belongsTo('App\Workshops');
+    }
+
+    public function services()
+    {
+        return $this->belongsToMany('App\Service');
+    }
+
+
 }
