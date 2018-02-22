@@ -46,7 +46,6 @@ Route::group(['prefix' => 'customer'], function () {
   Route::get('/requests', 'WorkshopsController@show_requests');
 
   Route::get('/profile', 'WorkshopsController@workshop_profile');
-});
 // ========= Worshop Routes End ===================================================
 // ========= Admin Routes Start ===================================================
 
