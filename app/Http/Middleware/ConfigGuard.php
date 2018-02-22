@@ -17,11 +17,11 @@ class ConfigGuard
      */
     public function handle($request, Closure $next, $model)
     {
-        if($model  = "Customer"){
-            Config::set('auth.providers.users.model', \App\Customer::class);
-        }
-        elseif($model  = "Workshop"){
+        if($model  == "Workshop"){
             Config::set('auth.providers.users.model', \App\Workshop::class);
+        }
+        elseif($model  == "Customer"){
+            Config::set('auth.providers.users.model', \App\Customer::class);
         }
 
         return $next($request);

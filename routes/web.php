@@ -56,6 +56,7 @@ Route::group(['prefix' => 'workshop'], function () {
   Route::get('/customers', 'WorkshopsController@show_customers');
   Route::get('/requests', 'WorkshopsController@show_requests');
 
+  Route::get('/profile', 'WorkshopsController@workshop_profile');
 });
 
 Route::group(['prefix' => 'admin'], function () {

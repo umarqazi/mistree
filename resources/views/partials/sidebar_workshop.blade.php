@@ -10,25 +10,31 @@
             </div>
 
             <ul class="nav">
-                <li class="active">
+                <li {{{ (Request::is('workshop/home') ? 'class=active' : '') }}}>
                     <a href="{{url('workshop/home')}}">
                         <i class="ti-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li>
+                <li {{{ (Request::is('workshop/profile') ? 'class=active' : '') }}}>
+                    <a href="{{url('workshop/profile')}}">
+                        <i class="ti-user"></i>
+                        <p>Profile</p>
+                    </a>
+                </li>
+                <li {{{ (Request::is('workshop/history') ? 'class=active' : '') }}}>
                     <a href="{{url('workshop/history')}}">
                         <i class="ti-view-list-alt"></i>
                         <p>Work History</p>
                     </a>
                 </li>
-                <li>
+                <li {{{ (Request::is('workshop/customers') ? 'class=active' : '') }}}>
                     <a href="{{url('workshop/customers')}}">
                         <i class="ti-user"></i>
                         <p>Customers</p>
                     </a>
                 </li>
-                <li>
+                <li {{{ (Request::is('workshop/requests') ? 'class=active' : '') }}}>
                     <a href="{{url('workshop/requests')}}">
                         <i class="ti-panel"></i>
                         <p>Requests</p>

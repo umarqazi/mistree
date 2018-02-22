@@ -58,7 +58,7 @@ class LoginController extends Controller
      */
     protected function guard()
     {
-        Config::set('auth.providers.users.model', \App\Workshop::class);
+        // Config::set('auth.providers.users.model', \App\Workshop::class);
         return Auth::guard('workshop');
     }
 }
