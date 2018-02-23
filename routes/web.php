@@ -60,7 +60,7 @@ Route::get('/profile', 'WorkshopsController@workshop_profile');
 
 Route::group(['prefix' => 'admin'], function () {
 
-  Route::get('/home', 'AdminController@showHome');
+  Route::get('/home', 'AdminsController@showHome');
   Route::get('/', 'AdminAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'AdminAuth\LoginController@login');
   Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
@@ -78,6 +78,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::resource('customers', 'CustomersController');
   Route::resource('workshops', 'WorkshopsController');
   Route::resource('services', 'ServicesController');
+  Route::resource('cars', 'CarsController');
 
   Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
   Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
