@@ -80,7 +80,7 @@ $factory->define(App\Workshop::class, function (Faker\Generator $faker) {
 
 $factory->define(App\WorkshopAddress::class, function(Faker\Generator $faker){
     return [
-        'type'          => 'Residential',
+        'type'          => $faker->randomElement(['Office', 'Home']),
         'house_no'      => $faker->buildingNumber,
         'street_no'     => random_int(1, 16),
         'block'         => ucwords($faker->randomLetter),
@@ -90,5 +90,14 @@ $factory->define(App\WorkshopAddress::class, function(Faker\Generator $faker){
         'status'        => 1,
         'created_at'    => $faker->dateTimeBetween('-5 days', 'now', 'Asia/Karachi'),
         'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
+    ];
+});
+
+$factory->define(App\Car::class, function (Faker\Generator $faker) {
+    return [
+        'type'      => $faker->randomElement(['Honda', 'Toyota', 'Suzuki', 'Daihatsu', 'Nissan', 'Adam']),
+        'model'     => $faker->randomElement(['Accord', 'Civic', 'City', 'Vezel', 'Corolla', 'Mehran']),
+        'picture'   => '',
+        'status'    => 1,
     ];
 });
