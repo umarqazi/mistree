@@ -1132,7 +1132,7 @@ class WorkshopsController extends Controller
      *   tags={"Workshops"},
      *   @SWG\Parameter(
      *     name="token",
-     *     in="query",
+     *     in="formData",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -1312,5 +1312,14 @@ class WorkshopsController extends Controller
     public function workshop_profile(){
         $workshop = Auth::guard('workshop')->user();
         return View::make('workshops.index')->with('workshop', $workshop);                       
+    }
+
+    /**
+     * Show Home
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showHome() {
+        return view('workshop.home');
     }
 }
