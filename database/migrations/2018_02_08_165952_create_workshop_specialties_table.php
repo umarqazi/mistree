@@ -13,13 +13,13 @@ class CreateWorkshopSpecialtiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('workshop_specialties', function (Blueprint $table) {
+        Schema::create('workshop_service', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('workshop_id')->unsigned();
             $table->foreign('workshop_id')->references('id')->on('workshops');
             $table->integer('service_id');
-            $table->float('service_rate');
-            $table->dateTime('service_time');
+            $table->decimal('service_rate',11,2);
+            $table->integer('service_time');
             $table->timestamps();
         });
     }
@@ -31,6 +31,6 @@ class CreateWorkshopSpecialtiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('workshop_specialties');
+        Schema::dropIfExists('workshop_service');
     }
 }

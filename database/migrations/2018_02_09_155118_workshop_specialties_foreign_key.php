@@ -13,7 +13,7 @@ class WorkshopSpecialtiesForeignKey extends Migration
      */
     public function up()
     {
-        Schema::table('workshop_specialties', function (Blueprint $table) {            
+        Schema::table('workshop_service', function (Blueprint $table) {
             $table->integer('service_id')->unsigned()->change();
             $table->foreign('service_id')->references('id')->on('services');
         });
@@ -26,9 +26,9 @@ class WorkshopSpecialtiesForeignKey extends Migration
      */
     public function down()
     {
-        Schema::table('workshop_specialties', function(Blueprint $table)
+        Schema::table('workshop_service', function(Blueprint $table)
         {
-            $table->dropForeign('workshop_specialties_service_id_foreign');
+            $table->dropForeign('workshop_service_service_id_foreign');
             $table->dropColumn('service_id');
         });
     }
