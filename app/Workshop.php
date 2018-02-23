@@ -49,6 +49,11 @@ class Workshop extends Authenticatable
         return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time');
     }
 
+    public function bookings()
+    {
+        return $this->hasMany('App\Booking');
+    }
+
     public function images()
     {
         return $this->hasMany('App\WorkshopImages');

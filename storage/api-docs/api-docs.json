@@ -382,6 +382,662 @@
                 }
             }
         },
+        "/api/workshop/getServices": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "All Services for Workshop",
+                "operationId": "select services",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/address/{workshop_id}": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Address Details",
+                "operationId": "fetch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/address/{address_id}/edit": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Address Details",
+                "operationId": "fetch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_id",
+                        "in": "path",
+                        "description": "address id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/address/{id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Address",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "address id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_city",
+                        "in": "formData",
+                        "description": "Workshop Address City",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_block",
+                        "in": "formData",
+                        "description": "Workshop Address Block",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_town",
+                        "in": "formData",
+                        "description": "Workshop Address Town",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_area",
+                        "in": "formData",
+                        "description": "Workshop Address Area",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_type",
+                        "in": "formData",
+                        "description": "Workshop Address Type",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_house_no",
+                        "in": "formData",
+                        "description": "Workshop House No",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_street_no",
+                        "in": "formData",
+                        "description": "Workshop Street No",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "_method",
+                        "in": "formData",
+                        "description": "Required to update form",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/register": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Register Workshop",
+                "operationId": "register",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name of Workshop",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "owner_name",
+                        "in": "formData",
+                        "description": "Owner Name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Workshop Email Address",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Workshop Login Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "description": "Workshop Confirm Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "card_number",
+                        "in": "formData",
+                        "description": "Workshop CNIC card Number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "con_number",
+                        "in": "formData",
+                        "description": "Workshop Contact Number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "type",
+                        "in": "formData",
+                        "description": "Workshop Type",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "team_slot",
+                        "in": "formData",
+                        "description": "Workshop Team Slots",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "open_time",
+                        "in": "formData",
+                        "description": "Workshop Opening Time",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "close_time",
+                        "in": "formData",
+                        "description": "Workshop Closing Time",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_city",
+                        "in": "formData",
+                        "description": "Workshop Address City",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_block",
+                        "in": "formData",
+                        "description": "Workshop Address Block",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_town",
+                        "in": "formData",
+                        "description": "Workshop Address Town",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_area",
+                        "in": "formData",
+                        "description": "Workshop Address Area",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_type",
+                        "in": "formData",
+                        "description": "Workshop Address Type",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_house_no",
+                        "in": "formData",
+                        "description": "Workshop House No",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_street_no",
+                        "in": "formData",
+                        "description": "Workshop Street No",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "formData",
+                        "description": "Workshop selected service Ids in array",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_rate",
+                        "in": "formData",
+                        "description": "Workshop Service rates",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "service_time",
+                        "in": "formData",
+                        "description": "Workshop Service times",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/login": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Login",
+                "operationId": "login",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Email of Workshop",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Workshop Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/logout": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Logout",
+                "operationId": "logout",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Auth Logout",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/recover": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Recover Workshop Password",
+                "operationId": "recover",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "formData",
+                        "description": "Workshop Email",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/verifyEmail": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Verify Workshop Email",
+                "operationId": "verifyEmail",
+                "consumes": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "produces": [
+                    "application/xml",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "verification_code",
+                        "in": "query",
+                        "description": "Verification Code",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/getWorkshop/{id}": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Get Workshop Details",
+                "operationId": "fetch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/updateProfile/{workshop_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Details",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Name of Workshop",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "owner_name",
+                        "in": "formData",
+                        "description": "Owner Name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "card_number",
+                        "in": "formData",
+                        "description": "Workshop CNIC card Number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "con_number",
+                        "in": "formData",
+                        "description": "Workshop Contact Number",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "type",
+                        "in": "formData",
+                        "description": "Workshop Type",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "team_slot",
+                        "in": "formData",
+                        "description": "Workshop Team Slots",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "open_time",
+                        "in": "formData",
+                        "description": "Workshop Opening Time",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "close_time",
+                        "in": "formData",
+                        "description": "Workshop Closing Time",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "_method",
+                        "in": "formData",
+                        "description": "Always give PATCH",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/customer/search-workshop": {
             "post": {
                 "tags": [
@@ -453,6 +1109,91 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/deleteWorkshopService/{workshop_id}/{service_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Delete Workshop Service",
+                "operationId": "delete",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "path",
+                        "description": "service id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/workshopServices/{workshop_id}": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "All services of Workshop",
+                "operationId": "fetch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
                     },
                     "500": {
                         "description": "internal server error"

@@ -19,10 +19,10 @@ class BookingsController extends Controller
             'customer_car_id'                => 'required|integer',
             'job_date'                       => 'required',            
             'job_time'                       => 'required',
-            'workshop_service_id'            => 'required|array'             
+            'service_id'                     => 'required|array'             
         ];        
 
-        $input = $request->only('customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'workshop_service_id');
+        $input = $request->only('customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'service_id');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -43,11 +43,27 @@ class BookingsController extends Controller
         $booking->job_time               = $request->customer_id;
         $booking->response 			     = 'waiting';
         $booking->job_status 			 = 'not-started';
-
         $booking->save();
 
-        $
+        $service_ids = $request->service_id;
+        if(!empty($service_ids)){
+            for($i = 0; $i<count($service_ids); $i++){            
+                $booking->services()->attach($service_ids[$i]);
+            }
+        }
+
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Booking create',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
 
 	}
+
+    public function acceptBooking($workshop_id, $booking_id){
+        $workshop = Workshop::find($workshop_id);
+        $workshop->bookings()->where('id', $booking_id)->update(['response' => 'accepted']);
+    }
     
 }
