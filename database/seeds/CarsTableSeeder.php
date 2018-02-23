@@ -1,6 +1,6 @@
 <?php
 
-use App\Cars;
+use App\Car;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
