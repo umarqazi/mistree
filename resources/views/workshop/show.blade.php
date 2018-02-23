@@ -69,9 +69,15 @@
 						                        </tr>
 						                        <tr> 
 						                        	<td>CNIC Card Number</td>
-						                        	<td>{{$workshop->card_number}}</td>
-						                        	<td>Contact Number</td>
-						                        	<td>{{ $workshop->con_number}}</td>
+						                        	<td>{{$workshop->cnic}}</td>
+						                        	<td>Mobile Number</td>
+						                        	<td>{{ $workshop->mobile}}</td>
+						                        </tr>
+												<tr> 
+						                        	<td>Landline Number</td>
+						                        	<td>{{ $workshop->landline}}</td>
+													<td></td>
+						                        	<td></td>
 						                        </tr>
 						                        <tr> 
 						                        	<td>Opening Time</td>
@@ -79,12 +85,7 @@
 						                        	<td>Closing Time</td>
 						                        	<td>{{ $workshop->close_time}}</td>
 						                        </tr>  
-						                        <tr> 
-						                        	<td>Geo Cord</td>
-						                        	<td>{{ $workshop->geo_cord}}</td>
-						                        	<td>Team Slot</td>
-						                        	<td>{{ $workshop->team_slot}}</td>
-						                        </tr>                               
+						                                            
 						                    </tbody>
 						                </table>
 					                </div>
@@ -106,28 +107,29 @@
 											@php $address = $workshop->address @endphp
 						                    <tbody>
 						                        <tr> 
-						                        	<td>House No</td>
-						                        	<td>{{ $address->house_no }}</td>
+						                        	<td>Shop No</td>
+						                        	<td>{{ $address->shop }}</td>
 						                        	<td>Street No</td>
-						                        	<td>{{ $address->street_no}}</td>
+						                        	<td>{{ $address->street}}</td>
 						                        </tr>
 						                        <tr> 
-						                        	<td>Town</td>
-						                        	<td>{{$address->town}}</td>
+													<td>Building No</td>
+						                        	<td>{{$address->building}}</td>
+						                        
 						                        	<td>Block</td>
 						                        	<td>{{ $address->block}}</td>
 						                        </tr>
 						                        <tr> 
-						                        	<td>Area</td>
-						                        	<td>{{$address->area}}</td>
+													<td>Town</td>
+						                        	<td>{{$address->town}}</td>
 						                        	<td>City</td>
 						                        	<td>{{ $address->city}}</td>
 						                        </tr>
 						                        <tr> 
 						                        	<td>Geo Cord</td>
 						                        	<td>{{ $address->geo_cord}}</td>
-						                        	<td>Type</td>
-						                        	<td>{{ $address->type}}</td>
+						                        	<td></td>
+						                        	<td></td>
 						                        </tr>  	                        
 						                    </tbody>
 						                </table>
@@ -148,9 +150,8 @@
 												</tr>
 											</thead>
 											@php 
-												$specialty = $workshop->service								
-											@endphp						
-
+												$specialty = $workshop->services							
+											@endphp
 						                    <tbody>
 						                    	@if($specialty)
 						                    	@foreach($specialty as $spec)
