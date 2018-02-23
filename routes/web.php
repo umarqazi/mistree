@@ -11,7 +11,9 @@
 |
 */  
 
-// ========= Customer Routes Start ==================================================
+/* ========= Customer Routes Start ================================================== */
+
+
 Route::group(['prefix' => 'customer'], function () {
   Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'CustomerAuth\LoginController@login');
@@ -25,36 +27,44 @@ Route::group(['prefix' => 'customer'], function () {
   Route::get('/password/reset', 'CustomerAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
   Route::get('/password/reset/{token}', 'CustomerAuth\ResetPasswordController@showResetForm');
   Route::get('/verify/{verification_code}', 'CustomersController@verifyEmail');
+
 });
-// ========= Customer Routes End ===================================================
-// ========= Worshop Routes Start ==================================================
-  Route::get('/', 'WorkshopAuth\LoginController@showLoginForm')->name('login');
-  Route::post('/login', 'WorkshopAuth\LoginController@login');
-  Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
+
+/* ========= Customer Routes End ==================================================== */
+/* ========= Worshop Routes Start =================================================== */
+
+
+Route::get('/home', 'WorkshopsController@showHome');
+Route::get('/', 'WorkshopAuth\LoginController@showLoginForm')->name('login');
+Route::post('/login', 'WorkshopAuth\LoginController@login');
+Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
   // Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
-  Route::post('/register', 'WorkshopAuth\RegisterController@register');
+Route::post('/register', 'WorkshopAuth\RegisterController@register');
+Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
+Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
+Route::get('/password/reset', 'WorkshopAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
+Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
+Route::get('/verify/{verification_code}', 'WorkshopsController@verifyEmail');
 
-  Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
-  Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
-  Route::get('/password/reset', 'WorkshopAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
-  Route::get('/password/reset/{token}', 'WorkshopAuth\ResetPasswordController@showResetForm');
-  Route::get('/verify/{verification_code}', 'WorkshopsController@verifyEmail');
+Route::get('/history', 'WorkshopsController@show_history');
+Route::get('/customers', 'WorkshopsController@show_customers');
+Route::get('/requests', 'WorkshopsController@show_requests');
 
-  Route::get('/history', 'WorkshopsController@show_history');
-  Route::get('/customers', 'WorkshopsController@show_customers');
-  Route::get('/requests', 'WorkshopsController@show_requests');
+Route::get('/profile', 'WorkshopsController@workshop_profile');
 
-  Route::get('/profile', 'WorkshopsController@workshop_profile');
-// ========= Worshop Routes End ===================================================
-// ========= Admin Routes Start ===================================================
+
+/* ========= Worshop Routes End ==================================================== */
+/* ========= Admin Routes Start ==================================================== */
+
 
 Route::group(['prefix' => 'admin'], function () {
 
-  Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('login');
+  Route::get('/home', 'AdminController@showHome');
+  Route::get('/', 'AdminAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'AdminAuth\LoginController@login');
   Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
- 
+   
 
   Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm')->name('register');
   Route::post('/register', 'AdminAuth\RegisterController@register');
@@ -80,8 +90,7 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
   Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
 
-  // ========= Admin Routes End ==================================================
-  
 });
 
 
+/* ========= Admin Routes End ====================================================== */
