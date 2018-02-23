@@ -104,72 +104,67 @@ class CarsController extends Controller
         }
     }
 
-    // /**
-    //  * Display the specified car.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function show($id)
-    // {
+    /**
+     * Display the specified car.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
 
-    //     $car = Car::find($id);
+        $car = Car::find($id);
 
-    //     return View::make('cars.show')
-    //         ->with('car', $car);
-    // }
+        return View::make('cars.show')
+            ->with('car', $car);
+    }
 
-    // /**
-    //  * Show the form for editing the specified car.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function edit($id)
-    // {
-    //     $car = Car::find($id);
+    /**
+     * Show the form for editing the specified car.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $car = Car::find($id);
 
-    //     return View::make('cars.edit')
-    //         ->with('car', $car);
-    // }
+        return View::make('cars.edit')
+            ->with('car', $car);
+    }
 
-    // /**
-    //  * Update the specified resource in storage.
-    //  *
-    //  * @param  int  $id
-    //  * @return \Illuminate\Http\Response
-    //  */
-    // public function update($id)
-    // {
-    //     $rules = array(
-    //         'type'       => 'required',
-    //         'maker'      => 'required',
-    //         'model'      => 'required',
-    //         'year'       => 'required',
-    //         'picture'    => 'required'
-    //     );
-    //     $validator = Validator::make(Input::all(), $rules);
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id)
+    {
+        $rules = array(
+            'type'       => 'required',
+            'model'      => 'required'
+        );
+        $validator = Validator::make(Input::all(), $rules);
 
-    //     // process the login
-    //     if ($validator->fails()) {
-    //         return Redirect::to('cars/' . $id . '/edit')
-    //             ->withErrors($validator)
-    //             ->withInput();
-    //     } else {
-    //         // store
-    //         $car = Car::find($id);
-    //         $car->type       = Input::get('type');
-    //         $car->maker      = Input::get('maker');
-    //         $car->model      = Input::get('model');
-    //         $car->year       = Input::get('year');
-    //         $car->picture    = Input::get('picture');
-    //         $car->save();
+        // process the login
+        if ($validator->fails()) {
+            return Redirect::to('cars/' . $id . '/edit')
+                ->withErrors($validator)
+                ->withInput();
+        } else {
+            // store
+            $car = Car::find($id);
+            $car->type       = Input::get('type');
+            $car->model      = Input::get('model');
+            $car->picture    = '';
+            $car->save();
 
-    //         // redirect
-    //         Session::flash('message', 'Successfully updated car!');
-    //         return Redirect::to('cars');
-    //     }
-    // }
+            // redirect
+            Session::flash('message', 'Successfully updated car!');
+            return Redirect::to('admin/cars');
+        }
+    }
 
     /**
      * Remove the specified car from storage.
