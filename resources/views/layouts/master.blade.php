@@ -44,21 +44,17 @@
 
         @if (Auth::guard('admin')->check())
         
-        @include('partials.sidebar')
-          <div class="main-panel">
-          @yield('content')
-          </div>
-        @else        
-            @yield('content_login')      
-        @endif
-
-        @if (Auth::guard('workshop')->check())
+            @include('partials.sidebar')
+            <div class="main-panel">
+                @yield('content')
+            </div>
+        @elseif (Auth::guard('workshop')->check())
         
-        @include('partials.sidebar_workshop')
-          <div class="main-panel">
-          @yield('content')
-          </div>
-        @else        
+            @include('partials.sidebar_workshop')
+            <div class="main-panel">
+                @yield('content')
+            </div>
+        @else         
             @yield('content_login')      
         @endif
 
