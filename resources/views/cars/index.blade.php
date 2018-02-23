@@ -25,7 +25,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clear20"></div>
                     <div class="content table-responsive table-full-width">
                         <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">
                        <!--  <div class="dataTables_length" id="jsTable_length">
@@ -48,13 +47,13 @@
                                     <td class="text-center">{{ $value->type }}</td>
                                     <td class="text-center">{{ $value->model }}</td>                                   
                                     <td class="text-center">
-                                      <form method="POST" action="cars/{{ $value->id }}" accept-charset="UTF-8">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <button type="submit" style="border: none; background: none;">
-                                          <i class="fa fa-trash"></i>
-                                        </button>
-                                      </form>
+                                        <form method="POST" action="cars/{{ $value->id }}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <a href="{{url('admin/cars/'. $value->id.'/edit')}}" style="color: #000;"><i class="fa fa-edit"></i></a> | <button type="submit" style="border: none; background: none;">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                  @endforeach
