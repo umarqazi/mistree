@@ -247,6 +247,13 @@ class CarsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="year",
+     *     in="formData",
+     *     description="Year",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
@@ -257,6 +264,7 @@ class CarsController extends Controller
        $rules = array(
             'car_id'       => 'required',
             'customer_id'  => 'required',
+            'year'         => 'required',
             'millage'      => 'required',
             'vehicle_no'   => 'required',
             'insurance'    => 'required'
@@ -278,7 +286,7 @@ class CarsController extends Controller
             $car_exists = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->get();
             //->where('car_customer.status', 0)
             if(count($car_exists) == 0){
-                $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'status' => 1, 'created_at' => $current_time));
+                $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'year' => $request->year, 'status' => 1, 'created_at' => $current_time));
                 return response()->json([
                     'http-status'   => Response::HTTP_OK,
                     'status'        => true,
@@ -286,9 +294,9 @@ class CarsController extends Controller
                     'body'          => '' 
                 ],Response::HTTP_OK);
             }else{
-                $car_exists_with_status_0 = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_customer.status', 0)->get();
+                $car_exists_with_status_0 = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->whereNotNull('car_customer.deleted_at')->get();
                 if(count($car_exists_with_status_0)){
-                    $customer->cars()->newPivotStatement()->where([['customer_id','=', $request->customer_id], ['vehicle_no','=', $request->vehicle_no] ])->update(array('millage' => $request->millage, 'insurance' => $request->insurance, 'status' => 1, 'updated_at' => $current_time));
+                    $customer->cars()->newPivotStatement()->where([['customer_id','=', $request->customer_id], ['vehicle_no','=', $request->vehicle_no] ])->update(array('millage' => $request->millage, 'insurance' => $request->insurance, 'year' => $request->year, 'status' => 1, 'updated_at' => $current_time, 'deleted_at' => null));
                     return response()->json([
                         'http-status'   => Response::HTTP_OK,
                         'status'        => true,
@@ -355,23 +363,17 @@ class CarsController extends Controller
      */
     public function unassignCar(Request $request)
     {
-       $rules = array(
-            'custmer_id'        => 'required',
-            'vehicle_no'        => 'required',
-            'car_id'            => 'required',
-        );
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        if ($request->custmer_id && $request->vehicle_no && $request->car_id){
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator,
+                    'message' => 'Incorrect Details',
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         } else {
            // soft delete
             $customer   = Customer::find($request->customer_id);
-            $customer->cars()->newPivotStatement()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_id', $request->car_id)->update(array('status' => 0));
+            $customer->cars()->newPivotStatement()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_id', $request->car_id)->update(array('deleted_at' => DB::raw('NOW()')));
 
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
