@@ -477,25 +477,12 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="service_id",
+     *     name="services",
      *     in="formData",
-     *     description="Workshop selected service Ids in array",
+     *     description="Workshop selected services in array",
      *     required=true,
-     *     type="integer"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="service_rate",
-     *     in="formData",
-     *     description="Workshop Service rates",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="service_time",
-     *     in="formData",
-     *     description="Workshop Service times",
-     *     required=true,
-     *     type="string"
+     *     type="array",
+     *     items="service_id"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),

@@ -6,6 +6,212 @@
     },
     "basePath": "/",
     "paths": {
+        "/api/workshop/createbooking": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Create Booking",
+                "operationId": "booking",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "customer_id",
+                        "in": "formData",
+                        "description": "Customer id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "formData",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "customer_car_id",
+                        "in": "formData",
+                        "description": "Customer Car ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "job_date",
+                        "in": "formData",
+                        "description": "Job Date",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "job_time",
+                        "in": "formData",
+                        "description": "Job Time",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "services",
+                        "in": "formData",
+                        "description": "Services",
+                        "required": true,
+                        "type": "array",
+                        "items": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/acceptbooking/{workshop_id}/{booking_id}": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Accept Booking",
+                "operationId": "acception",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "description": "Booking ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/rejectbooking/{workshop_id}/{booking_id}": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Reject Booking",
+                "operationId": "rejection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "description": "Booking ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/completejob/{booking_id}": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Complete Booking",
+                "operationId": "completion",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "description": "Booking ID",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/customer/get-cars": {
             "get": {
                 "tags": [
@@ -716,25 +922,12 @@
                         "type": "string"
                     },
                     {
-                        "name": "service_id",
+                        "name": "services",
                         "in": "formData",
-                        "description": "Workshop selected service Ids in array",
+                        "description": "Workshop selected services in array",
                         "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "service_rate",
-                        "in": "formData",
-                        "description": "Workshop Service rates",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "service_time",
-                        "in": "formData",
-                        "description": "Workshop Service times",
-                        "required": true,
-                        "type": "string"
+                        "type": "array",
+                        "items": "service_id"
                     }
                 ],
                 "responses": {

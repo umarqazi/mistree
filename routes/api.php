@@ -53,5 +53,9 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::resource('address', 'WorkshopAddressesController');
 		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');		
 		Route::get('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
+		Route::post('createbooking','BookingsController@createBooking');
+		Route::post('acceptbooking/{workshop_id}/{booking_id}','BookingsController@acceptBooking');
+		Route::post('rejectbooking/{workshop_id}/{booking_id}','BookingsController@rejectBooking');
+		Route::get('completejob/{booking_id}','BookingsController@completeJob');		
 	});
 });

@@ -20,7 +20,7 @@ class Booking extends Model
 
     public function workshop()
     {
-        return $this->belongsTo('App\Workshops');
+        return $this->belongsTo('App\Workshop');
     }
 
     public function services()
