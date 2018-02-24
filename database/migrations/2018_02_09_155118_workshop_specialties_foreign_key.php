@@ -15,7 +15,7 @@ class WorkshopSpecialtiesForeignKey extends Migration
     {
         Schema::table('workshop_service', function (Blueprint $table) {
             $table->integer('service_id')->unsigned()->change();
-            $table->foreign('service_id')->references('id')->on('services');
+            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
         });
     }
 
