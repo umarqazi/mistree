@@ -15,13 +15,13 @@
                     <input type="hidden"  value="PATCH" name="_method">
                     {{ csrf_field() }}
                       <div class="header">
-                        {{-- @if ($errors->any())
+                        @if ($errors->any())
                           <div class="row text-center alert alert-danger">
                             @foreach($errors->all() as $error)
                               <div><span class="manadatory">{{ $error }}</span></div>
                             @endforeach                        
                           </div>
-                        @endif --}} 
+                        @endif  
                           <div class="row">
                               <div class="col-md-12">
                                   <h4 class="title">Workshop Management - Update Workshop</h4> 
@@ -74,24 +74,33 @@
                               </div>   -->
 
                               <div class="form-group">
-                                <label class="control-label">Card Number <span class="manadatory">*</span></label>
-                                <input type="text" class="form-control border-input" name="card_number" value="{{$workshop->card_number}}">
-                                @if ($errors->has('card_number'))
+                                <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="cnic" value="{{$workshop->cnic}}">
+                                @if ($errors->has('cnic'))
                                     <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('card_number') }}</strong>
+                                        <strong class="manadatory">{{ $errors->first('cnic') }}</strong>
                                     </span>
                                 @endif
                               </div>
 
                               <div class="form-group">
-                                <label class="control-label">Contact Number <span class="manadatory">*</span></label>
-                                <input type="text" class="form-control border-input" name="con_number" value="{{$workshop->con_number}}">
-                                @if ($errors->has('con_number'))
+                                <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="mobile" value="{{$workshop->mobile}}">
+                                @if ($errors->has('mobile'))
                                     <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('con_number') }}</strong>
+                                        <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
                                     </span>
                                 @endif
-                              </div>                          
+                              </div>
+                              <div class="form-group">
+                                <label class="control-label">Landline Number <span class="manadatory"></span></label>
+                                <input type="text" class="form-control border-input" name="landline" value="{{$workshop->landline}}">
+                                @if ($errors->has('landline'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('landline') }}</strong>
+                                    </span>
+                                @endif
+                              </div>                           
                             </div>
 
                             <div class="col-md-6">
@@ -100,11 +109,11 @@
                                 <label class="control-label">Type</label>
                                 <select name="type" class="form-control border-input" required="required">
                                   <option value="">Please Select</option>
-                                  <option value="authorized" @if($workshop->type == "authorized") selected @endif >Authorized</option>
-                                  <option value="unauthorized" @if($workshop->type == "unauthorized") selected @endif >UnAuthorized</option>
+                                  <option value="Authorized" @if($workshop->type == "Authorized") selected @endif >Authorized</option>
+                                  <option value="Unauthorized" @if($workshop->type == "Unauthorized") selected @endif >UnAuthorized</option>
                                 </select>
                               </div>
-
+                              {{-- 
                               <div class="form-group">
                                 <label class="control-label">Team Slot</label>
                                 <select name="team_slot" class="form-control border-input" required="required">
@@ -115,7 +124,7 @@
                                   <option value="4" @if($workshop->team_slot == "4") selected @endif>4</option>
                                  </select>
                               </div>
-
+                              --}}
                               <div class="form-group">                              
                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
                                 <input type="time" class="form-control border-input" name="open_time" value="{{$workshop->open_time}}"> 
@@ -176,85 +185,66 @@
                           
                           <!--###############################################--> 
                           <div class="cn-section-2">
-
                             <div class="content">
                               <div class="row">                            
                                 <div class="col-md-6">
                                   @php $address = $workshop->address;  @endphp
                                   <div class="form-group">                              
-                                    <label class="control-label">City <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_city" value="{{$address->city}}">
-                                    @if ($errors->has('address_city'))
+                                    <label class="control-label">Shop No <span class="manadatory">*</span></label>
+                                    <input type="text" class="form-control border-input" name="shop" value="{{$address->shop}}">
+                                    @if ($errors->has('shop'))
                                         <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_city') }}</strong>
+                                            <strong class="manadatory">{{ $errors->first('shop') }}</strong>
                                         </span>
                                     @endif
                                   </div>
-
                                   <div class="form-group">                              
-                                    <label class="control-label">Block <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_block" value="{{$address->block}}">
-                                    @if ($errors->has('address_block'))
+                                    <label class="control-label">Building No <span class="manadatory"></span></label>
+                                    <input type="text" class="form-control border-input" name="building" value="{{$address->building}}">
+                                    @if ($errors->has('building'))
                                         <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_block') }}</strong>
+                                            <strong class="manadatory">{{ $errors->first('building') }}</strong>
                                         </span>
                                     @endif
                                   </div>
-
+                                  <div class="form-group">                              
+                                    <label class="control-label">Street <span class="manadatory"></span></label>
+                                    <input type="text" class="form-control border-input" name="street" value="{{$address->street}}">
+                                    @if ($errors->has('street'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('street') }}</strong>
+                                        </span>
+                                    @endif
+                                  </div>                                       
+                                </div>
+                                <div class="col-md-6">
+                                <div class="form-group">                              
+                                    <label class="control-label">Block <span class="manadatory"></span></label>
+                                    <input type="text" class="form-control border-input" name="block" value="{{$address->block}}">
+                                    @if ($errors->has('block'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('block') }}</strong>
+                                        </span>
+                                    @endif
+                                  </div>
                                   <div class="form-group">                              
                                     <label class="control-label">Town <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_town" value="{{$address->town}}">
-                                    @if ($errors->has('address_town'))
+                                    <input type="text" class="form-control border-input" name="town" value="{{$address->town}}">
+                                    @if ($errors->has('town'))
                                         <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_town') }}</strong>
+                                            <strong class="manadatory">{{ $errors->first('town') }}</strong>
                                         </span>
                                     @endif
-                                  </div>
-
+                                  </div>                                
                                   <div class="form-group">                              
-                                    <label class="control-label">Area <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_area" value="{{$address->area}}">
-                                    @if ($errors->has('address_area'))
+                                    <label class="control-label">City <span class="manadatory">*</span></label>
+                                    <input type="text" class="form-control border-input" name="city" value="{{$address->city}}">
+                                    @if ($errors->has('city'))
                                         <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_area') }}</strong>
+                                            <strong class="manadatory">{{ $errors->first('city') }}</strong>
                                         </span>
                                     @endif
-                                  </div>
-                                  
-                                </div>
-
-                                <div class="col-md-6">
-
-                                  <div class="form-group">                              
-                                    <label class="control-label">Address Type <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_type" value="{{$address->type}}">
-                                    @if ($errors->has('address_type'))
-                                        <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_type') }}</strong>
-                                        </span>
-                                    @endif
-                                  </div>
-
-                                  <div class="form-group">                              
-                                    <label class="control-label">House No <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_house_no" value="{{$address->house_no}}">
-                                    @if ($errors->has('address_house_no'))
-                                        <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_house_no') }}</strong>
-                                        </span>
-                                    @endif
-                                  </div>
-
-                                  <div class="form-group">                              
-                                    <label class="control-label">Street No <span class="manadatory">*</span></label>
-                                    <input type="text" class="form-control border-input" name="address_street_no" value="{{$address->street_no}}">
-                                    @if ($errors->has('address_street_no'))
-                                        <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('address_street_no') }}</strong>
-                                        </span>
-                                    @endif
-                                  </div>
-
+                                  </div>                   
                                 </div>
                               </div> 
 
