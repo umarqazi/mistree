@@ -87,7 +87,7 @@ class CustomersController extends Controller
                 ->withInput();
         } else {
             // store
-            $customers = new Customers;
+            $customer = new Customers;
             $customer->name       = Input::get('name');
             $customer->email      = Input::get('email');
             $customer->password   = Input::get('password');

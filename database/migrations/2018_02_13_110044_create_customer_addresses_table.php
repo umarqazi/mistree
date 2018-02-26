@@ -17,15 +17,14 @@ class CreateCustomerAddressesTable extends Migration
             $table->increments('id');
             $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
-            $table->string('type',45);
-            $table->string('house_no',45);
-            $table->string('street_no',45);
-            $table->string('block',45);
-            $table->string('area',45);
-            $table->string('town',45);
-            $table->string('city',45);
-            $table->string('geo_cord',45)->nullable();
-            $table->string('status');
+            $table->enum('type', ['Office', 'Residence']);
+            $table->string('house_no')->nullable();
+            $table->string('street_no')->nullable();
+            $table->char('block',4)->nullable();
+            $table->string('town');
+            $table->string('city');
+            $table->string('geo_cord')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
