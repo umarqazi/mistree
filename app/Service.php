@@ -42,4 +42,9 @@ class Service extends Model
         return $this->hasMany('App\Service', 'service_parent');
     }
 
+    public function parent($id)
+    {
+        return $this->find($id)['name'];
+    }
+
 }
