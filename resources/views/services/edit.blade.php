@@ -34,27 +34,28 @@
 
                                   <div class="form-group">  
                                     <label class="control-label">Loyalty Points</label>
-                                    <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty_points">
-                                    <input type="hidden"  value="PUT" name="_method"">
-                                    @if ($errors->has('loyalty_points'))
+                                    <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty-points">
+                                    <input type="hidden"  value="PUT" name="_method">
+                                    @if ($errors->has('loyalty-points'))
                                         <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('loyalty_points') }}</strong>
+                                            <strong class="manadatory">{{ $errors->first('loyalty-points') }}</strong>
                                         </span>
                                      @endif
                                   </div>
 
                                   <div class="form-group">  
                                     <label class="control-label">Parent</label>
-                                    <select class="form-control border-input" name="parent_id" >
+                                    <select class="form-control border-input" name="service-parent" >
                                       <option value="0">Select Option</option>
                                       @foreach($services as $key => $value)
-                                          @if( $service->parent_id == $value->id)
-                                            <option selected value="{{$value->id}}">{{$value->name}}</option>
-                                            @else
-                                            <option value="{{$value->id}}">{{$value->name}}</option>
-                                          @endif
+                                          <option value="{{$value->id}}" @if($service->service_parent == $value->id) {{"selected"}} @endif>{{$value->name}}</option>
                                       @endforeach
                                     </select>
+                                      @if ($errors->has('service-parent'))
+                                          <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('service-parent') }}</strong>
+                                        </span>
+                                      @endif
                                   </div> 
 
                                   <div class="form-group">  
