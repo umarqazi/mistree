@@ -5,9 +5,9 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class Booking extends Model
+class Billing extends Model
 {
-    use Notifiable;
+	use Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -15,8 +15,8 @@ class Booking extends Model
      * @var array
      */
     protected $fillable = [
-        'customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'response', 'job_status',
-    ];	
+        'workshop_id', 'booking_id', 'amount', 'customer_id'
+    ];
 
     public function workshop()
     {
@@ -28,16 +28,9 @@ class Booking extends Model
         return $this->belongsTo('App\Customer');
     }
 
-    public function services()
+    public function booking()
     {
-        return $this->belongsToMany('App\Service')->withPivot('name', 'service_rate', 'service_time')->withTimestamps();
-    }
-
-    public function billing()
-    {
-        return $this->hasOne('App\Billing');
+        return $this->belongsTo('App\Booking');
     }
     
-
-
 }

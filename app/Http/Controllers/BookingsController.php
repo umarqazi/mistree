@@ -8,8 +8,9 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use App\Workshop;
 use App\Service;
+use App\Billing;
 use App\WorkshopAddress;
-
+use App\WorkshopLedger;
 use App\Customer;
 use App\Booking;
 
@@ -73,6 +74,13 @@ class BookingsController extends Controller
      *     type="array",
      *     items="integer"      
      *   ),
+     *   @SWG\Parameter(
+     *     name="vehicle_no",
+     *     in="formData",
+     *     description="Vehicle Number",
+     *     required=true,
+     *     type="string"     
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -110,23 +118,25 @@ class BookingsController extends Controller
         $booking->job_time               = $request->job_time;
         $booking->response 			     = 'waiting';
         $booking->job_status 			 = 'not-started';
+        $booking->vehicle_no             = $request->vehicle_no;
+
         $booking->save();
 
         //Insert Services data from request        
-        $services = $request->services;        
+        $services = $request->services->service_id;        
         if(!empty($services)){
-            // foreach($services as $service){
+            foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
-                $service_info = $workshop->services()->where('service_id',$services)->first();
-                // $booking->services()->attach($services,[ 'service_name' => $service_info->name, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
-            // }
+                $service_info = $workshop->services()->where('service_id',$service)->first();
+                $booking->services()->attach($service,['name' => $service_info->name, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
+            }
         }        
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking create',
-                    'body' => $service_info
+                    'body' => $request->all()
                 ],Response::HTTP_OK);
 
 	}
@@ -223,10 +233,59 @@ class BookingsController extends Controller
     }
 
      /**
-     * @SWG\Get(
-     *   path="/api/workshop/completejob/{booking_id}",
-     *   summary="Complete Booking",
-     *   operationId="completion",
+     * @SWG\Post(
+     *   path="/api/customer/amount-paid",
+     *   summary="Bill Paid by customer",
+     *   operationId="Paid Bill",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="billing_id",
+     *     in="formData",
+     *     description="Billing ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="paid_amount",
+     *     in="formData",
+     *     description="Customer Total Paid Amount",
+     *     required=true,
+     *     type="number"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function customerpaidbill(Request $request){
+
+        $billing = Billing::find($request->billing_id);
+        $billing->paid_amount = $request->paid_amount;
+        $billing->save();
+
+        $billing->booking->services;
+
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Booking Services',
+                    'body' => $billing
+                ],Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/complete-job",
+     *   summary="Workshop Complete Job",
+     *   operationId="Insert Billing",
      *   produces={"application/json"},
      *   tags={"Bookings"},
      *   @SWG\Parameter(
@@ -238,8 +297,22 @@ class BookingsController extends Controller
      *   ),
      *   @SWG\Parameter(
      *     name="booking_id",
-     *     in="path",
+     *     in="formData",
      *     description="Booking ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="formData",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="customer_id",
+     *     in="formData",
+     *     description="Customer ID",
      *     required=true,
      *     type="integer"
      *   ),
@@ -247,21 +320,66 @@ class BookingsController extends Controller
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
-     *
      */
-    public function completeJob($booking_id){
-        $booking = Booking::find($booking_id);        
-        $workshop_services = $booking->workshop->services;
-        // $workshop = Workshop::find($workshop_id);
-        // $workshop_services = $workshop->services;
+    public function workshopcompletejob(Request $request){
+        $rules = [            
+            'workshop_id'                       => 'required|integer',
+            'booking_id'                        => 'required|integer',
+            'customer_id'                       => 'required|integer'           
+        ];   
+        
+        $input = $request->only('workshop_id', 'booking_id', 'customer_id');
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => $validator->messages(),
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+        }             
+
+        $booking = Booking::find($request->booking_id);                            
         $booking_services = $booking->services;
+        $bill = 0;
+        foreach($booking_services as $service){
+            $bill = $service->pivot->service_rate + $bill;            
+        }        
+
+        $billing = new Billing;
+        $billing->workshop_id                = $request->workshop_id;         
+        $billing->booking_id                 = $request->booking_id;
+        $billing->amount                     = $bill;
+        $billing->customer_id                = $request->customer_id;
+
+        $billing->save();
+
+        $services_count = $booking->services->count();
+        $deduction = $services_count * 50;
+        $workshop = Workshop::find($request->workshop_id);
+        $balance = $workshop->balance->balance;
+        $new_balance = $balance - $deduction;
+
+        $workshop->balance->update(['balance'=>$new_balance]);
+
+        $transaction = new WorkshopLedger;
+
+        $transaction->workshop_id                   = $request->workshop_id;         
+        $transaction->booking_id                    = $request->booking_id;         
+        $transaction->amount                        = $deduction;         
+        $transaction->transaction_type              = 'Job-Billing';         
+        $transaction->unadjusted_balance            = $balance;         
+        $transaction->adjusted_balance              = $new_balance;
+
+        $transaction->save();
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking Services',
-                    'body' => $booking
+                    'body' => $balance
                 ],Response::HTTP_OK);
-
     }
     
 

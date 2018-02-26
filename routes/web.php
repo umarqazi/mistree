@@ -79,6 +79,8 @@ Route::group(['prefix' => 'admin'], function () {
   Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
   Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
   Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
+  Route::get('/top-up', 'WorkshopsController@topup');
+  Route::post('/update-balance', 'WorkshopsController@topupBalance');
 
   // ========= Admin Routes End ==================================================
   

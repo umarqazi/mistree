@@ -45,7 +45,7 @@ class Workshop extends Authenticatable
 
     public function services()
     {
-        return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time');
+        return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time')->withTimestamps();
     }
 
     public function bookings()
@@ -62,4 +62,19 @@ class Workshop extends Authenticatable
     {
         $this->notify(new WorkshopResetPassword($token));
     }
+
+    public function billings()
+    {
+        return $this->hasMany('App\Billing');
+    }
+
+    public function balance(){
+        return $this->hasOne('App\WorkshopBalance');       
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany('App\WorkshopLedger');
+    }
 }
+

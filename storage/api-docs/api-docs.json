@@ -66,6 +66,13 @@
                         "required": true,
                         "type": "array",
                         "items": "integer"
+                    },
+                    {
+                        "name": "vehicle_no",
+                        "in": "formData",
+                        "description": "Vehicle Number",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -173,13 +180,59 @@
                 }
             }
         },
-        "/api/workshop/completejob/{booking_id}": {
-            "get": {
+        "/api/customer/amount-paid": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Bill Paid by customer",
+                "operationId": "Paid Bill",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "billing_id",
+                        "in": "formData",
+                        "description": "Billing ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "paid_amount",
+                        "in": "formData",
+                        "description": "Customer Total Paid Amount",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/complete-job": {
+            "post": {
                 "tags": [
                     "Bookings"
                 ],
-                "summary": "Complete Booking",
-                "operationId": "completion",
+                "summary": "Workshop Complete Job",
+                "operationId": "Insert Billing",
                 "produces": [
                     "application/json"
                 ],
@@ -193,8 +246,22 @@
                     },
                     {
                         "name": "booking_id",
-                        "in": "path",
+                        "in": "formData",
                         "description": "Booking ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "formData",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "customer_id",
+                        "in": "formData",
+                        "description": "Customer ID",
                         "required": true,
                         "type": "integer"
                     }

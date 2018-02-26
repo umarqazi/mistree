@@ -10,6 +10,8 @@ use App\Workshop;
 use App\WorkshopImages;
 use App\Service;
 use App\WorkshopAddress;
+use App\WorkshopLedger;
+use App\WorkshopBalance;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -152,6 +154,12 @@ class WorkshopsController extends Controller
                 $workshop->services()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
             }
         }
+
+        $workshop_balance = new WorkshopBalance;        
+
+        $workshop_balance->balance              = 2000;
+        $workshop_balance->workshop_id          = $workshop->id;
+        $workshop_balance->save();
 
         if ($request->hasFile('ws_images')) 
         {
@@ -537,7 +545,13 @@ class WorkshopsController extends Controller
             foreach($services as $service){
                 $workshop->services()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
             }
-        }        
+        }
+
+        $workshop_balance = new WorkshopBalance;        
+
+        $workshop_balance->balance              = 2000;
+        $workshop_balance->workshop_id          = $workshop->id;
+        $workshop_balance->save();
 
         $name = $request->name;
         $con_number = $request->con_number;
@@ -1417,5 +1431,41 @@ class WorkshopsController extends Controller
     public function workshop_profile(){
         $workshop = Auth::guard('workshop')->user();
         return View::make('workshops.index')->with('workshop', $workshop);                       
+    }
+
+    public function topup(){
+        $workshops = Workshop::all();
+        return View::make('admin.topup.topup')->with('workshops', $workshops);
+    }
+
+    public function topupBalance(Request $request){
+        $rules = [
+            'amount'                          => 'required|numeric',
+            'workshop_id'                     => 'required|integer'
+        ];        
+
+        $input = $request->only('amount', 'workshop_id');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {            
+            return Redirect::to('admin/top-up')
+                ->withErrors($validator);                
+        }
+
+        $workshop = Workshop::find($request->workshop_id);
+        $balance = $workshop->balance->balance;
+        $new_balance = $request->amount + $balance;
+        $workshop->balance->update(['balance' => $new_balance]); 
+
+        $transaction = new WorkshopLedger;
+
+        $transaction->amount                        = $request->amount;
+        $transaction->workshop_id                   = $request->workshop_id;
+        $transaction->transaction_type              = 'Top-Up';        
+        $transaction->unadjusted_balance            = $balance;
+        $transaction->adjusted_balance              = $new_balance;
+        
+        $transaction->save();
+
+        return Redirect::to('admin/top-up');       
     }
 }

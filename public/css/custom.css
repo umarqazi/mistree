@@ -211,3 +211,13 @@ form .form-group {margin-bottom: 0px;}
 .manadatory{
     color : #FF0000;
 }
+
+.top-up-form{
+    border-radius: 4px;
+    border: 1px solid #CCC5B9 !important;
+    background-color: #fffcf5 !important;
+    padding: 10px;
+    display: table;    
+    margin-bottom: 10px;
+}
+
