@@ -53,7 +53,7 @@
                                     <td>{{ $value->name }}</td>
                                     <td>{{ $value->owner_name }}</td>
                                     @if($value->address)
-                                    <td>{{ $value->address->area }}</td>
+                                    <td>{{ $value->address->town }}</td>
                                     @else
                                     <td></td>
                                     @endif
@@ -72,7 +72,14 @@
                                             <a href="{{url('admin/undo-approval-workshop/'.$value->id)}}" class="btn btn-header btn-export">Undo Approval</a>
                                         @endif</a>
                                         <a class= "btn btn-header" href="{{url('admin/workshops/'. $value->id)}}">View Details</a>
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a></td>
+                                        <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a>
+                                        
+                                        <form method="POST" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                        <input class="btn btn-header btn-export" type="submit" value="Delete">
+                                        </form>
+                                        </td>
                                     </td>
                                 </tr>
                                  @endforeach

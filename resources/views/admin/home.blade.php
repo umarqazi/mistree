@@ -17,14 +17,14 @@
                                 <div class="col-xs-8">
                                     <div class="numbers">
                                         <p>CUSTOMERS</p>
-                                        540
+                                        {{$CustomerCount}}
                                     </div>
                                 </div>
                             </div>
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{ url('admin/customers') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>
@@ -42,14 +42,14 @@
                                 <div class="col-xs-8">
                                     <div class="numbers">
                                         <p>WORKSHOPS</p>
-                                        39
+                                        {{$WorkshopCount}}
                                     </div>
                                 </div>
                             </div>
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{ url('admin/workshops') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>

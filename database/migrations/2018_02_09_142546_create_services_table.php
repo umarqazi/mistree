@@ -15,9 +15,11 @@ class CreateServicesTable extends Migration
     {
         Schema::create('services', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name', 45);
-            $table->integer('parent_id');
-            $table->string('status',45);
+            $table->string('name');
+            $table->unsignedInteger('service_parent')->default(0);
+            $table->unsignedInteger('loyalty_points')->default(0);
+            $table->string('image', 2048)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

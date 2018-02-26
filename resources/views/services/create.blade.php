@@ -26,27 +26,46 @@
                               <div class="col-md-6">
                                   <div class="form-group">  
                                     <label class="control-label">Service Name</label>
-                                    <input type="text" class="form-control border-input" name="name" required="required">
+                                    <input type="text" class="form-control border-input" name="name" required="required" value="{{ old('name') }}" />
+                                    @if ($errors->has('name'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('name') }}</strong>
+                                        </span>
+                                     @endif
                                   </div>
-
                                   <div class="form-group">  
                                     <label class="control-label">Loyalty Points</label>
-                                    <input type="text" class="form-control border-input" name="loyalty_points">
+                                    <input type="text" class="form-control border-input" name="loyalty-points" value="{{ old('loyalty-points',0) }}">
+                                    @if ($errors->has('loyalty-points'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('loyalty-points') }}</strong>
+                                        </span>
+                                     @endif
                                   </div>
 
                                   <div class="form-group">  
                                     <label class="control-label">Parent</label>
-                                    <select class="form-control border-input" name="parent_id" >
+                                    <select class="form-control border-input" name="service-parent" >
                                       <option value="0">Select Parent</option>
-                                      @foreach($services as $key => $value)
-                                      <option value="{{$value->id}}">{{$value->name}}</option>
+                                      @foreach($services as $service)
+                                      <option value="{{$service->id}}" @if(old('service-parent') == $service->id){{"selected"}}@endif>{{$service->name}}</option>
                                       @endforeach
                                     </select>
+                                      @if ($errors->has('service-parent'))
+                                          <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('service-parent') }}</strong>
+                                        </span>
+                                      @endif
                                   </div> 
 
                                   <div class="form-group">  
                                     <label class="control-label">Image</label>
                                     <input type="file" name="image">
+                                    @if ($errors->has('image'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('image') }}</strong>
+                                        </span>
+                                     @endif
                                   </div> 
 
                                   <div class="form-group">  

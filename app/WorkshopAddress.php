@@ -15,7 +15,7 @@ class WorkshopAddress extends Model
      * @var array
      */
     protected $fillable = [
-        'workshop_id', 'type', 'house_no', 'street_no', 'block', 'area', 'town', 'city', 'geo_cord', 'status'
+        'workshop_id', 'shop', 'building', 'street', 'block', 'town', 'city', 'coordinates'
     ];
 
     /**

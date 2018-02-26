@@ -18,7 +18,13 @@ use Illuminate\Http\File;
 
 class ServicesController extends Controller
 {
-     /**
+     
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    /**
      * @SWG\Get(
      *   path="/api/workshop/getServices",
      *   summary="All Services for Workshop",
@@ -29,16 +35,11 @@ class ServicesController extends Controller
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
-    /**
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::where('status', '=', 1)->get();
+        $services = Service::all();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -62,7 +63,7 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $services = Service::all();
+        $services = Service::where('service_parent', 0)->get();
         return View::make('services.create')->with('services', $services);
     }
 
@@ -74,21 +75,23 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
+        $services   = Service::where('service_parent', 0)->get();
+        $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required',            
-            'loyalty_points'    => 'numeric',            
+            'name'              => 'required|unique:services|max:255',            
+            'loyalty-points'    => 'required|numeric',
+            'service-parent'    => 'in:0,'.$services,
+            'image'             => 'mimes:jpeg,jpg,png',         
         );
-
-        $inputs = $request->only('name','loyalty_points');
+        $inputs = $request->only('name','loyalty-points','service-parent');
 
         $validator = Validator::make($inputs, $rules);
 
         // process the login
         if ($validator->fails()) {
-            return Redirect::to('services/create')
-                ->withErrors($validator);               
+            return Redirect::back()->withInput()->withErrors($validator);
         } else {
             // store
             $service = new Service;
@@ -101,13 +104,12 @@ class ServicesController extends Controller
             }
             else
             {
-              $service->image          =  url('img/thumbnail.png');
+              $service->image        =  url('img/thumbnail.png');
             }
 
             $service->name           = Input::get('name');
-            $service->parent_id      = Input::get('parent_id');            
-            $service->loyalty_points = Input::get('loyalty_points');                     
-            $service->status         = 1;            
+            $service->service_parent = Input::get('service-parent');
+            $service->loyalty_points = Input::get('loyalty-points');
             $service->save();
 
             // redirect
@@ -140,11 +142,10 @@ class ServicesController extends Controller
      */
     public function edit($id)
     {
-        // dd($id);
         // get the service
         $service = Service::find($id);
-        $services = Service::all();
-        // dd($service);
+        $services = Service::where('service_parent', 0)->where('id', '<>', $service->id)->get();
+
         // show the view and pass the service to it
         return View::make('services.edit', compact('service','services'));
     }
@@ -158,20 +159,23 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $services   = Service::where('service_parent', 0)->where('id', '<>', $id)->get();
+        $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
 
         $rules = array(
-            'name'       => 'required',
-            'parent_id'      => 'required|numeric',            
+            'name'           => 'required|unique:services,id,'.$id.'|max:255',
+            'loyalty-points' => 'required|numeric',
+            'service-parent' => 'in:0,'.$services,
+            'image'          => 'mimes:jpeg,jpg,png',          
         );
 
-        $inputs = $request->only('name', 'parent_id');
+        $inputs = $request->only('name', 'service-parent','loyalty-points');
         $validator = Validator::make($inputs, $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('services/'. $id .'/edit')
-                ->withErrors($validator);                
+            return Redirect::back()->withInput()->withErrors($validator);
         } else {
             $service = Service::find($id);
          
@@ -183,10 +187,11 @@ class ServicesController extends Controller
             }
             else
             {
-              $service->image          = $service->image;
+              $service->image        = $service->image;
             }
-            $service->name           = $request->name;
-            $service->parent_id      = $request->parent_id;
+            $service->name           = Input::get('name');
+            $service->service_parent = Input::get('service-parent');
+            $service->loyalty_points = Input::get('loyalty-points');
             $service->save();
 
             // redirect
@@ -203,12 +208,8 @@ class ServicesController extends Controller
      */
     public function destroy($id)
     {
-        // delete
-        // dd($id);
         $service = Service::find($id);
-        $service->status = 0;
-        $service->update();
-        // $service->delete();
+        $service->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
