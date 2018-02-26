@@ -89,3 +89,12 @@ $factory->define(App\WorkshopAddress::class, function(Faker\Generator $faker){
         'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
     ];
 });
+
+$factory->define(App\Car::class, function (Faker\Generator $faker) {
+    return [
+        'type'      => $faker->randomElement(['Honda', 'Toyota', 'Suzuki', 'Daihatsu', 'Nissan', 'Adam']),
+        'model'     => $faker->randomElement(['Accord', 'Civic', 'City', 'Vezel', 'Corolla', 'Mehran']),
+        'picture'   => '',
+        'status'    => 1,
+    ];
+});

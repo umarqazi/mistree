@@ -92,6 +92,13 @@
                         "description": "Insurance",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "name": "year",
+                        "in": "formData",
+                        "description": "Year",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1051,7 +1058,7 @@
                 "parameters": [
                     {
                         "name": "token",
-                        "in": "query",
+                        "in": "formData",
                         "description": "Token",
                         "required": true,
                         "type": "string"

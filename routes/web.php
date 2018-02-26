@@ -11,6 +11,7 @@
 |
 */
 
+// ========= Customer Routes Start ==================================================
 Route::group(['prefix' => 'customer'], function () {
   /*  Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
     Route::post('/login', 'CustomerAuth\LoginController@login');
@@ -25,7 +26,6 @@ Route::group(['prefix' => 'customer'], function () {
     Route::get('/password/reset/{token}', 'CustomerAuth\ResetPasswordController@showResetForm');
     Route::get('/verify/{verification_code}', 'CustomersController@verifyEmail');
 });
-// ========= Customer Routes Start ==================================================
 // ========= Customer Routes End ===================================================
 // ========= Worshop Routes Start ==================================================
 Route::group(['middleware' => 'admin.guest'], function (){
@@ -38,6 +38,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
     });
 
+    Route::get('/home', 'WorkshopsController@showHome');
     Route::get('/', 'WorkshopAuth\LoginController@showLoginForm')->name('login');
     Route::post('/login', 'WorkshopAuth\LoginController@login');
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
@@ -60,10 +61,11 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
 Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function () {
 
-  Route::get('/login', 'AdminAuth\LoginController@showLoginForm')->name('login');
+  Route::get('/home', 'AdminsController@showHome');
+  Route::get('/', 'AdminAuth\LoginController@showLoginForm')->name('login');
   Route::post('/login', 'AdminAuth\LoginController@login');
   Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
- 
+   
 
   Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm')->name('register');
   Route::post('/register', 'AdminAuth\RegisterController@register');
@@ -78,6 +80,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
+        Route::resource('cars', 'CarsController');
         Route::get('/dashboard','AdminsController@home');
 
         Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
@@ -92,8 +95,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
     });
 
-  // ========= Admin Routes End ==================================================
-  
 });
 
 
+/* ========= Admin Routes End ====================================================== */

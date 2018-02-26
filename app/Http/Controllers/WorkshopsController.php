@@ -925,7 +925,14 @@ class WorkshopsController extends Controller
         //Approve Workshop
         $workshop = Workshop::find($id);
         $workshop->is_approved       = 1;
-        $workshop->save();        
+        $workshop->save();
+        $subject = "Conragulations! Your workshop has been approved.";
+           Mail::send('workshop.confirmationEmail', ['name' => $name],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email, $name);
+                $mail->subject($subject);
+            });        
         return Redirect::to('admin/workshops');
     }
 
@@ -1263,7 +1270,7 @@ class WorkshopsController extends Controller
      *   tags={"Workshops"},
      *   @SWG\Parameter(
      *     name="token",
-     *     in="query",
+     *     in="formData",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -1457,5 +1464,14 @@ class WorkshopsController extends Controller
     public function workshop_profile(){
         $workshop = Auth::guard('workshop')->user();
         return View::make('workshops.index')->with('workshop', $workshop);                       
+    }
+
+    /**
+     * Show Home
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showHome() {
+        return view('workshop.home');
     }
 }
