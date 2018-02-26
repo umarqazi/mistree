@@ -39,6 +39,16 @@ class Customer extends Authenticatable
     {
         return $this->hasMany('App\CustomerAddress');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany('App\Booking');
+    }
+
+    public function billings()
+    {
+        return $this->hasMany('App\Billing');
+    }
     /**
      * Send the password reset notification.
      *

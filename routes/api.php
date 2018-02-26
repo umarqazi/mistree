@@ -35,6 +35,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('get-customer-car', 'CarsController@getCustCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
+		Route::post('amount-paid', 'BookingsController@customerpaidbill');
 	});
 });
 Route::group(['prefix'=>'workshop'], function() {
@@ -53,5 +54,10 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::resource('address', 'WorkshopAddressesController');
 		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');		
 		Route::get('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
+		Route::post('createbooking','BookingsController@createBooking');
+		Route::post('acceptbooking/{workshop_id}/{booking_id}','BookingsController@acceptBooking');
+		Route::post('rejectbooking/{workshop_id}/{booking_id}','BookingsController@rejectBooking');
+		Route::post('booking-bill','BookingsController@bookingBiling');				
+		Route::post('complete-job','BookingsController@workshopcompletejob');						
 	});
 });

@@ -76,6 +76,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
   Route::get('/password/reset/{token}', 'AdminAuth\ResetPasswordController@showResetForm');
 
   //  Web portal
+
     Route::group(['middleware' => 'admin'], function (){
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
@@ -93,6 +94,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
         Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
         Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
+      
+        Route::get('/top-up', 'WorkshopsController@topup');
+        Route::post('/update-balance', 'WorkshopsController@topupBalance');
     });
 
 });
