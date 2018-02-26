@@ -87,7 +87,7 @@ class WorkshopsController extends Controller
             'password_confirmation'          => 'required',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:10',
+            'landline'                       => 'digits:11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required',
@@ -95,9 +95,9 @@ class WorkshopsController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png',  
 
             'shop'                           => 'required|numeric',
-            'building'                       => 'numeric',
+            'building'                       => 'regex:/^[\pL\s\-]+$/u',
             'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'integer',
+            'street'                         => 'required|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
             // 'service_id.*'                   => 'required|integer',
@@ -142,7 +142,7 @@ class WorkshopsController extends Controller
         }
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'cnic' => $request->cnic, 'mobile' => $request->mobile, 'type' => $request->type, 'profile_pic' => $profile_pic,'cnic_image' => $cnic_image, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'is_approved' => 0]); 
+        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'cnic' => $request->cnic, 'mobile' => $request->mobile, 'type' => $request->type, 'profile_pic' => $profile_pic,'cnic_image' => $cnic_image, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'is_approved' => 1]); 
 
         //Insert Address data from request
         $address = WorkshopAddress::create(['shop' => $request->shop, 'building' => $request->building, 'street' => $request->street, 'block' => $request->block,'town' => $request->town, 'city' => $request->city, 'workshop_id' => $workshop->id, 'coordinates' => NULL]);
@@ -226,29 +226,9 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {           
-        // $rules = [
-        //     'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
-        //     'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-        //     // 'email'                          => 'required|email|unique:workshops',
-        //     // 'password'                       => 'required|confirmed|min:8',
-        //     // 'password_confirmation'          => 'required',
-        //     'card_number'                    => 'required|digits:13',
-        //     'con_number'                     => 'required|digits:11',
-        //     'open_time'                      => 'required',
-        //     'close_time'                     => 'required',
-        //     'address_type'                   => 'required|alpha',
-        //     'address_house_no'               => 'required|numeric',
-        //     'address_street_no'              => 'required|numeric',
-        //     'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
-        //     'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
-        //     'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
-        //     'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
-        //     'service_id.*'                   => 'required|integer',
-        //     'service_rate.*'                 => 'required|integer',
-        //     'service_time.*'                 => 'required|alpha_dash' 
-        // ];   
+    {             
         $rules = [
+
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             // 'email'                          => 'required|email|unique:workshops',
@@ -256,7 +236,7 @@ class WorkshopsController extends Controller
             // 'password_confirmation'          => 'required',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:10',
+            'landline'                       => 'digits:11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required',
@@ -264,9 +244,9 @@ class WorkshopsController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png',  
 
             'shop'                           => 'required|numeric',
-            'building'                       => 'numeric',
-            // 'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'integer',
+            'building'                       => 'regex:/^[\pL\s\-]+$/u',
+            'block'                          => 'regex:/^[\pL\s\-]+$/u',
+            'street'                         => 'required|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'service_id.*'                   => 'required|integer',

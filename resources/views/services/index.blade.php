@@ -44,7 +44,7 @@
                                 <td class="sorting_1">{{$value->id}}</td>
                                 <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
                                 <td>{{$value->name}}</td>
-                                <td class="text-center">{{$value->parent_id}}</td>
+                                <td class="text-center">{{$value->parent($value->service_parent)}}</td>
                                 <td>
                                     <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
                                      <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">

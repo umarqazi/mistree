@@ -302,6 +302,7 @@
                                 
                                 <div class="col-sm-4">
                                   <div class="child-box-wrap">
+                                  <br>
                                     <div class="row">
 
                                       <div class="col-md-12">
@@ -382,7 +383,11 @@
 <script>
   function addmoreServices(event){
     event.preventDefault();
-    $(".services-row").append('<div class="col-sm-4"><div class="child-box-wrap"><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service</label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
+    $(".services-row").append('<div class="col-sm-4"> <div class="child-box-wrap"><a class="pull-right" onclick="removeService(this);"> X </a><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service<span class="manadatory"> *</span></label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
+  }
+  function removeService(obj)
+  {
+     $(obj).parent('div').parent('div').remove();
   }
 </script>
 @include('partials.footer')
