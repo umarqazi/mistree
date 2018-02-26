@@ -59,36 +59,42 @@ $factory->define(App\Workshop::class, function (Faker\Generator $faker) {
 
     return [
         'name'          => $faker->company,
+        'owner_name'    => $faker->name('male'),
         'email'         => preg_replace('/@example\..*/', '@wmp.com', $faker->unique()->safeEmail),
         'password'      => $password ?: $password = bcrypt('secret'),
-        'card_number'   => $faker->numberBetween(35201, 35205).$faker->randomNumber(8, true),
-        'con_number'    => '03'.$faker->randomElement(['00','01','02','03','04','05','06','07',10,11,12,13,14,15,16,20,21,22,23,24,25,26,31,32,33,34,35,41,42,43,44,45,46,47]).'-'.$faker->numberBetween(4,9).$faker->randomNumber(6, true),
+        'cnic'          => $faker->numberBetween(35201, 35205).$faker->randomNumber(8, true),
+        'mobile'        => '03'.$faker->randomElement(['00','01','02','03','04','05','06','07',10,11,12,13,14,15,16,20,21,22,23,24,25,26,31,32,33,34,35,41,42,43,44,45,46,47]).$faker->numberBetween(4,9).$faker->randomNumber(6, true),
+        'landline'      => '0423'.$faker->numberBetween(4,6).$faker->randomNumber(6, true),
         'type'          => $faker->randomElement(['Authorized', 'Unauthorized']),
         'profile_pic'   => $faker->imageUrl(640,480,'business',true),
-        'team_slot'     => $faker->numberBetween(1,5),
-        'open_time'     => $faker->numberBetween(10,11).':00:00am',
-        'close_time'    => $faker->numberBetween(10,11).':00:00pm',
-        'status'        => 1,
+        'open_time'     => $faker->numberBetween(10,11).':00am',
+        'close_time'    => $faker->numberBetween(10,11).':00pm',
+        'is_approved'   => 1,
         'remember_token'=> str_random(10),
         'created_at'    => $faker->dateTimeBetween('-5 days', 'now', 'Asia/Karachi'),
         'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
         'is_verified'   => 1,
-        'is_approved'   => 1,
-        'owner_name'    => $faker->name('male')
     ];
 });
 
 $factory->define(App\WorkshopAddress::class, function(Faker\Generator $faker){
     return [
-        'type'          => 'Residential',
-        'house_no'      => $faker->buildingNumber,
-        'street_no'     => random_int(1, 16),
+        'shop'          => $faker->buildingNumber,
+        'building'      => $faker->numerify('Building ###'),
+        'street'        => random_int(1, 16),
         'block'         => ucwords($faker->randomLetter),
-        'area'          => $faker->streetSuffix,
         'town'          => $faker->randomElement(['Johar', 'Muslim', 'Faisal', 'Model', 'Bahria', 'Nishtar']).' Town',
         'city'          => 'Lahore',
-        'status'        => 1,
         'created_at'    => $faker->dateTimeBetween('-5 days', 'now', 'Asia/Karachi'),
         'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
+    ];
+});
+
+$factory->define(App\Car::class, function (Faker\Generator $faker) {
+    return [
+        'type'      => $faker->randomElement(['Honda', 'Toyota', 'Suzuki', 'Daihatsu', 'Nissan', 'Adam']),
+        'model'     => $faker->randomElement(['Accord', 'Civic', 'City', 'Vezel', 'Corolla', 'Mehran']),
+        'picture'   => '',
+        'status'    => 1,
     ];
 });

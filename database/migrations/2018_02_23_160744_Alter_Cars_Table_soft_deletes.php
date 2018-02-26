@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddWorkshopColumns extends Migration
+class AlterCarsTableSoftDeletes extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddWorkshopColumns extends Migration
      */
     public function up()
     {
-        Schema::table('workshops', function($table) {
-            $table->string('owner_name')->nullable();
-            $table->string('cnic_image')->nullable();
+        Schema::table("car_customer", function ($table) {
+            $table->softDeletes();
         });
     }
 
@@ -26,9 +25,8 @@ class AddWorkshopColumns extends Migration
      */
     public function down()
     {
-         Schema::table('workshops', function($table) {
-            $table->dropColumn('owner_name');
-            $table->dropColumn('cnic_image');
+        Schema::table("car_customer", function ($table) {
+            $table->dropSoftDeletes();
         });
     }
 }

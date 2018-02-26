@@ -3,12 +3,13 @@
 namespace App;
 
 use App\Notifications\WorkshopResetPassword;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Workshop extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -16,7 +17,7 @@ class Workshop extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'card_number', 'con_number', 'type', 'profile_pic', 'geo_cord', 'team_slot', 'open_time', 'close_time','status', 'is_verified', 'owner_name', 'cnic_image'
+        'name', 'owner_name', 'email', 'password', 'cnic', 'cnic_image', 'mobile', 'landline', 'type', 'profile_pic', 'open_time', 'close_time', 'is_approved', 'is_verified'
     ];
 
     /**
@@ -29,11 +30,11 @@ class Workshop extends Authenticatable
     ];
 
     /**
-     * Send the password reset notification.
+     * The attributes that should be mutated to dates.
      *
-     * @param  string  $token
-     * @return void
+     * @var array
      */
+    protected $dates = ['deleted_at'];
 
     /**
      * Get the phone record associated with the user.
@@ -57,6 +58,13 @@ class Workshop extends Authenticatable
     {
         return $this->hasMany('App\WorkshopImages');
     }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
 
     public function sendPasswordResetNotification($token)
     {

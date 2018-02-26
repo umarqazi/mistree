@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Customer;
+use App\Workshop;
+
 
 class AdminsController extends Controller
 {
@@ -11,6 +14,17 @@ class AdminsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function home()
+    {
+        $customers = Customer::all();
+        $CustomerCount = count($customers);
+
+        $workshops = Workshop::all();
+        $WorkshopCount = count($workshops);
+        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount ]);
+    }
+
     public function index()
     {
         //
@@ -80,5 +94,14 @@ class AdminsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Show Home
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showHome() {
+        return view('admin.home');
     }
 }

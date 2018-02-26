@@ -15,21 +15,20 @@ class CreateWorkshopsTable extends Migration
         Schema::create('workshops', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('owner_name')->nullable();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('card_number',45);
-            $table->string('con_number',45);
-            $table->string('type',45);
-            $table->string('profile_pic',191);
-            $table->string('pic1',45);
-            $table->string('pic2',45);
-            $table->string('pic3',45);
-            $table->string('geo_cord',45)->nullable();
-            $table->string('team_slot',45);
-            $table->string('open_time',45);
-            $table->string('close_time',45);
-            $table->string('status',45);
             $table->rememberToken();
+            $table->string('cnic');
+            $table->string('cnic_image',2048)->nullable();
+            $table->string('mobile');
+            $table->string('landline')->nullable();
+            $table->enum('type',['Authorized', 'Unauthorized']);
+            $table->string('profile_pic',2048)->nullable();
+            $table->string('open_time');
+            $table->string('close_time');
+            $table->tinyInteger('is_approved')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

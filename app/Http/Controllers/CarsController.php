@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
-use Hash, DB, Config, Mail, View;
+use Hash, DB, Config, Mail, View, Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Car;
 use App\Customer;
@@ -47,7 +47,7 @@ class CarsController extends Controller
     public function index(Request $request)
     {
         // get all the nerds ->toJson()
-        $cars = Car::all();
+        $cars = Car::where('status', 1)->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -81,9 +81,7 @@ class CarsController extends Controller
     {
         $rules = array(
             'type'       => 'required',
-            'maker'      => 'required',
-            'model'      => 'required',
-            'year'       => 'required'
+            'model'      => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -95,9 +93,8 @@ class CarsController extends Controller
             // store
             $car = new Car;
             $car->type       = Input::get('type');
-            $car->maker      = Input::get('maker');
             $car->model      = Input::get('model');
-            $car->year       = Input::get('year');
+            $car->picture    = '';
             $car->status     = 1;
             $car->save();
 
@@ -146,10 +143,7 @@ class CarsController extends Controller
     {
         $rules = array(
             'type'       => 'required',
-            'maker'      => 'required',
-            'model'      => 'required',
-            'year'       => 'required',
-            'picture'    => 'required'
+            'model'      => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -162,15 +156,13 @@ class CarsController extends Controller
             // store
             $car = Car::find($id);
             $car->type       = Input::get('type');
-            $car->maker      = Input::get('maker');
             $car->model      = Input::get('model');
-            $car->year       = Input::get('year');
-            $car->picture    = Input::get('picture');
+            $car->picture    = '';
             $car->save();
 
             // redirect
             Session::flash('message', 'Successfully updated car!');
-            return Redirect::to('cars');
+            return Redirect::to('admin/cars');
         }
     }
 
@@ -189,7 +181,7 @@ class CarsController extends Controller
 
         // redirect
         Session::flash('message', 'Successfully deleted the car!');
-        return Redirect::to('cars');
+        return Redirect::to('admin/cars');
     }
     
 
@@ -247,6 +239,13 @@ class CarsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="year",
+     *     in="formData",
+     *     description="Year",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
@@ -257,6 +256,7 @@ class CarsController extends Controller
        $rules = array(
             'car_id'       => 'required',
             'customer_id'  => 'required',
+            'year'         => 'required',
             'millage'      => 'required',
             'vehicle_no'   => 'required',
             'insurance'    => 'required'
@@ -278,7 +278,7 @@ class CarsController extends Controller
             $car_exists = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->get();
             //->where('car_customer.status', 0)
             if(count($car_exists) == 0){
-                $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'status' => 1, 'created_at' => $current_time));
+                $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'year' => $request->year, 'status' => 1, 'created_at' => $current_time));
                 return response()->json([
                     'http-status'   => Response::HTTP_OK,
                     'status'        => true,
@@ -286,9 +286,9 @@ class CarsController extends Controller
                     'body'          => '' 
                 ],Response::HTTP_OK);
             }else{
-                $car_exists_with_status_0 = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_customer.status', 0)->get();
+                $car_exists_with_status_0 = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->whereNotNull('car_customer.deleted_at')->get();
                 if(count($car_exists_with_status_0)){
-                    $customer->cars()->newPivotStatement()->where([['customer_id','=', $request->customer_id], ['vehicle_no','=', $request->vehicle_no] ])->update(array('millage' => $request->millage, 'insurance' => $request->insurance, 'status' => 1, 'updated_at' => $current_time));
+                    $customer->cars()->newPivotStatement()->where([['customer_id','=', $request->customer_id], ['vehicle_no','=', $request->vehicle_no] ])->update(array('millage' => $request->millage, 'insurance' => $request->insurance, 'year' => $request->year, 'status' => 1, 'updated_at' => $current_time, 'deleted_at' => null));
                     return response()->json([
                         'http-status'   => Response::HTTP_OK,
                         'status'        => true,
@@ -355,23 +355,17 @@ class CarsController extends Controller
      */
     public function unassignCar(Request $request)
     {
-       $rules = array(
-            'custmer_id'        => 'required',
-            'vehicle_no'        => 'required',
-            'car_id'            => 'required',
-        );
-        $validator = Validator::make($request->all(), $rules);
-        if ($validator->fails()) {
+        if ($request->custmer_id && $request->vehicle_no && $request->car_id){
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator,
+                    'message' => 'Incorrect Details',
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         } else {
            // soft delete
             $customer   = Customer::find($request->customer_id);
-            $customer->cars()->newPivotStatement()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_id', $request->car_id)->update(array('status' => 0));
+            $customer->cars()->newPivotStatement()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_id', $request->car_id)->update(array('deleted_at' => DB::raw('NOW()')));
 
             return response()->json([
                 'http-status'   => Response::HTTP_OK,

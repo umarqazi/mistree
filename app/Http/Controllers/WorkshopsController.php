@@ -87,27 +87,31 @@ class WorkshopsController extends Controller
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
-            'card_number'                    => 'required|digits:13',
-            'con_number'                     => 'required|digits:11',
+            'cnic'                           => 'required|digits:13',
+            'mobile'                         => 'required|digits:11',
+            'landline'                       => 'digits:11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'address_type'                   => 'required|alpha',
-            'address_house_no'               => 'required|numeric',
-            'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
-            'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
+            'type'                           => 'required',
+            'profile_pic'                    => 'image|mimes:jpg,png',  
+            'cnic_image'                     => 'image|mimes:jpg,png',  
+
+            'shop'                           => 'required|numeric',
+            'building'                       => 'regex:/^[\pL\s\-]+$/u',
+            'block'                          => 'regex:/^[\pL\s\-]+$/u',
+            'street'                         => 'required|string',
+            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
             // 'service_id.*'                   => 'required|integer',
             // 'service_rate.*'                 => 'required|integer',
             // 'service_time.*'                 => 'required|alpha_dash' 
         ];        
 
-        $input = $request->only('name', 'email', 'owner_name', 'password', 'password_confirmation', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city','open_time', 'close_time');
+        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
-            return Redirect::to('admin/workshops/create')
+            return Redirect::back()
                 ->withErrors($validator)
                 ->withInput(Input::except('password'));
         }       
@@ -140,10 +144,10 @@ class WorkshopsController extends Controller
         }
 
         //Insert Workshop data from request 
-        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'card_number' => $request->card_number, 'con_number' => $request->con_number, 'type' => $request->type, 'profile_pic' => $profile_pic,'cnic_image' => $cnic_image, 'team_slot' => $request->team_slot, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'status' => 1, 'is_approved' => 0]); 
+        $workshop = Workshop::create(['name' => $request->name, 'owner_name' => $request->owner_name ,'email' => $request->email, 'password' => Hash::make($request->password), 'cnic' => $request->cnic, 'mobile' => $request->mobile, 'type' => $request->type, 'profile_pic' => $profile_pic,'cnic_image' => $cnic_image, 'open_time' => $request->open_time, 'close_time' => $request->close_time, 'is_approved' => 1]); 
 
         //Insert Address data from request
-        $address = WorkshopAddress::create(['type' => $request->address_type, 'house_no' => $request->address_house_no, 'street_no' => $request->address_street_no, 'block' => $request->address_block, 'area' => $request->address_area, 'town' => $request->address_town, 'city' => $request->address_city, 'workshop_id' => $workshop->id, 'geo_cord' => NULL, 'status' => 1 ]);
+        $address = WorkshopAddress::create(['shop' => $request->shop, 'building' => $request->building, 'street' => $request->street, 'block' => $request->block,'town' => $request->town, 'city' => $request->city, 'workshop_id' => $workshop->id, 'coordinates' => NULL]);
 
         //Insert Services data from request        
         $service_ids = $request->service_id;
@@ -168,16 +172,13 @@ class WorkshopsController extends Controller
             foreach($files as $file)
             {
                 $images = new WorkshopImages;
-               $ws_name = str_replace(' ', '_', $request->name);
-                   $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/ws_images', new File($file), 'public');  
-
-                   $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-
-                   $ws_pic = $ws_pic_path;
-
-                   $images->url = $ws_pic;
-                   $images->workshop_id = $workshop->id;
-                   $images->save();
+                $ws_name = str_replace(' ', '_', $request->name);
+                $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/ws_images', new File($file), 'public');
+                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $ws_pic = $ws_pic_path;
+                $images->url = $ws_pic;
+                $images->workshop_id = $workshop->id;
+                $images->save();
               }
         }       
 
@@ -233,31 +234,36 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {           
+    {             
         $rules = [
+
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:8',
-            'password_confirmation'          => 'required',
-            'card_number'                    => 'required|digits:13',
-            'con_number'                     => 'required|digits:11',
+            // 'email'                          => 'required|email|unique:workshops',
+            // 'password'                       => 'required|confirmed|min:8',
+            // 'password_confirmation'          => 'required',
+            'cnic'                           => 'required|digits:13',
+            'mobile'                         => 'required|digits:11',
+            'landline'                       => 'digits:11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'address_type'                   => 'required|alpha',
-            'address_house_no'               => 'required|numeric',
-            'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required|regex:/^[\pL\s\-]+$/u',
-            'address_area'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            'address_town'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u',
-            // 'service_id.*'                   => 'required|integer',
-            // 'service_rate.*'                 => 'required|integer',
-            // 'service_time.*'                 => 'required|alpha_dash' 
-        ];   
+            'type'                           => 'required',
+            'profile_pic'                    => 'image|mimes:jpg,png',  
+            'cnic_image'                     => 'image|mimes:jpg,png',  
 
-        $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
+            'shop'                           => 'required|numeric',
+            'building'                       => 'regex:/^[\pL\s\-]+$/u',
+            'block'                          => 'regex:/^[\pL\s\-]+$/u',
+            'street'                         => 'required|string',
+            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'service_id.*'                   => 'required|integer',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
+        ];  
 
+        // $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
+        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             return Redirect::to('admin/workshops/' . $id . '/edit')
@@ -297,32 +303,33 @@ class WorkshopsController extends Controller
 
         $workshop->name             = Input::get('name');        
         $workshop->owner_name       = Input::get('owner_name');  
-        $workshop->card_number      = Input::get('card_number');
-        $workshop->con_number       = Input::get('con_number');
+        $workshop->cnic             = Input::get('cnic');
+        $workshop->mobile           = Input::get('mobile');
+        $workshop->landline         = Input::get('landline');
         $workshop->type             = Input::get('type');
         $workshop->profile_pic      = $profile_pic;
         $workshop->cnic_image      =  $cnic_image;
         // $workshop->pic1             = '';
         // $workshop->pic2             = '';
         // $workshop->pic3             = '';
-        $workshop->team_slot        = Input::get('team_slot');
+        // $workshop->team_slot        = Input::get('team_slot');
         $workshop->open_time        = Input::get('open_time');
         $workshop->close_time       = Input::get('close_time');
-        $workshop->status           = 1;
+        // $workshop->status           = 1;
         $workshop->save();   
 
         // Update Workshop Address
         $address = WorkshopAddress::find($workshop->address->id);
 
-        $address->type              = Input::get('address_type');
-        $address->house_no          = Input::get('address_house_no');
-        $address->street_no         = Input::get('address_street_no');
-        $address->block             = Input::get('address_block');
-        $address->area              = Input::get('address_area');
-        $address->town              = Input::get('address_town');
-        $address->city              = Input::get('address_city');
-        $address->town              = Input::get('address_town');                
-        $address->save();
+        // $address->type              = Input::get('address_type');
+        $address->shop              = Input::get('shop');
+        $address->building          = Input::get('building');
+        $address->street         = Input::get('street');
+        $address->block             = Input::get('block');
+        $address->town              = Input::get('town');
+        $address->city              = Input::get('city');
+        $address->town              = Input::get('town');                
+        $address->update();
         
         // Session::flash('message', 'Successfully updated Workshop!');
         return Redirect::to('admin/workshops');
@@ -342,7 +349,7 @@ class WorkshopsController extends Controller
 
         // redirect
         Session::flash('message', 'Successfully deleted the Workshop!');
-        return Redirect::to('workshops');      
+        return Redirect::to('admin/workshops');      
     }
     
     /**
@@ -899,7 +906,14 @@ class WorkshopsController extends Controller
         //Approve Workshop
         $workshop = Workshop::find($id);
         $workshop->is_approved       = 1;
-        $workshop->save();        
+        $workshop->save();
+        $subject = "Conragulations! Your workshop has been approved.";
+           Mail::send('workshop.confirmationEmail', ['name' => $name],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email, $name);
+                $mail->subject($subject);
+            });        
         return Redirect::to('admin/workshops');
     }
 
@@ -1237,7 +1251,7 @@ class WorkshopsController extends Controller
      *   tags={"Workshops"},
      *   @SWG\Parameter(
      *     name="token",
-     *     in="query",
+     *     in="formData",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -1433,6 +1447,7 @@ class WorkshopsController extends Controller
         return View::make('workshops.index')->with('workshop', $workshop);                       
     }
 
+
     public function topup(){
         $workshops = Workshop::all();
         return View::make('admin.topup.topup')->with('workshops', $workshops);
@@ -1467,5 +1482,14 @@ class WorkshopsController extends Controller
         $transaction->save();
 
         return Redirect::to('admin/top-up');       
+    }
+
+    /**
+     * Show Home
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showHome() {
+        return view('workshop.home');
     }
 }

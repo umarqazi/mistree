@@ -3,11 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 
 class Service extends Model
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -15,13 +16,20 @@ class Service extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'parent_id', 'status', 'image', 'loyalty_points', 
+        'name', 'service_parent', 'loyalty_points', 'image'
     ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
 
 
     public function workshops()
     {
-        return $this->belongsToMany('App\Workshop')->withTimestamps();
+        return $this->belongsToMany('App\Workshop', 'workshop_service')->withTimestamps();
     }
 
     public function bookings()
@@ -29,18 +37,14 @@ class Service extends Model
         return $this->belongsToMany('App\Booking')->withPivot('name', 'service_rate', 'service_time')->withTimestamps();
     }
 
+    public function services()
+    {
+        return $this->hasMany('App\Service', 'service_parent');
+    }
 
-    // public function parent($parent_id) {
-        // return Service::find($parent_id);
-    // }
-
-    // public function parent() {
-    //     return $this->belongsTo('Service','parent_id');
-    // }
-
-    // public function children()
-    //     {
-    //         return $this->hasMany('Service', 'parent_id');
-    //     }
+    public function parent($id)
+    {
+        return $this->find($id)['name'];
+    }
 
 }

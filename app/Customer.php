@@ -59,4 +59,5 @@ class Customer extends Authenticatable
     {
         $this->notify(new CustomerResetPassword($token));
     }
+
 }
