@@ -1231,8 +1231,10 @@ class WorkshopsController extends Controller
             $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
         }
         $workshops = $workshops->get();
+        $eachWorkShop = new Workshop();
+
         foreach ($workshops as $key =>$workshop) {
-            $workshops[$key]->est_rates = array_sum($workshops[$key]->services->pluck('pivot')->pluck('service_rate')->toArray());
+            $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,

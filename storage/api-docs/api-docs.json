@@ -892,7 +892,7 @@
                 "parameters": [
                     {
                         "name": "token",
-                        "in": "formData",
+                        "in": "query",
                         "description": "Token",
                         "required": true,
                         "type": "string"

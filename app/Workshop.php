@@ -57,4 +57,11 @@ class Workshop extends Authenticatable
     {
         $this->notify(new WorkshopResetPassword($token));
     }
+
+//    Returns sum of the workshop
+    public function sumOfServiceRates($workshop)
+    {
+       $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
+        return $sum;
+    }
 }
