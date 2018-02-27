@@ -823,12 +823,13 @@ class WorkshopsController extends Controller
             }
             $workshop->update(['is_verified' => 1]);
             DB::table('workshop_verifications')->where('token',$verification_code)->delete();
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'You have successfully verified your email address.',
-                'body' => ''
-            ],Response::HTTP_OK);
+            // return response()->json([
+            //     'http-status' => Response::HTTP_OK,
+            //     'status' => true,
+            //     'message' => 'You have successfully verified your email address.',
+            //     'body' => ''
+            // ],Response::HTTP_OK);
+            return View::make('workshop.thankyou');
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
