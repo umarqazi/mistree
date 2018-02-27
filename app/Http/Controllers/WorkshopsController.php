@@ -200,8 +200,8 @@ class WorkshopsController extends Controller
                 $images = new WorkshopImages;                
                 $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/ws_images', new File($file), 'public');
                 $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-                $images->url = $ws_pic_path;
-                $images->workshop_id = $workshop->id;
+                $images->url = $ws_pic_path;                
+                $images->workshop()->associate($workshop);
                 $images->save();
             }
         }       
@@ -1245,7 +1245,7 @@ class WorkshopsController extends Controller
         $services = Service::all();        
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
     }
-
+    
     /**
      *  Store Workshop Service
      *
@@ -1574,5 +1574,177 @@ class WorkshopsController extends Controller
      */
     public function showHome() {
         return view('workshop.home');
+    }
+
+    /**
+    * @SWG\Get(
+    *   path="/api/workshop/address/{workshop_id}",
+    *   summary="Workshop Address Details",
+    *   operationId="fetch",
+    *   produces={"application/json"},
+    *   tags={"Workshops"},
+    *    @SWG\Parameter(
+    *     name="token",
+    *     in="query",
+    *     description="Token",
+    *     required=true,
+    *     type="string"
+    *   ),
+    *   @SWG\Parameter(
+    *     name="workshop_id",
+    *     in="path",
+    *     description="workshop id",
+    *     required=true,
+    *     type="integer"
+    *   ), 
+    *   @SWG\Response(response=200, description="successful operation"),
+    *   @SWG\Response(response=406, description="not acceptable"),
+    *   @SWG\Response(response=500, description="internal server error")
+    * )    
+    * Display the specified resource.
+    *
+    * @param  int  $id
+    * @return \Illuminate\Http\Response
+    */
+    public function workshopaddress($workshop_id)
+    {           
+        $workshop = Workshop::find($workshop_id);
+        $address = $workshop->address; 
+        
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Workshop Details!',
+            'body' => $address
+        ],Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/update-address/{workshop_id}",
+     *   summary="Update Workshop Address",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="shop",
+     *     in="formData",
+     *     description="Workshop Shop No",
+     *     required=true,
+     *     type="number"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="building",
+     *     in="formData",
+     *     description="Workshop Building",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="street",
+     *     in="formData",
+     *     description="Workshop Street",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="block",
+     *     in="formData",
+     *     description="Workshop Block",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="town",
+     *     in="formData",
+     *     description="Workshop Town",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="city",
+     *     in="formData",
+     *     description="Workshop City",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="_method",
+     *     in="formData",
+     *     description="Required to update form",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateAddress(Request $request, $workshop_id)
+    {
+        $workshop = Workshop::find($workshop_id);
+        $address = $workshop->address;                
+        $rules = [            
+            'shop'                           => 'required|numeric',
+            'building'                       => 'regex:/^[\pL\s\-]+$/u',
+            'block'                          => 'regex:/^[\pL\s\-]+$/u',
+            'street'                         => 'required|string',
+            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+        ];
+
+        $input = $request->only('shop', 'building', 'block', 'street', 'town', 'city');
+
+        $validator = Validator::make($input , $rules);
+
+        // process the login
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
+        if (!count($address)) {
+            $address = new WorkshopAddress;
+            $address->workshop_id = $workshop->id;
+        }
+         
+        $address->shop          =  $request->shop;
+        $address->building      =  $request->building;        
+        $address->block         =  $request->block;
+        $address->street        =  $request->street;
+        $address->town          =  $request->town;
+        $address->city          =  $request->city;        
+        $address->save(); 
+        
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Address updated Successfully!',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);               
     }
 }

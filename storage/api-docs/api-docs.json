@@ -685,172 +685,6 @@
                 }
             }
         },
-        "/api/workshop/address/{workshop_id}": {
-            "get": {
-                "tags": [
-                    "Workshops"
-                ],
-                "summary": "Workshop Address Details",
-                "operationId": "fetch",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "workshop id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "406": {
-                        "description": "not acceptable"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
-        "/api/workshop/address/{address_id}/edit": {
-            "get": {
-                "tags": [
-                    "Workshops"
-                ],
-                "summary": "Workshop Address Details",
-                "operationId": "fetch",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_id",
-                        "in": "path",
-                        "description": "address id",
-                        "required": true,
-                        "type": "integer"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "406": {
-                        "description": "not acceptable"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
-        "/api/workshop/address/{id}": {
-            "post": {
-                "tags": [
-                    "Workshops"
-                ],
-                "summary": "Update Workshop Address",
-                "operationId": "update",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "address id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "shop",
-                        "in": "formData",
-                        "description": "Workshop Shop No",
-                        "required": true,
-                        "type": "number"
-                    },
-                    {
-                        "name": "building",
-                        "in": "formData",
-                        "description": "Workshop Building",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "street",
-                        "in": "formData",
-                        "description": "Workshop Street",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "block",
-                        "in": "formData",
-                        "description": "Workshop Block",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "town",
-                        "in": "formData",
-                        "description": "Workshop Town",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "city",
-                        "in": "formData",
-                        "description": "Workshop City",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "_method",
-                        "in": "formData",
-                        "description": "Required to update form",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "406": {
-                        "description": "not acceptable"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
         "/api/workshop/register": {
             "post": {
                 "tags": [
@@ -1482,6 +1316,133 @@
                         "description": "workshop id",
                         "required": true,
                         "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/address/{workshop_id}": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Address Details",
+                "operationId": "fetch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-address/{workshop_id}": {
+            "patch": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Address",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "shop",
+                        "in": "formData",
+                        "description": "Workshop Shop No",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "building",
+                        "in": "formData",
+                        "description": "Workshop Building",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "street",
+                        "in": "formData",
+                        "description": "Workshop Street",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "block",
+                        "in": "formData",
+                        "description": "Workshop Block",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "town",
+                        "in": "formData",
+                        "description": "Workshop Town",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "city",
+                        "in": "formData",
+                        "description": "Workshop City",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "_method",
+                        "in": "formData",
+                        "description": "Required to update form",
+                        "required": true,
+                        "type": "string"
                     }
                 ],
                 "responses": {
