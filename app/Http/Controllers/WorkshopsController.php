@@ -100,9 +100,9 @@ class WorkshopsController extends Controller
             'street'                         => 'required|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            // 'service_id.*'                   => 'required|integer',
-            // 'service_rate.*'                 => 'required|integer',
-            // 'service_time.*'                 => 'required|alpha_dash' 
+            'service_id.*'                   => 'required|integer:unique',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];        
 
         $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
@@ -249,7 +249,7 @@ class WorkshopsController extends Controller
             'street'                         => 'required|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'service_id.*'                   => 'required|integer',
+            'service_id.*'                   => 'required|integer:unique',
             'service_rate.*'                 => 'required|integer',
             'service_time.*'                 => 'required|alpha_dash' 
         ];  
@@ -1443,8 +1443,179 @@ class WorkshopsController extends Controller
 
     public function workshop_profile(){
         $workshop = Auth::guard('workshop')->user();
-        return View::make('workshops.index')->with('workshop', $workshop);                       
+        return View::make('workshop_profile.index')->with('workshop', $workshop);                       
     }
+
+    public function edit_profile($id){
+     // get the workshop
+     $workshop = Workshop::find($id);
+     $services = Service::all();
+     // show the edit form and pass the workshop   
+     return View::make('workshop_profile.edit')->with('workshop', $workshop)->with('services',$services);                         
+    }
+
+    public function update_profile(Request $request, $id)
+    {
+        $rules = [           
+                        'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+                        'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
+                        // 'email'                          => 'required|email|unique:workshops',
+                        // 'password'                       => 'required|confirmed|min:8',
+                        // 'password_confirmation'          => 'required',
+                        'cnic'                           => 'required|digits:13',
+                        'mobile'                         => 'required|digits:11',
+                        'landline'                       => 'digits:11',
+                        'open_time'                      => 'required',
+                        'close_time'                     => 'required',
+                        'type'                           => 'required',
+                        'profile_pic'                    => 'image|mimes:jpg,png',  
+                        'cnic_image'                     => 'image|mimes:jpg,png',  
+            
+                        'shop'                           => 'required|numeric',
+                        'building'                       => 'regex:/^[\pL\s\-]+$/u',
+                        'block'                          => 'regex:/^[\pL\s\-]+$/u',
+                        'street'                         => 'required|string',
+                        'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+                        'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+                        // 'service_id.*'                   => 'required|integer:unique',
+                        // 'service_rate.*'                 => 'required|integer',
+                        // 'service_time.*'                 => 'required|alpha_dash' 
+                    ];  
+            
+                    // $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
+                    $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
+                    $validator = Validator::make($input, $rules);
+                    if($validator->fails()) {
+                        return Redirect::back()
+                            ->withErrors($validator);
+                    } 
+            
+                     // Update workshop
+                    $workshop = Workshop::find($id);
+            
+                    if ($request->hasFile('profile_pic')) 
+                    {
+                        $ws_name = str_replace(' ', '_', $request->name);
+                        $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
+                       
+                        $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                        $profile_pic = $profile_pic_path;
+                        
+                    }
+                    else
+                    {
+                      $profile_pic         =  $workshop->profile_pic;
+                    }
+            
+            
+                    if ($request->hasFile('cnic_image')) 
+                    {
+                        $ws_name = str_replace(' ', '_', $request->name);
+                        $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
+                        $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                        $cnic_image = $cnic_pic_path;
+                    }
+                    else
+                    {
+                      $cnic_image         =  $workshop->cnic_image;
+                    }
+            
+                    $workshop->name             = Input::get('name');        
+                    $workshop->owner_name       = Input::get('owner_name');  
+                    $workshop->cnic             = Input::get('cnic');
+                    $workshop->mobile           = Input::get('mobile');
+                    $workshop->landline         = Input::get('landline');
+                    $workshop->type             = Input::get('type');
+                    $workshop->profile_pic      = $profile_pic;
+                    $workshop->cnic_image      =  $cnic_image;
+                    $workshop->open_time        = Input::get('open_time');
+                    $workshop->close_time       = Input::get('close_time');
+                    // $workshop->status           = 1;
+                    $workshop->save();   
+            
+                    // Update Workshop Address
+                    $address = WorkshopAddress::find($workshop->address->id);
+            
+                    // $address->type              = Input::get('address_type');
+                    $address->shop              = Input::get('shop');
+                    $address->building          = Input::get('building');
+                    $address->street         = Input::get('street');
+                    $address->block             = Input::get('block');
+                    $address->town              = Input::get('town');
+                    $address->city              = Input::get('city');
+                    $address->town              = Input::get('town');                
+                    $address->update();
+                    
+                    // Session::flash('message', 'Successfully updated Workshop!');
+                    return Redirect::to('/profile');
+    }
+
+    public function addProfileService($workshop){
+       // dd('here');
+        $workshop = Workshop::find($workshop);
+        $services = Service::all();        
+        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('services',$services);            
+    }
+
+    public function storeProfileService(Request $request){
+        // dd($request);
+        $rules = [
+            // 'service_id'      => 'required|unique_with:workshop_service,workshop_id',
+            'service_rate'    => 'required',            
+            'service_time'    => 'required'                        
+            ];
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            // $request->offsetUnset('password');
+            return Redirect::back()
+                ->withErrors($validator);                
+        }        
+        $workshop = Workshop::find($request->workshop_id);
+        $service = $request->service_id; 
+        $rate = $request->service_rate;
+        $time = $request->service_time;       
+        
+        $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        
+        return Redirect::to('profile');               
+    }
+
+    public function editProfileService($id){
+        // dd('edit profile service');
+        $services = Service::all();
+        $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
+        return View::make('workshop_profile.services.edit')->with('workshop_service', $workshop_service)->with('services',$services);            
+
+    }
+    
+    public function updateProfileService(Request $request){
+        // dd('here');
+        $rules = [            
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required'                        
+            ];        
+        $input = $request->only('service_rate', 'service_time' );
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $workshop_service_id = $request->workshop_service_id ;            
+            return Redirect::back()
+                ->withErrors($validator);
+        }                 
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        return Redirect::to('profile');               
+
+    }
+
+    public function deleteProfileService($workshop_id, $service_id){
+        $workshop = Workshop::find($workshop_id);
+        $workshop->services()->detach($service_id);        
+        // show the view and pass the workshop to it
+        return Redirect::to('profile/');               
+    }
+
 
     /**
      * Show Home
