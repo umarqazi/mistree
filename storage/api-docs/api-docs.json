@@ -789,51 +789,44 @@
                         "type": "string"
                     },
                     {
-                        "name": "address_city",
+                        "name": "shop",
                         "in": "formData",
-                        "description": "Workshop Address City",
+                        "description": "Workshop Shop No",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "building",
+                        "in": "formData",
+                        "description": "Workshop Building",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "street",
+                        "in": "formData",
+                        "description": "Workshop Street",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "address_block",
+                        "name": "block",
                         "in": "formData",
-                        "description": "Workshop Address Block",
+                        "description": "Workshop Block",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "town",
+                        "in": "formData",
+                        "description": "Workshop Town",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "address_town",
+                        "name": "city",
                         "in": "formData",
-                        "description": "Workshop Address Town",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_area",
-                        "in": "formData",
-                        "description": "Workshop Address Area",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_type",
-                        "in": "formData",
-                        "description": "Workshop Address Type",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_house_no",
-                        "in": "formData",
-                        "description": "Workshop House No",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "address_street_no",
-                        "in": "formData",
-                        "description": "Workshop Street No",
+                        "description": "Workshop City",
                         "required": true,
                         "type": "string"
                     },
@@ -905,94 +898,116 @@
                         "type": "string"
                     },
                     {
-                        "name": "card_number",
+                        "name": "cnic",
                         "in": "formData",
                         "description": "Workshop CNIC card Number",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "con_number",
+                        "name": "mobile",
                         "in": "formData",
-                        "description": "Workshop Contact Number",
+                        "description": "Workshop Mobile Number",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "landline",
+                        "in": "formData",
+                        "description": "Workshop Landline Number",
+                        "required": false,
                         "type": "string"
                     },
                     {
                         "name": "type",
                         "in": "formData",
                         "description": "Workshop Type",
-                        "required": false,
+                        "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "team_slot",
-                        "in": "formData",
-                        "description": "Workshop Team Slots",
-                        "required": false,
-                        "type": "integer"
                     },
                     {
                         "name": "open_time",
                         "in": "formData",
                         "description": "Workshop Opening Time",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
                         "name": "close_time",
                         "in": "formData",
                         "description": "Workshop Closing Time",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "profile_pic",
+                        "in": "formData",
+                        "description": "Workshop Logo/Profile Picture",
                         "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_city",
+                        "name": "cnic_image",
                         "in": "formData",
-                        "description": "Workshop Address City",
-                        "required": true,
+                        "description": "CNIC Image",
+                        "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_block",
+                        "name": "ws_images",
                         "in": "formData",
-                        "description": "Workshop Address Block",
-                        "required": true,
+                        "description": "Array of Workshop Images",
+                        "required": false,
+                        "type": "array",
+                        "items": "[base64strings]"
+                    },
+                    {
+                        "name": "cnic_image",
+                        "in": "formData",
+                        "description": "CNIC Image",
+                        "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_town",
+                        "name": "shop",
                         "in": "formData",
-                        "description": "Workshop Address Town",
-                        "required": true,
+                        "description": "Workshop Shop No",
+                        "required": false,
+                        "type": "number"
+                    },
+                    {
+                        "name": "building",
+                        "in": "formData",
+                        "description": "Workshop Building",
+                        "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_area",
+                        "name": "street",
                         "in": "formData",
-                        "description": "Workshop Address Area",
-                        "required": true,
+                        "description": "Workshop Street",
+                        "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_type",
+                        "name": "block",
                         "in": "formData",
-                        "description": "Workshop Address Type",
-                        "required": true,
+                        "description": "Workshop Block",
+                        "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_house_no",
+                        "name": "town",
                         "in": "formData",
-                        "description": "Workshop House No",
-                        "required": true,
+                        "description": "Workshop Town",
+                        "required": false,
                         "type": "string"
                     },
                     {
-                        "name": "address_street_no",
+                        "name": "city",
                         "in": "formData",
-                        "description": "Workshop Street No",
-                        "required": true,
+                        "description": "Workshop City",
+                        "required": false,
                         "type": "string"
                     },
                     {
@@ -1001,7 +1016,7 @@
                         "description": "Workshop selected services in array",
                         "required": true,
                         "type": "array",
-                        "items": "service_id"
+                        "items": "[service_id,service_rate,service_time]"
                     }
                 ],
                 "responses": {
@@ -1243,44 +1258,58 @@
                         "type": "string"
                     },
                     {
-                        "name": "card_number",
+                        "name": "cnic",
                         "in": "formData",
-                        "description": "Workshop CNIC card Number",
+                        "description": "Workshop CNIC Number",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "con_number",
+                        "name": "mobile",
                         "in": "formData",
-                        "description": "Workshop Contact Number",
+                        "description": "Workshop Mobile Number",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "landline",
+                        "in": "formData",
+                        "description": "Workshop Landline Number",
+                        "required": false,
                         "type": "string"
                     },
                     {
                         "name": "type",
                         "in": "formData",
                         "description": "Workshop Type",
-                        "required": false,
+                        "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "team_slot",
-                        "in": "formData",
-                        "description": "Workshop Team Slots",
-                        "required": false,
-                        "type": "integer"
                     },
                     {
                         "name": "open_time",
                         "in": "formData",
                         "description": "Workshop Opening Time",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
                         "name": "close_time",
                         "in": "formData",
                         "description": "Workshop Closing Time",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "profile_pic",
+                        "in": "formData",
+                        "description": "Workshop Profile Image",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cnic_image",
+                        "in": "formData",
+                        "description": "Workshop CNIC Image",
                         "required": false,
                         "type": "string"
                     },

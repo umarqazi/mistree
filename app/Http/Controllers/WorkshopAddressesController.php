@@ -155,51 +155,44 @@ class WorkshopAddressesController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="address_city",
+     *     name="shop",
      *     in="formData",
-     *     description="Workshop Address City",
+     *     description="Workshop Shop No",
+     *     required=true,
+     *     type="number"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="building",
+     *     in="formData",
+     *     description="Workshop Building",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="street",
+     *     in="formData",
+     *     description="Workshop Street",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="address_block",
+     *     name="block",
      *     in="formData",
-     *     description="Workshop Address Block",
+     *     description="Workshop Block",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="town",
+     *     in="formData",
+     *     description="Workshop Town",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="address_town",
+     *     name="city",
      *     in="formData",
-     *     description="Workshop Address Town",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_area",
-     *     in="formData",
-     *     description="Workshop Address Area",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_type",
-     *     in="formData",
-     *     description="Workshop Address Type",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_house_no",
-     *     in="formData",
-     *     description="Workshop House No",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_street_no",
-     *     in="formData",
-     *     description="Workshop Street No",
+     *     description="Workshop City",
      *     required=true,
      *     type="string"
      *   ),
@@ -227,16 +220,15 @@ class WorkshopAddressesController extends Controller
     {
         $address = WorkshopAddress::find($id);                
         $rules = [            
-            'address_type'                   => 'required',
-            'address_house_no'               => 'required|numeric',
-            'address_street_no'              => 'required|numeric',
-            'address_block'                  => 'required',
-            'address_area'                   => 'required',
-            'address_town'                   => 'required',
-            'address_city'                   => 'required|regex:/^[\pL\s\-]+$/u'
-            ];
+            'shop'                           => 'required|numeric',
+            'building'                       => 'regex:/^[\pL\s\-]+$/u',
+            'block'                          => 'regex:/^[\pL\s\-]+$/u',
+            'street'                         => 'required|string',
+            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+        ];
 
-        $input = $request->only('address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city');
+        $input = $request->only('shop', 'building', 'block', 'street', 'town', 'city');
 
         $validator = Validator::make($input , $rules);
 
@@ -249,14 +241,13 @@ class WorkshopAddressesController extends Controller
                 'body' => $request->all()
             ],Response::HTTP_OK);
         }         
-        $address->type          =  $request->address_type;
-        $address->house_no      =  $request->address_house_no;
+        $address->shop          =  $request->shop;
+        $address->building      =  $request->building;
         $address->street_no     =  $request->address_street_no;
-        $address->block         =  $request->address_block;
-        $address->area          =  $request->address_area;
-        $address->town          =  $request->address_town;
-        $address->city          =  $request->address_city;
-        $address->status        = 1;
+        $address->block         =  $request->block;
+        $address->street        =  $request->street;
+        $address->town          =  $request->town;
+        $address->city          =  $request->city;        
         $address->save(); 
         
         return response()->json([
