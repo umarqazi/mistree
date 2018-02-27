@@ -148,7 +148,7 @@
                                                 </tr>
                                             </thead>
                                             @php 
-                                                $specialty = $workshop->service                             
+                                                $specialty = $workshop->services                             
                                             @endphp                     
 
                                             <tbody>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class ChangeWorkshopServiceTimeDatatype extends Migration
+class AlterBookingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class ChangeWorkshopServiceTimeDatatype extends Migration
      */
     public function up()
     {
-        Schema::table('workshop_service', function (Blueprint $table) {
-            $table->string('service_time', 50)->change();
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->string('vehicle_no');           
         });
     }
 
@@ -25,8 +25,8 @@ class ChangeWorkshopServiceTimeDatatype extends Migration
      */
     public function down()
     {
-        Schema::table('workshop_service', function (Blueprint $table) {
-            $table->dateTime('service_time')->change();
-        });
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropColumn('vehicle_no');           
+        }); 
     }
 }

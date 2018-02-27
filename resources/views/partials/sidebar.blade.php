@@ -40,6 +40,12 @@
                         <p>Services</p>
                     </a>
                 </li>
+                <li  @if(Request::is('admin/top-up/*') || Request::is('admin/top-up')) class="active" @endif >
+                    <a href="{{url('admin/top-up')}}">
+                        <i class="ti-panel"></i>
+                        <p>Top UP</p>
+                    </a>
+                </li>
                 <li>
                     <a href="notifications.html">
                         <i class="ti-comment-alt"></i>

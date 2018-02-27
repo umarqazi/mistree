@@ -5,8 +5,8 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
-class WorkshopAddress extends Model
-{	
+class Billing extends Model
+{
 	use Notifiable;
 
     /**
@@ -15,14 +15,22 @@ class WorkshopAddress extends Model
      * @var array
      */
     protected $fillable = [
-        'workshop_id', 'shop', 'building', 'street', 'block', 'town', 'city', 'coordinates'
+        'workshop_id', 'booking_id', 'amount', 'customer_id'
     ];
 
-    /**
-     * Get the user that owns the phone.
-     */   
     public function workshop()
     {
         return $this->belongsTo('App\Workshop');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Customer');
+    }
+
+    public function booking()
+    {
+        return $this->belongsTo('App\Booking');
+    }
+    
 }

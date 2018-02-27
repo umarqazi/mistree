@@ -37,6 +37,8 @@
     <!-- Datatables -->
     <link href="{{asset('css/dataTables.min.css')}}" rel="stylesheet" />
 
+    <script src="{{asset('js/jquery-1.10.2.js')}}" type="text/javascript"></script>
+
 </head>
 <body>
 
@@ -62,7 +64,7 @@
     </div>  <!-- /wrapper  -->
 
 
-    <script src="{{asset('js/jquery-1.10.2.js')}}" type="text/javascript"></script>
+    
     <script src="{{asset('js/bootstrap.min.js')}}" type="text/javascript"></script>
     <script src="{{asset('js/bootstrap-checkbox-radio.js')}}"></script>
     <script src="{{asset('js/chartist.min.js')}}"></script>
