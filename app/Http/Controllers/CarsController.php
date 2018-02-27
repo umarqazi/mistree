@@ -47,9 +47,8 @@ class CarsController extends Controller
     public function index(Request $request)
     {
         // get all the nerds ->toJson()
-        $cars = Car::where('status', 1)->get();
-        $reqFrom = $request->header('Content-Type');
-        if( $reqFrom == 'application/json'){
+        $cars = Car::all();
+        if( $request->header('Content-Type') == 'application/json'){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -57,7 +56,8 @@ class CarsController extends Controller
                 'body' => [ 'cars' => $cars ]
             ],Response::HTTP_OK);
         }
-        else{
+        else
+        {
             return View::make('cars.index')->with('cars', $cars);
         }
     }
@@ -80,7 +80,7 @@ class CarsController extends Controller
     public function store()
     {
         $rules = array(
-            'type'       => 'required',
+            'make'       => 'required',
             'model'      => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -93,9 +93,9 @@ class CarsController extends Controller
             // store
             $car = new Car;
             $car->type       = Input::get('type');
+            $car->make       = Input::get('make');
             $car->model      = Input::get('model');
             $car->picture    = '';
-            $car->status     = 1;
             $car->save();
 
             // redirect
@@ -142,7 +142,7 @@ class CarsController extends Controller
     public function update($id)
     {
         $rules = array(
-            'type'       => 'required',
+            'make'       => 'required',
             'model'      => 'required'
         );
         $validator = Validator::make(Input::all(), $rules);
@@ -156,6 +156,7 @@ class CarsController extends Controller
             // store
             $car = Car::find($id);
             $car->type       = Input::get('type');
+            $car->make       = Input::get('make');
             $car->model      = Input::get('model');
             $car->picture    = '';
             $car->save();
@@ -176,8 +177,7 @@ class CarsController extends Controller
     {
        // delete
         $car = Car::find($id);
-        $car->status = 0;
-        $car->save();
+        $car->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the car!');
@@ -212,13 +212,6 @@ class CarsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="customer_id",
-     *     in="formData",
-     *     description="Customer Id",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
      *     name="millage",
      *     in="formData",
      *     description="Millage",
@@ -236,7 +229,7 @@ class CarsController extends Controller
      *     name="insurance",
      *     in="formData",
      *     description="Insurance",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
@@ -254,12 +247,10 @@ class CarsController extends Controller
     public function assignCar(Request $request)
     {
        $rules = array(
-            'car_id'       => 'required',
-            'customer_id'  => 'required',
-            'year'         => 'required',
-            'millage'      => 'required',
-            'vehicle_no'   => 'required',
-            'insurance'    => 'required'
+           'car_id'       => 'required',
+           'vehicle_no'   => 'required',
+           'millage'      => 'required',
+           'year'         => 'required',
         );
         $car_exists = "";
         $current_time = Carbon::now()->toDateTimeString();
@@ -274,11 +265,11 @@ class CarsController extends Controller
         } else {
             // store
             $car        = Car::find($request->car_id);
-            $customer   = Customer::find($request->customer_id);
-            $car_exists = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->get();
+            $customer   = JWTAuth::authenticate();
+            $car_exists = $customer->cars()->where('customer_id', $customer->id)->where('vehicle_no', $request->vehicle_no)->get();
             //->where('car_customer.status', 0)
             if(count($car_exists) == 0){
-                $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'year' => $request->year, 'status' => 1, 'created_at' => $current_time));
+                $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'year' => $request->year));
                 return response()->json([
                     'http-status'   => Response::HTTP_OK,
                     'status'        => true,
@@ -286,9 +277,9 @@ class CarsController extends Controller
                     'body'          => '' 
                 ],Response::HTTP_OK);
             }else{
-                $car_exists_with_status_0 = $customer->cars()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->whereNotNull('car_customer.deleted_at')->get();
+                $car_exists_with_status_0 = $customer->cars()->where('customer_id', $customer->id)->where('vehicle_no', $request->vehicle_no)->whereNotNull('car_customer.removed_at')->get();
                 if(count($car_exists_with_status_0)){
-                    $customer->cars()->newPivotStatement()->where([['customer_id','=', $request->customer_id], ['vehicle_no','=', $request->vehicle_no] ])->update(array('millage' => $request->millage, 'insurance' => $request->insurance, 'year' => $request->year, 'status' => 1, 'updated_at' => $current_time, 'deleted_at' => null));
+                    $customer->cars()->newPivotStatement()->where([['customer_id','=', $customer->customer_id], ['vehicle_no','=', $request->vehicle_no] ])->update(array('millage' => $request->millage, 'insurance' => $request->insurance, 'year' => $request->year, 'removed_at' => null));
                     return response()->json([
                         'http-status'   => Response::HTTP_OK,
                         'status'        => true,
@@ -300,7 +291,7 @@ class CarsController extends Controller
                         'http-status'   => Response::HTTP_OK,
                         'status'        => true,
                         'message'       => 'A Car already exists with the same registration no.',
-                        'body'          => '' 
+                        'body'          => $request->all()
                     ],Response::HTTP_OK);
                 }
             }
@@ -331,20 +322,13 @@ class CarsController extends Controller
      *     name="car_id",
      *     in="formData",
      *     description="Car Id",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="vehicle_no",
      *     in="formData",
      *     description="Vechile No.",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="customer_id",
-     *     in="formData",
-     *     description="Customer Id",
      *     required=true,
      *     type="string"
      *   ),
@@ -355,23 +339,47 @@ class CarsController extends Controller
      */
     public function unassignCar(Request $request)
     {
-        if ($request->custmer_id && $request->vehicle_no && $request->car_id){
+        $customer   = JWTAuth::authenticate();
+
+        $rules = array(
+            'vehicle_no'   => 'required|exists:car_customer,vehicle_no,customer_id,'.$customer->id,
+        );
+
+        $validator = Validator::make($request->all(), $rules);
+        if ($validator->fails()) {
             return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Incorrect Details',
-                    'body' => $request->all()
-                ],Response::HTTP_OK);
-        } else {
-           // soft delete
-            $customer   = Customer::find($request->customer_id);
-            $customer->cars()->newPivotStatement()->where('customer_id', $request->customer_id)->where('vehicle_no', $request->vehicle_no)->where('car_id', $request->car_id)->update(array('deleted_at' => DB::raw('NOW()')));
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Incorrect Details',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+
+        $car = $customer->cars()->newPivotStatement()->where('vehicle_no', 'like', '%'.$request->vehicle_no.'%');
+        if(!empty($request->car_id))
+        {
+            $car->where('car_id', $request->car_id);
+        }
+        $car    = $car->first();
+
+        if($car->removed_at != null)
+        {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Car has already been removed.',
+                'body' => null
+            ], Response::HTTP_OK);
+        }
+        else
+        {
+            $customer->cars()->newPivotStatement()->where('customer_id', $customer->id)->where('vehicle_no', $request->vehicle_no)->update(['removed_at' => DB::raw('NOW()')]);
 
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
                 'message'       => 'Car deleted!',
-                'body'          => '' 
+                'body'          => null
             ],Response::HTTP_OK);
         }
     }
@@ -386,7 +394,7 @@ class CarsController extends Controller
      * @SWG\Get(
      *   path="/api/customer/get-customer-car",
      *   summary="Get customer's car",
-     *   operationId="getCustCar",
+     *   operationId="getCustomerCar",
      *   produces={"application/json"},
      *   tags={"Cars"},
      *   @SWG\Parameter(
@@ -396,39 +404,28 @@ class CarsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
-     *   @SWG\Parameter(
-     *     name="customer_id",
-     *     in="query",
-     *     description="Customer Id",
-     *     required=true,
-     *     type="string"
-     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
      */
-    public function getCustCar($customer_id)
+    public function getCustomerCar()
     {
-       $rules = array(
-            'custmer_id'        => 'required',
-        );
-        $validator  = Validator::make($customer_id, $rules);
-        if ($validator->fails()) {
+        $customer   = JWTAuth::authenticate();
+        //$validator  = Validator::make($customer_id, $rules);
+        if (!$customer) {
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator,
-                    'body' => $request->all()
+                    'message' => 'Invalid Request!',
+                    'body' => ''
                 ],Response::HTTP_OK);
         } else {
-            $customer   = Customer::find($request->customer_id);
-            $cars       = $customer->cars();
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
                 'message'       => '',
-                'body'          => $cars 
+                'body'          => $customer->cars()->where('removed_at', null)->get()
             ],Response::HTTP_OK);
         }
     }  

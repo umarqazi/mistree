@@ -1,7 +1,6 @@
 <?php
 
 use App\Car;
-use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,2461 +16,2112 @@ class CarsTableSeeder extends Seeder
        	Model::unguard();
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Accord',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Civic',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'City',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Vezel',
             'picture'   => '',
-            'status'    => 1,
         ]);
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'NWgn',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'NOne',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Fit Hybrid',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Life',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Crossroad',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'BR-V',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'CR-V',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Civic Hybrid',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Insight',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Zest',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Airwave',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Honda',
+            'make'      => 'Honda',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Corolla',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Vitz',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Aqua',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Prius',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Passo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Land Cruiser',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Prado',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Belta',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Aygo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Corolla Fielder',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Crown',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Fortuner',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Hiace',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Mark X',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Rav4',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Ractis',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Auris',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Camry',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Corolla Axio',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Mark 2',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Surf',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'IQ',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Rush',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Toyota',
+            'make'      => 'Toyota',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Mehran',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Cultus',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Alto',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Wagon R',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Bolan',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'APV',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Ciaz',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Hustler',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Jimny',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Kei',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Potohar',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Vitara',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Ravi',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Liana',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Margalla',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Baleno',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Alto Eco',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Every',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Swift',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Suzuki',
+            'make'      => 'Suzuki',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Mira',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Cuore',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Move',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Hijet',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Charade',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Tanto',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Terios',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Terios Kid',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Copen',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Cast',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Bego',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Esse',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daihatsu',
+            'make'      => 'Daihatsu',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Dayz',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Sunny',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Clipper',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Dayz Highway',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Star',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Juke',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Nissan',
+            'make'      => 'Nissan',
             'model'     => 'Patrol',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Adam',
+            'make'      => 'Adam',
             'model'     => 'Boltoro',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Adam',
+            'make'      => 'Adam',
             'model'     => 'Revo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Adam',
+            'make'      => 'Adam',
             'model'     => 'Zabardast',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Adam',
+            'make'      => 'Adam',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Audi',
+            'make'      => 'Audi',
             'model'     => 'A4',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Audi',
+            'make'      => 'Audi',
             'model'     => 'A5',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Audi',
+            'make'      => 'Audi',
             'model'     => 'A6',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Audi',
+            'make'      => 'Audi',
             'model'     => 'A3',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Audi',
+            'make'      => 'Audi',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Austin',
+            'make'      => 'Austin',
             'model'     => '10',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Austin',
+            'make'      => 'Austin',
             'model'     => 'Fx4',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Austin',
+            'make'      => 'Austin',
             'model'     => 'Maxi',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Austin',
+            'make'      => 'Austin',
             'model'     => 'Mini',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Austin',
+            'make'      => 'Austin',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Bentley',
+            'make'      => 'Bentley',
             'model'     => 'Continental Gt',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Bentley',
+            'make'      => 'Bentley',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => '1 Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => '5 Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => '7 Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => '3 Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => 'X5 Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => 'X1',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'BMW',
+            'make'      => 'BMW',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Buick',
+            'make'      => 'Buick',
             'model'     => 'Century',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Buick',
+            'make'      => 'Buick',
             'model'     => 'Lesabre',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Buick',
+            'make'      => 'Buick',
             'model'     => 'Regal',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Buick',
+            'make'      => 'Buick',
             'model'     => 'Road Master',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Buick',
+            'make'      => 'Buick',
             'model'     => 'Special',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Buick',
+            'make'      => 'Buick',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Cadillac',
+            'make'      => 'Cadillac',
             'model'     => 'Cts Escalade',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Cadillac',
+            'make'      => 'Cadillac',
             'model'     => 'Ext',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Cadillac',
+            'make'      => 'Cadillac',
             'model'     => 'Fleetwood',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Cadillac',
+            'make'      => 'Cadillac',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Alfa Romeo',
+            'make'      => 'Alfa Romeo',
             'model'     => 'Guilietta',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Alfa Romeo',
+            'make'      => 'Alfa Romeo',
             'model'     => 'Mitto',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Alfa Romeo',
+            'make'      => 'Alfa Romeo',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Kalash',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Chitral',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Kaghan xL',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Kalam',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Gilgit',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Shahanshah',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Changan',
+            'make'      => 'Changan',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Cherry',
+            'make'      => 'Cherry',
             'model'     => 'QQ',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Cherry',
+            'make'      => 'Cherry',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chevrolet',
+            'make'      => 'Chevrolet',
             'model'     => 'Joy',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chevrolet',
+            'make'      => 'Chevrolet',
             'model'     => 'Exclusive',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chevrolet',
+            'make'      => 'Chevrolet',
             'model'     => 'Optra',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chevrolet',
+            'make'      => 'Chevrolet',
             'model'     => 'Aveo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chevrolet',
+            'make'      => 'Chevrolet',
             'model'     => 'Matiz',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chevrolet',
+            'make'      => 'Chevrolet',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chrysler',
+            'make'      => 'Chrysler',
             'model'     => '300C',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chrysler',
+            'make'      => 'Chrysler',
             'model'     => 'Plymouth',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chrysler',
+            'make'      => 'Chrysler',
             'model'     => 'Voyager',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chrysler',
+            'make'      => 'Chrysler',
             'model'     => 'Pt Cruiser',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Chrysler',
+            'make'      => 'Chrysler',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Citreon',
+            'make'      => 'Citreon',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daewoo',
+            'make'      => 'Daewoo',
             'model'     => 'Racer',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daewoo',
+            'make'      => 'Daewoo',
             'model'     => 'Cielo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daewoo',
+            'make'      => 'Daewoo',
             'model'     => 'Matiz',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daewoo',
+            'make'      => 'Daewoo',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daimler',
+            'make'      => 'Daimler',
             'model'     => 'Xj6',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Daimler',
+            'make'      => 'Daimler',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Datsun',
+            'make'      => 'Datsun',
             'model'     => '120Y',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Datsun',
+            'make'      => 'Datsun',
             'model'     => '1000',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Datsun',
+            'make'      => 'Datsun',
             'model'     => 'Cherry',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Datsun',
+            'make'      => 'Datsun',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'DFSK',
+            'make'      => 'DFSK',
             'model'     => 'Rustom',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'DFSK',
+            'make'      => 'DFSK',
             'model'     => 'C37',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'DFSK',
+            'make'      => 'DFSK',
             'model'     => 'Convoy',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'DFSK',
+            'make'      => 'DFSK',
             'model'     => 'Shahbaz',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'DFSK',
+            'make'      => 'DFSK',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Dodge',
+            'make'      => 'Dodge',
             'model'     => 'Brothers',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Dodge',
+            'make'      => 'Dodge',
             'model'     => 'Dart',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Dodge',
+            'make'      => 'Dodge',
             'model'     => 'Nitro',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Dodge',
+            'make'      => 'Dodge',
             'model'     => 'Ram',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Dodge',
+            'make'      => 'Dodge',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'FAW',
+            'make'      => 'FAW',
             'model'     => 'X-PV',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'FAW',
+            'make'      => 'FAW',
             'model'     => 'V2',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'FAW',
+            'make'      => 'FAW',
             'model'     => 'Carrier',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'FAW',
+            'make'      => 'FAW',
             'model'     => 'Sirius',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'FAW',
+            'make'      => 'FAW',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
 
         Car::create([
-            'type'      => 'Ferrari',
+            'make'      => 'Ferrari',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => '1100',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => '124',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => '126',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => 'Iveco',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => 'Punto',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => 'EVO',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => 'Uno',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Fiat',
+            'make'      => 'Fiat',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ford',
+            'make'      => 'Ford',
             'model'     => 'Mutt M 825',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ford',
+            'make'      => 'Ford',
             'model'     => 'Ranger',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ford',
+            'make'      => 'Ford',
             'model'     => 'Escort',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ford',
+            'make'      => 'Ford',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Geely',
+            'make'      => 'Geely',
             'model'     => 'Ck',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Geely',
+            'make'      => 'Geely',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'GMC',
+            'make'      => 'GMC',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Golden Dragon',
+            'make'      => 'Golden Dragon',
             'model'     => 'Xml6532',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Golden Dragon',
+            'make'      => 'Golden Dragon',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Golf',
+            'make'      => 'Golf',
             'model'     => 'Convertible',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Golf',
+            'make'      => 'Golf',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hillman',
+            'make'      => 'Hillman',
             'model'     => 'Avenger',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hillman',
+            'make'      => 'Hillman',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hino',
+            'make'      => 'Hino',
             'model'     => 'Other',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hummer',
+            'make'      => 'Hummer',
             'model'     => 'H1',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hummer',
+            'make'      => 'Hummer',
             'model'     => 'H2',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hummer',
+            'make'      => 'Hummer',
             'model'     => 'H3',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hummer',
+            'make'      => 'Hummer',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hyundai',
+            'make'      => 'Hyundai',
             'model'     => 'Santro',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hyundai',
+            'make'      => 'Hyundai',
             'model'     => 'Excel',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hyundai',
+            'make'      => 'Hyundai',
             'model'     => 'Shehzore',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hyundai',
+            'make'      => 'Hyundai',
             'model'     => 'Coupe',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hyundai',
+            'make'      => 'Hyundai',
             'model'     => 'Terracan',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Hyundai',
+            'make'      => 'Hyundai',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Isuzu',
+            'make'      => 'Isuzu',
             'model'     => 'Como',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Isuzu',
+            'make'      => 'Isuzu',
             'model'     => 'Rodeo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Isuzu',
+            'make'      => 'Isuzu',
             'model'     => 'Trooper',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Isuzu',
+            'make'      => 'Isuzu',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'JAC',
+            'make'      => 'JAC',
             'model'     => 'X200',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'JAC',
+            'make'      => 'JAC',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jaguar',
+            'make'      => 'Jaguar',
             'model'     => 'S Type',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jaguar',
+            'make'      => 'Jaguar',
             'model'     => 'XF',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jaguar',
+            'make'      => 'Jaguar',
             'model'     => 'Xj6',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jaguar',
+            'make'      => 'Jaguar',
             'model'     => 'Xjs',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jaguar',
+            'make'      => 'Jaguar',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jeep',
+            'make'      => 'Jeep',
             'model'     => 'CJ5',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jeep',
+            'make'      => 'Jeep',
             'model'     => 'M 151',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jeep',
+            'make'      => 'Jeep',
             'model'     => 'CJ 7',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jeep',
+            'make'      => 'Jeep',
             'model'     => 'Cherokee',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Jeep',
+            'make'      => 'Jeep',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Kaiser Jeep',
+            'make'      => 'Kaiser Jeep',
             'model'     => 'M715',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Kaiser Jeep',
+            'make'      => 'Kaiser Jeep',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'KIA',
+            'make'      => 'KIA',
             'model'     => 'Classic',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'KIA',
+            'make'      => 'KIA',
             'model'     => 'Sportage',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'KIA',
+            'make'      => 'KIA',
             'model'     => 'Spectra',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'KIA',
+            'make'      => 'KIA',
             'model'     => 'Pride',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'KIA',
+            'make'      => 'KIA',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lada',
+            'make'      => 'Lada',
             'model'     => 'Riva',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lada',
+            'make'      => 'Lada',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Aventador',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Cabrera',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Countach',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Diablo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Espada',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Estoque',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lamborghini',
+            'make'      => 'Lamborghini',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Land Rover',
+            'make'      => 'Land Rover',
             'model'     => 'Defender',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Land Rover',
+            'make'      => 'Land Rover',
             'model'     => 'Discovery',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Land Rover',
+            'make'      => 'Land Rover',
             'model'     => 'Freelander',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Land Rover',
+            'make'      => 'Land Rover',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lexus',
+            'make'      => 'Lexus',
             'model'     => 'RX Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lexus',
+            'make'      => 'Lexus',
             'model'     => 'CT200h',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lexus',
+            'make'      => 'Lexus',
             'model'     => 'LX Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lexus',
+            'make'      => 'Lexus',
             'model'     => 'LS Series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lexus',
+            'make'      => 'Lexus',
             'model'     => 'SC 430',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lexus',
+            'make'      => 'Lexus',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Lincoln',
+            'make'      => 'Lincoln',
             'model'     => 'Other',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Maserati',
+            'make'      => 'Maserati',
             'model'     => 'Gran Turismo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Maserati',
+            'make'      => 'Maserati',
             'model'     => 'Quattroporte',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Maserati',
+            'make'      => 'Maserati',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Master',
+            'make'      => 'Master',
             'model'     => 'Rocket',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Master',
+            'make'      => 'Master',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mazda',
+            'make'      => 'Mazda',
             'model'     => 'Scrum',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mazda',
+            'make'      => 'Mazda',
             'model'     => 'Carol',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mazda',
+            'make'      => 'Mazda',
             'model'     => 'RX8',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mazda',
+            'make'      => 'Mazda',
             'model'     => 'Flair',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mazda',
+            'make'      => 'Mazda',
             'model'     => 'Carol Eco',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mazda',
+            'make'      => 'Mazda',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mercedes Benz',
+            'make'      => 'Mercedes Benz',
             'model'     => 'C Class',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mercedes Benz',
+            'make'      => 'Mercedes Benz',
             'model'     => 'E Class',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mercedes Benz',
+            'make'      => 'Mercedes Benz',
             'model'     => 'S Class',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mercedes Benz',
+            'make'      => 'Mercedes Benz',
             'model'     => 'E series',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mercedes Benz',
+            'make'      => 'Mercedes Benz',
             'model'     => 'CLA Class',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mercedes Benz',
+            'make'      => 'Mercedes Benz',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'MG',
+            'make'      => 'MG',
             'model'     => 'Midget',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'MG',
+            'make'      => 'MG',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'MINI',
+            'make'      => 'MINI',
             'model'     => 'Cooper',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'MINI',
+            'make'      => 'MINI',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'EK Wagon',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Lancer',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Pajero',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Mirage',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Minicab',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Bravo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Galant',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Pajero Mini',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Mitsubishi',
+            'make'      => 'Mitsubishi',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Morris',
+            'make'      => 'Morris',
             'model'     => 'Mini Minor',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Morris',
+            'make'      => 'Morris',
             'model'     => 'Oxford',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Morris',
+            'make'      => 'Morris',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Oldsmobile',
+            'make'      => 'Oldsmobile',
             'model'     => '442',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Oldsmobile',
+            'make'      => 'Oldsmobile',
             'model'     => 'Ninety Eight',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Oldsmobile',
+            'make'      => 'Oldsmobile',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Opel',
+            'make'      => 'Opel',
             'model'     => 'Corsa',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Opel',
+            'make'      => 'Opel',
             'model'     => 'Kadet',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Opel',
+            'make'      => 'Opel',
             'model'     => 'Rekord',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Opel',
+            'make'      => 'Opel',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Peugot',
+            'make'      => 'Peugot',
             'model'     => '205',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Peugot',
+            'make'      => 'Peugot',
             'model'     => '309',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Peugot',
+            'make'      => 'Peugot',
             'model'     => 'Saga',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Peugot',
+            'make'      => 'Peugot',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Duster',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Valiant',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Pontiac',
+            'make'      => 'Pontiac',
             'model'     => 'Bonneville',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Catalina',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Le Mans',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Transam',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Plymouth',
+            'make'      => 'Plymouth',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
 
         Car::create([
-            'type'      => 'Porsche',
+            'make'      => 'Porsche',
             'model'     => 'Cayenne',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Porsche',
+            'make'      => 'Porsche',
             'model'     => 'Panamera',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Porsche',
+            'make'      => 'Porsche',
             'model'     => '911',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Porsche',
+            'make'      => 'Porsche',
             'model'     => 'Boxster',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Porsche',
+            'make'      => 'Porsche',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Proton',
+            'make'      => 'Proton',
             'model'     => 'Gen 2',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Proton',
+            'make'      => 'Proton',
             'model'     => 'Saga',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Proton',
+            'make'      => 'Proton',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Range Rover',
+            'make'      => 'Range Rover',
             'model'     => 'Sport',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Range Rover',
+            'make'      => 'Range Rover',
             'model'     => 'Vogue',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Range Rover',
+            'make'      => 'Range Rover',
             'model'     => 'Se 4.0',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Range Rover',
+            'make'      => 'Range Rover',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Renault',
+            'make'      => 'Renault',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Rolls Royce',
+            'make'      => 'Rolls Royce',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Roma',
+            'make'      => 'Roma',
             'model'     => 'Family Van',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Roma',
+            'make'      => 'Roma',
             'model'     => 'Family Van Deluxe',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Roma',
+            'make'      => 'Roma',
             'model'     => 'Mini Truck',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Roma',
+            'make'      => 'Roma',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Rover',
+            'make'      => 'Rover',
             'model'     => 'Metro',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Rover',
+            'make'      => 'Rover',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Royal Enfield',
+            'make'      => 'Royal Enfield',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Saab',
+            'make'      => 'Saab',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Scion',
+            'make'      => 'Scion',
             'model'     => 'TC',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Scion',
+            'make'      => 'Scion',
             'model'     => 'XA',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Scion',
+            'make'      => 'Scion',
             'model'     => 'XB',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Scion',
+            'make'      => 'Scion',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Skoda',
+            'make'      => 'Skoda',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Smart',
+            'make'      => 'Smart',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Sogo',
+            'make'      => 'Sogo',
             'model'     => 'Double Cabin',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Sogo',
+            'make'      => 'Sogo',
             'model'     => 'Family Van',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Sogo',
+            'make'      => 'Sogo',
             'model'     => 'Pick up',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Sogo',
+            'make'      => 'Sogo',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Sokon',
+            'make'      => 'Sokon',
             'model'     => 'Mpv',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Sokon',
+            'make'      => 'Sokon',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ssang Yong',
+            'make'      => 'Ssang Yong',
             'model'     => 'Chairman',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ssang Yong',
+            'make'      => 'Ssang Yong',
             'model'     => 'Korando',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ssang Yong',
+            'make'      => 'Ssang Yong',
             'model'     => 'Musso',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ssang Yong',
+            'make'      => 'Ssang Yong',
             'model'     => 'Rexton',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ssang Yong',
+            'make'      => 'Ssang Yong',
             'model'     => 'Stavic',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Ssang Yong',
+            'make'      => 'Ssang Yong',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Subaru',
+            'make'      => 'Subaru',
             'model'     => 'Pleo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Subaru',
+            'make'      => 'Subaru',
             'model'     => 'Stella',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Subaru',
+            'make'      => 'Subaru',
             'model'     => 'Sambar',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Subaru',
+            'make'      => 'Subaru',
             'model'     => 'R2',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Subaru',
+            'make'      => 'Subaru',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Triumph',
+            'make'      => 'Triumph',
             'model'     => 'Herald',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Triumph',
+            'make'      => 'Triumph',
             'model'     => 'Spitfire',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Triumph',
+            'make'      => 'Triumph',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Vauxhall',
+            'make'      => 'Vauxhall',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volkswagen',
+            'make'      => 'Volkswagen',
             'model'     => 'Beetle',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volkswagen',
+            'make'      => 'Volkswagen',
             'model'     => 'Up',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volkswagen',
+            'make'      => 'Volkswagen',
             'model'     => 'Polo',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volkswagen',
+            'make'      => 'Volkswagen',
             'model'     => 'Double Cabin Amarok',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volkswagen',
+            'make'      => 'Volkswagen',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volvo',
+            'make'      => 'Volvo',
             'model'     => 'S40',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volvo',
+            'make'      => 'Volvo',
             'model'     => 'S90',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volvo',
+            'make'      => 'Volvo',
             'model'     => 'V40',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Volvo',
+            'make'      => 'Volvo',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Car::create([
-            'type'      => 'Willys',
+            'make'      => 'Willys',
             'model'     => 'Others',
             'picture'   => '',
-            'status'    => 1,
         ]);
 
         Model::reguard();

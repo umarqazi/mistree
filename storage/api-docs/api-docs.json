@@ -339,13 +339,6 @@
                         "type": "string"
                     },
                     {
-                        "name": "customer_id",
-                        "in": "formData",
-                        "description": "Customer Id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
                         "name": "millage",
                         "in": "formData",
                         "description": "Millage",
@@ -363,7 +356,7 @@
                         "name": "insurance",
                         "in": "formData",
                         "description": "Insurance",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
@@ -406,20 +399,13 @@
                         "name": "car_id",
                         "in": "formData",
                         "description": "Car Id",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
                         "name": "vehicle_no",
                         "in": "formData",
                         "description": "Vechile No.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "customer_id",
-                        "in": "formData",
-                        "description": "Customer Id",
                         "required": true,
                         "type": "string"
                     }
@@ -440,7 +426,7 @@
                     "Cars"
                 ],
                 "summary": "Get customer's car",
-                "operationId": "getCustCar",
+                "operationId": "getCustomerCar",
                 "produces": [
                     "application/json"
                 ],
@@ -449,13 +435,6 @@
                         "name": "token",
                         "in": "query",
                         "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "customer_id",
-                        "in": "query",
-                        "description": "Customer Id",
                         "required": true,
                         "type": "string"
                     }
