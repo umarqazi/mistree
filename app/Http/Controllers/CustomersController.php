@@ -178,12 +178,26 @@ class CustomersController extends Controller
     public function destroy($id)
     {
         // soft delete
-        $customer = Customers::find($id);
-        $customer->status = 0;
-        $customer->save();
+        $customer = Customer::find($id);
+        $customer->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the customer!');
+        return Redirect::to('customers');
+    }
+
+    /**
+     * Restore the specified customer from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id){
+        $customer   = Customer::withTrashed()->where('id', $id)->get();
+        $customer->restore();
+
+        // redirect
+        Session::flash('message', 'Successfully activated the customer!');
         return Redirect::to('customers');
     }
 
@@ -347,8 +361,6 @@ class CustomersController extends Controller
         }
         // all good so return the token
         $customer = Auth::user();
-        // Config::set('jwt.user' , "App\User");
-        // Config::set('auth.providers.users.model', \App\User::class);
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -372,8 +384,8 @@ class CustomersController extends Controller
      *   produces={"application/json"},
      *   tags={"Customers"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Auth Token",
      *     required=true,
      *     type="string"
@@ -384,10 +396,9 @@ class CustomersController extends Controller
      *
      */
     public function logout(Request $request) {
-        $this->validate($request, ['token' => 'required']);
         try {
             Config::set('auth.providers.users.model', \App\Customer::class);
-            JWTAuth::invalidate($request->input('token'));
+            JWTAuth::invalidate(JWTAuth::getToken());
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -488,8 +499,8 @@ class CustomersController extends Controller
      *   consumes={"application/xml", "application/json"},
      *   produces={"application/xml", "application/json"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
