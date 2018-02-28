@@ -284,7 +284,7 @@ class CustomersController extends Controller
         $subject = "Please verify your email address.";
         Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->from(getenv('MAIL_USERNAME'), "umar.farooq@gems.techverx.com");
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -453,9 +453,12 @@ class CustomersController extends Controller
             ],Response::HTTP_OK);
         }
         try {
-            Password::sendResetLink($request->only('email'), function (Message $message) {
-                $message->subject('Your Password Reset Link');
-            });
+            Config::set('auth.providers.users.model', \App\Customer::class);
+
+            $response = $this->broker()->sendResetLink(
+                $request->only('email')
+            );
+
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
@@ -472,6 +475,11 @@ class CustomersController extends Controller
             'message' => 'A reset email has been sent! Please check your email.',
             'body' => null
         ],Response::HTTP_OK);
+    }
+
+    protected function broker()
+    {
+        return Password::broker('customers');
     }
 
     /**
