@@ -63,7 +63,8 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $services = Service::where('service_parent', 0)->get();
+      //  $services = Service::where('service_parent', 0)->get(); 
+        $services = Service::all();
         return View::make('services.create')->with('services', $services);
     }
 
@@ -75,7 +76,8 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-        $services   = Service::where('service_parent', 0)->get();
+       // $services   = Service::where('service_parent', 0)->get();
+        $services   = Service::all();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
