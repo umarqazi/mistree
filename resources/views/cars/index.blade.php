@@ -30,7 +30,7 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting_asc text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Car Make: activate to sort column descending" style="width: 77px;">Car Make</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Car Make: activate to sort column descending" style="width: 77px;">Car Make</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Car Model: activate to sort column ascending" style="width: 142px;">Car Model</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Car Type: activate to sort column ascending" style="width: 130px;">Car Type</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&nbsp;&nbsp;: activate to sort column ascending" style="width: 57px;">Actions</th>
@@ -39,7 +39,7 @@
                             <tbody>
                                 @foreach($cars as $key => $value)
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1 text-center">{{ $value->make }}</td>
+                                    <td class="text-center">{{ $value->make }}</td>
                                     <td class="text-center">{{ $value->model }}</td>
                                     <td class="text-center">{{ $value->type }}</td>
                                     <td class="text-center">
