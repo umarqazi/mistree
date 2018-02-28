@@ -29,12 +29,12 @@ class Service extends Model
 
     public function workshops()
     {
-        return $this->belongsToMany('App\Workshop', 'workshop_service');
+        return $this->belongsToMany('App\Workshop', 'workshop_service')->withTimestamps();
     }
 
     public function bookings()
     {
-        return $this->belongsToMany('App\Booking');
+        return $this->belongsToMany('App\Booking')->withPivot('name', 'service_rate', 'service_time')->withTimestamps();
     }
 
     public function services()
