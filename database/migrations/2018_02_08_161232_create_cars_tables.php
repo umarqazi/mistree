@@ -19,6 +19,7 @@ class CreateCarsTables extends Migration
             $table->string('make');
             $table->string('model');
             $table->string('picture')->nullable();
+            $table->boolean('is_published')->default(TRUE);
             $table->softDeletes();
             $table->timestamps();
         });
