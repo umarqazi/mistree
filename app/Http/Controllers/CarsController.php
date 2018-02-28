@@ -41,7 +41,7 @@ class CarsController extends Controller
     public function index(Request $request)
     {
         // get all the nerds ->toJson()
-        $cars = Car::all();
+        $cars = Car::orderBy('created_at', 'desc')->get();
         if( $request->header('Content-Type') == 'application/json'){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -166,7 +166,7 @@ class CarsController extends Controller
      */
     public function destroy($id)
     {
-       // delete
+       // soft delete
         $car = Car::find($id);
         $car->delete();
 
@@ -183,7 +183,7 @@ class CarsController extends Controller
      */
     public function restore($id)
     {
-        // delete
+        // restore
         $car = Car::withTrashed()->find($id);
         $car->restore();
 
