@@ -59,6 +59,8 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		
 		Route::get('address/{workshop_id}', 'WorkshopsController@workshopaddress');
 		Route::patch('update-address/{workshop_id}', 'WorkshopsController@updateAddress');
+		Route::post('update-workshop-images/{workshop_id}','WorkshopsController@updateWorkshopImages');
+		Route::patch('update-workshop-profile-image/{workshop_id}','WorkshopsController@updateProfileImage');	
 		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');		
 		Route::get('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
 		Route::post('createbooking','BookingsController@createBooking');
@@ -66,6 +68,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::post('rejectbooking/{workshop_id}/{booking_id}','BookingsController@rejectBooking');
 		Route::post('booking-bill','BookingsController@bookingBiling');				
 		Route::post('complete-job','BookingsController@workshopcompletejob');
+		Route::get('get-workshop-ledger/{workshop_id}','WorkshopsController@getWorkshopLedger');
 
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
