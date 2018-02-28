@@ -18,16 +18,13 @@
                 ],
                 "parameters": [
                     {
-                        "name": "Authorization",
-                        "in": "header",
+                        "name": "token",
+                        "in": "query",
                         "description": "Token",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Token",
                         "name": "customer_id",
                         "in": "formData",
                         "description": "Customer id",
@@ -37,9 +34,6 @@
                     {
                         "name": "workshop_id",
                         "in": "formData",
-                        "description": "Car Id",
-                        "required": false,
-                        "type": "string"
                         "description": "Workshop ID",
                         "required": true,
                         "type": "integer"
@@ -61,9 +55,6 @@
                     {
                         "name": "job_time",
                         "in": "formData",
-                        "description": "Insurance",
-                        "required": false,
-                        "type": "boolean"
                         "description": "Job Time",
                         "required": true,
                         "type": "string"
@@ -71,7 +62,7 @@
                     {
                         "name": "services",
                         "in": "formData",
-                        "description": "Services",
+                        "description": "[id1,id2,id3,...]",
                         "required": true,
                         "type": "array",
                         "items": "integer"
@@ -81,27 +72,6 @@
                         "in": "formData",
                         "description": "Vehicle Number",
                         "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "type",
-                        "in": "formData",
-                        "description": "Car Type",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "make",
-                        "in": "formData",
-                        "description": "Car Make",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "model",
-                        "in": "formData",
-                        "description": "Car Model",
-                        "required": false,
                         "type": "string"
                     }
                 ],
@@ -130,8 +100,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "Authorization",
-                        "in": "header",
+                        "name": "token",
+                        "in": "query",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -176,8 +146,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "Authorization",
-                        "in": "header",
+                        "name": "token",
+                        "in": "query",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -328,9 +298,6 @@
                     {
                         "name": "Authorization",
                         "in": "header",
-                        "description": "Auth Token",
-                        "name": "token",
-                        "in": "query",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -358,8 +325,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -368,7 +335,7 @@
                         "name": "car_id",
                         "in": "formData",
                         "description": "Car Id",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
@@ -390,13 +357,34 @@
                         "in": "formData",
                         "description": "Insurance",
                         "required": false,
-                        "type": "string"
+                        "type": "boolean"
                     },
                     {
                         "name": "year",
                         "in": "formData",
                         "description": "Year",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "type",
+                        "in": "formData",
+                        "description": "Car Type",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "make",
+                        "in": "formData",
+                        "description": "Car Make",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "model",
+                        "in": "formData",
+                        "description": "Car Model",
+                        "required": false,
                         "type": "string"
                     }
                 ],
@@ -465,8 +453,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -587,8 +575,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Auth Token",
                         "required": true,
                         "type": "string"
@@ -650,8 +638,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -819,7 +807,11 @@
                         "in": "formData",
                         "description": "Workshop Type",
                         "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "Authorized",
+                            "Unauthorized"
+                        ]
                     },
                     {
                         "name": "open_time",
@@ -852,17 +844,10 @@
                     {
                         "name": "ws_images",
                         "in": "formData",
-                        "description": "Array of Workshop Images",
+                        "description": "ws_images[base64,base64,base64]",
                         "required": false,
                         "type": "array",
                         "items": "[base64strings]"
-                    },
-                    {
-                        "name": "cnic_image",
-                        "in": "formData",
-                        "description": "CNIC Image",
-                        "required": false,
-                        "type": "string"
                     },
                     {
                         "name": "shop",
@@ -909,8 +894,8 @@
                     {
                         "name": "services",
                         "in": "formData",
-                        "description": "Workshop selected services in array",
-                        "required": true,
+                        "description": "services[{service_id,service_rate,service_time}]",
+                        "required": false,
                         "type": "array",
                         "items": "[service_id,service_rate,service_time]"
                     }
@@ -979,8 +964,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Auth Logout",
                         "required": true,
                         "type": "string"
@@ -1048,8 +1033,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -1087,9 +1072,9 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
-                        "description": "Workshop's Token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
                         "required": true,
                         "type": "string"
                     },
@@ -1137,8 +1122,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -1165,7 +1150,7 @@
             }
         },
         "/api/workshop/updateProfile/{workshop_id}": {
-            "post": {
+            "patch": {
                 "tags": [
                     "Workshops"
                 ],
@@ -1176,8 +1161,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -1229,7 +1214,11 @@
                         "in": "formData",
                         "description": "Workshop Type",
                         "required": true,
-                        "type": "string"
+                        "type": "string",
+                        "enum": [
+                            "Authorized",
+                            "Unauthorized"
+                        ]
                     },
                     {
                         "name": "open_time",
@@ -1351,6 +1340,126 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/add-new-workshop-services/{workshop_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Add New Workshop Services",
+                "operationId": "insert",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "formData",
+                        "description": "service id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_rate",
+                        "in": "formData",
+                        "description": "service rate",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "service_time",
+                        "in": "formData",
+                        "description": "service time",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-workshop-service/{workshop_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Add New Workshop Services",
+                "operationId": "insert",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "formData",
+                        "description": "service id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_rate",
+                        "in": "formData",
+                        "description": "service rate",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "service_time",
+                        "in": "formData",
+                        "description": "service time",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
                     },
                     "500": {
                         "description": "internal server error"
@@ -1553,6 +1662,138 @@
                         "name": "_method",
                         "in": "formData",
                         "description": "Required to update form",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-workshop-images/{workshop_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Images",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "images",
+                        "in": "formData",
+                        "description": "[{old_url,new_image}]",
+                        "required": true,
+                        "type": "array",
+                        "items": "[old_url,new_image]"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-workshop-profile-image/{workshop_id}": {
+            "patch": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Images",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "profile_pic",
+                        "in": "formData",
+                        "description": "Base64 String",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/get-workshop-ledger/{workshop_id}": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Images",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop ID",
                         "required": true,
                         "type": "string"
                     }

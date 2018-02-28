@@ -69,7 +69,7 @@ class BookingsController extends Controller
      *   @SWG\Parameter(
      *     name="services",
      *     in="formData",
-     *     description="Services",
+     *     description="[id1,id2,id3,...]",
      *     required=true,
      *     type="array",
      *     items="integer"      
@@ -123,7 +123,7 @@ class BookingsController extends Controller
         $booking->save();
 
         //Insert Services data from request        
-        $services = $request->services->service_id;        
+        $services = $request->services;        
         if(!empty($services)){
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
@@ -358,7 +358,7 @@ class BookingsController extends Controller
         $services_count = $booking->services->count();
         $deduction = $services_count * 50;
         $workshop = Workshop::find($request->workshop_id);
-        $balance = $workshop->balance->balance;
+        $balance = $workshop->balance->balance;        
         $new_balance = $balance - $deduction;
 
         $workshop->balance->update(['balance'=>$new_balance]);
@@ -377,10 +377,10 @@ class BookingsController extends Controller
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Booking Services',
-                    'body' => $balance
+                    'message' => 'Job Completed',
+                    'body' => ''
                 ],Response::HTTP_OK);
-    }
+    }    
     
 
 }

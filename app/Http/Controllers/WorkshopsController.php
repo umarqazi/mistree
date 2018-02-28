@@ -297,10 +297,8 @@ class WorkshopsController extends Controller
         if ($request->hasFile('profile_pic')) 
         {            
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-           
             $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $profile_pic = $profile_pic_path;
-            
+            $profile_pic = $profile_pic_path;    
         }
         else
         {
@@ -333,9 +331,7 @@ class WorkshopsController extends Controller
         $workshop->save();   
 
         // Update Workshop Address
-        $address = WorkshopAddress::find($workshop->address->id);
-
-        // $address->type              = Input::get('address_type');
+        $address = WorkshopAddress::find($workshop->address->id);        
         $address->shop              = Input::get('shop');
         $address->building          = Input::get('building');
         $address->street            = Input::get('street');
@@ -345,10 +341,9 @@ class WorkshopsController extends Controller
                         
         $address->update();
 
-        if ($request->hasFile('ws_images')) 
+        if($request->hasFile('ws_images')) 
         {
-             $files = $request->file('ws_images');
-
+            $files = $request->file('ws_images');
             foreach($files as $file)
             {
                 $images = new WorkshopImages;                
@@ -456,7 +451,8 @@ class WorkshopsController extends Controller
      *     in="formData",
      *     description="Workshop Type",
      *     required=true,
-     *     type="string"
+     *     type="string",
+     *     enum={"Authorized", "Unauthorized"}
      *   ),
      *   @SWG\Parameter(
      *     name="open_time",
@@ -489,17 +485,10 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="ws_images",
      *     in="formData",
-     *     description="Array of Workshop Images",
+     *     description="ws_images[base64,base64,base64]",
      *     required=false,
      *     type="array",
      *     items="[base64strings]"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="cnic_image",
-     *     in="formData",
-     *     description="CNIC Image",
-     *     required=false,
-     *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="shop",
@@ -546,8 +535,8 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="services",
      *     in="formData",
-     *     description="Workshop selected services in array",
-     *     required=true,
+     *     description="services[{service_id,service_rate,service_time}]",
+     *     required=false,
      *     type="array",
      *     items="[service_id,service_rate,service_time]"
      *   ),
@@ -631,8 +620,8 @@ class WorkshopsController extends Controller
             }
         }
 
+        //By Default Inserting Workshop Balance 2000
         $workshop_balance = new WorkshopBalance;        
-
         $workshop_balance->balance              = 2000;
         $workshop_balance->workshop_id          = $workshop->id;
         $workshop_balance->save();
@@ -671,24 +660,6 @@ class WorkshopsController extends Controller
           $workshop->cnic_image   = $cnic_image;       
           $workshop->save();
         }
-
-        if (!empty($request->ws_images))
-        {
-            $files = $request->ws_images;
-            foreach($files as $file)
-            {   
-                @list($type, $file) = explode(';', $file);
-                @list(, $file) = explode(',', $file);
-                $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/ws_images', base64_decode($file), 'public');
-                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-                 
-                $images = new WorkshopImages;                
-                $images->url = $ws_pic_path;
-                $images->workshop_id = $workshop->id;
-                $images->save();
-            }
-        }
-
 
         $name = $request->name;        
         $email = $request->email;        
@@ -809,8 +780,8 @@ class WorkshopsController extends Controller
      *   produces={"application/json"},
      *   tags={"Workshops"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Auth Logout",
      *     required=true,
      *     type="string"
@@ -882,9 +853,11 @@ class WorkshopsController extends Controller
             ],Response::HTTP_OK);
         }
         try {
-            Password::sendResetLink($request->only('email'), function (Message $message) {
-                $message->subject('Your Password Reset Link');
-            });
+            Config::set('auth.providers.users.model', \App\Workshop::class);
+
+            $response = $this->broker()->sendResetLink(
+                $request->only('email')
+            );            
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
@@ -892,7 +865,7 @@ class WorkshopsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $error_message,
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }
         return response()->json([
@@ -902,6 +875,12 @@ class WorkshopsController extends Controller
             'body' => ''
         ],Response::HTTP_OK);
     }
+
+    protected function broker()
+    {
+        return Password::broker('workshops');
+    }
+
 
     /**
      * API Verify Email
@@ -919,8 +898,8 @@ class WorkshopsController extends Controller
      *   consumes={"application/xml", "application/json"},
      *   produces={"application/xml", "application/json"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -983,9 +962,9 @@ class WorkshopsController extends Controller
      *   produces={"application/json"},
      *   tags={"Workshops"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
-     *     description="Workshop's Token",
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
      *     required=true,
      *     type="string"
      *   ),
@@ -1078,63 +1057,6 @@ class WorkshopsController extends Controller
             ],Response::HTTP_OK);
         }
     }
-    /**
-     * Registration Store Data
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function regStoreData(Request $request){
-        $this->validate($request, ['token' => 'required']);
-        try {
-            Config::set('auth.providers.users.model', \App\Workshop::class);
-            $rules = [
-                'card_number' => 'required',
-                'con_number' => 'required',
-                'type' => 'required',                
-                'open_time' => 'required',
-                'close_time' => 'required',
-                'address_type' => 'required',
-                'address_house_no' => 'required',
-                'address_street_no' => 'required',
-                'address_block' => 'required',
-                'address_area' => 'required',
-                'address_town' => 'required',
-                'address_city' => 'required',
-
-
-
-            ];
-            $input = $request->only('card_number', 'con_number', 'type', 'team_slot', 'open_time', 'close_time' , 'status', 'is_verified');
-
-            $validator = Validator::make($input, $rules);
-            if($validator->fails()) {                
-                return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => $validator->messages(),
-                        'body' => $request->all()
-                    ],Response::HTTP_OK);
-            }
-
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'success',
-                'body' => ''
-            ],Response::HTTP_OK);
-        } catch (JWTException $e) {
-
-            // something went wrong whilst attempting to encode the token
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => '',
-                'body' => $request->all()
-            ],Response::HTTP_OK);
-        }
-
-    }
 
     /**
      *  Approve Workshop
@@ -1179,8 +1101,8 @@ class WorkshopsController extends Controller
      *   produces={"application/json"},
      *   tags={"Workshops"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -1210,15 +1132,15 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
     /**
-     * @SWG\post(
+     * @SWG\Patch(
      *   path="/api/workshop/updateProfile/{workshop_id}",
      *   summary="Update Workshop Details",
      *   operationId="update",
      *   produces={"application/json"},
      *   tags={"Workshops"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -1270,7 +1192,8 @@ class WorkshopsController extends Controller
      *     in="formData",
      *     description="Workshop Type",
      *     required=true,
-     *     type="string"
+     *     type="string",
+     *     enum={"Authorized", "Unauthorized"}
      *   ),
      *   @SWG\Parameter(
      *     name="open_time",
@@ -1354,9 +1277,7 @@ class WorkshopsController extends Controller
         $workshop->landline         = $request->landline;
         $workshop->open_time        = $request->open_time;
         $workshop->close_time       = $request->close_time;        
-        $workshop->type             = $request->type;
-        // $workshop->profile_pic      = $profile_pic;
-        // $workshop->cnic_image      =  $cnic_image;            
+        $workshop->type             = $request->type;        
         $workshop->save();      
         
         return response([
@@ -1396,8 +1317,7 @@ class WorkshopsController extends Controller
         if($validator->fails()) {
             $workshop_service_id = $request->workshop_service_id ;            
             return Redirect::to('admin/edit-workshop-service/'.$workshop_service_id)
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
         }                 
         $workshop = Workshop::find($request->workshop_id);
         $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
@@ -1429,11 +1349,10 @@ class WorkshopsController extends Controller
             'service_rate'    => 'required',            
             'service_time'    => 'required'                        
             ];
-        $input = $request->only('service_id', 'service_rate', 'service_time' );
+        $input = $request->only('service_rate', 'service_time' );
 
         $validator = Validator::make($input, $rules);
-        if($validator->fails()) {
-            $request->offsetUnset('password');
+        if($validator->fails()) {            
             return Redirect::to('admin/add-workshop-service/'.$request->workshop_id)
                 ->withErrors($validator);                
         }        
@@ -1618,6 +1537,167 @@ class WorkshopsController extends Controller
             'body' => $workshops
         ],Response::HTTP_OK);
     }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/add-new-workshop-services/{workshop_id}",
+     *   summary="Add New Workshop Services",
+     *   operationId="insert",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="workshop id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_id",
+     *     in="formData",
+     *     description="service id",
+     *     required=true,
+     *     type="integer"
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_rate",
+     *     in="formData",
+     *     description="service rate",
+     *     required=true,
+     *     type="number"          
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_time",
+     *     in="formData",
+     *     description="service time",
+     *     required=true,
+     *     type="string"     
+     *   ), 
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )    
+     *  Store Workshop Service
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addNewWorkshopServices(Request $request, $workshop_id){
+        $rules = [
+            'service_id'      => 'required|integer',
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required|numeric'                        
+            ];
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+
+        $validator = Validator::make($input, $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+        $workshop = Workshop::find($workshop_id);
+        $service = $request->service_id; 
+        $rate = $request->service_rate;
+        $time = $request->service_time;       
+        
+        $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Workshop Service Added!!',
+            'body'          => ''
+        ],Response::HTTP_OK);                  
+    }
+     /**
+     * @SWG\Post(
+     *   path="/api/workshop/update-workshop-service/{workshop_id}",
+     *   summary="Add New Workshop Services",
+     *   operationId="insert",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="workshop id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_id",
+     *     in="formData",
+     *     description="service id",
+     *     required=true,
+     *     type="integer"
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_rate",
+     *     in="formData",
+     *     description="service rate",
+     *     required=true,
+     *     type="number"          
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_time",
+     *     in="formData",
+     *     description="service time",
+     *     required=true,
+     *     type="number"     
+     *   ), 
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * ) 
+     *  Update Workshop Service
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function workshopServiceUpdate(Request $request, $workshop_id){
+        $rules = [
+            'service_id'      => 'required|integer',           
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required'                        
+            ];        
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+        $validator = Validator::make($input, $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
+        $workshop = Workshop::find($workshop_id);
+        $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Workshop Service Updated!!',
+            'body'          => ''
+        ],Response::HTTP_OK);             
+
+    }
     /**
      * @SWG\Post(
      *   path="/api/workshop/deleteWorkshopService/{workshop_id}/{service_id}",
@@ -1718,9 +1798,6 @@ class WorkshopsController extends Controller
         $rules = [           
                         'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
                         'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-                        // 'email'                          => 'required|email|unique:workshops',
-                        // 'password'                       => 'required|confirmed|min:8',
-                        // 'password_confirmation'          => 'required',
                         'cnic'                           => 'required|digits:13',
                         'mobile'                         => 'required|digits:11',
                         'landline'                       => 'digits:11',
@@ -1735,13 +1812,9 @@ class WorkshopsController extends Controller
                         'block'                          => 'regex:/^[\pL\s\-]+$/u',
                         'street'                         => 'required|string',
                         'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-                        'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-                        // 'service_id.*'                   => 'required|integer:unique',
-                        // 'service_rate.*'                 => 'required|integer',
-                        // 'service_time.*'                 => 'required|alpha_dash' 
+                        'city'                           => 'required|regex:/^[\pL\s\-]+$/u'
                     ];  
-            
-                    // $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
+                                
                     $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
                     $validator = Validator::make($input, $rules);
                     if($validator->fails()) {
@@ -2092,4 +2165,184 @@ class WorkshopsController extends Controller
                     'body' => $request->all()
                 ],Response::HTTP_OK);               
     }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/update-workshop-images/{workshop_id}",
+     *   summary="Update Workshop Images",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="images",
+     *     in="formData",
+     *     description="[{old_url,new_image}]",
+     *     required=true,
+     *     type="array",
+     *     items="[old_url,new_image]"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateWorkshopImages(Request $request, $workshop_id)
+    {            
+        $images = $request->images;
+        $url_array = [];
+        foreach($images as $image){
+            $file_data = $image->new_image;                                 
+            if( (empty($image->old_url)) && (!empty($image->new_image)) ){
+
+                $url = $this->upload_image($file_data,$workshop_id);
+                array_push($url_array, $url);
+                $workshop_image = new WorkshopImages;
+                $workshop_image->url            = $url;
+                $workshop_image->workshop_id    = $workshop_id;
+                $workshop->save();
+                       
+            }elseif( (!empty($image->old_url)) && (!empty($image->new_image)) ){
+
+                $url = $this->upload_image($file_data,$workshop_id);                                
+                array_push($url_array, $url);
+                WorkshopImages::where('url', $image->old_url)
+                                ->where('workshop_id',$workshop_id)
+                                ->update(['url' => $url]);                
+            }            
+        }        
+        
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Images Uploaded Successfully!',
+                    'body' => $url_array
+                ],Response::HTTP_OK);               
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/update-workshop-profile-image/{workshop_id}",
+     *   summary="Update Workshop Images",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="profile_pic",
+     *     in="formData",
+     *     description="Base64 String",
+     *     required=true,
+     *     type="string"     
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateProfileImage(Request $request, $workshop_id)
+    {            
+        $file_data = $request->profile_pic;                       
+        $url = $this->upload_image($file_data,$workshop_id);                                        
+        $workshop_image = Workshop::where('workshop_id', $workshop_id)                            
+                                    ->update(['profile_pic' => $url]);                
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Images Uploaded Successfully!',
+                    'body' => $request
+                ],Response::HTTP_OK);               
+    }
+
+    public function upload_image($file_data , $workshop_id){        
+        @list($type, $file_data) = explode(';', $file_data);
+        @list(, $file_data) = explode(',', $file_data);             
+        $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', base64_decode($file_data), 'public');               
+        $ws_img = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+        return $ws_img;
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/get-workshop-ledger/{workshop_id}",
+     *   summary="Update Workshop Images",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getWorkshopLedger($workshop_id){
+        $ledger = Workshop::find($workshop_id)->transactions;
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Workshop Ledger',
+                    'body' => $ledger
+                ],Response::HTTP_OK);
+    }
+
+
 }
+
+
