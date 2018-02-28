@@ -41,7 +41,7 @@ class CarsController extends Controller
     public function index(Request $request)
     {
         // get all the nerds ->toJson()
-        $cars = Car::orderBy('created_at', 'desc')->get();
+        $cars = Car::where('is_published',true)->orderBy('created_at', 'desc')->get();
         if( $request->header('Content-Type') == 'application/json'){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -299,9 +299,10 @@ class CarsController extends Controller
         if(is_null($car))
         {
             $car    = new Car();
-            $car->type  = $request->type;
-            $car->make  = $request->make;
-            $car->model = $request->model;
+            $car->type          = $request->type;
+            $car->make          = $request->make;
+            $car->model         = $request->model;
+            $car->is_published  = FALSE;
             $car->save();
         }
 
