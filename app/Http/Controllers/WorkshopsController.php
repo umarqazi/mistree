@@ -1349,6 +1349,8 @@ class WorkshopsController extends Controller
         if ($request->has('address_city')) {
             $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
         }
+
+        $workshops = $workshops->with('services.pivot');
         $workshops = $workshops->get();
         foreach ($workshops as $key =>$workshop) {
             $workshops[$key]->est_rates = array_sum($workshops[$key]->services->pluck('pivot')->pluck('service_rate')->toArray());

@@ -32,7 +32,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::get('get-cars', 'CarsController@index');
 		Route::post('add-customer-car', 'CarsController@assignCar');
 		Route::post('remove-customer-car', 'CarsController@unassignCar');
-		Route::post('get-customer-car', 'CarsController@getCustCar');
+		Route::get('get-customer-car', 'CarsController@getCustomerCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
 	});

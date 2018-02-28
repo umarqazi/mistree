@@ -20,7 +20,7 @@ class CreateWorkshopAddressesTable extends Migration
             $table->string('shop');
             $table->string('building')->nullable();
             $table->string('street')->nullable();
-            $table->char('block', 4)->nullable();
+            $table->string('block')->nullable();
             $table->string('town');
             $table->string('city');
             $table->string('coordinates')->nullable();
