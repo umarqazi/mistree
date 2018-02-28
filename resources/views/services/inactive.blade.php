@@ -19,13 +19,12 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Services</h4>
-                                <p class="category">List of all services.</p>
+                                <p class="category">List of all Trashed services.</p>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services/create')}}" class="btn btn-header btn-export">Add New Service</a></div>
-                            <br>
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services/trash')}}" class="btn btn-header btn-export">Trashed Services</a></div>
+                           
+                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services')}}" class="btn btn-header btn-export">Active Services</a></div>
                         </div>
                         <div class="clear20"></div>
                     </div>
@@ -48,12 +47,7 @@
                                 <td>{{$value->name}}</td>
                                 <td class="text-center">{{$value->parent($value->service_parent)}}</td>
                                 <td>
-                                    <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
-                                     <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
-                                     <input name="_method" type="hidden" value="DELETE">
-                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                     <input class="btn btn-header btn-export" type="submit" value="Move To Trash">
-                                     </form>
+                                     <a href="{{ URL::to('admin/services/' . $value->id . '/restore') }}" class="btn btn-header btn-export">Restore</a>
                                 </td>
                             </tr>
                         @endforeach

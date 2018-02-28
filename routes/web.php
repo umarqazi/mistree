@@ -38,8 +38,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
 
-
-    // Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
     Route::post('/register', 'WorkshopAuth\RegisterController@register');
 
     Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
@@ -75,7 +73,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
 Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function () {
 
-  //Route::get('/home', 'AdminsController@showHome');
   Route::get('/', function(){
       return redirect()->route('admin.home');
   });
@@ -95,6 +92,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
   //  Web portal
 
     Route::group(['middleware' => 'admin'], function (){
+        Route::get('/services/trash', 'ServicesController@inactive_services');
+        Route::get('/services/{id}/restore', 'ServicesController@restore'); 
+
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
@@ -113,7 +113,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
       
         Route::get('/top-up', 'WorkshopsController@topup');
-        Route::post('/update-balance', 'WorkshopsController@topupBalance');
+        Route::post('/update-balance', 'WorkshopsController@topupBalance');        
     });
 
 });
