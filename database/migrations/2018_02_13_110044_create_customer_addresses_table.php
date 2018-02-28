@@ -20,7 +20,7 @@ class CreateCustomerAddressesTable extends Migration
             $table->enum('type', ['Office', 'Residence']);
             $table->string('house_no')->nullable();
             $table->string('street_no')->nullable();
-            $table->char('block',4)->nullable();
+            $table->string('block')->nullable();
             $table->string('town');
             $table->string('city');
             $table->string('geo_cord')->nullable();

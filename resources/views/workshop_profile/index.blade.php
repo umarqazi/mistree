@@ -28,8 +28,8 @@
                               
                                 <div class="clear10"></div><div class="clear5"></div>
                                 <div class="text-right">
-                                	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
-                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
+                                	<a href="{{url('profile/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Profile</a>
+                                	<a href="{{ url('profile/add-profile-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
 						                        	<td>{{ $address->street}}</td>
 						                        </tr>
 						                        <tr> 
-													<td>Building No</td>
+													<td>Building</td>
 						                        	<td>{{$address->building}}</td>
 						                        
 						                        	<td>Block</td>
@@ -155,8 +155,8 @@
 						                        	<td>{{ $spec->pivot->service_rate }}</td>
 						                        	<td>{{ $spec->pivot->service_time }}</td>	
 						                        	<td>						                        	
-						                        		<a href="{{url('admin/edit-workshop-service/'.$spec->pivot->id)}}" class="btn btn-header">Edit</a>
-                                						<a href="{{ url('admin/delete-workshop-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
+						                        		<a href="{{url('profile/edit-profile-service/'.$spec->pivot->id)}}" class="btn btn-header">Edit</a>
+                                						<a href="{{ url('profile/delete-profile-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
                                 					</td>	                        	
 						                        </tr>
 						                        @endforeach
