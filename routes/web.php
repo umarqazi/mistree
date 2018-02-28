@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::post('profile/store-profile-service', 'WorkshopsController@storeProfileService');
 // ========= Customer Routes Start ==================================================
 Route::group(['prefix' => 'customer'], function () {
   /*  Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
@@ -57,6 +57,15 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('/home', 'WorkshopsController@showHome')->name('home');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
+        Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
+        Route::post('/profile/{id}', 'WorkshopsController@update_profile');
+
+        Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
+        Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
+        Route::patch('profile/updateProfileService/', 'WorkshopsController@updateProfileService');
+        Route::get('/profile', 'WorkshopsController@workshop_profile');
+        
+        Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
     });
 
 });
