@@ -102,9 +102,9 @@ class WorkshopsController extends Controller
             'street'                         => 'required|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            // 'service_id.*'                   => 'required|integer',
-            // 'service_rate.*'                 => 'required|integer',
-            // 'service_time.*'                 => 'required|alpha_dash' 
+            'service_id.*'                   => 'required|integer:unique',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];        
 
         $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
@@ -277,7 +277,10 @@ class WorkshopsController extends Controller
             'block'                          => 'regex:/^[\pL\s\-]+$/u',
             'street'                         => 'required|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',           
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'service_id.*'                   => 'required|integer:unique',
+            'service_rate.*'                 => 'required|integer',
+            'service_time.*'                 => 'required|alpha_dash' 
         ];  
 
         $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
@@ -945,12 +948,13 @@ class WorkshopsController extends Controller
             }
             $workshop->update(['is_verified' => 1]);
             DB::table('workshop_verifications')->where('token',$verification_code)->delete();
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'You have successfully verified your email address.',
-                'body' => ''
-            ],Response::HTTP_OK);
+            // return response()->json([
+            //     'http-status' => Response::HTTP_OK,
+            //     'status' => true,
+            //     'message' => 'You have successfully verified your email address.',
+            //     'body' => ''
+            // ],Response::HTTP_OK);
+            return View::make('workshop.thankyou');
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
@@ -958,6 +962,173 @@ class WorkshopsController extends Controller
             'message' => 'Verification code is invalid.',
             'body' => ''
         ],Response::HTTP_OK);
+    }
+
+    /**
+     * API Password Reset for Workshop, on success return Success Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/password-reset",
+     *   summary="Workshop Password Reset",
+     *   operationId="password Reset",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Workshop's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="prev_password",
+     *     in="formData",
+     *     description="Workshop's Previous Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Workshop's New Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="formData",
+     *     description="Workshop's Confirm Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function passwordReset(Request $request)
+    {
+        $rules = [
+            'prev_password'  => 'required',
+            'password'  => 'required|confirmed|min:6',
+        ];
+
+        $input = $request->only('prev_password','password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+
+        if($validator->fails()) {
+            $request->offsetUnset('prev_password');
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+        else{
+            $workshop   = JWTAuth::authenticate();
+
+            try {
+                // Config::set('jwt.user' , "App\Customer");
+                Config::set('auth.providers.users.model', \App\Customer::class);
+                if (!Hash::check($request->prev_password, $workshop->password)) {
+                    $request->offsetUnset('prev_password');
+                    $request->offsetUnset('password');
+                    $request->offsetUnset('password_confirmation');
+                    return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => 'We cant find an account with this credentials.',
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
+                }
+            } catch (JWTException $e) {
+                // something went wrong whilst attempting to encode the token
+                $request->offsetUnset('prev_password');
+                $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Failed to Reset Password, please try again.',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+            }
+            // all good so Reset Customer's Password
+            $workshop->password = Hash::make($request->password);
+            $workshop->save();
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'success',
+                'body' => [ 'workshop' => $workshop ],
+            ],Response::HTTP_OK);
+        }
+    }
+    /**
+     * Registration Store Data
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function regStoreData(Request $request){
+        $this->validate($request, ['token' => 'required']);
+        try {
+            Config::set('auth.providers.users.model', \App\Workshop::class);
+            $rules = [
+                'card_number' => 'required',
+                'con_number' => 'required',
+                'type' => 'required',                
+                'open_time' => 'required',
+                'close_time' => 'required',
+                'address_type' => 'required',
+                'address_house_no' => 'required',
+                'address_street_no' => 'required',
+                'address_block' => 'required',
+                'address_area' => 'required',
+                'address_town' => 'required',
+                'address_city' => 'required',
+
+
+
+            ];
+            $input = $request->only('card_number', 'con_number', 'type', 'team_slot', 'open_time', 'close_time' , 'status', 'is_verified');
+
+            $validator = Validator::make($input, $rules);
+            if($validator->fails()) {                
+                return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => $validator->messages(),
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
+            }
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'success',
+                'body' => ''
+            ],Response::HTTP_OK);
+        } catch (JWTException $e) {
+
+            // something went wrong whilst attempting to encode the token
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => '',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
     }
 
     /**
@@ -1425,9 +1596,13 @@ class WorkshopsController extends Controller
         if ($request->has('address_city')) {
             $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
         }
+
+        $workshops = $workshops->with('services.pivot');
         $workshops = $workshops->get();
+        $eachWorkShop = new Workshop();
+
         foreach ($workshops as $key =>$workshop) {
-            $workshops[$key]->est_rates = array_sum($workshops[$key]->services->pluck('pivot')->pluck('service_rate')->toArray());
+            $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
         return response()->json([
             'http-status' => Response::HTTP_OK,
@@ -1681,7 +1856,177 @@ class WorkshopsController extends Controller
 
     public function workshop_profile(){
         $workshop = Auth::guard('workshop')->user();
-        return View::make('workshops.index')->with('workshop', $workshop);                       
+        return View::make('workshop_profile.index')->with('workshop', $workshop);                       
+    }
+
+    public function edit_profile($id){
+     // get the workshop
+     $workshop = Workshop::find($id);
+     $services = Service::all();
+     // show the edit form and pass the workshop   
+     return View::make('workshop_profile.edit')->with('workshop', $workshop)->with('services',$services);                         
+    }
+
+    public function update_profile(Request $request, $id)
+    {
+        $rules = [           
+                        'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+                        'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
+                        // 'email'                          => 'required|email|unique:workshops',
+                        // 'password'                       => 'required|confirmed|min:8',
+                        // 'password_confirmation'          => 'required',
+                        'cnic'                           => 'required|digits:13',
+                        'mobile'                         => 'required|digits:11',
+                        'landline'                       => 'digits:11',
+                        'open_time'                      => 'required',
+                        'close_time'                     => 'required',
+                        'type'                           => 'required',
+                        'profile_pic'                    => 'image|mimes:jpg,png',  
+                        'cnic_image'                     => 'image|mimes:jpg,png',  
+            
+                        'shop'                           => 'required|numeric',
+                        'building'                       => 'regex:/^[\pL\s\-]+$/u',
+                        'block'                          => 'regex:/^[\pL\s\-]+$/u',
+                        'street'                         => 'required|string',
+                        'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+                        'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+                        // 'service_id.*'                   => 'required|integer:unique',
+                        // 'service_rate.*'                 => 'required|integer',
+                        // 'service_time.*'                 => 'required|alpha_dash' 
+                    ];  
+            
+                    // $input = $request->only('name', 'owner_name', 'card_number', 'con_number', 'address_type', 'address_house_no', 'address_street_no', 'address_block', 'address_area', 'address_town', 'address_city', 'close_time', 'open_time');
+                    $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
+                    $validator = Validator::make($input, $rules);
+                    if($validator->fails()) {
+                        return Redirect::back()
+                            ->withErrors($validator);
+                    } 
+            
+                     // Update workshop
+                    $workshop = Workshop::find($id);
+            
+                    if ($request->hasFile('profile_pic')) 
+                    {
+                        $ws_name = str_replace(' ', '_', $request->name);
+                        $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
+                       
+                        $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                        $profile_pic = $profile_pic_path;
+                        
+                    }
+                    else
+                    {
+                      $profile_pic         =  $workshop->profile_pic;
+                    }
+            
+            
+                    if ($request->hasFile('cnic_image')) 
+                    {
+                        $ws_name = str_replace(' ', '_', $request->name);
+                        $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
+                        $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                        $cnic_image = $cnic_pic_path;
+                    }
+                    else
+                    {
+                      $cnic_image         =  $workshop->cnic_image;
+                    }
+            
+                    $workshop->name             = Input::get('name');        
+                    $workshop->owner_name       = Input::get('owner_name');  
+                    $workshop->cnic             = Input::get('cnic');
+                    $workshop->mobile           = Input::get('mobile');
+                    $workshop->landline         = Input::get('landline');
+                    $workshop->type             = Input::get('type');
+                    $workshop->profile_pic      = $profile_pic;
+                    $workshop->cnic_image      =  $cnic_image;
+                    $workshop->open_time        = Input::get('open_time');
+                    $workshop->close_time       = Input::get('close_time');
+                    // $workshop->status           = 1;
+                    $workshop->save();   
+            
+                    // Update Workshop Address
+                    $address = WorkshopAddress::find($workshop->address->id);
+            
+                    // $address->type              = Input::get('address_type');
+                    $address->shop              = Input::get('shop');
+                    $address->building          = Input::get('building');
+                    $address->street         = Input::get('street');
+                    $address->block             = Input::get('block');
+                    $address->town              = Input::get('town');
+                    $address->city              = Input::get('city');
+                    $address->town              = Input::get('town');                
+                    $address->update();
+                    
+                    // Session::flash('message', 'Successfully updated Workshop!');
+                    return Redirect::to('/profile');
+    }
+
+    public function addProfileService($workshop){
+       // dd('here');
+        $workshop = Workshop::find($workshop);
+        $services = Service::all();        
+        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('services',$services);            
+    }
+
+    public function storeProfileService(Request $request){
+        // dd($request);
+        $rules = [
+            // 'service_id'      => 'required|unique_with:workshop_service,workshop_id',
+            'service_rate'    => 'required',            
+            'service_time'    => 'required'                        
+            ];
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            // $request->offsetUnset('password');
+            return Redirect::back()
+                ->withErrors($validator);                
+        }        
+        $workshop = Workshop::find($request->workshop_id);
+        $service = $request->service_id; 
+        $rate = $request->service_rate;
+        $time = $request->service_time;       
+        
+        $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        
+        return Redirect::to('profile');               
+    }
+
+    public function editProfileService($id){
+        // dd('edit profile service');
+        $services = Service::all();
+        $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
+        return View::make('workshop_profile.services.edit')->with('workshop_service', $workshop_service)->with('services',$services);            
+
+    }
+    
+    public function updateProfileService(Request $request){
+        // dd('here');
+        $rules = [            
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required'                        
+            ];        
+        $input = $request->only('service_rate', 'service_time' );
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $workshop_service_id = $request->workshop_service_id ;            
+            return Redirect::back()
+                ->withErrors($validator);
+        }                 
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        return Redirect::to('profile');               
+
+    }
+
+    public function deleteProfileService($workshop_id, $service_id){
+        $workshop = Workshop::find($workshop_id);
+        $workshop->services()->detach($service_id);        
+        // show the view and pass the workshop to it
+        return Redirect::to('profile/');               
     }
 
 

@@ -18,7 +18,7 @@ class RedirectIfNotWorkshop
 	public function handle($request, Closure $next, $guard = 'workshop')
 	{
 	    if (!Auth::guard($guard)->check()) {
-	        return redirect('/');
+	        return redirect('/login');
 	    }
 
 	    return $next($request);

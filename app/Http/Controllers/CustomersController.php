@@ -87,7 +87,7 @@ class CustomersController extends Controller
                 ->withInput();
         } else {
             // store
-            $customers = new Customers;
+            $customer = new Customers;
             $customer->name       = Input::get('name');
             $customer->email      = Input::get('email');
             $customer->password   = Input::get('password');
@@ -177,12 +177,26 @@ class CustomersController extends Controller
     public function destroy($id)
     {
         // soft delete
-        $customer = Customers::find($id);
-        $customer->status = 0;
-        $customer->save();
+        $customer = Customer::find($id);
+        $customer->delete();
 
         // redirect
         Session::flash('message', 'Successfully deleted the customer!');
+        return Redirect::to('customers');
+    }
+
+    /**
+     * Restore the specified customer from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id){
+        $customer   = Customer::withTrashed()->where('id', $id)->get();
+        $customer->restore();
+
+        // redirect
+        Session::flash('message', 'Successfully activated the customer!');
         return Redirect::to('customers');
     }
 
@@ -270,7 +284,7 @@ class CustomersController extends Controller
         $subject = "Please verify your email address.";
         Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->from(getenv('MAIL_USERNAME'), "umar.farooq@gems.techverx.com");
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -346,8 +360,6 @@ class CustomersController extends Controller
         }
         // all good so return the token
         $customer = Auth::user();
-        // Config::set('jwt.user' , "App\User");
-        // Config::set('auth.providers.users.model', \App\User::class);
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -371,8 +383,8 @@ class CustomersController extends Controller
      *   produces={"application/json"},
      *   tags={"Customers"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Auth Token",
      *     required=true,
      *     type="string"
@@ -383,10 +395,9 @@ class CustomersController extends Controller
      *
      */
     public function logout(Request $request) {
-        $this->validate($request, ['token' => 'required']);
         try {
             Config::set('auth.providers.users.model', \App\Customer::class);
-            JWTAuth::invalidate($request->input('token'));
+            JWTAuth::invalidate(JWTAuth::getToken());
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -442,9 +453,12 @@ class CustomersController extends Controller
             ],Response::HTTP_OK);
         }
         try {
-            Password::sendResetLink($request->only('email'), function (Message $message) {
-                $message->subject('Your Password Reset Link');
-            });
+            Config::set('auth.providers.users.model', \App\Customer::class);
+
+            $response = $this->broker()->sendResetLink(
+                $request->only('email')
+            );
+
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
@@ -463,6 +477,11 @@ class CustomersController extends Controller
         ],Response::HTTP_OK);
     }
 
+    protected function broker()
+    {
+        return Password::broker('customers');
+    }
+
     /**
      * API Verify Email
      *
@@ -479,8 +498,8 @@ class CustomersController extends Controller
      *   consumes={"application/xml", "application/json"},
      *   produces={"application/xml", "application/json"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -646,6 +665,116 @@ class CustomersController extends Controller
             'message' => 'Details Added!',
             'body' => null
         ],Response::HTTP_OK);
+    }
+
+    /**
+     * API Password Reset for customer, on success return Success Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/password-reset",
+     *   summary="Customer Password Reset",
+     *   operationId="password Reset",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="prev_password",
+     *     in="formData",
+     *     description="Customer's Previous Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Customer's New Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="formData",
+     *     description="Customer's Confirm Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function passwordReset(Request $request)
+    {
+        $rules = [
+            'prev_password'  => 'required',
+            'password'  => 'required|confirmed|min:6',
+        ];
+
+        $input = $request->only('prev_password','password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+
+        if($validator->fails()) {
+            $request->offsetUnset('prev_password');
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+        else{
+            $customer   = JWTAuth::authenticate();
+
+            try {
+                // Config::set('jwt.user' , "App\Customer");
+                Config::set('auth.providers.users.model', \App\Customer::class);
+                if (!Hash::check($request->prev_password, $customer->password)) {
+                    $request->offsetUnset('prev_password');
+                    $request->offsetUnset('password');
+                    $request->offsetUnset('password_confirmation');
+                    return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => 'We cant find an account with this credentials.',
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
+                }
+            } catch (JWTException $e) {
+                // something went wrong whilst attempting to encode the token
+                $request->offsetUnset('prev_password');
+                $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Failed to Reset Password, please try again.',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+            }
+            // all good so Reset Customer's Password
+            $customer->password = Hash::make($request->password);
+            $customer->save();
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'success',
+                'body' => [ 'customer' => $customer ],
+            ],Response::HTTP_OK);
+        }
     }
 
     public function activateCustomer($id){        

@@ -18,13 +18,16 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
                     },
                     {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
                         "name": "customer_id",
                         "in": "formData",
                         "description": "Customer id",
@@ -34,6 +37,9 @@
                     {
                         "name": "workshop_id",
                         "in": "formData",
+                        "description": "Car Id",
+                        "required": false,
+                        "type": "string"
                         "description": "Workshop ID",
                         "required": true,
                         "type": "integer"
@@ -55,6 +61,9 @@
                     {
                         "name": "job_time",
                         "in": "formData",
+                        "description": "Insurance",
+                        "required": false,
+                        "type": "boolean"
                         "description": "Job Time",
                         "required": true,
                         "type": "string"
@@ -72,6 +81,27 @@
                         "in": "formData",
                         "description": "Vehicle Number",
                         "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "type",
+                        "in": "formData",
+                        "description": "Car Type",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "make",
+                        "in": "formData",
+                        "description": "Car Make",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "model",
+                        "in": "formData",
+                        "description": "Car Model",
+                        "required": false,
                         "type": "string"
                     }
                 ],
@@ -100,8 +130,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -146,8 +176,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -296,6 +326,9 @@
                 ],
                 "parameters": [
                     {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Auth Token",
                         "name": "token",
                         "in": "query",
                         "description": "Token",
@@ -339,13 +372,6 @@
                         "type": "string"
                     },
                     {
-                        "name": "customer_id",
-                        "in": "formData",
-                        "description": "Customer Id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
                         "name": "millage",
                         "in": "formData",
                         "description": "Millage",
@@ -363,7 +389,7 @@
                         "name": "insurance",
                         "in": "formData",
                         "description": "Insurance",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
@@ -396,8 +422,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -406,20 +432,13 @@
                         "name": "car_id",
                         "in": "formData",
                         "description": "Car Id",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
                         "name": "vehicle_no",
                         "in": "formData",
                         "description": "Vechile No.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "customer_id",
-                        "in": "formData",
-                        "description": "Customer Id",
                         "required": true,
                         "type": "string"
                     }
@@ -440,7 +459,7 @@
                     "Cars"
                 ],
                 "summary": "Get customer's car",
-                "operationId": "getCustCar",
+                "operationId": "getCustomerCar",
                 "produces": [
                     "application/json"
                 ],
@@ -449,13 +468,6 @@
                         "name": "token",
                         "in": "query",
                         "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "customer_id",
-                        "in": "query",
-                        "description": "Customer Id",
                         "required": true,
                         "type": "string"
                     }
@@ -648,6 +660,56 @@
                         "name": "verification_code",
                         "in": "query",
                         "description": "Verification Code",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/password-reset": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer Password Reset",
+                "operationId": "password Reset",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "prev_password",
+                        "in": "formData",
+                        "description": "Customer's Previous Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Customer's New Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "description": "Customer's Confirm Password",
                         "required": true,
                         "type": "string"
                     }
@@ -1006,6 +1068,56 @@
                     },
                     "406": {
                         "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/password-reset": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Password Reset",
+                "operationId": "password Reset",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Workshop's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "prev_password",
+                        "in": "formData",
+                        "description": "Workshop's Previous Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Workshop's New Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "description": "Workshop's Confirm Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     },
                     "500": {
                         "description": "internal server error"
