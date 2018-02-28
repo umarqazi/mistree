@@ -970,6 +970,173 @@ class WorkshopsController extends Controller
     }
 
     /**
+     * API Password Reset for Workshop, on success return Success Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/password-reset",
+     *   summary="Workshop Password Reset",
+     *   operationId="password Reset",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Workshop's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="prev_password",
+     *     in="formData",
+     *     description="Workshop's Previous Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Workshop's New Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="formData",
+     *     description="Workshop's Confirm Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function passwordReset(Request $request)
+    {
+        $rules = [
+            'prev_password'  => 'required',
+            'password'  => 'required|confirmed|min:6',
+        ];
+
+        $input = $request->only('prev_password','password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+
+        if($validator->fails()) {
+            $request->offsetUnset('prev_password');
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+        else{
+            $workshop   = JWTAuth::authenticate();
+
+            try {
+                // Config::set('jwt.user' , "App\Customer");
+                Config::set('auth.providers.users.model', \App\Customer::class);
+                if (!Hash::check($request->prev_password, $workshop->password)) {
+                    $request->offsetUnset('prev_password');
+                    $request->offsetUnset('password');
+                    $request->offsetUnset('password_confirmation');
+                    return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => 'We cant find an account with this credentials.',
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
+                }
+            } catch (JWTException $e) {
+                // something went wrong whilst attempting to encode the token
+                $request->offsetUnset('prev_password');
+                $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Failed to Reset Password, please try again.',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+            }
+            // all good so Reset Customer's Password
+            $workshop->password = Hash::make($request->password);
+            $workshop->save();
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'success',
+                'body' => [ 'workshop' => $workshop ],
+            ],Response::HTTP_OK);
+        }
+    }
+    /**
+     * Registration Store Data
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function regStoreData(Request $request){
+        $this->validate($request, ['token' => 'required']);
+        try {
+            Config::set('auth.providers.users.model', \App\Workshop::class);
+            $rules = [
+                'card_number' => 'required',
+                'con_number' => 'required',
+                'type' => 'required',                
+                'open_time' => 'required',
+                'close_time' => 'required',
+                'address_type' => 'required',
+                'address_house_no' => 'required',
+                'address_street_no' => 'required',
+                'address_block' => 'required',
+                'address_area' => 'required',
+                'address_town' => 'required',
+                'address_city' => 'required',
+
+
+
+            ];
+            $input = $request->only('card_number', 'con_number', 'type', 'team_slot', 'open_time', 'close_time' , 'status', 'is_verified');
+
+            $validator = Validator::make($input, $rules);
+            if($validator->fails()) {                
+                return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => $validator->messages(),
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
+            }
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'success',
+                'body' => ''
+            ],Response::HTTP_OK);
+        } catch (JWTException $e) {
+
+            // something went wrong whilst attempting to encode the token
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => '',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
+    }
+
+    /**
      *  Approve Workshop
      *
      * @param $id

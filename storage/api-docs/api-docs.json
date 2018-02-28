@@ -674,6 +674,56 @@
                 }
             }
         },
+        "/api/customer/password-reset": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer Password Reset",
+                "operationId": "password Reset",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "prev_password",
+                        "in": "formData",
+                        "description": "Customer's Previous Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Customer's New Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "description": "Customer's Confirm Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/workshop/getServices": {
             "get": {
                 "tags": [
@@ -1025,6 +1075,56 @@
                 }
             }
         },
+        "/api/workshop/password-reset": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Workshop Password Reset",
+                "operationId": "password Reset",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "description": "Workshop's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "prev_password",
+                        "in": "formData",
+                        "description": "Workshop's Previous Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password",
+                        "in": "formData",
+                        "description": "Workshop's New Password",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "password_confirmation",
+                        "in": "formData",
+                        "description": "Workshop's Confirm Password",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/workshop/getWorkshop/{id}": {
             "get": {
                 "tags": [
@@ -1193,7 +1293,7 @@
                 "parameters": [
                     {
                         "name": "token",
-                        "in": "query",
+                        "in": "formData",
                         "description": "Token",
                         "required": true,
                         "type": "string"

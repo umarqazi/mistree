@@ -36,6 +36,9 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('amount-paid', 'BookingsController@customerpaidbill');
+
+//		Route For Customer Password Reset
+      Route::post('password-reset', 'CustomersController@passwordReset');
 	});
 });
 Route::group(['prefix'=>'workshop'], function() {
@@ -60,6 +63,9 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::post('acceptbooking/{workshop_id}/{booking_id}','BookingsController@acceptBooking');
 		Route::post('rejectbooking/{workshop_id}/{booking_id}','BookingsController@rejectBooking');
 		Route::post('booking-bill','BookingsController@bookingBiling');				
-		Route::post('complete-job','BookingsController@workshopcompletejob');						
-	});
+		Route::post('complete-job','BookingsController@workshopcompletejob');
+
+//		Route For Workshop Password Reset
+        Route::post('password-reset', 'WorkshopsController@passwordReset');
+    });
 });

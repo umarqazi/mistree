@@ -667,6 +667,116 @@ class CustomersController extends Controller
         ],Response::HTTP_OK);
     }
 
+    /**
+     * API Password Reset for customer, on success return Success Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/password-reset",
+     *   summary="Customer Password Reset",
+     *   operationId="password Reset",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="token",
+     *     in="query",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="prev_password",
+     *     in="formData",
+     *     description="Customer's Previous Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password",
+     *     in="formData",
+     *     description="Customer's New Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="password_confirmation",
+     *     in="formData",
+     *     description="Customer's Confirm Password",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function passwordReset(Request $request)
+    {
+        $rules = [
+            'prev_password'  => 'required',
+            'password'  => 'required|confirmed|min:6',
+        ];
+
+        $input = $request->only('prev_password','password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+
+        if($validator->fails()) {
+            $request->offsetUnset('prev_password');
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+        else{
+            $customer   = JWTAuth::authenticate();
+
+            try {
+                // Config::set('jwt.user' , "App\Customer");
+                Config::set('auth.providers.users.model', \App\Customer::class);
+                if (!Hash::check($request->prev_password, $customer->password)) {
+                    $request->offsetUnset('prev_password');
+                    $request->offsetUnset('password');
+                    $request->offsetUnset('password_confirmation');
+                    return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => 'We cant find an account with this credentials.',
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
+                }
+            } catch (JWTException $e) {
+                // something went wrong whilst attempting to encode the token
+                $request->offsetUnset('prev_password');
+                $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Failed to Reset Password, please try again.',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
+            }
+            // all good so Reset Customer's Password
+            $customer->password = Hash::make($request->password);
+            $customer->save();
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'success',
+                'body' => [ 'customer' => $customer ],
+            ],Response::HTTP_OK);
+        }
+    }
+
     public function activateCustomer($id){        
         $customer = Customer::where('id', '=', $id)->first();
         $customer->update(['status' => 1]);        
