@@ -16,18 +16,11 @@
                     <input type="hidden"  value="PATCH" name="_method">
                     {!! csrf_field() !!}
                       <div class="header">
-                        {{-- @if ($errors->any())
-                          <div class="row text-center alert alert-danger">
-                            @foreach($errors->all() as $error)
-                              <div><span class="manadatory">{{ $error }}</span></div>
-                            @endforeach                        
+                      <div class="row">
+                          <div class="col-md-12">
+                              <h4 class="title">Cars - Edit Car</h4>
                           </div>
-                        @endif --}}
-                          <div class="row">
-                              <div class="col-md-12">
-                                  <h4 class="title">Cars - Edit Car</h4> 
-                              </div>
-                          </div>
+                      </div>
                       </div>                
                       <div class="content">
                         <div class="row">
@@ -41,6 +34,16 @@
                                   </span>
                               @endif
                             </div>
+
+                              <div class="form-group">
+                                  <label class="control-label">Car Make <span class="manadatory">*</span></label>
+                                  <input type="text" class="form-control border-input" name="make" value="{{$car->make}}">
+                                  @if ($errors->has('make'))
+                                      <span class="help-block">
+                                      <strong class="manadatory">{{ $errors->first('make') }}</strong>
+                                  </span>
+                                  @endif
+                              </div>
 
                             <div class="form-group">
                               <label class="control-label">Car Model <span class="manadatory">*</span></label>

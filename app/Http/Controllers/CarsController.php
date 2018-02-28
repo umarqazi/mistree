@@ -6,15 +6,10 @@ use JWTAuth;
 use Hash, DB, Config, Mail, View, Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Car;
-use App\Customer;
-use Carbon\Carbon;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 
 class CarsController extends Controller
 {
@@ -25,13 +20,12 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/customer/get-cars",
+     *   path="/api/cars",
      *   summary="Get All Cars",
-     *   operationId="getCars",
+     *   operationId="Cars",
      *   produces={"application/json"},
      *   tags={"Cars"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
+     *   consumes={"application/json"},
      *   @SWG\Parameter(
      *     name="Authorization",
      *     in="header",
@@ -113,10 +107,7 @@ class CarsController extends Controller
     public function show($id)
     {
 
-        $car = Car::find($id);
-
-        return View::make('cars.show')
-            ->with('car', $car);
+        //
     }
 
     /**
@@ -180,7 +171,24 @@ class CarsController extends Controller
         $car->delete();
 
         // redirect
-        Session::flash('message', 'Successfully deleted the car!');
+        Session::flash('message', 'Successfully de-activated the car!');
+        return Redirect::to('admin/cars');
+    }
+
+    /**
+     * Restore the specified car from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        // delete
+        $car = Car::withTrashed()->find($id);
+        $car->restore();
+
+        // redirect
+        Session::flash('message', 'Successfully activated the car!');
         return Redirect::to('admin/cars');
     }
     
@@ -192,7 +200,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/customer/add-customer-car",
+     *   path="/api/customer/car",
      *   summary="Add customer's car",
      *   operationId="add_customer_car",
      *   produces={"application/json"},
@@ -314,8 +322,8 @@ class CarsController extends Controller
      * @return \Illuminate\Http\Response
      */
     /**
-     * @SWG\Post(
-     *   path="/api/customer/remove-customer-car",
+     * @SWG\Patch(
+     *   path="/api/customer/car",
      *   summary="Delete customer's car",
      *   operationId="remove_customer_car",
      *   produces={"application/json"},
@@ -364,14 +372,14 @@ class CarsController extends Controller
             ],Response::HTTP_OK);
         }
 
-        $car = $customer->cars()->where('vehicle_no', 'like', '%'.$request->vehicle_no.'%');
+        $car = $customer->cars()->withTrashed()->where('vehicle_no', 'like', '%'.$request->vehicle_no.'%');
         if(!empty($request->car_id))
         {
             $car->where('car_id', $request->car_id);
         }
-        $car    = $car->orderBy('created_at', 'desc')->first();
+        $car    = $car->orderBy('car_customer.created_at', 'desc')->firstOrFail();
 
-        if($car->removed_at != null)
+        if( ! empty( $car->pivot->removed_at ) )
         {
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -382,7 +390,7 @@ class CarsController extends Controller
         }
         else
         {
-            $customer->cars()->newPivotStatement()->where('customer_id', $customer->id)->where('vehicle_no', 'like', '%'.$request->vehicle_no.'%')->where('removed_at',null)->update(['removed_at' => DB::raw('NOW()')]);
+            $customer->cars()->withTrashed()->newPivotStatement()->where('customer_id', $customer->id)->where('vehicle_no', 'like', '%'.$request->vehicle_no.'%')->where('removed_at',null)->update(['removed_at' => DB::raw('NOW()')]);
 
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
@@ -401,7 +409,7 @@ class CarsController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/customer/get-customer-car",
+     *   path="/api/customer/cars",
      *   summary="Get customer's car",
      *   operationId="getCustomerCar",
      *   produces={"application/json"},
@@ -434,7 +442,7 @@ class CarsController extends Controller
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
                 'message'       => '',
-                'body'          => $customer->cars()->where('removed_at', null)->get()
+                'body'          => $customer->cars()->withTrashed()->where('removed_at', null)->get()
             ],Response::HTTP_OK);
         }
     }  

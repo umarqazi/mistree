@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+Route::group(['middleware' => 'conf_guard:Customer'], function(){
+	Route::get('cars', 'CarsController@index');
+});
+
 
 Route::group(['prefix'=>'customer'], function() {
 	Route::post('register', 'CustomersController@register');
@@ -28,11 +32,10 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('logout', 'CustomersController@logout');
 		Route::post('regStoreData', 'CustomersController@regStoreData');
 		Route::post('verify-email', 'CustomersController@verifyEmail');
-		
-		Route::get('get-cars', 'CarsController@index');
-		Route::post('add-customer-car', 'CarsController@assignCar');
-		Route::post('remove-customer-car', 'CarsController@unassignCar');
-		Route::get('get-customer-car', 'CarsController@getCustomerCar');
+
+		Route::get('cars', 'CarsController@getCustomerCar');
+		Route::post('car', 'CarsController@assignCar');
+		Route::patch('car', 'CarsController@unassignCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('amount-paid', 'BookingsController@customerpaidbill');
