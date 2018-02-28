@@ -101,6 +101,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('cars', 'CarsController');
         Route::get('/home','AdminsController@home')->name('admin.home');
 
+        Route::post('/cars/restore/{id}', 'CarsController@restore');
+
         Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
         Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
         Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
