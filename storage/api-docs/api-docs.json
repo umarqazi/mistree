@@ -790,7 +790,7 @@
                     {
                         "name": "ws_images",
                         "in": "formData",
-                        "description": "Array of Workshop Images",
+                        "description": "ws_images[base64,base64,base64]",
                         "required": false,
                         "type": "array",
                         "items": "[base64strings]"
@@ -847,7 +847,7 @@
                     {
                         "name": "services",
                         "in": "formData",
-                        "description": "Workshop selected services in array",
+                        "description": "services[{service_id,service_rate,service_time}]",
                         "required": true,
                         "type": "array",
                         "items": "[service_id,service_rate,service_time]"
@@ -1246,6 +1246,126 @@
                 }
             }
         },
+        "/api/workshop/add-new-workshop-services/{workshop_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Add New Workshop Services",
+                "operationId": "insert",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "formData",
+                        "description": "service id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_rate",
+                        "in": "formData",
+                        "description": "service rate",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "service_time",
+                        "in": "formData",
+                        "description": "service time",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-workshop-service/{workshop_id}": {
+            "post": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Add New Workshop Services",
+                "operationId": "insert",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "workshop id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "formData",
+                        "description": "service id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_rate",
+                        "in": "formData",
+                        "description": "service rate",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "service_time",
+                        "in": "formData",
+                        "description": "service time",
+                        "required": true,
+                        "type": "number"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/workshop/deleteWorkshopService/{workshop_id}/{service_id}": {
             "post": {
                 "tags": [
@@ -1441,6 +1561,45 @@
                         "name": "_method",
                         "in": "formData",
                         "description": "Required to update form",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-workshop-images/": {
+            "patch": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Workshop Images",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "images",
+                        "in": "path",
+                        "description": "Workshop ID",
                         "required": true,
                         "type": "string"
                     }

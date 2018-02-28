@@ -294,10 +294,8 @@ class WorkshopsController extends Controller
         if ($request->hasFile('profile_pic')) 
         {            
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-           
             $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $profile_pic = $profile_pic_path;
-            
+            $profile_pic = $profile_pic_path;    
         }
         else
         {
@@ -330,9 +328,7 @@ class WorkshopsController extends Controller
         $workshop->save();   
 
         // Update Workshop Address
-        $address = WorkshopAddress::find($workshop->address->id);
-
-        // $address->type              = Input::get('address_type');
+        $address = WorkshopAddress::find($workshop->address->id);        
         $address->shop              = Input::get('shop');
         $address->building          = Input::get('building');
         $address->street            = Input::get('street');
@@ -342,10 +338,9 @@ class WorkshopsController extends Controller
                         
         $address->update();
 
-        if ($request->hasFile('ws_images')) 
+        if($request->hasFile('ws_images')) 
         {
-             $files = $request->file('ws_images');
-
+            $files = $request->file('ws_images');
             foreach($files as $file)
             {
                 $images = new WorkshopImages;                
@@ -486,7 +481,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="ws_images",
      *     in="formData",
-     *     description="Array of Workshop Images",
+     *     description="ws_images[base64,base64,base64]",
      *     required=false,
      *     type="array",
      *     items="[base64strings]"
@@ -543,7 +538,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="services",
      *     in="formData",
-     *     description="Workshop selected services in array",
+     *     description="services[{service_id,service_rate,service_time}]",
      *     required=true,
      *     type="array",
      *     items="[service_id,service_rate,service_time]"
@@ -1225,8 +1220,7 @@ class WorkshopsController extends Controller
         if($validator->fails()) {
             $workshop_service_id = $request->workshop_service_id ;            
             return Redirect::to('admin/edit-workshop-service/'.$workshop_service_id)
-                ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withErrors($validator);
         }                 
         $workshop = Workshop::find($request->workshop_id);
         $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
@@ -1258,11 +1252,10 @@ class WorkshopsController extends Controller
             'service_rate'    => 'required',            
             'service_time'    => 'required'                        
             ];
-        $input = $request->only('service_id', 'service_rate', 'service_time' );
+        $input = $request->only('service_rate', 'service_time' );
 
         $validator = Validator::make($input, $rules);
-        if($validator->fails()) {
-            $request->offsetUnset('password');
+        if($validator->fails()) {            
             return Redirect::to('admin/add-workshop-service/'.$request->workshop_id)
                 ->withErrors($validator);                
         }        
@@ -1442,6 +1435,167 @@ class WorkshopsController extends Controller
             'message' => '',
             'body' => $workshops
         ],Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/add-new-workshop-services/{workshop_id}",
+     *   summary="Add New Workshop Services",
+     *   operationId="insert",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="workshop id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_id",
+     *     in="formData",
+     *     description="service id",
+     *     required=true,
+     *     type="integer"
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_rate",
+     *     in="formData",
+     *     description="service rate",
+     *     required=true,
+     *     type="number"          
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_time",
+     *     in="formData",
+     *     description="service time",
+     *     required=true,
+     *     type="number"     
+     *   ), 
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )    
+     *  Store Workshop Service
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addNewWorkshopServices(Request $request, $workshop_id){
+        $rules = [
+            'service_id'      => 'required|integer',
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required|numeric'                        
+            ];
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+
+        $validator = Validator::make($input, $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+        $workshop = Workshop::find($workshop_id);
+        $service = $request->service_id; 
+        $rate = $request->service_rate;
+        $time = $request->service_time;       
+        
+        $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Workshop Service Added!!',
+            'body'          => ''
+        ],Response::HTTP_OK);                  
+    }
+     /**
+     * @SWG\Post(
+     *   path="/api/workshop/update-workshop-service/{workshop_id}",
+     *   summary="Add New Workshop Services",
+     *   operationId="insert",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="workshop id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_id",
+     *     in="formData",
+     *     description="service id",
+     *     required=true,
+     *     type="integer"
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_rate",
+     *     in="formData",
+     *     description="service rate",
+     *     required=true,
+     *     type="number"          
+     *   ), 
+     *   @SWG\Parameter(
+     *     name="service_time",
+     *     in="formData",
+     *     description="service time",
+     *     required=true,
+     *     type="number"     
+     *   ), 
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * ) 
+     *  Update Workshop Service
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function workshopServiceUpdate(Request $request, $workshop_id){
+        $rules = [
+            'service_id'      => 'required|integer',           
+            'service_rate'    => 'required|numeric',            
+            'service_time'    => 'required'                        
+            ];        
+        $input = $request->only('service_id', 'service_rate', 'service_time' );
+        $validator = Validator::make($input, $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
+        $workshop = Workshop::find($workshop_id);
+        $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Workshop Service Updated!!',
+            'body'          => ''
+        ],Response::HTTP_OK);             
+
     }
     /**
      * @SWG\Post(
@@ -1725,6 +1879,94 @@ class WorkshopsController extends Controller
                 'message' => $validator->messages(),
                 'body' => $request->all()
             ],Response::HTTP_OK);
+        }
+
+        if (!count($address)) {
+            $address = new WorkshopAddress;
+            $address->workshop_id = $workshop->id;
+        }
+         
+        $address->shop          =  $request->shop;
+        $address->building      =  $request->building;        
+        $address->block         =  $request->block;
+        $address->street        =  $request->street;
+        $address->town          =  $request->town;
+        $address->city          =  $request->city;        
+        $address->save(); 
+        
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Address updated Successfully!',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);               
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/update-workshop-images/",
+     *   summary="Update Workshop Images",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop ID",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="images",
+     *     in="formData",
+     *     description="images[{old_url,new_image}]",
+     *     required=true,
+     *     type="array"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateWorkshopImages(Request $request, $workshop_id)
+    {
+        $workshop = Workshop::find($workshop_id);        
+        $rules = [            
+            'shop'                           => 'required|numeric',            
+        ];
+
+        $input = $request->only('shop');
+
+        $validator = Validator::make($input , $rules);
+        // process the login
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
+        $images = $request->images;
+        foreach($images as $image){
+            if(empty($image->old_url)){
+                
+                $workshop_image = new 
+            }
         }
 
         if (!count($address)) {
