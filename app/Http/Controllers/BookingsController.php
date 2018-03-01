@@ -6,6 +6,7 @@ use JWTAuth;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
 use App\Workshop;
 use App\Service;
 use App\Billing;
@@ -25,8 +26,8 @@ class BookingsController extends Controller
      *   produces={"application/json"},
      *   tags={"Bookings"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -142,25 +143,18 @@ class BookingsController extends Controller
 	}
 
     /**
-     * @SWG\Post(
-     *   path="/api/workshop/acceptbooking/{workshop_id}/{booking_id}",
+     * @SWG\Patch(
+     *   path="/api/workshop/accept-booking/{booking_id}",
      *   summary="Accept Booking",
      *   operationId="acception",
      *   produces={"application/json"},
      *   tags={"Bookings"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="workshop_id",
-     *     in="path",
-     *     description="Workshop id",
-     *     required=true,
-     *     type="integer"
      *   ),
      *   @SWG\Parameter(
      *     name="booking_id",
@@ -175,7 +169,8 @@ class BookingsController extends Controller
      * )
      *
     */
-    public function acceptBooking($workshop_id, $booking_id){
+    public function acceptBooking($booking_id){
+        $workshop_id = Auth::user()->id;
         $workshop = Workshop::find($workshop_id);
         $workshop->bookings()->where('id', $booking_id)->update(['response' => 'accepted']);
         return response()->json([
@@ -188,25 +183,18 @@ class BookingsController extends Controller
 
 
      /**
-     * @SWG\Post(
-     *   path="/api/workshop/rejectbooking/{workshop_id}/{booking_id}",
+     * @SWG\Patch(
+     *   path="/api/workshop/reject-booking/{booking_id}",
      *   summary="Reject Booking",
      *   operationId="rejection",
      *   produces={"application/json"},
      *   tags={"Bookings"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="workshop_id",
-     *     in="path",
-     *     description="Workshop id",
-     *     required=true,
-     *     type="integer"
      *   ),
      *   @SWG\Parameter(
      *     name="booking_id",
@@ -218,10 +206,10 @@ class BookingsController extends Controller
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *
+     * )     
     */
-    public function rejectBooking($workshop_id, $booking_id){
+    public function rejectBooking($booking_id){
+        $workshop_id = Auth::user()->id;
         $workshop = Workshop::find($workshop_id);
         $workshop->bookings()->where('id', $booking_id)->update(['response' => 'rejected']);
         return response()->json([
@@ -240,8 +228,8 @@ class BookingsController extends Controller
      *   produces={"application/json"},
      *   tags={"Customers"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -289,8 +277,8 @@ class BookingsController extends Controller
      *   produces={"application/json"},
      *   tags={"Bookings"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Token",
      *     required=true,
      *     type="string"
@@ -299,13 +287,6 @@ class BookingsController extends Controller
      *     name="booking_id",
      *     in="formData",
      *     description="Booking ID",
-     *     required=true,
-     *     type="integer"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="workshop_id",
-     *     in="formData",
-     *     description="Workshop ID",
      *     required=true,
      *     type="integer"
      *   ),
@@ -321,14 +302,14 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      */
-    public function workshopcompletejob(Request $request){
-        $rules = [            
-            'workshop_id'                       => 'required|integer',
+    public function completeLead(Request $request){
+        $workshop_id = Auth::user()->id;
+        $rules = [                        
             'booking_id'                        => 'required|integer',
             'customer_id'                       => 'required|integer'           
         ];   
         
-        $input = $request->only('workshop_id', 'booking_id', 'customer_id');
+        $input = $request->only('booking_id', 'customer_id');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -342,13 +323,16 @@ class BookingsController extends Controller
 
         $booking = Booking::find($request->booking_id);                            
         $booking_services = $booking->services;
+        $booking->job_status = 'completed';
+        $booking->save();
+
         $bill = 0;
         foreach($booking_services as $service){
             $bill = $service->pivot->service_rate + $bill;            
         }        
 
         $billing = new Billing;
-        $billing->workshop_id                = $request->workshop_id;         
+        $billing->workshop_id                = $workshop_id;         
         $billing->booking_id                 = $request->booking_id;
         $billing->amount                     = $bill;
         $billing->customer_id                = $request->customer_id;
@@ -357,7 +341,7 @@ class BookingsController extends Controller
 
         $services_count = $booking->services->count();
         $deduction = $services_count * 50;
-        $workshop = Workshop::find($request->workshop_id);
+        $workshop = Workshop::find($workshop_id);
         $balance = $workshop->balance->balance;        
         $new_balance = $balance - $deduction;
 
@@ -365,7 +349,7 @@ class BookingsController extends Controller
 
         $transaction = new WorkshopLedger;
 
-        $transaction->workshop_id                   = $request->workshop_id;         
+        $transaction->workshop_id                   = $workshop_id;         
         $transaction->booking_id                    = $request->booking_id;         
         $transaction->amount                        = $deduction;         
         $transaction->transaction_type              = 'Job-Billing';         
