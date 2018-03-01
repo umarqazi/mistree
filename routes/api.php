@@ -42,6 +42,11 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 
 //		Route For Customer Password Reset
       Route::post('password-reset', 'CustomersController@passwordReset');
+      Route::get('profile', 'CustomersController@getCustomerAddressAndCars');
+      Route::post('add-customer-address', 'CustomersController@addCustomerAddress');
+      Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
+      Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
+
 	});
 });
 Route::group(['prefix'=>'workshop'], function() {

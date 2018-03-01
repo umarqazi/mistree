@@ -674,8 +674,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Customer's Token",
                         "required": true,
                         "type": "string"
@@ -700,6 +700,220 @@
                         "description": "Customer's Confirm Password",
                         "required": true,
                         "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/profile": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer Cars And Addresses",
+                "operationId": "Customer Cars And Addresses",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/add-customer-address": {
+            "post": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Add Customer Address",
+                "operationId": "Add Customer Address",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_type",
+                        "in": "formData",
+                        "description": "Customer's Address Type",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_house_no",
+                        "in": "formData",
+                        "description": "Customer's address house no",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_street_no",
+                        "in": "formData",
+                        "description": "Customer's address street no",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_block",
+                        "in": "formData",
+                        "description": "Customer's address block",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_town",
+                        "in": "formData",
+                        "description": "Customer's address town",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "address_city",
+                        "in": "formData",
+                        "description": "Customer's address city",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/edit-customer-address": {
+            "put": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Edit Customer Address",
+                "operationId": "Edit Customer Address",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "Customer's Address Id To Edit",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "type",
+                        "in": "formData",
+                        "description": "Customer's Address Type To Edit",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "house_no",
+                        "in": "formData",
+                        "description": "Customer's Address House No To Edit",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "street_no",
+                        "in": "formData",
+                        "description": "Customer's Address Street No  To Edit",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "block",
+                        "in": "formData",
+                        "description": "Customer's Address Block To Edit",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "town",
+                        "in": "formData",
+                        "description": "Customer's Address Town To Edit",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "city",
+                        "in": "formData",
+                        "description": "Customer's Address City To Edit",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/delete-customer-address": {
+            "delete": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Delete Customer Address",
+                "operationId": " Delete Customer Address",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "id",
+                        "in": "formData",
+                        "description": "Customer's Address Id To Delete",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
