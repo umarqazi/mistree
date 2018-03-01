@@ -732,7 +732,7 @@ class CustomersController extends Controller
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => $validator->messages(),
+                'message' => $validator->messages()->first(),
                 'body' => $request->all()
             ],Response::HTTP_OK);
         }
@@ -749,7 +749,7 @@ class CustomersController extends Controller
                     return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => false,
-                        'message' => 'We cant find an account with this credentials.',
+                        'message' => "We can't find an account with these credentials",
                         'body' => $request->all()
                     ],Response::HTTP_OK);
                 }
@@ -761,7 +761,7 @@ class CustomersController extends Controller
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => 'Failed to Reset Password, please try again.',
+                    'message' => 'Failed to reset password, Please try again.',
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
@@ -812,7 +812,7 @@ class CustomersController extends Controller
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => 'Invalid Request!',
+                'message' => 'Invalid Customer!',
                 'body' => ''
             ],Response::HTTP_OK);
         } else {
@@ -909,7 +909,7 @@ class CustomersController extends Controller
             return response([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => 'Invalid Details!',
+                'message' => $validator->messages()->first(),
                 'body' => $request->all()
             ],Response::HTTP_OK);
         } else {
@@ -1024,7 +1024,7 @@ class CustomersController extends Controller
             return response([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => 'Invalid Details!',
+                'message' => $validator->messages()->first(),
                 'body' => $request->all()
             ],Response::HTTP_OK);
         }
