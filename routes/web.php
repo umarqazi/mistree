@@ -95,6 +95,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/services/trash', 'ServicesController@inactive_services');
         Route::get('/services/{id}/restore', 'ServicesController@restore'); 
 
+        Route::get('/workshops/trash', 'WorkshopsController@inactive_workshops');
+        Route::get('/workshops/{id}/restore', 'WorkshopsController@restore');
+
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');

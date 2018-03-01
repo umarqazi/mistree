@@ -20,11 +20,8 @@
                         <div class="row">
                          
                             <div class="col-sm-6 col-sm-offset-6 balance-info">
-                              
                                 <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right"><a href="{{ url('admin/workshops/create') }}" class="btn btn-header btn-export">Add New Workshop</a></div>
-                                <br> 
-                                <div class="text-right"><a href="{{ url('admin/workshops/trash') }}" class="btn btn-header btn-export">Trashed Workshop</a></div>
+                                <div class="text-right"><a href="{{ url('admin/workshops/') }}" class="btn btn-header btn-export">Active Workshops</a></div>
                             </div>
                         </div>
                     </div>
@@ -66,22 +63,10 @@
                                             Not Approved
                                         @else
                                             Approved
-                                        @endif</a>                                    
+                                        @endif</a> 
+                                    </td>                                   
                                     <td>
-                                        @if($value->is_approved == 0)
-                                            <a href="{{url('admin/approve-workshop/'.$value->id)}}" class="btn btn-header btn-export">Approve</a>
-                                        @else
-                                            <a href="{{url('admin/undo-approval-workshop/'.$value->id)}}" class="btn btn-header btn-export">Undo Approval</a>
-                                        @endif</a>
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'. $value->id)}}">View Details</a>
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a>
-                                        
-                                        <form method="POST" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input class="btn btn-header btn-export" type="submit" value="Move To Trash">
-                                        </form>
-                                        </td>
+                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/restore') }}" class="btn btn-header btn-export">Restore</a>
                                     </td>
                                 </tr>
                                  @endforeach
