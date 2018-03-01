@@ -85,8 +85,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
   //  Web portal
 
     Route::group(['middleware' => 'admin'], function (){
-        Route::get('/services/inactive', 'ServicesController@inactive_services');
-        Route::get('/services/{id}/restore', 'ServicesController@restore'); 
 
         Route::get('/workshops/block', 'WorkshopsController@inactive_workshops');
         Route::get('/workshops/{id}/unblock', 'WorkshopsController@restore');
@@ -98,6 +96,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/home','AdminsController@home')->name('admin.home');
 
         Route::post('/cars/restore/{id}', 'CarsController@restore');
+        Route::get('/service/inactive', 'ServicesController@inactive_services');
+        Route::post('/services/restore/{id}', 'ServicesController@restore');
 
         Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
         Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
