@@ -337,12 +337,13 @@ class CustomersController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
+
         try {
             // Config::set('jwt.user' , "App\Customer");
             Config::set('auth.providers.users.model', \App\Customer::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
-                $request->offsetUnset('password_confirmation');
+
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -353,7 +354,7 @@ class CustomersController extends Controller
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
-            $request->offsetUnset('password_confirmation');
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -363,6 +364,7 @@ class CustomersController extends Controller
         }
         // all good so return the token
         $customer = Auth::user();
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -381,7 +383,7 @@ class CustomersController extends Controller
     /**
      * @SWG\Post(
      *   path="/api/customer/logout",
-     *   summary="Logout customer",
+     *   summary="Customer Logout",
      *   operationId="logout",
      *   produces={"application/json"},
      *   tags={"Customers"},
@@ -399,8 +401,8 @@ class CustomersController extends Controller
      */
     public function logout(Request $request) {
         try {
-            Config::set('auth.providers.users.model', \App\Customer::class);
             JWTAuth::invalidate(JWTAuth::getToken());
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -445,26 +447,33 @@ class CustomersController extends Controller
      */
     public function recover(Request $request)
     {
-        $customer = Customer::where('email', $request->email)->first();
-        if (!$customer) {
-            $error_message = "Your email address was not found.";
+        $rules  = [
+            'email' => 'exists:customers'
+        ];
+
+        $validation = Validator::make($request->only('email'), $rules);
+
+        if($validation->fails()){
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => $error_message,
+                'message' => $validation->messages()->first(),
                 'body' => null
-            ],Response::HTTP_OK);
+            ], Response::HTTP_OK);
         }
+
         try {
             Config::set('auth.providers.users.model', \App\Customer::class);
 
-            $response = $this->broker()->sendResetLink(
+            $this->broker()->sendResetLink(
                 $request->only('email')
             );
 
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -472,6 +481,7 @@ class CustomersController extends Controller
                 'body' => null
             ],Response::HTTP_OK);
         }
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -524,7 +534,8 @@ class CustomersController extends Controller
         $check = DB::table('customer_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
             $customer = Customer::find($check->id);
-            if($customer->is_verified == 1){
+            if( $customer->is_verified ){
+
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -534,6 +545,7 @@ class CustomersController extends Controller
             }
             $customer->update(['is_verified' => 1]);
             DB::table('customer_verifications')->where('token',$verification_code)->delete();
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -541,6 +553,7 @@ class CustomersController extends Controller
                 'body' => null
             ],Response::HTTP_OK);
         }
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => false,
@@ -735,7 +748,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'body' => null
             ],Response::HTTP_OK);
         }
         else{
@@ -751,8 +764,8 @@ class CustomersController extends Controller
                     return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => false,
-                        'message' => "We can't find an account with these credentials",
-                        'body' => $request->all()
+                        'message' => 'Your provided password didn\'t match.',
+                        'body' => null
                     ],Response::HTTP_OK);
                 }
             } catch (JWTException $e) {
@@ -764,7 +777,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => 'Failed to reset password, Please try again.',
-                    'body' => $request->all()
+                    'body' => null
                 ],Response::HTTP_OK);
             }
             // all good so Reset Customer's Password

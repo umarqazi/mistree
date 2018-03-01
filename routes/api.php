@@ -62,8 +62,8 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('logout', 'WorkshopsController@logout');
 		Route::post('verifyEmail', 'WorkshopsController@verifyEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
-		Route::get('/', 'WorkshopsController@getWorkshop');
-		Route::patch('update-profile', 'WorkshopsController@profileUpdate');
+		Route::get('profile', 'WorkshopsController@getWorkshop');
+		Route::put('profile', 'WorkshopsController@profileUpdate');
 		Route::post('insert-service', 'WorkshopsController@insertService');
 		Route::patch('update-service/{service_id}', 'WorkshopsController@updateService');
 		
