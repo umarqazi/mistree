@@ -17,11 +17,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{ url('admin/cars/create') }}" class="btn btn-header btn-export">Add New Car</a></div>
-                            <br>
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/inactive-cars')}}" class="btn btn-header btn-export">Inactive Cars</a></div>
-                            <br>
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/unpublished/cars')}}" class="btn btn-header btn-export">UnPublished Cars</a></div>
+                            <div class="text-right" style="margin-right: 15px;"><a href="{{ url('admin/cars') }}" class="btn btn-header btn-export">Active Cars</a></div>
                         </div>
                         <div class="clear20"></div>
                     </div>
@@ -44,10 +40,11 @@
                                     <td class="text-center">{{ $value->type }}</td>
                                     <td class="text-center">
                                         <a href="{{url('admin/cars/'. $value->id.'/edit')}}" class="btn btn-header btn-export">Edit</a>
-                                        <form method="POST" action="cars/{{ $value->id }}" accept-charset="UTF-8">
-                                            <input name="_method" type="hidden" value="DELETE">
+                                        <form method="POST" action="{{ url('admin/car/publish/') }}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="PATCH">                                             
+                                            <input type="hidden" name="car_id" value="{{$value->id }}"> 
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
-                                            <button type="submit" class="btn btn-header btn-export">Deactivate</button>
+                                            <button type="submit" class="btn btn-header btn-export">Publish</button>
                                         </form>
                                     </td>
                                 </tr>
@@ -57,10 +54,8 @@
                      </div>
                 </div>
             </div>
-
         </div>
     </div>
-
     </div>
 @include('partials.footer')
 @endsection
