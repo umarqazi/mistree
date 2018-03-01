@@ -376,6 +376,19 @@ class WorkshopsController extends Controller
         Session::flash('message', 'Successfully deleted the Workshop!');
         return Redirect::to('admin/workshops');      
     }
+
+    public function inactive_workshops()
+    {
+        $workshops = Workshop::onlyTrashed()->get();  
+        return View::make('workshop.inactive')
+        ->with('workshops', $workshops); 
+    }
+
+    public function restore($id) 
+    {
+        $workshop = Workshop::withTrashed()->find($id)->restore();
+        return redirect ('admin/workshops');
+    }
     
     /**
      * API Register for new workshop.

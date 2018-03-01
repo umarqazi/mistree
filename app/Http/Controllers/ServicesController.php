@@ -63,7 +63,8 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $services = Service::where('service_parent', 0)->get();
+      //  $services = Service::where('service_parent', 0)->get(); 
+        $services = Service::all();
         return View::make('services.create')->with('services', $services);
     }
 
@@ -75,7 +76,8 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-        $services   = Service::where('service_parent', 0)->get();
+       // $services   = Service::where('service_parent', 0)->get();
+        $services   = Service::all();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
@@ -144,7 +146,7 @@ class ServicesController extends Controller
     {
         // get the service
         $service = Service::find($id);
-        $services = Service::where('service_parent', 0)->where('id', '<>', $service->id)->get();
+        $services = Service::where('id', '<>', $service->id)->get();
 
         // show the view and pass the service to it
         return View::make('services.edit', compact('service','services'));
@@ -159,7 +161,7 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $services   = Service::where('service_parent', 0)->where('id', '<>', $id)->get();
+        $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
@@ -214,5 +216,19 @@ class ServicesController extends Controller
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
         return Redirect::to('admin/services');
+    }
+
+    public function inactive_services()
+    {
+        $services = Service::onlyTrashed()->get();  
+        return View::make('services.inactive')
+        ->with('services', $services);
+       // dd($services); 
+    }
+
+    public function restore($id) 
+    {
+        $service = Service::withTrashed()->find($id)->restore();
+        return redirect ('/admin/services');
     }
 }
