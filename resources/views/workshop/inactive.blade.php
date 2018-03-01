@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Registered Workshops</h4>
-                                <p class="category">List of all registered workshops.</p>
+                                <p class="category">List of all blocked workshops.</p>
                             </div>
                         </div>
                         <div class="clear20"></div>
@@ -28,10 +28,6 @@
                     <div class="clear20"></div>
                     <div class="content table-responsive table-full-width">
                         <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">
-                       <!--  <div class="dataTables_length" id="jsTable_length">
-                        <label>Show <select name="jsTable_length" aria-controls="jsTable" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div> -->
-
-                      <!--   <div id="jsTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="jsTable"></label></div> -->
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                             <thead>
                                 <tr role="row">
@@ -66,7 +62,7 @@
                                         @endif</a> 
                                     </td>                                   
                                     <td>
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/restore') }}" class="btn btn-header btn-export">Restore</a>
+                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/unblock') }}" class="btn btn-header btn-export">Unblock</a>
                                     </td>
                                 </tr>
                                  @endforeach

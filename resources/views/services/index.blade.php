@@ -25,7 +25,7 @@
                         <div class="row">
                             <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services/create')}}" class="btn btn-header btn-export">Add New Service</a></div>
                             <br>
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services/trash')}}" class="btn btn-header btn-export">Trashed Services</a></div>
+                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services/inactive')}}" class="btn btn-header btn-export">Inactive Services</a></div>
                         </div>
                         <div class="clear20"></div>
                     </div>
@@ -52,7 +52,7 @@
                                      <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
                                      <input name="_method" type="hidden" value="DELETE">
                                      <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                     <input class="btn btn-header btn-export" type="submit" value="Move To Trash">
+                                     <input class="btn btn-header btn-export" type="submit" value="Inactive">
                                      </form>
                                 </td>
                             </tr>

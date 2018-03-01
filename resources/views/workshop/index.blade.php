@@ -24,17 +24,13 @@
                                 <div class="clear10"></div><div class="clear5"></div>
                                 <div class="text-right"><a href="{{ url('admin/workshops/create') }}" class="btn btn-header btn-export">Add New Workshop</a></div>
                                 <br> 
-                                <div class="text-right"><a href="{{ url('admin/workshops/trash') }}" class="btn btn-header btn-export">Trashed Workshop</a></div>
+                                <div class="text-right"><a href="{{ url('admin/workshops/block') }}" class="btn btn-header btn-export">Blocked Workshop</a></div>
                             </div>
                         </div>
                     </div>
                     <div class="clear20"></div>
                     <div class="content table-responsive table-full-width">
                         <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">
-                       <!--  <div class="dataTables_length" id="jsTable_length">
-                        <label>Show <select name="jsTable_length" aria-controls="jsTable" class=""><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div> -->
-
-                      <!--   <div id="jsTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="" placeholder="" aria-controls="jsTable"></label></div> -->
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                             <thead>
                                 <tr role="row">
@@ -79,7 +75,7 @@
                                         <form method="POST" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input class="btn btn-header btn-export" type="submit" value="Move To Trash">
+                                        <input class="btn btn-header btn-export" type="submit" value="Block">
                                         </form>
                                         </td>
                                     </td>

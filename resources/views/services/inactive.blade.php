@@ -19,7 +19,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Services</h4>
-                                <p class="category">List of all Trashed services.</p>
+                                <p class="category">List of all inactive services.</p>
                             </div>
                         </div>
                         <div class="row">
@@ -47,7 +47,7 @@
                                 <td>{{$value->name}}</td>
                                 <td class="text-center">{{$value->parent($value->service_parent)}}</td>
                                 <td>
-                                     <a href="{{ URL::to('admin/services/' . $value->id . '/restore') }}" class="btn btn-header btn-export">Restore</a>
+                                     <a href="{{ URL::to('admin/services/' . $value->id . '/restore') }}" class="btn btn-header btn-export">Active</a>
                                 </td>
                             </tr>
                         @endforeach

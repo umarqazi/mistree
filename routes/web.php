@@ -13,13 +13,6 @@
 Route::post('profile/store-profile-service', 'WorkshopsController@storeProfileService');
 // ========= Customer Routes Start ==================================================
 Route::group(['prefix' => 'customer'], function () {
-  /*  Route::get('/login', 'CustomerAuth\LoginController@showLoginForm')->name('login');
-    Route::post('/login', 'CustomerAuth\LoginController@login');
-    Route::post('/logout', 'CustomerAuth\LoginController@logout')->name('logout');
-
-    Route::get('/register', 'CustomerAuth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('/register', 'CustomerAuth\RegisterController@register');*/
-
     Route::post('/password/email', 'CustomerAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
     Route::post('/password/reset', 'CustomerAuth\ResetPasswordController@reset')->name('password.email');
     Route::get('/password/reset', 'CustomerAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
@@ -92,11 +85,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
   //  Web portal
 
     Route::group(['middleware' => 'admin'], function (){
-        Route::get('/services/trash', 'ServicesController@inactive_services');
+        Route::get('/services/inactive', 'ServicesController@inactive_services');
         Route::get('/services/{id}/restore', 'ServicesController@restore'); 
 
-        Route::get('/workshops/trash', 'WorkshopsController@inactive_workshops');
-        Route::get('/workshops/{id}/restore', 'WorkshopsController@restore');
+        Route::get('/workshops/block', 'WorkshopsController@inactive_workshops');
+        Route::get('/workshops/{id}/unblock', 'WorkshopsController@restore');
 
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
