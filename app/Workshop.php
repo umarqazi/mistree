@@ -37,6 +37,13 @@ class Workshop extends Authenticatable
     protected $dates = ['deleted_at'];
 
     /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
+
+    /**
      * Get the phone record associated with the user.
      */
     public function address()
