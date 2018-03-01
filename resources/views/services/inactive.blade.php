@@ -31,29 +31,31 @@
                     <div class="clear20"></div>
                     <div class="content table-responsive tbl-contained">
                         <div id="jsTable_wrapper" class="dataTables_wrapper">
-                        <table class="table table-striped dataTable" id="jsTable" role="grid" aria-describedby="jsTable_info">
-                            <thead>
-                                <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 178px;">ID</th>
-                                <th class="sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
-                                <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
-                                <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent</th>
-                                <th style="width: 286px">Action</th></tr>
-                            </thead>
-                        <tbody>
-                        @foreach($services as $key => $value)
-                            <tr role="row" class="odd">
-                                <td class="sorting_1">{{$value->id}}</td>
-                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
-                                <td>{{$value->name}}</td>
-                                <td class="text-center">{{$value->parent($value->service_parent)}}</td>
-                                <td>
-                                     <a href="{{ URL::to('admin/services/' . $value->id . '/restore') }}" class="btn btn-header btn-export">Active</a>
-                                </td>
-                            </tr>
-                        @endforeach
-                        </tbody>
-                        </table>
-
+                            <table class="table table-striped dataTable" id="jsTable" role="grid" aria-describedby="jsTable_info">
+                                <thead>
+                                    <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Date: activate to sort column descending" style="width: 178px;">ID</th>
+                                    <th class="sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
+                                    <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent</th>
+                                    <th style="width: 286px">Action</th></tr>
+                                </thead>
+                            <tbody>
+                            @foreach($services as $key => $value)
+                                <tr role="row" class="odd">
+                                    <td class="sorting_1">{{$value->id}}</td>
+                                    <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
+                                    <td>{{$value->name}}</td>
+                                    <td class="text-center">{{$value->parent($value->service_parent)['name']}}</td>
+                                    <td>
+                                        <form method="POST" action="{{ URL::to('admin/services/restore/'. $value->id) }}" accept-charset="UTF-8">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input class="btn btn-header btn-export" type="submit" value="Reactivate">
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
+                            </tbody>
+                            </table>
                         </div>
 
                     </div>

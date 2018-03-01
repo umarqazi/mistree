@@ -27,7 +27,7 @@ class ServiceObserver
     {
         foreach($service->services as $child)
         {
-            $child->service_parent  = 0;
+            $child->service_parent  = !is_null($service->parent($service->service_parent))?$service->parent($service->service_parent)['id']:0;
             $child->update();
         }
     }
