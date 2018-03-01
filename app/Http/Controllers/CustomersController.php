@@ -785,8 +785,8 @@ class CustomersController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     /**
-     * @SWG\Post(
-     *   path="/api/customer/get-customer-cars-address",
+     * @SWG\Get(
+     *   path="/api/customer/profile",
      *   summary="Customer Cars And Addresses",
      *   operationId="Customer Cars And Addresses",
      *   produces={"application/json"},

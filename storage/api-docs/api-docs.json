@@ -712,8 +712,8 @@
                 }
             }
         },
-        "/api/customer/get-customer-cars-address": {
-            "post": {
+        "/api/customer/profile": {
+            "get": {
                 "tags": [
                     "Customers"
                 ],
