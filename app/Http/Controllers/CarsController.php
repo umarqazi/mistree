@@ -77,10 +77,11 @@ class CarsController extends Controller
             'make'       => 'required',
             'model'      => 'required'
         );
+
         $validator = Validator::make(Input::all(), $rules);
 
         if ($validator->fails()) {
-            return Redirect::to('cars/create')
+            return Redirect::back()
                 ->withErrors($validator)
                 ->withInput();
         } else {
@@ -94,7 +95,7 @@ class CarsController extends Controller
 
             // redirect
             Session::flash('message', 'Successfully created car!');
-            return Redirect::to('car');
+            return Redirect::to('admin/cars');
         }
     }
 
@@ -191,7 +192,28 @@ class CarsController extends Controller
         Session::flash('message', 'Successfully activated the car!');
         return Redirect::to('admin/cars');
     }
+
+    public function inactive_cars()
+    {
+        $cars = Car::onlyTrashed()->get();  
+        return View::make('cars.inactive')
+        ->with('cars', $cars);
+    }
+
+    public function unPublished(){
+        $cars   = Car::where('is_published', FALSE)->get();
+
+        return View::make('cars.unpublished')->with('cars', $cars);
+    }
     
+    public function publish(Request $request)
+    {        
+        $car = Car::find($request->car_id);      
+        $car->is_published = 1;        
+        $car->update();         
+        Session::flash('message', 'Successfully created car!');
+         return Redirect::to('admin/cars');
+    }
 
     /**
      * Assign a specific car to owner.

@@ -60,7 +60,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
     });
 
 });
-
 // ========= Worshop Routes End ===================================================
 // ========= Admin Routes Start ===================================================
 
@@ -95,10 +94,15 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('cars', 'CarsController');
         Route::get('/home','AdminsController@home')->name('admin.home');
 
-        Route::post('/cars/restore/{id}', 'CarsController@restore');
+        Route::get('/inactive-cars', 'CarsController@inactive_cars');
+        Route::post('/car/restore/{id}', 'CarsController@restore');
         Route::get('/service/inactive', 'ServicesController@inactive_services');
         Route::post('/services/restore/{id}', 'ServicesController@restore');
 
+        Route::get('/unpublished/cars', 'CarsController@unPublished');  
+        Route::patch('/car/publish/', 'CarsController@publish');                   
+        
+        
         Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
         Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
         Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
