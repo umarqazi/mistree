@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Redirect;
 use Hash, DB, Config, Mail, View;
 use App\Customer;
 use App\Address;
+use App\Booking;
+use App\Billing;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1128,5 +1130,55 @@ class CustomersController extends Controller
         return Redirect::to('/admin/customers');
     }
 
+    /**
+     * API Vehicle History for customer
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+
+     * @SWG\Get(
+     *   path="/api/customer/vehicle-history",
+     *   summary="Customer Vehile History",
+     *   operationId="history",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="vehicle_no",
+     *     in="query",
+     *     description="Customer's Vehicle No",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function getVehicleHistory(){
+        $vehicle_no = Input::get('vehicle_no');
+        $bookings = Booking::where('vehicle_no', $vehicle_no)->where('job_status','completed')->with('billing')->with('services')->get();
+        if(count($bookings) == 0){
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'No History Found',
+                    'body' => ''
+                ],Response::HTTP_OK);        
+        }else{
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Vehicle History',
+                    'body' => $bookings
+                ],Response::HTTP_OK);        
+        }        
+    }
 
 }

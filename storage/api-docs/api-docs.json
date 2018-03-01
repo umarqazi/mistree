@@ -18,8 +18,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -88,8 +88,8 @@
                 }
             }
         },
-        "/api/workshop/acceptbooking/{workshop_id}/{booking_id}": {
-            "post": {
+        "/api/workshop/accept-booking/{booking_id}": {
+            "patch": {
                 "tags": [
                     "Bookings"
                 ],
@@ -100,18 +100,11 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop id",
-                        "required": true,
-                        "type": "integer"
                     },
                     {
                         "name": "booking_id",
@@ -134,8 +127,8 @@
                 }
             }
         },
-        "/api/workshop/rejectbooking/{workshop_id}/{booking_id}": {
-            "post": {
+        "/api/workshop/reject-booking/{booking_id}": {
+            "patch": {
                 "tags": [
                     "Bookings"
                 ],
@@ -146,18 +139,11 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop id",
-                        "required": true,
-                        "type": "integer"
                     },
                     {
                         "name": "booking_id",
@@ -192,8 +178,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -238,8 +224,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -248,13 +234,6 @@
                         "name": "booking_id",
                         "in": "formData",
                         "description": "Booking ID",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "formData",
-                        "description": "Workshop ID",
                         "required": true,
                         "type": "integer"
                     },
@@ -712,13 +691,22 @@
                 }
             }
         },
+
+        "/api/customer/vehicle-history": {
+
         "/api/customer/profile": {
+
             "get": {
                 "tags": [
                     "Customers"
                 ],
+
+                "summary": "Customer Vehile History",
+                "operationId": "history",
+
                 "summary": "Customer Cars And Addresses",
                 "operationId": "Customer Cars And Addresses",
+
                 "produces": [
                     "application/json"
                 ],
@@ -729,6 +717,13 @@
                         "description": "Customer's Token",
                         "required": true,
                         "type": "string"
+
+                    },
+                    {
+                        "name": "vehicle_no",
+                        "in": "query",
+                        "description": "Customer's Vehicle No",
+
                     }
                 ],
                 "responses": {
@@ -798,6 +793,7 @@
                         "name": "address_city",
                         "in": "formData",
                         "description": "Customer's address city",
+
                         "required": true,
                         "type": "string"
                     }
@@ -812,6 +808,8 @@
                 }
             }
         },
+
+
         "/api/customer/edit-customer-address": {
             "put": {
                 "tags": [
@@ -926,6 +924,7 @@
                 }
             }
         },
+
         "/api/workshop/getServices": {
             "get": {
                 "tags": [
@@ -1324,7 +1323,7 @@
                 }
             }
         },
-        "/api/workshop/getWorkshop/{id}": {
+        "/api/workshop/": {
             "get": {
                 "tags": [
                     "Workshops"
@@ -1341,13 +1340,6 @@
                         "description": "Token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "id",
-                        "in": "path",
-                        "description": "Workshop ID",
-                        "required": true,
-                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1363,7 +1355,7 @@
                 }
             }
         },
-        "/api/workshop/updateProfile/{workshop_id}": {
+        "/api/workshop/update-profile/": {
             "patch": {
                 "tags": [
                     "Workshops"
@@ -1380,13 +1372,6 @@
                         "description": "Token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop ID",
-                        "required": true,
-                        "type": "integer"
                     },
                     {
                         "name": "name",
@@ -1495,8 +1480,8 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "formData",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
@@ -1561,7 +1546,7 @@
                 }
             }
         },
-        "/api/workshop/add-new-workshop-services/{workshop_id}": {
+        "/api/workshop/insert-service": {
             "post": {
                 "tags": [
                     "Workshops"
@@ -1578,13 +1563,6 @@
                         "description": "token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "workshop id",
-                        "required": true,
-                        "type": "integer"
                     },
                     {
                         "name": "service_id",
@@ -1621,8 +1599,8 @@
                 }
             }
         },
-        "/api/workshop/update-workshop-service/{workshop_id}": {
-            "post": {
+        "/api/workshop/update-service/{service_id}": {
+            "patch": {
                 "tags": [
                     "Workshops"
                 ],
@@ -1640,15 +1618,8 @@
                         "type": "string"
                     },
                     {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "workshop id",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
                         "name": "service_id",
-                        "in": "formData",
+                        "in": "path",
                         "description": "service id",
                         "required": true,
                         "type": "integer"
@@ -1681,8 +1652,8 @@
                 }
             }
         },
-        "/api/workshop/deleteWorkshopService/{workshop_id}/{service_id}": {
-            "post": {
+        "/api/workshop/unassign-service/{service_id}": {
+            "patch": {
                 "tags": [
                     "Workshops"
                 ],
@@ -1693,18 +1664,11 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "workshop id",
-                        "required": true,
-                        "type": "integer"
                     },
                     {
                         "name": "service_id",
@@ -1727,7 +1691,7 @@
                 }
             }
         },
-        "/api/workshop/workshopServices/{workshop_id}": {
+        "/api/workshop/services": {
             "get": {
                 "tags": [
                     "Workshops"
@@ -1739,18 +1703,11 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "workshop id",
-                        "required": true,
-                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1766,30 +1723,23 @@
                 }
             }
         },
-        "/api/workshop/address/{workshop_id}": {
+        "/api/workshop/address": {
             "get": {
                 "tags": [
                     "Workshops"
                 ],
                 "summary": "Workshop Address Details",
-                "operationId": "fetch",
+                "operationId": "get",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "workshop id",
-                        "required": true,
-                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1805,8 +1755,8 @@
                 }
             }
         },
-        "/api/workshop/update-address/{workshop_id}": {
-            "patch": {
+        "/api/workshop/update-address": {
+            "post": {
                 "tags": [
                     "Workshops"
                 ],
@@ -1817,16 +1767,9 @@
                 ],
                 "parameters": [
                     {
-                        "name": "token",
-                        "in": "query",
+                        "name": "Authorization",
+                        "in": "header",
                         "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop ID",
                         "required": true,
                         "type": "string"
                     },
@@ -1871,13 +1814,6 @@
                         "description": "Workshop City",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "_method",
-                        "in": "formData",
-                        "description": "Required to update form",
-                        "required": true,
-                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1893,7 +1829,7 @@
                 }
             }
         },
-        "/api/workshop/update-workshop-images/{workshop_id}": {
+        "/api/workshop/update-images": {
             "post": {
                 "tags": [
                     "Workshops"
@@ -1908,13 +1844,6 @@
                         "name": "Authorization",
                         "in": "header",
                         "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop ID",
                         "required": true,
                         "type": "string"
                     },
@@ -1940,7 +1869,7 @@
                 }
             }
         },
-        "/api/workshop/update-workshop-profile-image/{workshop_id}": {
+        "/api/workshop/update-profile-image": {
             "patch": {
                 "tags": [
                     "Workshops"
@@ -1955,13 +1884,6 @@
                         "name": "Authorization",
                         "in": "header",
                         "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop ID",
                         "required": true,
                         "type": "string"
                     },
@@ -1986,13 +1908,13 @@
                 }
             }
         },
-        "/api/workshop/get-workshop-ledger/{workshop_id}": {
+        "/api/workshop/ledger/": {
             "get": {
                 "tags": [
                     "Workshops"
                 ],
-                "summary": "Update Workshop Images",
-                "operationId": "update",
+                "summary": "Workshop Legder",
+                "operationId": "get",
                 "produces": [
                     "application/json"
                 ],
@@ -2003,11 +1925,164 @@
                         "description": "Token",
                         "required": true,
                         "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/leads-info": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Leads Information",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
                     {
-                        "name": "workshop_id",
-                        "in": "path",
-                        "description": "Workshop ID",
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/history": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Leads History",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/leads/accepted": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Accepted Leads",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/leads/rejected": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Rejected Leads",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/leads/completed": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Completed Leads",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
                         "required": true,
                         "type": "string"
                     }

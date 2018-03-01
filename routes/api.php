@@ -39,6 +39,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('amount-paid', 'BookingsController@customerpaidbill');
+		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');		
 
 //		Route For Customer Password Reset
       Route::post('password-reset', 'CustomersController@passwordReset');
@@ -57,26 +58,31 @@ Route::group(['prefix'=>'workshop'], function() {
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 	Route::group(['prefix'=>'workshop','middleware' => ['jwt.auth']], function() {  
+
 		Route::get('logout', 'WorkshopsController@logout');
 		Route::post('verifyEmail', 'WorkshopsController@verifyEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
-		Route::get('getWorkshop/{id}', 'WorkshopsController@getWorkshop');
-		Route::patch('updateProfile/{id}', 'WorkshopsController@profileUpdate');
-		Route::post('add-new-workshop-services/{workshop_id}', 'WorkshopsController@addNewWorkshopServices');
-		Route::post('update-workshop-service/{workshop_id}', 'WorkshopsController@workshopServiceUpdate');
+		Route::get('/', 'WorkshopsController@getWorkshop');
+		Route::patch('update-profile', 'WorkshopsController@profileUpdate');
+		Route::post('insert-service', 'WorkshopsController@insertService');
+		Route::patch('update-service/{service_id}', 'WorkshopsController@updateService');
 		
-		Route::get('address/{workshop_id}', 'WorkshopsController@workshopaddress');
-		Route::patch('update-address/{workshop_id}', 'WorkshopsController@updateAddress');
-		Route::post('update-workshop-images/{workshop_id}','WorkshopsController@updateWorkshopImages');
-		Route::patch('update-workshop-profile-image/{workshop_id}','WorkshopsController@updateProfileImage');	
-		Route::post('deleteWorkshopService/{workshop_id}/{service_id}','WorkshopsController@unassignService');		
-		Route::get('workshopServices/{workshop_id}','WorkshopsController@allWorkshopServices');
+		Route::get('address', 'WorkshopsController@getAddress');
+		Route::post('update-address', 'WorkshopsController@updateAddress');
+		Route::post('update-images','WorkshopsController@updateImages');
+		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');	
+		Route::patch('unassign-service/{service_id}','WorkshopsController@unassignService');		
+		Route::get('services','WorkshopsController@workshopServices');
 		Route::post('createbooking','BookingsController@createBooking');
-		Route::post('acceptbooking/{workshop_id}/{booking_id}','BookingsController@acceptBooking');
-		Route::post('rejectbooking/{workshop_id}/{booking_id}','BookingsController@rejectBooking');
-		Route::post('booking-bill','BookingsController@bookingBiling');				
-		Route::post('complete-job','BookingsController@workshopcompletejob');
-		Route::get('get-workshop-ledger/{workshop_id}','WorkshopsController@getWorkshopLedger');
+		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
+		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
+		Route::post('complete-job','BookingsController@completeLead');
+		Route::get('ledger','WorkshopsController@getLedger');
+		Route::get('leads-info','WorkshopsController@getLeadsInfo');
+		Route::get('history','WorkshopsController@leadsHistory');
+		Route::get('leads/accepted','WorkshopsController@acceptedLeads');
+		Route::get('leads/rejected','WorkshopsController@rejectedLeads');
+		Route::get('leads/completed','WorkshopsController@completedLeads');
 
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
