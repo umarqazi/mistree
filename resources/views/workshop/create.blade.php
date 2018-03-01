@@ -300,7 +300,7 @@
                             <div class="content">                                            
                               <div class="row services-row">                                  
                                 
-                                <div class="col-sm-4">
+                                <div id="services-box-1" class="col-sm-4">
                                   <div class="child-box-wrap">
                                   <br>
                                     <div class="row">
@@ -309,7 +309,7 @@
                                         <div class="form-group">
                                           <label class="control-label">Select Service <span class="manadatory">*</span></label>
                                           <select class="form-control border-input" name="service_id[]">
-                                            <option value="" disabled selected>Select Service</option>
+                                          <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}</option>
                                             @endforeach
@@ -381,9 +381,35 @@
 </script>
 
 <script>
+  c = 1;
+  x = 0;
   function addmoreServices(event){
     event.preventDefault();
-    $(".services-row").append('<div class="col-sm-4"> <div class="child-box-wrap"><a class="pull-right" onclick="removeService(this);"> X </a><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service<span class="manadatory"> *</span></label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
+
+    c++;
+    x++;
+
+    var servicesSelectedVal = $('#services-box-'+x+' select').val();
+
+    if(servicesSelectedVal){
+      var servicesBox = $('#services-box-'+x).html();
+
+      $(".services-row").append('<div id="services-box-'+c+'" class="col-sm-4"></div>');
+      $("#services-box-"+c).append(servicesBox);
+
+      $('#services-box-'+c+' select option').each(function() {
+
+          if ( $(this).val() == servicesSelectedVal ) {
+              $(this).remove();
+          }
+      });
+    } else{
+      alert('Please select an option.');
+      c--;
+      x--;
+    }
+
+    //$(".services-row").append('<div class="col-sm-4"> <div class="child-box-wrap"><a class="pull-right" onclick="removeService(this);"> X </a><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service<span class="manadatory"> *</span></label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
   }
   function removeService(obj)
   {

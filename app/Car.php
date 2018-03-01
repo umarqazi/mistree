@@ -26,6 +26,13 @@ class Car extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_published' => 'boolean'];
+
     public function customers()
     {
         return $this->belongsToMany('App\Customer')->withPivot('millage', 'vehicle_no', 'insurance', 'year', 'removed_at')->withTimestamps();
