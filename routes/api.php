@@ -17,6 +17,10 @@ use Illuminate\Http\Request;
 //     return $request->user();
 // });
 
+Route::group(['middleware' => 'conf_guard:Customer'], function(){
+	Route::get('cars', 'CarsController@index');
+});
+
 
 Route::group(['prefix'=>'customer'], function() {
 	Route::post('register', 'CustomersController@register');
@@ -28,11 +32,10 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('logout', 'CustomersController@logout');
 		Route::post('regStoreData', 'CustomersController@regStoreData');
 		Route::post('verify-email', 'CustomersController@verifyEmail');
-		
-		Route::get('get-cars', 'CarsController@index');
-		Route::post('add-customer-car', 'CarsController@assignCar');
-		Route::post('remove-customer-car', 'CarsController@unassignCar');
-		Route::get('get-customer-car', 'CarsController@getCustomerCar');
+
+		Route::get('cars', 'CarsController@getCustomerCar');
+		Route::post('car', 'CarsController@assignCar');
+		Route::patch('car', 'CarsController@unassignCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
@@ -42,6 +45,11 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 
 //		Route For Customer Password Reset
       Route::post('password-reset', 'CustomersController@passwordReset');
+      Route::get('profile', 'CustomersController@getCustomerAddressAndCars');
+      Route::post('add-customer-address', 'CustomersController@addCustomerAddress');
+      Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
+      Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
+
 	});
 });
 Route::group(['prefix'=>'workshop'], function() {
@@ -56,8 +64,8 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('logout', 'WorkshopsController@logout');
 		Route::post('verifyEmail', 'WorkshopsController@verifyEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
-		Route::get('/', 'WorkshopsController@getWorkshop');
-		Route::patch('update-profile', 'WorkshopsController@profileUpdate');
+		Route::get('profile', 'WorkshopsController@getWorkshop');
+		Route::put('profile', 'WorkshopsController@profileUpdate');
 		Route::post('insert-service', 'WorkshopsController@insertService');
 		Route::patch('update-service/{service_id}', 'WorkshopsController@updateService');
 		

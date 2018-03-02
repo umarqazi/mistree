@@ -15,16 +15,9 @@
                   <form method="POST" action="{{ url('admin/cars') }}">
                     {!! csrf_field() !!}
                       <div class="header">
-                        {{-- @if ($errors->any())
-                          <div class="row text-center alert alert-danger">
-                            @foreach($errors->all() as $error)
-                              <div><span class="manadatory">{{ $error }}</span></div>
-                            @endforeach                        
-                          </div>
-                        @endif --}}
                           <div class="row">
                               <div class="col-md-12">
-                                  <h4 class="title">Cars - Create New</h4> 
+                                  <h4 class="title">Cars - Create New</h4>
                               </div>
                           </div>
                       </div>                
@@ -33,7 +26,7 @@
                           <div class="col-md-6">
                             <div class="form-group">
                               <label class="control-label">Car Type <span class="manadatory">*</span></label>
-                              <input type="text" class="form-control border-input" name="type">
+                              <input type="text" class="form-control border-input" name="type" value="{{ old('type') }}">
                               @if ($errors->has('type'))
                                   <span class="help-block">
                                       <strong class="manadatory">{{ $errors->first('type') }}</strong>
@@ -41,9 +34,19 @@
                               @endif
                             </div>
 
+                              <div class="form-group">
+                                  <label class="control-label">Car Make <span class="manadatory">*</span></label>
+                                  <input type="text" class="form-control border-input" name="make" value="{{ old('make') }}" required>
+                                  @if ($errors->has('make'))
+                                      <span class="help-block">
+                                      <strong class="manadatory">{{ $errors->first('make') }}</strong>
+                                  </span>
+                                  @endif
+                              </div>
+
                             <div class="form-group">
                               <label class="control-label">Car Model <span class="manadatory">*</span></label>
-                              <input type="text" class="form-control border-input" name="model">
+                              <input type="text" class="form-control border-input" name="model" value="{{ old('model') }}" required>
                               @if ($errors->has('model'))
                                   <span class="help-block">
                                       <strong class="manadatory">{{ $errors->first('model') }}</strong>

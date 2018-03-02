@@ -377,6 +377,19 @@ class WorkshopsController extends Controller
         Session::flash('message', 'Successfully deleted the Workshop!');
         return Redirect::to('admin/workshops');      
     }
+
+    public function inactive_workshops()
+    {
+        $workshops = Workshop::onlyTrashed()->get();  
+        return View::make('workshop.inactive')
+        ->with('workshops', $workshops); 
+    }
+
+    public function restore($id) 
+    {
+        $workshop = Workshop::withTrashed()->find($id)->restore();
+        return redirect ('admin/workshops');
+    }
     
     /**
      * API Register for new workshop.
@@ -717,36 +730,45 @@ class WorkshopsController extends Controller
      *
      */
     public function login(Request $request)
-    {           
-        $check = Workshop::select('is_approved')->where('email', $request->email)->first();        
-        if((!empty($check)) && ($check->is_approved == 0)){  
-            return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Workshop is not approved by the admin',
-                    'body' => $request->all()
-                ],Response::HTTP_OK);
-        }
+    {
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
         ];
+
+        $rules  = [
+            'email' => 'exists:workshops'
+        ];
+
+        $validation = Validator::make($request->only('email'), $rules);
+
+        if($validation->fails()){
+            $request->offsetUnset('password');
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validation->messages()->first(),
+                'body' => $request->all()
+            ], Response::HTTP_OK);
+        }
+
         try {
             Config::set('auth.providers.users.model', \App\Workshop::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
-                $request->offsetUnset('password_confirmation');
+
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => 'We cant find an account with this credentials.',
+                    'message' => 'Failed to login with provided details. Try again!',
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
-            $request->offsetUnset('password_confirmation');
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -754,10 +776,21 @@ class WorkshopsController extends Controller
                 'body' => $request->all()
             ],Response::HTTP_OK);
         }
-        // all good so return the token
         $workshop = Auth::user();
-        // Config::set('jwt.user' , "App\User");
-        // Config::set('auth.providers.users.model', \App\User::class);
+
+        $request->offsetUnset('password');
+
+        if( ( ! $workshop->is_approved ) ){
+
+            return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Workshop is pending approval yet.',
+                    'body' => [ 'token' => $token ]
+                ],Response::HTTP_OK);
+        }
+        // all good so return the token and workshop collection
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -783,7 +816,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="Authorization",
      *     in="header",
-     *     description="Auth Logout",
+     *     description="Auth Token",
      *     required=true,
      *     type="string"
      *   ),
@@ -794,15 +827,14 @@ class WorkshopsController extends Controller
      *
      */
     public function logout(Request $request) {
-        $this->validate($request, ['token' => 'required']);
         try {
-            Config::set('auth.providers.users.model', \App\Workshop::class);
-            JWTAuth::invalidate($request->input('token'));
+            JWTAuth::invalidate(JWTAuth::getToken());
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'success',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
@@ -843,25 +875,32 @@ class WorkshopsController extends Controller
      */
     public function recover(Request $request)
     {
-        $workshop = Workshop::where('email', $request->email)->first();
-        if (!$workshop) {
-            $error_message = "Your email address was not found.";
+        $rules  = [
+            'email' => 'exists:workshops'
+        ];
+
+        $validation = Validator::make($request->only('email'), $rules);
+
+        if($validation->fails()){
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => $error_message,
-                'body' => ''
-            ],Response::HTTP_OK);
+                'message' => $validation->messages()->first(),
+                'body' => null
+            ], Response::HTTP_OK);
         }
+
         try {
             Config::set('auth.providers.users.model', \App\Workshop::class);
 
-            $response = $this->broker()->sendResetLink(
+            $this->broker()->sendResetLink(
                 $request->only('email')
             );            
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -869,6 +908,7 @@ class WorkshopsController extends Controller
                 'body' => null
             ],Response::HTTP_OK);
         }
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -923,29 +963,27 @@ class WorkshopsController extends Controller
         $check = DB::table('workshop_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
             $workshop = Workshop::find($check->ws_id);
-            if($workshop->is_verified == 1){
+            if( $workshop->is_verified ){
+
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => 'Account already verified.',
-                    'body' => ''
+                    'body' => null
                 ],Response::HTTP_OK);
             }
+
             $workshop->update(['is_verified' => 1]);
             DB::table('workshop_verifications')->where('token',$verification_code)->delete();
-            // return response()->json([
-            //     'http-status' => Response::HTTP_OK,
-            //     'status' => true,
-            //     'message' => 'You have successfully verified your email address.',
-            //     'body' => ''
-            // ],Response::HTTP_OK);
+
             return View::make('workshop.thankyou');
         }
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => false,
             'message' => 'Verification code is invalid.',
-            'body' => ''
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -1013,8 +1051,8 @@ class WorkshopsController extends Controller
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => $validator->messages(),
-                'body' => $request->all()
+                'message' => $validator->messages()->first(),
+                'body' => null
             ],Response::HTTP_OK);
         }
         else{
@@ -1029,8 +1067,8 @@ class WorkshopsController extends Controller
                     return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => false,
-                        'message' => 'We cant find an account with this credentials.',
-                        'body' => $request->all()
+                        'message' => 'Your provided password didn\'t match.',
+                        'body' => null
                     ],Response::HTTP_OK);
                 }
             } catch (JWTException $e) {
@@ -1042,7 +1080,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => 'Failed to Reset Password, please try again.',
-                    'body' => $request->all()
+                    'body' => null
                 ],Response::HTTP_OK);
             }
             // all good so Reset Customer's Password
@@ -1095,7 +1133,7 @@ class WorkshopsController extends Controller
 
     /**
      * @SWG\Get(
-     *   path="/api/workshop/",
+     *   path="/api/workshop/profile",
      *   summary="Get Workshop Details",
      *   operationId="fetch",
      *   produces={"application/json"},
@@ -1113,23 +1151,18 @@ class WorkshopsController extends Controller
      * )
     */     
     public function getWorkshop(){
-        $id = Auth::user()->id;
-        $workshop = Workshop::find($id);
-        $address = $workshop->address;
-        $service = $workshop->services;
-        $balance = $workshop->balance;
-        $transactions = $workshop->transactions;
-        $bookings = $workshop->bookings;        
+        $workshop = JWTAuth::authenticate();
+
         return response([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Workshop Details!',
-            'body' => $workshop
+            'body' => $workshop->load(['address', 'services', 'balance', 'transactions', 'bookings'])
         ],Response::HTTP_OK);
     }
     /**
-     * @SWG\Patch(
-     *   path="/api/workshop/update-profile/",
+     * @SWG\Put(
+     *   path="/api/workshop/profile/",
      *   summary="Update Workshop Details",
      *   operationId="update",
      *   produces={"application/json"},
@@ -1158,7 +1191,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="cnic",
      *     in="formData",
-     *     description="Workshop CNIC Number",
+     *     description="CNIC Number",
      *     required=true,
      *     type="string"
      *   ),
@@ -1215,7 +1248,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="_method",
      *     in="formData",
-     *     description="Always give PATCH",
+     *     description="Always give PUT",
      *     required=true,
      *     type="string"
      *   ),
@@ -1226,7 +1259,7 @@ class WorkshopsController extends Controller
      *
      */
     /**
-     * API Register store data of new customer.
+     * API Register update data of existing customer.
      *
      * @param Request $request
      * @param $id
@@ -1240,7 +1273,7 @@ class WorkshopsController extends Controller
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',            
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11',
+            'landline'                       => 'digits_between:0,11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required'            
@@ -1254,12 +1287,11 @@ class WorkshopsController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
+                    'message' => $validator->messages()->first(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         }
-        $id = Auth::user()->id;
-        $workshop = Workshop::find($id);
+        $workshop = JWTAuth::authenticate();
         $workshop->name             = $request->name;        
         $workshop->owner_name       = $request->owner_name;  
         $workshop->cnic             = $request->cnic;
@@ -1274,7 +1306,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Details Updated!',
-            'body' => $request->all()
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -1477,7 +1509,7 @@ class WorkshopsController extends Controller
     {   
         // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
         /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
-        $workshops = Workshop::where('workshops.status', 1)->with('address');
+        $workshops = Workshop::with('address');
         $workshop_ids = [];
         if ($request->has('name')) {
             $workshops = $workshops->where('name', 'LIKE', '%'.$request->name.'%');

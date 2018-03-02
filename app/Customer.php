@@ -38,6 +38,13 @@ class Customer extends Authenticatable
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_verified' => 'boolean'];
+
     public function cars()
     {
         return $this->belongsToMany('App\Car')->withPivot('millage', 'vehicle_no', 'insurance', 'year', 'removed_at')->withTimestamps();

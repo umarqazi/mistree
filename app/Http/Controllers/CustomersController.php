@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\CustomerAddress;
 use JWTAuth;
 
 use Illuminate\Support\Facades\Redirect;
@@ -337,12 +338,13 @@ class CustomersController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
+
         try {
             // Config::set('jwt.user' , "App\Customer");
             Config::set('auth.providers.users.model', \App\Customer::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
-                $request->offsetUnset('password_confirmation');
+
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -353,7 +355,7 @@ class CustomersController extends Controller
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
-            $request->offsetUnset('password_confirmation');
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -363,6 +365,7 @@ class CustomersController extends Controller
         }
         // all good so return the token
         $customer = Auth::user();
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -381,7 +384,7 @@ class CustomersController extends Controller
     /**
      * @SWG\Post(
      *   path="/api/customer/logout",
-     *   summary="Logout customer",
+     *   summary="Customer Logout",
      *   operationId="logout",
      *   produces={"application/json"},
      *   tags={"Customers"},
@@ -399,8 +402,8 @@ class CustomersController extends Controller
      */
     public function logout(Request $request) {
         try {
-            Config::set('auth.providers.users.model', \App\Customer::class);
             JWTAuth::invalidate(JWTAuth::getToken());
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -445,26 +448,33 @@ class CustomersController extends Controller
      */
     public function recover(Request $request)
     {
-        $customer = Customer::where('email', $request->email)->first();
-        if (!$customer) {
-            $error_message = "Your email address was not found.";
+        $rules  = [
+            'email' => 'exists:customers'
+        ];
+
+        $validation = Validator::make($request->only('email'), $rules);
+
+        if($validation->fails()){
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => $error_message,
+                'message' => $validation->messages()->first(),
                 'body' => null
-            ],Response::HTTP_OK);
+            ], Response::HTTP_OK);
         }
+
         try {
             Config::set('auth.providers.users.model', \App\Customer::class);
 
-            $response = $this->broker()->sendResetLink(
+            $this->broker()->sendResetLink(
                 $request->only('email')
             );
 
         } catch (\Exception $e) {
             //Return with error
             $error_message = $e->getMessage();
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
@@ -472,6 +482,7 @@ class CustomersController extends Controller
                 'body' => null
             ],Response::HTTP_OK);
         }
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -524,7 +535,8 @@ class CustomersController extends Controller
         $check = DB::table('customer_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
             $customer = Customer::find($check->id);
-            if($customer->is_verified == 1){
+            if( $customer->is_verified ){
+
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -534,6 +546,7 @@ class CustomersController extends Controller
             }
             $customer->update(['is_verified' => 1]);
             DB::table('customer_verifications')->where('token',$verification_code)->delete();
+
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -541,6 +554,7 @@ class CustomersController extends Controller
                 'body' => null
             ],Response::HTTP_OK);
         }
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => false,
@@ -684,8 +698,8 @@ class CustomersController extends Controller
      *   produces={"application/json"},
      *   tags={"Customers"},
      *   @SWG\Parameter(
-     *     name="token",
-     *     in="query",
+     *     name="Authorization",
+     *     in="header",
      *     description="Customer's Token",
      *     required=true,
      *     type="string"
@@ -734,8 +748,8 @@ class CustomersController extends Controller
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => $validator->messages(),
-                'body' => $request->all()
+                'message' => $validator->messages()->first(),
+                'body' => null
             ],Response::HTTP_OK);
         }
         else{
@@ -751,8 +765,8 @@ class CustomersController extends Controller
                     return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => false,
-                        'message' => 'We cant find an account with this credentials.',
-                        'body' => $request->all()
+                        'message' => 'Your provided password didn\'t match.',
+                        'body' => null
                     ],Response::HTTP_OK);
                 }
             } catch (JWTException $e) {
@@ -763,8 +777,8 @@ class CustomersController extends Controller
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => 'Failed to Reset Password, please try again.',
-                    'body' => $request->all()
+                    'message' => 'Failed to reset password, Please try again.',
+                    'body' => null
                 ],Response::HTTP_OK);
             }
             // all good so Reset Customer's Password
@@ -776,6 +790,344 @@ class CustomersController extends Controller
                 'status' => true,
                 'message' => 'success',
                 'body' => [ 'customer' => $customer ],
+            ],Response::HTTP_OK);
+        }
+    }
+
+    /**
+     * API for customer's Cars And Addresses, on success return Customer with Cars And Address
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/profile",
+     *   summary="Customer Cars And Addresses",
+     *   operationId="Customer Cars And Addresses",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function getCustomerAddressAndCars()
+    {
+        $customer   = JWTAuth::authenticate();
+
+        if (!$customer) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Invalid Customer!',
+                'body' => ''
+            ],Response::HTTP_OK);
+        } else {
+            return response()->json([
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => '',
+                'body'          => $customer->load(['cars' => function($query){
+                    $query->withTrashed();
+                }, 'addresses'])
+            ],Response::HTTP_OK);
+        }
+    }
+
+    /**
+     * API for Add  customer's Address, on success return Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/add-customer-address",
+     *   summary="Add Customer Address",
+     *   operationId="Add Customer Address",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_type",
+     *     in="formData",
+     *     description="Customer's Address Type",
+     *     required=true,
+     *     type="string"
+     *   ),@SWG\Parameter(
+     *     name="address_house_no",
+     *     in="formData",
+     *     description="Customer's address house no",
+     *     required=true,
+     *     type="string"
+     *   ),@SWG\Parameter(
+     *     name="address_street_no",
+     *     in="formData",
+     *     description="Customer's address street no",
+     *     required=true,
+     *     type="string"
+     *   ),@SWG\Parameter(
+     *     name="address_block",
+     *     in="formData",
+     *     description="Customer's address block",
+     *     required=true,
+     *     type="string"
+     *   ),@SWG\Parameter(
+     *     name="address_town",
+     *     in="formData",
+     *     description="Customer's address town",
+     *     required=true,
+     *     type="string"
+     *   ),@SWG\Parameter(
+     *     name="address_city",
+     *     in="formData",
+     *     description="Customer's address city",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function addCustomerAddress(Request $request)
+    {
+        // read more on validation at http://laravel.com/docs/validation
+        $rules = array(
+            'address_type'          => 'required',
+            'address_house_no'      => 'required',
+            'address_street_no'     => 'required',
+            'address_block'         => 'required',
+            'address_town'          => 'required',
+            'address_city'          => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        // process the Address
+        if ($validator->fails()) {
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        } else {
+            //customer
+            $customer = JWTAuth::authenticate();
+
+            //address
+            $address = new CustomerAddress;
+            $address->customer_id       =  $customer->id;
+            $address->type              =  $request->address_type;
+            $address->house_no          =  $request->address_house_no;
+            $address->street_no         =  $request->address_street_no;
+            $address->block             =  $request->address_block;
+            $address->town              =  $request->address_town;
+            $address->city              =  $request->address_city;
+            $address->save();
+
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Details Added!',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+    }
+
+    /**
+     * API for Edit  customer's Address, on success return Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Put(
+     *   path="/api/customer/edit-customer-address",
+     *   summary="Edit Customer Address",
+     *   operationId="Edit Customer Address",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="formData",
+     *     description="Customer's Address Id To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="type",
+     *     in="formData",
+     *     description="Customer's Address Type To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),@SWG\Parameter(
+     *     name="house_no",
+     *     in="formData",
+     *     description="Customer's Address House No To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),@SWG\Parameter(
+     *     name="street_no",
+     *     in="formData",
+     *     description="Customer's Address Street No  To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),@SWG\Parameter(
+     *     name="block",
+     *     in="formData",
+     *     description="Customer's Address Block To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),@SWG\Parameter(
+     *     name="town",
+     *     in="formData",
+     *     description="Customer's Address Town To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),@SWG\Parameter(
+     *     name="city",
+     *     in="formData",
+     *     description="Customer's Address City To Edit",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function editCustomerAddress(Request $request)
+    {
+        $rules = array(
+            'id'            => 'required',
+            'type'          => 'required',
+            'house_no'      => 'required',
+            'street_no'     => 'required',
+            'block'         => 'required',
+            'town'          => 'required',
+            'city'          => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        // process the Address
+        if ($validator->fails()) {
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+
+        else{
+            $address = CustomerAddress::find($request->id);
+
+            if (!$address){
+                return response([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Invalid Address!',
+                    'body' => null
+                ],Response::HTTP_OK);
+            }
+            else{
+                $address->type = $request->type;
+                $address->house_no = $request->house_no;
+                $address->street_no = $request->street_no;
+                $address->block = $request->block;
+                $address->town = $request->town;
+                $address->city = $request->city;
+
+                $address->update();
+
+                return response([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Address Updated!',
+                    'body' => null
+                ],Response::HTTP_OK);
+            }
+        }
+    }
+
+    /**
+     * API for Delete  customer's Address, on success return Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Delete(
+     *   path="/api/customer/delete-customer-address",
+     *   summary="Delete Customer Address",
+     *   operationId=" Delete Customer Address",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="formData",
+     *     description="Customer's Address Id To Delete",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function deleteCustomerAddress(Request $request){
+        $address = CustomerAddress::find($request->id);
+        if (!$address)
+        {
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Invalid Address!',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+        else{
+            $address->delete();
+
+            return response([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Address Deleted!',
+                'body' => null
             ],Response::HTTP_OK);
         }
     }
@@ -943,4 +1295,5 @@ class CustomersController extends Controller
                 'body' => $workshop->load('services')
             ],Response::HTTP_OK);                
     }
+
 }

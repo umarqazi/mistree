@@ -44,7 +44,7 @@ class Service extends Model
 
     public function parent($id)
     {
-        return $this->find($id)['name'];
+        return $this->find($id);
     }
 
 }

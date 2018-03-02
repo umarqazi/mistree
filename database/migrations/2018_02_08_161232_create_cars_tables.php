@@ -19,6 +19,7 @@ class CreateCarsTables extends Migration
             $table->string('make');
             $table->string('model');
             $table->string('picture')->nullable();
+            $table->boolean('is_published')->default(TRUE);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,7 +31,7 @@ class CreateCarsTables extends Migration
             $table->foreign('car_id')->references('id')->on('cars')->onDelete('cascade');
             $table->string('millage');
             $table->string('vehicle_no');
-            $table->string('insurance')->nullable();
+            $table->string('insurance')->nullable()->default(FALSE);
             $table->string('year');
             $table->timestamp('removed_at')->nullable();
             $table->timestamps();
