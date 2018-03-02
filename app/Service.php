@@ -34,7 +34,7 @@ class Service extends Model
 
     public function bookings()
     {
-        return $this->belongsToMany('App\Booking')->withPivot('name', 'service_rate', 'service_time')->withTimestamps();
+        return $this->belongsToMany('App\Booking')->withPivot('name', 'service_rate', 'service_time', 'loyalty_points', 'lead_charges')->withTimestamps();
     }
 
     public function services()

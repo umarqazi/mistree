@@ -6,7 +6,7 @@
     },
     "basePath": "/",
     "paths": {
-        "/api/workshop/createbooking": {
+        "/api/workshop/create-booking": {
             "post": {
                 "tags": [
                     "Bookings"
@@ -166,7 +166,7 @@
                 }
             }
         },
-        "/api/customer/amount-paid": {
+        "/api/customer/billing/{billing_id}/amount-paid": {
             "post": {
                 "tags": [
                     "Customers"
@@ -186,7 +186,7 @@
                     },
                     {
                         "name": "billing_id",
-                        "in": "formData",
+                        "in": "path",
                         "description": "Billing ID",
                         "required": true,
                         "type": "integer"
@@ -234,13 +234,6 @@
                         "name": "booking_id",
                         "in": "formData",
                         "description": "Booking ID",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "customer_id",
-                        "in": "formData",
-                        "description": "Customer ID",
                         "required": true,
                         "type": "integer"
                     }
@@ -715,6 +708,92 @@
                         "description": "Customer's Vehicle No",
                         "required": true,
                         "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/leave-rating/{billing_id}": {
+            "patch": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Lead Review and Rating",
+                "operationId": "insert",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "billing_id",
+                        "in": "path",
+                        "description": "Billing Id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "review",
+                        "in": "formData",
+                        "description": "Lead Review",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "ratings",
+                        "in": "formData",
+                        "description": "Lead Ratings",
+                        "required": true,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/customer/get-workshop/{workshop_id}": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Get Workshop Details",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop Id",
+                        "required": true,
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -1885,6 +1964,52 @@
                         "name": "Authorization",
                         "in": "header",
                         "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/lead/{booking_id}/enter-millage": {
+            "patch": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Completed Leads",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "description": "Booking ID",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "millage",
+                        "in": "formData",
+                        "description": "Millage at job date",
                         "required": true,
                         "type": "string"
                     }

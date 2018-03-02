@@ -20,7 +20,7 @@ class BookingsController extends Controller
 
      /**
      * @SWG\Post(
-     *   path="/api/workshop/createbooking",
+     *   path="/api/workshop/create-booking",
      *   summary="Create Booking",
      *   operationId="booking",
      *   produces={"application/json"},
@@ -129,7 +129,7 @@ class BookingsController extends Controller
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
                 $service_info = $workshop->services()->where('service_id',$service)->first();
-                $booking->services()->attach($service,['name' => $service_info->name, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
+                $booking->services()->attach($service,['name' => $service_info->name, 'lead_charges' => $service_info->lead_charges, 'loyalty_points' => $service_info->loyalty_points, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
             }
         }        
 
@@ -222,7 +222,7 @@ class BookingsController extends Controller
 
      /**
      * @SWG\Post(
-     *   path="/api/customer/amount-paid",
+     *   path="/api/customer/billing/{billing_id}/amount-paid",
      *   summary="Bill Paid by customer",
      *   operationId="Paid Bill",
      *   produces={"application/json"},
@@ -236,7 +236,7 @@ class BookingsController extends Controller
      *   ),
      *   @SWG\Parameter(
      *     name="billing_id",
-     *     in="formData",
+     *     in="path",
      *     description="Billing ID",
      *     required=true,
      *     type="integer"
@@ -253,9 +253,9 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      */
-    public function customerpaidbill(Request $request){
+    public function customerpaidbill(Request $request, $billing_id){
 
-        $billing = Billing::find($request->billing_id);
+        $billing = Billing::find($billing_id);
         $billing->paid_amount = $request->paid_amount;
         $billing->save();
 
@@ -290,13 +290,6 @@ class BookingsController extends Controller
      *     required=true,
      *     type="integer"
      *   ),
-     *   @SWG\Parameter(
-     *     name="customer_id",
-     *     in="formData",
-     *     description="Customer ID",
-     *     required=true,
-     *     type="integer"
-     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -305,11 +298,10 @@ class BookingsController extends Controller
     public function completeLead(Request $request){
         $workshop_id = Auth::user()->id;
         $rules = [                        
-            'booking_id'                        => 'required|integer',
-            'customer_id'                       => 'required|integer'           
+            'booking_id'                        => 'required|integer',            
         ];   
         
-        $input = $request->only('booking_id', 'customer_id');
+        $input = $request->only('booking_id');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -324,26 +316,34 @@ class BookingsController extends Controller
         $booking = Booking::find($request->booking_id);                            
         $booking_services = $booking->services;
         $booking->job_status = 'completed';
-        $booking->save();
 
+        $loyalty_points = 0;
+        $lead_charges = 0;
         $bill = 0;
         foreach($booking_services as $service){
             $bill = $service->pivot->service_rate + $bill;            
+            $lead_charges = $service->pivot->lead_charges + $lead_charges;
+            $loyalty_points = $service->pivot->loyalty_points + $loyalty_points;
         }        
+        $booking->loyalty_points = $loyalty_points;
+        $booking->save();
 
         $billing = new Billing;
         $billing->workshop_id                = $workshop_id;         
         $billing->booking_id                 = $request->booking_id;
         $billing->amount                     = $bill;
-        $billing->customer_id                = $request->customer_id;
+        $billing->customer_id                = $booking->customer_id;
+        $billing->lead_charges               = $lead_charges;
 
         $billing->save();
 
-        $services_count = $booking->services->count();
-        $deduction = $services_count * 50;
         $workshop = Workshop::find($workshop_id);
         $balance = $workshop->balance->balance;        
-        $new_balance = $balance - $deduction;
+        $new_balance = $balance - $lead_charges;
+
+        $customer = Customer::find($booking->customer_id);
+        $customer->loyalty_points = $loyalty_points;        
+        $customer->save();
 
         $workshop->balance->update(['balance'=>$new_balance]);
 
@@ -351,7 +351,7 @@ class BookingsController extends Controller
 
         $transaction->workshop_id                   = $workshop_id;         
         $transaction->booking_id                    = $request->booking_id;         
-        $transaction->amount                        = $deduction;         
+        $transaction->amount                        = $lead_charges;         
         $transaction->transaction_type              = 'Job-Billing';         
         $transaction->unadjusted_balance            = $balance;         
         $transaction->adjusted_balance              = $new_balance;

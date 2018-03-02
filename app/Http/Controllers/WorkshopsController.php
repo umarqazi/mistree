@@ -2487,6 +2487,59 @@ class WorkshopsController extends Controller
         
     }
 
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/lead/{booking_id}/enter-millage",
+     *   summary="Completed Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="millage",
+     *     in="formData",
+     *     description="Millage at job date",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function insertMillage(Request $request, $booking_id){        
+        
+        $booking = Booking::find($booking_id);
+        $booking->millage =$request->millage;
+        $booking->save() ;
+
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Millage Entered',
+                'body' => ''
+            ],Response::HTTP_OK);      
+    }
+
 
 
 

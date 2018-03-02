@@ -17,6 +17,8 @@ class AlterBookingServiceTable extends Migration
             $table->string('name');
             $table->decimal('service_rate',11,2);
             $table->string('service_time');            
+            $table->unsignedInteger('loyalty_points')->default(0);
+            $table->decimal('lead_charges',7,2);
         });
     }
 
@@ -30,7 +32,9 @@ class AlterBookingServiceTable extends Migration
         Schema::table('booking_service', function (Blueprint $table) {
             $table->dropColumn('name');
             $table->dropColumn('service_rate');
-            $table->dropColumn('service_time');            
+            $table->dropColumn('service_time');
+            $table->dropColumn('loyalty_points');
+            $table->dropColumn('lead_charges');            
         });
     }
 }

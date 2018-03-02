@@ -35,8 +35,10 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::get('get-customer-car', 'CarsController@getCustomerCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
-		Route::post('amount-paid', 'BookingsController@customerpaidbill');
-		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');		
+		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
+		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');
+		Route::patch('leave-rating/{billing_id}', 'CustomersController@insertRatings');
+		Route::get('get-workshop/{workshop_id}','CustomersController@getWorkshopDetails');		
 
 //		Route For Customer Password Reset
       Route::post('password-reset', 'CustomersController@passwordReset');
@@ -65,7 +67,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');	
 		Route::patch('unassign-service/{service_id}','WorkshopsController@unassignService');		
 		Route::get('services','WorkshopsController@workshopServices');
-		Route::post('createbooking','BookingsController@createBooking');
+		Route::post('create-booking','BookingsController@createBooking');
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
 		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
 		Route::post('complete-job','BookingsController@completeLead');
@@ -75,7 +77,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('leads/accepted','WorkshopsController@acceptedLeads');
 		Route::get('leads/rejected','WorkshopsController@rejectedLeads');
 		Route::get('leads/completed','WorkshopsController@completedLeads');
-
+		Route::patch('lead/{booking_id}/enter-millage', 'WorkshopsController@insertMillage');
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
     });
