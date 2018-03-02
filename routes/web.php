@@ -18,6 +18,9 @@ Route::group(['prefix' => 'customer'], function () {
     Route::get('/password/reset', 'CustomerAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
     Route::get('/password/reset/{token}', 'CustomerAuth\ResetPasswordController@showResetForm');
     Route::get('/verify/{verification_code}', 'CustomersController@verifyEmail');
+    Route::get('successfully-recover', function (){
+        return view('customer.successfullyRecover');
+    });
 });
 // ========= Customer Routes End ===================================================
 // ========= Worshop Routes Start ==================================================

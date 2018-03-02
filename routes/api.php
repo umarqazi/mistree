@@ -25,7 +25,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 Route::group(['prefix'=>'customer'], function() {
 	Route::post('register', 'CustomersController@register');
 	Route::post('login', 'CustomersController@login');
-	Route::post('recover', 'CustomersController@recover');    
+	Route::post('recover', 'CustomersController@recover');
 });
 Route::group(['middleware' => 'conf_guard:Customer'], function(){
 	Route::group(['prefix'=>'customer','middleware' => ['jwt.auth']], function() {  
