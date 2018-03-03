@@ -26,7 +26,7 @@ class ServicesController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/workshop/getServices",
+     *   path="/api/services",
      *   summary="All Services for Workshops",
      *   operationId="select services",
      *   produces={"application/json"},

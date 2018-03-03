@@ -28,7 +28,7 @@ $factory->define(App\Customer::class, function (Faker\Generator $faker) {
 
     return [
         'name'          => $faker->name,
-        'email'         => preg_replace('/@example\..*/', '@wmp.com', $faker->unique()->safeEmail),
+        'email'         => preg_replace('/@example\..*/', '@wmp.com.pk', $faker->unique()->safeEmail),
         'password'      => $password ?: $password = bcrypt('secret'),
         'con_number'    => '03'.$faker->randomElement(['00','01','02','03','04','05','06','07',10,11,12,13,14,15,16,20,21,22,23,24,25,26,31,32,33,34,35,41,42,43,44,45,46,47]).$faker->numberBetween(4,9).$faker->randomNumber(6, true),
         'remember_token'=> str_random(10),

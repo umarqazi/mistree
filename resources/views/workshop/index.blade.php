@@ -34,7 +34,6 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting_asc" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Lead ID: activate to sort column descending" style="width: 77px;">ID</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 130px;">Workshop Name</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 142px;">Owner Name</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 207px;">Area</th>
@@ -47,7 +46,6 @@
                             <tbody>
                                 @foreach($workshops as $key => $value)    
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1">{{ $value->id }}</td>
                                     <td>{{ $value->name }}</td>
                                     <td>{{ $value->owner_name }}</td>
                                     @if($value->address)
@@ -58,17 +56,15 @@
                                     <td>{{23*($key+1) }}</td>
                                     <td>{{ 2*($key+1) }}</td>
                                     <td>
-                                        @if($value->is_approved == 0)
+                                        @if( ! $value->is_approved )
                                             Not Approved
                                         @else
                                             Approved
-                                        @endif</a>                                    
+                                        @endif
                                     <td>
-                                        @if($value->is_approved == 0)
-                                            <a href="{{url('admin/approve-workshop/'.$value->id)}}" class="btn btn-header btn-export">Approve</a>
-                                        @else
-                                            <a href="{{url('admin/undo-approval-workshop/'.$value->id)}}" class="btn btn-header btn-export">Undo Approval</a>
-                                        @endif</a>
+                                        @if(! $value->is_approved )
+                                            <a href="{{ url( 'admin/approve-workshop/'.$value->id ) }}" class="btn btn-header btn-export">Approve</a>
+                                        @endif
                                         <a class= "btn btn-header" href="{{url('admin/workshops/'. $value->id)}}">View Details</a>
                                         <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a>
                                         

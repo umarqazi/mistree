@@ -502,65 +502,22 @@ class CustomersController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    /**
-     * @SWG\Get(
-     *   path="/api/customer/verify-email",
-     *   summary="Verify Customer Email",
-     *   operationId="verifyEmail",
-     *   produces={"application/json"},
-     *   tags={"Customers"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
-     *   @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="verification_code",
-     *     in="query",
-     *     description="Verification Code",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *
-     */
     public function verifyEmail($verification_code)
     {
         $check = DB::table('customer_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
-            $customer = Customer::find($check->id);
+            $customer = Customer::find($check->cust_id);
             if( $customer->is_verified ){
 
-                return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Account already verified.',
-                    'body' => null
-                ],Response::HTTP_OK);
+                return View::make('customer.thankyou')->with('message', 'Account already verified.');
             }
             $customer->update(['is_verified' => 1]);
             DB::table('customer_verifications')->where('token',$verification_code)->delete();
 
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'You have successfully verified your email address.',
-                'body' => null
-            ],Response::HTTP_OK);
+            return View::make('customer.thankyou')->with('message', 'Thank You For Verifying Your Email.');
         }
 
-        return response()->json([
-            'http-status' => Response::HTTP_OK,
-            'status' => false,
-            'message' => 'Verification code is invalid.',
-            'body' => null
-        ],Response::HTTP_OK);
+        return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
     }
 
     /**
