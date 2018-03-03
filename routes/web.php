@@ -42,7 +42,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
     Route::group(['middleware' => 'workshop'], function (){
 
-        Route::get('/history', 'WorkshopsController@show_history');
+    //    Route::get('/history', 'WorkshopsController@show_history');
         Route::get('/customers', 'WorkshopsController@show_customers');
         Route::get('/requests', 'WorkshopsController@show_requests');
 
@@ -57,6 +57,8 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
+        
+        Route::get('history','WorkshopsController@leadsHistory');
     });
 
 });

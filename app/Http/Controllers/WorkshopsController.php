@@ -2360,24 +2360,34 @@ class WorkshopsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function leadsHistory(){
-        $workshop = Auth::user();
-        $bookings = Booking::where('workshop_id', $workshop->id)->with('billing')->get();
-        
-        if(count($bookings) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => 'No Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{            
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'Workshop History',
-                        'body' => $bookings
-                    ],Response::HTTP_OK);
+    public function leadsHistory(Request $request){
+        $workshop = Auth::guard('workshop')->user();
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
+       
+        // check request Type
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($bookings) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => false,
+                            'message' => 'No Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{            
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'Workshop History',
+                            'body' => $bookings
+                        ],Response::HTTP_OK);
+            }
+        }
+        else 
+        {            
+            // dd($bookings[0]->billing->amount);
+                return View::make('workshop.history', ['bookings' => $bookings]);    
+
         }
     }
 
