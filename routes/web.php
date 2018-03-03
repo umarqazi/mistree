@@ -112,8 +112,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/activate-customer/{id}', 'CustomersController@activateCustomer');
         Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
         Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
-        Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
-      
+
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');        
     });

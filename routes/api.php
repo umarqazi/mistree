@@ -18,7 +18,9 @@ use Illuminate\Http\Request;
 // });
 
 Route::group(['middleware' => 'conf_guard:Customer'], function(){
-	Route::get('cars', 'CarsController@index');
+	Route::group(['middleware' => ['jwt.auth']], function(){
+		Route::get('cars', 'CarsController@index');
+	});
 });
 
 
@@ -50,28 +52,30 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 
 	});
 });
+Route::group(['middleware' => 'conf_guard:Workshop'], function(){
+	Route::get('services', 'ServicesController@index');
+});
 Route::group(['prefix'=>'workshop'], function() {
 	Route::post('register', 'WorkshopsController@register');
-	Route::get('getServices', 'ServicesController@index');
 	Route::post('login', 'WorkshopsController@login');
 	Route::post('recover', 'WorkshopsController@recover');    
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 	Route::group(['prefix'=>'workshop','middleware' => ['jwt.auth']], function() {  
 
-		Route::get('logout', 'WorkshopsController@logout');
+		Route::post('logout', 'WorkshopsController@logout');
 		Route::post('verifyEmail', 'WorkshopsController@verifyEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
 		Route::get('profile', 'WorkshopsController@getWorkshop');
 		Route::put('profile', 'WorkshopsController@profileUpdate');
-		Route::post('insert-service', 'WorkshopsController@insertService');
-		Route::patch('update-service/{service_id}', 'WorkshopsController@updateService');
-		
+		Route::post('service', 'WorkshopsController@insertService');
+		Route::patch('service', 'WorkshopsController@updateService');
+		Route::delete('service','WorkshopsController@unassignService');
+
 		Route::get('address', 'WorkshopsController@getAddress');
-		Route::post('update-address', 'WorkshopsController@updateAddress');
+		Route::post('address', 'WorkshopsController@updateAddress');
 		Route::post('update-images','WorkshopsController@updateImages');
-		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');	
-		Route::patch('unassign-service/{service_id}','WorkshopsController@unassignService');		
+		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');
 		Route::get('services','WorkshopsController@workshopServices');
 		Route::post('createbooking','BookingsController@createBooking');
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
