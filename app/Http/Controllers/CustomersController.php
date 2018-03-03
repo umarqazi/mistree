@@ -11,6 +11,7 @@ use App\Customer;
 use App\Address;
 use App\Booking;
 use App\Billing;
+use App\Workshop;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1192,6 +1193,107 @@ class CustomersController extends Controller
                     'body' => $bookings
                 ],Response::HTTP_OK);        
         }        
+    }
+
+    /**
+     * API Lead Rating from Customer
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+
+     * @SWG\Patch(
+     *   path="/api/customer/leave-rating/{billing_id}",
+     *   summary="Lead Review and Rating",
+     *   operationId="insert",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="billing_id",
+     *     in="path",
+     *     description="Billing Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="review",
+     *     in="formData",
+     *     description="Lead Review",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="ratings",
+     *     in="formData",
+     *     description="Lead Ratings",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function insertRatings(Request $request, $billing_id){        
+        
+        $billing = Billing::find($billing_id);
+        $billing->review        = $request->review;
+        $billing->ratings       = $request->ratings;
+        $billing->save();
+
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Ratings Given',
+                'body' => $request->all()
+            ],Response::HTTP_OK);                
+    }
+
+    /**
+     * API Workshop Details for customer to create Bookings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+
+     * @SWG\Get(
+     *   path="/api/customer/get-workshop/{workshop_id}",
+     *   summary="Get Workshop Details",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function getWorkshopDetails($workshop_id){        
+        
+        $workshop = Workshop::find($workshop_id);                
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Ratings Given',
+                'body' => $workshop->load('services')
+            ],Response::HTTP_OK);                
     }
 
 }

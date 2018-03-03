@@ -25,6 +25,9 @@ class CreateBookingsTable extends Migration
             $table->time('job_time');
             $table->string('response');
             $table->string('job_status');
+            $table->string('vehicle_no');
+            $table->unsignedInteger('loyalty_points')->default(0);
+            $table->string('millage')->nullable();
             $table->timestamps();
         });
     }
