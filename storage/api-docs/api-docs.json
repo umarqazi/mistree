@@ -258,19 +258,17 @@
                 }
             }
         },
-        "/api/customer/get-cars": {
+        "/api/cars": {
             "get": {
                 "tags": [
                     "Cars"
                 ],
                 "summary": "Get All Cars",
-                "operationId": "getCars",
+                "operationId": "Cars",
                 "consumes": [
-                    "application/xml",
                     "application/json"
                 ],
                 "produces": [
-                    "application/xml",
                     "application/json"
                 ],
                 "parameters": [
@@ -292,7 +290,7 @@
                 }
             }
         },
-        "/api/customer/add-customer-car": {
+        "/api/customer/car": {
             "post": {
                 "tags": [
                     "Cars"
@@ -375,10 +373,8 @@
                         "description": "internal server error"
                     }
                 }
-            }
-        },
-        "/api/customer/remove-customer-car": {
-            "post": {
+            },
+            "patch": {
                 "tags": [
                     "Cars"
                 ],
@@ -420,7 +416,7 @@
                 }
             }
         },
-        "/api/customer/get-customer-car": {
+        "/api/customer/cars": {
             "get": {
                 "tags": [
                     "Cars"
@@ -547,7 +543,7 @@
                 "tags": [
                     "Customers"
                 ],
-                "summary": "Logout customer",
+                "summary": "Customer Logout",
                 "operationId": "logout",
                 "produces": [
                     "application/json"
@@ -691,22 +687,13 @@
                 }
             }
         },
-
-        "/api/customer/vehicle-history": {
-
         "/api/customer/profile": {
-
             "get": {
                 "tags": [
                     "Customers"
                 ],
-
-                "summary": "Customer Vehile History",
-                "operationId": "history",
-
                 "summary": "Customer Cars And Addresses",
                 "operationId": "Customer Cars And Addresses",
-
                 "produces": [
                     "application/json"
                 ],
@@ -717,13 +704,6 @@
                         "description": "Customer's Token",
                         "required": true,
                         "type": "string"
-
-                    },
-                    {
-                        "name": "vehicle_no",
-                        "in": "query",
-                        "description": "Customer's Vehicle No",
-
                     }
                 ],
                 "responses": {
@@ -793,7 +773,6 @@
                         "name": "address_city",
                         "in": "formData",
                         "description": "Customer's address city",
-
                         "required": true,
                         "type": "string"
                     }
@@ -808,8 +787,6 @@
                 }
             }
         },
-
-
         "/api/customer/edit-customer-address": {
             "put": {
                 "tags": [
@@ -924,13 +901,48 @@
                 }
             }
         },
-
+        "/api/customer/vehicle-history": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer Vehile History",
+                "operationId": "history",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "vehicle_no",
+                        "in": "query",
+                        "description": "Customer's Vehicle No",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/workshop/getServices": {
             "get": {
                 "tags": [
-                    "Workshops"
+                    "Services"
                 ],
-                "summary": "All Services for Workshop",
+                "summary": "All Services for Workshops",
                 "operationId": "select services",
                 "produces": [
                     "application/json"
@@ -1179,7 +1191,7 @@
                     {
                         "name": "Authorization",
                         "in": "header",
-                        "description": "Auth Logout",
+                        "description": "Auth Token",
                         "required": true,
                         "type": "string"
                     }
@@ -1323,7 +1335,7 @@
                 }
             }
         },
-        "/api/workshop/": {
+        "/api/workshop/profile": {
             "get": {
                 "tags": [
                     "Workshops"
@@ -1355,8 +1367,8 @@
                 }
             }
         },
-        "/api/workshop/update-profile/": {
-            "patch": {
+        "/api/workshop/profile/": {
+            "put": {
                 "tags": [
                     "Workshops"
                 ],
@@ -1390,7 +1402,7 @@
                     {
                         "name": "cnic",
                         "in": "formData",
-                        "description": "Workshop CNIC Number",
+                        "description": "CNIC Number",
                         "required": true,
                         "type": "string"
                     },
@@ -1450,7 +1462,7 @@
                     {
                         "name": "_method",
                         "in": "formData",
-                        "description": "Always give PATCH",
+                        "description": "Always give PUT",
                         "required": true,
                         "type": "string"
                     }
