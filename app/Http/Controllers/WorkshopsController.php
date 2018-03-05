@@ -2253,15 +2253,19 @@ class WorkshopsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getLedger(){
-        $workshop_id = Auth::user()->id;
-        $ledger = Workshop::find($workshop_id)->transactions;
-        return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Workshop Ledger',
-                    'body' => $ledger
-                ],Response::HTTP_OK);
+    public function getLedger(Request $request){
+        if($request->header('content-type') == "application/json"){
+            $workshop   = JWTAuth::authenticate()->load('transactions','balance');        
+            return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => true,
+                        'message' => 'Workshop Ledger',
+                        'body' => $workshop
+                    ],Response::HTTP_OK);            
+        }else{
+            $workshop = Auth::guard('workshop')->user()->load('transactions','balance');                        
+            return view::make('workshop_profile.ledger')->with('workshop',$workshop);
+        }
     }
 
     /**
@@ -2540,6 +2544,10 @@ class WorkshopsController extends Controller
             ],Response::HTTP_OK);      
     }
 
+    public function workshopLedger($workshop_id){
+        $workshop = Workshop::find($workshop_id)->first()->load('transactions','balance');
+        return view::make('workshop.ledger')->with('workshop',$workshop);
+    }
 
 
 
