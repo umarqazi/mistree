@@ -10,31 +10,31 @@
             </div>
 
             <ul class="nav">
-                <li {{{ (Request::is('workshop/home') ? 'class=active' : '') }}}>
+                <li {{{ (Request::is('home') ? 'class=active' : '') }}}>
                     <a href="{{url('/home')}}">
                         <i class="ti-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/profile') ? 'class=active' : '') }}}>
+                <li {{{ (Request::is('profile') ? 'class=active' : '') }}}>
                     <a href="{{url('/profile')}}">
                         <i class="ti-user"></i>
                         <p>Profile</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/history') ? 'class=active' : '') }}}>
+                <li {{{ (Request::is('history') ? 'class=active' : '') }}}>
                     <a href="{{url('/history')}}">
                         <i class="ti-view-list-alt"></i>
                         <p>Work History</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/customers') ? 'class=active' : '') }}}>
+                <li {{{ (Request::is('customers') ? 'class=active' : '') }}}>
                     <a href="{{url('/customers')}}">
                         <i class="ti-user"></i>
                         <p>Customers</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/requests') ? 'class=active' : '') }}}>
+                <li {{{ (Request::is('requests') ? 'class=active' : '') }}}>
                     <a href="{{url('/requests')}}">
                         <i class="ti-panel"></i>
                         <p>Requests</p>

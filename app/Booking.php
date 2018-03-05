@@ -37,7 +37,11 @@ class Booking extends Model
     {
         return $this->hasOne('App\Billing');
     }
-    
+
+    public function car()
+    {
+        return $this->belongsTo('App\Car');
+    }
 
 
 }
