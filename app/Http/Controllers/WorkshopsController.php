@@ -2468,24 +2468,31 @@ class WorkshopsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function rejectedLeads(){
+    public function rejectedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('response','rejected')->with('services')->get();
-        if(count($rejected_leads) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'No rejected Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'Rejected Leads',
-                        'body' => $rejected_leads
-                    ],Response::HTTP_OK);            
-        }         
+        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->with('services')->get();
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($rejected_leads) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'No rejected Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'Rejected Leads',
+                            'body' => $rejected_leads
+                        ],Response::HTTP_OK);            
+            } 
+         }
+         else
+         {
+            return View::make('workshop.rejected_leads', ['rejected_leads' => $rejected_leads]);
+         }        
     }
 
     /**

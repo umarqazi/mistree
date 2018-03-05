@@ -38,8 +38,8 @@
                                 <div class="total text-right">Total Earnings: PKR 38,700</div>
                                 <div class="clear10"></div><div class="clear5"></div>
                                 <div class="text-right">
-                                <a href="{{ url('workshop/leads/accepted') }}" class="btn btn-header btn-export">Accepted Leads</a>
-                                <a href="{{ url('workshop/leads/rejected') }}" class="btn btn-header btn-export">Rejected Leads</a>
+                                <a href="{{ url('leads/accepted') }}" class="btn btn-header btn-export">Accepted Leads</a>
+                                <a href="{{ url('leads/rejected') }}" class="btn btn-header btn-export">Rejected Leads</a>
                                 </div>
                             </div>
                         </div>
@@ -66,7 +66,6 @@
                                     <td>{{$value->job_time}}</td>
                                     <td>{{$value->billing['amount']}}</td>
                                     <td><i class="ti-star"></i> 4.5</td>
-                                    <td><a href="#">Details</a></td>
                                 </tr>
                   @endforeach              
                                 </tbody>
