@@ -82,6 +82,7 @@ class ServicesController extends Controller
         $rules = array(
             'name'              => 'required|unique:services|max:255',            
             'loyalty-points'    => 'required|numeric',
+            'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
             'image'             => 'mimes:jpeg,jpg,png',         
         );
@@ -110,6 +111,7 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
+            $service->lead_charges = Input::get('lead-charges');
             $service->save();
 
             // redirect
