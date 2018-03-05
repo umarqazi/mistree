@@ -28,6 +28,13 @@
                         <p>Work History</p>
                     </a>
                 </li>
+                </li>
+                <li {{{ (Request::is('workshop/leads') ? 'class=active' : '') }}}>
+                    <a href="{{url('/leads')}}">
+                        <i class="ti-stats-up"></i>
+                        <p>Work Leads</p>
+                    </a>
+                </li>
                 <li {{{ (Request::is('workshop/customers') ? 'class=active' : '') }}}>
                     <a href="{{url('/customers')}}">
                         <i class="ti-user"></i>
