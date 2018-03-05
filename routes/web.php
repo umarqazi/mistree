@@ -59,6 +59,8 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
         
         Route::get('leads','WorkshopsController@leadsHistory');
+        Route::get('leads/accepted','WorkshopsController@acceptedLeads');
+        Route::get('leads/rejected','WorkshopsController@rejectedLeads');
     });
 
 });

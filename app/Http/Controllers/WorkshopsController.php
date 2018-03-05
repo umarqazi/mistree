@@ -2385,7 +2385,6 @@ class WorkshopsController extends Controller
         }
         else 
         {            
-            // dd($bookings[0]->billing->amount);
                 return View::make('workshop.history', ['bookings' => $bookings]);    
 
         }
@@ -2416,25 +2415,32 @@ class WorkshopsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function acceptedLeads(){
-        $workshop = Auth::user();
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('response','accepted')->with('services')->get();
-
-        if(count($accepted_leads) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'No Accepted Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{            
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'Accepted Leads',
-                        'body' => $accepted_leads
-                    ],Response::HTTP_OK);
-        }                 
+    public function acceptedLeads(Request $request){
+        $workshop = Auth::guard('workshop')->user();
+        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->with('services')->get();
+         // check request Type
+         if( $request->header('Content-Type') == 'application/json')
+         {
+            if(count($accepted_leads) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'No Accepted Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{            
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'Accepted Leads',
+                            'body' => $accepted_leads
+                        ],Response::HTTP_OK);
+            }     
+        } 
+        else
+        {
+            return View::make('workshop.accepted_leads', ['accepted_leads' => $accepted_leads]); 
+        }           
     }
 
     /**
@@ -2463,7 +2469,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rejectedLeads(){
-        $workshop = Auth::user();
+        $workshop = Auth::guard('workshop')->user();
         $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('response','rejected')->with('services')->get();
         if(count($rejected_leads) == 0){
             return response()->json([
