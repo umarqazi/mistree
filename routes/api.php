@@ -92,5 +92,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('lead/{booking_id}/enter-millage', 'WorkshopsController@insertMillage');
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
+//      Route For Workshop Customers
+        Route::get('get-customers', 'WorkshopsController@getCustomers');
     });
 });

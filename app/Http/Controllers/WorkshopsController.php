@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Customer;
 use JWTAuth;
 use Session;
 use Hash, DB, Config, Mail, View;
@@ -2538,6 +2539,55 @@ class WorkshopsController extends Controller
                 'message' => 'Millage Entered',
                 'body' => ''
             ],Response::HTTP_OK);      
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/get-customers",
+     *   summary="Get Workshop Customers",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Getting Workshop Customers.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+
+    public function getCustomers()
+    {
+        $workshop = JWTAuth::authenticate();
+        $bookings = $workshop->bookings()->pluck('customer_id');
+
+        if (!$bookings)
+        {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'No Records Exists',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'success',
+            'body' => Customer::whereIn('id', $bookings)->get()
+        ],Response::HTTP_OK);
     }
 
 
