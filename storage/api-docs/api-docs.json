@@ -1089,78 +1089,6 @@
                         "description": "Workshop Closing Time",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "profile_pic",
-                        "in": "formData",
-                        "description": "Workshop Logo/Profile Picture",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "cnic_image",
-                        "in": "formData",
-                        "description": "CNIC Image",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "ws_images",
-                        "in": "formData",
-                        "description": "ws_images[base64,base64,base64]",
-                        "required": false,
-                        "type": "array",
-                        "items": "[base64strings]"
-                    },
-                    {
-                        "name": "shop",
-                        "in": "formData",
-                        "description": "Workshop Shop No",
-                        "required": false,
-                        "type": "number"
-                    },
-                    {
-                        "name": "building",
-                        "in": "formData",
-                        "description": "Workshop Building",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "street",
-                        "in": "formData",
-                        "description": "Workshop Street",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "block",
-                        "in": "formData",
-                        "description": "Workshop Block",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "town",
-                        "in": "formData",
-                        "description": "Workshop Town",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "city",
-                        "in": "formData",
-                        "description": "Workshop City",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "services",
-                        "in": "formData",
-                        "description": "services[{service_id,service_rate,service_time}]",
-                        "required": false,
-                        "type": "array",
-                        "items": "[service_id,service_rate,service_time]"
                     }
                 ],
                 "responses": {
@@ -1874,7 +1802,7 @@
                 "tags": [
                     "Workshops"
                 ],
-                "summary": "Update Workshop Images",
+                "summary": "Update Profile Images",
                 "operationId": "update",
                 "produces": [
                     "application/json"
@@ -1889,6 +1817,45 @@
                     },
                     {
                         "name": "profile_pic",
+                        "in": "formData",
+                        "description": "Base64 String",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-cnic-image": {
+            "patch": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Cnic Images",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cnic_image",
                         "in": "formData",
                         "description": "Base64 String",
                         "required": true,
