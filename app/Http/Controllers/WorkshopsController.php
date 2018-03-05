@@ -481,6 +481,13 @@ class WorkshopsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="services",
+     *     in="formData",
+     *     description="Workshop Services",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -536,6 +543,14 @@ class WorkshopsController extends Controller
         $workshop_balance->workshop_id          = $workshop->id;
         $workshop_balance->save();
 
+         //Insert Services data from request        
+        $services = $request->services;
+        if(count($services) > 0){
+            foreach($services as $service){
+                $workshop->services()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
+            }
+        }
+
         $name = $request->name;        
         $email = $request->email;        
         $subject = "Please verify your email address.";
@@ -548,11 +563,18 @@ class WorkshopsController extends Controller
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
+
+        $credentials = [
+            'email' => $request->email,
+            'password' => $request->password,
+        ];
+        $token = JWTAuth::attempt($credentials);
+
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => $request->all()
+            'body' => ['workshop'=>$workshop, 'token'=>$token]
         ],Response::HTTP_OK);
     }
 
