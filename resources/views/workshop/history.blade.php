@@ -37,7 +37,10 @@
                                 <div class="current text-right">Current Balance: PKR 550</div>
                                 <div class="total text-right">Total Earnings: PKR 38,700</div>
                                 <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right"><a href="#" class="btn btn-header btn-export">Export</a></div>
+                                <div class="text-right">
+                                <a href="{{ url('workshop/leads/accepted') }}" class="btn btn-header btn-export">Accepted Leads</a>
+                                <a href="{{ url('workshop/leads/rejected') }}" class="btn btn-header btn-export">Rejected Leads</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -58,7 +61,7 @@
                                     <td>{{$value->customer->name}}</td>                                    
                                     <td>
                                     @foreach($value->services as $service)
-                                        {{$service->name}}
+                                        {{$service->name}},
                                     @endforeach
                                     </td>
                                     <td>{{$value->job_time}}</td>
