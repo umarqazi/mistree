@@ -15,9 +15,10 @@ class Booking extends Model
      * @var array
      */
     protected $fillable = [
-        'customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'response', 'job_status',
+        'customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'is_accepted', 'job_status',
     ];	
 
+    protected $casts = ['is_accepted' => 'boolean'];
     public function workshop()
     {
         return $this->belongsTo('App\Workshop');
