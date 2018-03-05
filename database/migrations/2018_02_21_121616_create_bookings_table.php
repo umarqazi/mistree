@@ -23,7 +23,7 @@ class CreateBookingsTable extends Migration
             $table->foreign('car_id')->references('id')->on('cars');
             $table->date('job_date');
             $table->time('job_time');
-            $table->string('response');
+            $table->boolean('is_accepted');
             $table->string('job_status');
             $table->timestamps();
         });
