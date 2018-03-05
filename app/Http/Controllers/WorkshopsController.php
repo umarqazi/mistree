@@ -2136,26 +2136,8 @@ class WorkshopsController extends Controller
         fclose($file);
         $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File($full_path), 'public');
         $ws_img = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+        Storage::delete($path.'/'.basename($full_path));
         return $ws_img;
-    }
-
-    public function haha(Request $request){        
-        $full_path = storage_path()."/app/workshop/temp/".md5(microtime()).".png";
-        $path = "/workshop/temp";
-        if(!is_dir($path)) {
-            Storage::makeDirectory($path);            
-        }
-        $file   = fopen($full_path, "wb");        
-        fwrite($file, base64_decode($request->img));
-        fclose($file);
-        $s3_path =  Storage::disk('s3')->putFile('workshops/1/ws_images', new File($full_path), 'public');
-        $ws_img = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-        echo $ws_img;
-        // $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File("image.jpg"), 'public');
-    }
-
-    public function lol(){     
-        return view::make('workshop.services.upload');
     }
 
     /**
@@ -2190,7 +2172,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Workshop Ledger',
-                    'body' => $ledger
+                    'body' => ['transactions'=>$ledger]
                 ],Response::HTTP_OK);
     }
 
