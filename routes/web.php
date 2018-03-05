@@ -118,6 +118,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');        
+        Route::get('upload', 'WorkshopsController@lol');     
+        Route::post('upload-img', 'WorkshopsController@haha');        
+         
     });
 
 });
