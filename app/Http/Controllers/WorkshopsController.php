@@ -80,7 +80,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {                
+    {
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -89,23 +89,24 @@ class WorkshopsController extends Controller
             'password_confirmation'          => 'required',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11',
+            'landline'                       => 'digits:11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'type'                           => 'required',
-            'profile_pic'                    => 'image|mimes:jpg,png',  
-            'cnic_image'                     => 'image|mimes:jpg,png',  
+            'type'                           => 'required|in:Authorized,Unauthorized',
+            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
+            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
 
             'shop'                           => 'required|numeric',
-            'building'                       => 'regex:/^[\pL\s\-]+$/u',
-            'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'required|string',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'nullable|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'service_id.*'                   => 'required|integer:unique',
-            'service_rate.*'                 => 'required|integer',
-            'service_time.*'                 => 'required|alpha_dash' 
-        ];        
+
+            'services.*'                     => 'required|integer:unique',
+            'service-rates.*'                => 'required',
+            'service-times.*'                => 'required',
+        ];
 
         $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
         $validator = Validator::make($input, $rules);
@@ -113,7 +114,7 @@ class WorkshopsController extends Controller
             $request->offsetUnset('password');
             return Redirect::back()
                 ->withErrors($validator)
-                ->withInput(Input::except('password'));
+                ->withInput(Input::except('password','password_confirmation'));
         }
 
         //Insert Workshop data from request 
@@ -128,7 +129,7 @@ class WorkshopsController extends Controller
                                 'open_time' => $request->open_time, 
                                 'close_time' => $request->close_time, 
                                 'is_approved' => 1
-                            ]); 
+                            ]);
 
         //Insert Address data from request
         $address = WorkshopAddress::create([
@@ -143,18 +144,14 @@ class WorkshopsController extends Controller
                                     ]);
 
         //Insert Services data from request        
-        $service_ids = $request->service_id;
-        $service_rates = $request->service_rate;
-        $service_times = $request->service_time;    
-        if(!empty($service_ids)){
-            for($i = 0; $i<count($service_ids); $i++){            
-                $workshop->services()->attach($service_ids[$i], ['service_rate' => $service_rates[$i] , 'service_time' => $service_times[$i] ]);
-            }
+        foreach($request->services as $service)
+        {
+            $workshop->services()->attach($service, ['service_rate' => Input::get('service-rates')[$service] , 'service_time' => Input::get('service-times')[$service] ]);
         }
 
         $workshop_balance = new WorkshopBalance;        
 
-        $workshop_balance->balance              = 2000;
+        $workshop_balance->balance              = 0;
         $workshop_balance->workshop_id          = $workshop->id;
         $workshop_balance->save();
 
@@ -1070,7 +1067,7 @@ class WorkshopsController extends Controller
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->from(getenv('MAIL_USERNAME'));
                 $mail->to($workshop->email, $workshop->name);
                 $mail->subject($subject);
             });        
