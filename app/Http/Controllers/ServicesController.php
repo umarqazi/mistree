@@ -86,7 +86,7 @@ class ServicesController extends Controller
             'service-parent'    => 'in:0,'.$services,
             'image'             => 'mimes:jpeg,jpg,png',         
         );
-        $inputs = $request->only('name','loyalty-points','service-parent');
+        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges');
 
         $validator = Validator::make($inputs, $rules);
 
@@ -161,19 +161,20 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
-
         $rules = array(
             'name'           => 'required|unique:services,id,'.$id.'|max:255',
             'loyalty-points' => 'required|numeric',
+            'lead-charges'   => 'required|numeric',
             'service-parent' => 'in:0,'.$services,
             'image'          => 'mimes:jpeg,jpg,png',          
         );
 
-        $inputs = $request->only('name', 'service-parent','loyalty-points');
+        $inputs = $request->only('name', 'service-parent','loyalty-points', 'lead-charges');
         $validator = Validator::make($inputs, $rules);
 
         if ($validator->fails()) {
@@ -194,7 +195,8 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
-            $service->save();
+            $service->lead_charges   = Input::get('lead-charges');
+            $service->update();
 
             // redirect
             Session::flash('message', 'Successfully updated the Service!');
