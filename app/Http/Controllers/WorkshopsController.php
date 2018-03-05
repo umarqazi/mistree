@@ -481,78 +481,6 @@ class WorkshopsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
-     *   @SWG\Parameter(
-     *     name="profile_pic",
-     *     in="formData",
-     *     description="Workshop Logo/Profile Picture",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="cnic_image",
-     *     in="formData",
-     *     description="CNIC Image",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="ws_images",
-     *     in="formData",
-     *     description="ws_images[base64,base64,base64]",
-     *     required=false,
-     *     type="array",
-     *     items="[base64strings]"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="shop",
-     *     in="formData",
-     *     description="Workshop Shop No",
-     *     required=false,
-     *     type="number"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="building",
-     *     in="formData",
-     *     description="Workshop Building",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="street",
-     *     in="formData",
-     *     description="Workshop Street",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="block",
-     *     in="formData",
-     *     description="Workshop Block",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="town",
-     *     in="formData",
-     *     description="Workshop Town",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="city",
-     *     in="formData",
-     *     description="Workshop City",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="services",
-     *     in="formData",
-     *     description="services[{service_id,service_rate,service_time}]",
-     *     required=false,
-     *     type="array",
-     *     items="[service_id,service_rate,service_time]"
-     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -572,22 +500,10 @@ class WorkshopsController extends Controller
             'landline'                       => 'digits_between:0,11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'type'                           => 'required',
-            'profile_pic'                    => 'image|mimes:jpg,png',  
-            'cnic_image'                     => 'image|mimes:jpg,png',  
-
-            'shop'                           => 'numeric',
-            'building'                       => 'regex:/^[\pL\s\-]+$/u',
-            'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'string',
-            'town'                           => 'regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'regex:/^[\pL\s\-]+$/u',
-            // 'service_id.*'                   => 'required|integer',
-            // 'service_rate.*'                 => 'required|integer',
-            // 'service_time.*'                 => 'required|alpha_dash' 
+            'type'                           => 'required|in:Authorized,Unauthorized'            
         ];        
 
-        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');        
+        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type');        
         
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -607,72 +523,18 @@ class WorkshopsController extends Controller
                                 'password' => Hash::make($request->password), 
                                 'cnic' => $request->cnic, 
                                 'mobile' => $request->mobile, 
+                                'landline' => $request->landline,
                                 'type' => $request->type,                                 
                                 'open_time' => $request->open_time, 
                                 'close_time' => $request->close_time, 
                                 'is_approved' => 0
                             ]);
 
-        //Insert Address data from request
-        $address = WorkshopAddress::create([
-                                        'shop' => $request->shop, 
-                                        'building' => $request->building, 
-                                        'street' => $request->street, 
-                                        'block' => $request->block,
-                                        'town' => $request->town, 
-                                        'city' => $request->city, 
-                                        'workshop_id' => $workshop->id, 
-                                        'coordinates' => NULL
-                                    ]);
-
-        //Insert Services data from request        
-        $services = $request->services;
-        if(!empty($service_ids)){
-            foreach($services as $service){
-                $workshop->services()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
-            }
-        }
-
         //By Default Inserting Workshop Balance 2000
         $workshop_balance = new WorkshopBalance;        
         $workshop_balance->balance              = 2000;
         $workshop_balance->workshop_id          = $workshop->id;
         $workshop_balance->save();
-
-        if (!empty($request->profile_pic))
-        {            
-            $file_data = $request->profile_pic;             
-            @list($type, $file_data) = explode(';', $file_data);
-            @list(, $file_data) = explode(',', $file_data);             
-            $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', base64_decode($file_data), 'public');              
-           
-            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $workshop->profile_pic   = $profile_pic_path;
-            $workshop->save();            
-        }
-        else
-        {
-          $profile_pic         =  url('img/thumbnail.png');
-          $workshop->profile_pic   = $profile_pic;
-          $workshop->save();
-        }
-
-        if (!empty($request->cnic_image)) 
-        {
-            $file_data = $request->cnic_image;             
-            @list($type, $file_data) = explode(';', $file_data);
-            @list(, $file_data) = explode(',', $file_data);             
-            $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', base64_decode($file_data), 'public');              
-            $cnic_image_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $workshop->cnic_image   = $cnic_image_path;
-            $workshop->save();             
-        }
-        else
-        { 
-          $cnic_image         =  url('img/thumbnail.png');
-          $workshop->cnic_image   = $cnic_image;       
-          $workshop->save();
-        }
 
         $name = $request->name;        
         $email = $request->email;        
@@ -1228,8 +1090,7 @@ class WorkshopsController extends Controller
         $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type');
 
         $validator = Validator::make($input, $rules);
-        if($validator->fails()) {
-            $request->offsetUnset('password');
+        if($validator->fails()) {            
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
@@ -2138,7 +1999,7 @@ class WorkshopsController extends Controller
      */
     public function updateImages(Request $request)
     {            
-        $workshop_id = Auth::user()->id;
+        $workshop_id = JWTAuth::authenticate()->id;
         $images = $request->images;
         $url_array = [];
         foreach($images as $image){
@@ -2173,7 +2034,7 @@ class WorkshopsController extends Controller
     /**
      * @SWG\Patch(
      *   path="/api/workshop/update-profile-image",
-     *   summary="Update Workshop Images",
+     *   summary="Update Profile Images",
      *   operationId="update",
      *   produces={"application/json"},
      *   tags={"Workshops"},
@@ -2207,21 +2068,65 @@ class WorkshopsController extends Controller
         $workshop   = JWTAuth::authenticate();
         $file_data = $request->profile_pic;
         $url = $this->upload_image($file_data,$workshop->id);
-        $workshop_image = $workshop->update(['profile_pic' => $url]);
+        $profile_image = $workshop->update(['profile_pic' => $url]);
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => null
+                    'body' => $url
+                ],Response::HTTP_OK);               
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/update-cnic-image",
+     *   summary="Update Cnic Images",
+     *   operationId="update",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="cnic_image",
+     *     in="formData",
+     *     description="Base64 String",
+     *     required=true,
+     *     type="string"     
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function updateCnicImage(Request $request)
+    {            
+        $workshop   = JWTAuth::authenticate();
+        $file_data = $request->cnic_image;
+        $url = $this->upload_image($file_data,$workshop->id);
+        $cnic_image = $workshop->update(['cnic_image' => $url]);
+
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'success',
+                    'body' => $url
                 ],Response::HTTP_OK);               
     }
 
     public function upload_image($file_data , $workshop_id){
-//        @list($type, $file_data) = explode(';', $file_data);
-//        @list(, $file_data) = explode(',', $file_data);
-        $file   = fopen("image.jpg", "wb");
-        //$file_data  = explode(',', $file_data);
+        $file   = fopen("image.jpg", "wb");        
         fwrite($file, base64_decode($file_data));
         $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File("image.jpg"), 'public');
         $ws_img = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
