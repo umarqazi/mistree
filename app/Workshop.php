@@ -6,6 +6,7 @@ use App\Notifications\WorkshopResetPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DB;
 
 class Workshop extends Authenticatable
 {
@@ -77,10 +78,10 @@ class Workshop extends Authenticatable
     {
         $this->notify(new WorkshopResetPassword($token));
     }
-//    Returns sum of the workshop
+    //    Returns sum of the workshop
     public function sumOfServiceRates($workshop)
     {
-       $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
+        $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
         return $sum;
     }
 
@@ -97,5 +98,12 @@ class Workshop extends Authenticatable
     {
         return $this->hasMany('App\WorkshopLedger');
     }
+
+    public static function get_workshop_by_service($service_name)
+    {
+        $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', 'LIKE', '%'.$service_name.'%')->get()->pluck('workshop_id')->toArray();
+        return $workshop_ids;
+    }
+
 }
 
