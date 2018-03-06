@@ -573,7 +573,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => ['workshop'=>$workshop, 'token'=>$token]
+            'body' => ['workshop'=>'', 'token'=>$token]
         ],Response::HTTP_OK);
     }
 
