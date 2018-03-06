@@ -65,7 +65,7 @@
                                     </td>
                                     <td>{{$value->job_time}}</td>
                                     <td>{{$value->billing['amount']}}</td>
-                                    <td><i class="ti-star"></i> 4.5</td>
+                                    <td><i class="ti-star"></i>{{$value->billing['ratings']}}</td>
                                 </tr>
                   @endforeach              
                                 </tbody>
