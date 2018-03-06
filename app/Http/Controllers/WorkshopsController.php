@@ -159,11 +159,10 @@ class WorkshopsController extends Controller
         $workshop_balance->save();
 
         if ($request->hasFile('profile_pic')) 
-        {
-            // $ws_name = str_replace(' ', '_', $request->name);
+        {            
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
            
-            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $profile_pic_path = env('S3_BUCKET_URL').$s3_path;
             $profile_pic = $profile_pic_path;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();            
@@ -179,7 +178,7 @@ class WorkshopsController extends Controller
         {
             $ws_name = str_replace(' ', '_', $request->name);
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $cnic_pic_path = env('S3_BUCKET_URL').$s3_path;
             $cnic_image = $cnic_pic_path;
             $workshop->cnic_image   = $cnic_image;            
             $workshop->save();
@@ -199,7 +198,7 @@ class WorkshopsController extends Controller
             {
                 $images = new WorkshopImages;                
                 $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/ws_images', new File($file), 'public');
-                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $ws_pic_path = env('S3_BUCKET_URL').$s3_path;
                 $images->url = $ws_pic_path;                
                 $images->workshop()->associate($workshop);
                 $images->save();
@@ -213,7 +212,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->from(env('MAIL_USERNAME'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -297,7 +296,7 @@ class WorkshopsController extends Controller
         if ($request->hasFile('profile_pic')) 
         {            
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $profile_pic_path = env('S3_BUCKET_URL').$s3_path;
             $profile_pic = $profile_pic_path;    
         }
         else
@@ -310,7 +309,7 @@ class WorkshopsController extends Controller
         {
             // $ws_name = str_replace(' ', '_', $request->name);
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+            $cnic_pic_path = env('S3_BUCKET_URL').$s3_path;
             $cnic_image = $cnic_pic_path;
         }
         else
@@ -348,7 +347,7 @@ class WorkshopsController extends Controller
             {
                 $images = new WorkshopImages;                
                 $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/ws_images', new File($file), 'public');
-                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $ws_pic_path = env('S3_BUCKET_URL').$s3_path;
                 $images->url = $ws_pic_path;
                 $images->save();
                 $workshop->images()->associate($images);
@@ -559,7 +558,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->from(env('MAIL_USERNAME'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -954,7 +953,7 @@ class WorkshopsController extends Controller
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->from(env('MAIL_USERNAME'));
                 $mail->to($workshop->email, $workshop->name);
                 $mail->subject($subject);
             });        
@@ -1678,7 +1677,7 @@ class WorkshopsController extends Controller
                         $ws_name = str_replace(' ', '_', $request->name);
                         $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
                        
-                        $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                        $profile_pic_path = env('S3_BUCKET_URL').$s3_path;
                         $profile_pic = $profile_pic_path;
                         
                     }
@@ -1692,7 +1691,7 @@ class WorkshopsController extends Controller
                     {
                         $ws_name = str_replace(' ', '_', $request->name);
                         $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
-                        $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                        $cnic_pic_path = env('S3_BUCKET_URL').$s3_path;
                         $cnic_image = $cnic_pic_path;
                     }
                     else
@@ -2157,7 +2156,7 @@ class WorkshopsController extends Controller
         fwrite($file, base64_decode($file_data));
         fclose($file);
         $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File($full_path), 'public');
-        $ws_img = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+        $ws_img = env('S3_BUCKET_URL').$s3_path;
         Storage::delete($path.'/'.basename($full_path));
         return $ws_img;
     }
