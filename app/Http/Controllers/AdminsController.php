@@ -95,4 +95,13 @@ class AdminsController extends Controller
     {
         //
     }
+
+    /**
+     * Show Home
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function showHome() {
+        return view('admin.home');
+    }
 }

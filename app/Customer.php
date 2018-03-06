@@ -3,12 +3,13 @@
 namespace App;
 
 use App\Notifications\CustomerResetPassword;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Customer extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, SoftDeletes;
 
     private $guard_name = 'customer';
 
@@ -18,7 +19,7 @@ class Customer extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'con_number', 'status', 'is_verified'
+        'name', 'email', 'password', 'con_number', 'is_verified'
     ];
 
     /**
@@ -30,14 +31,38 @@ class Customer extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = ['deleted_at'];
+
+    /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_verified' => 'boolean'];
+
     public function cars()
     {
-        return $this->belongsToMany('App\Car')->withPivot('millage', 'vehicle_no', 'insurance', 'removed_at', 'status')->withTimestamps();
+        return $this->belongsToMany('App\Car')->withPivot('millage', 'vehicle_no', 'insurance', 'year', 'removed_at')->withTimestamps();
     }
 
     public function addresses()
     {
         return $this->hasMany('App\CustomerAddress');
+    }
+
+    public function bookings()
+    {
+        return $this->hasMany('App\Booking');
+    }
+
+    public function billings()
+    {
+        return $this->hasMany('App\Billing');
     }
     /**
      * Send the password reset notification.

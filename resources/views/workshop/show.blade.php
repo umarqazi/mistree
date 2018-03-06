@@ -16,15 +16,10 @@
                             <div class="col-md-12">
                                 <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
                                 <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
+								<div>
+									<img src="{{$workshop->profile_pic}}" alt="workshop_logo" width="100px" width="90px" style="padding-top:20px;"> 
+								</div>
                             </div>
-                            <!-- <div class="col-md-6">
-                                <div class="pull-right search">
-                                    <div class="from-group">
-                                        <i class="ti-search"></i>
-                                        <input type="text" class="form-control" placeholder="Search by ID, Name, Location">
-                                    </div>
-                                </div>
-                            </div> -->
                         </div>
                         <div class="clear20"></div>
                         <div class="row">

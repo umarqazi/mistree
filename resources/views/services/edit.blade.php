@@ -48,7 +48,7 @@
                                     <select class="form-control border-input" name="service-parent" >
                                       <option value="0">Select Option</option>
                                       @foreach($services as $key => $value)
-                                          <option value="{{$value->id}}" @if($service->service_parent == $value->id) {{"selected"}} @endif>{{$value->name}}</option>
+                                          <option value="{{$value->id}}" @if($service->service_parent == $value->id) {{"selected"}} @endif>@if($value->parent($value->service_parent)){{$value->parent($value->service_parent)['name'].' - '}}@endif{{$value->name}}</option>
                                       @endforeach
                                     </select>
                                       @if ($errors->has('service-parent'))
