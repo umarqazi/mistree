@@ -9,6 +9,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
+                    <div class="row">
+                        <div class="col-md-12">
+                            @if (session('success_message'))
+                                <div class="alert alert-success">
+                                    {{ session('success_message') }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
@@ -43,9 +52,13 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <a class= "btn btn-header" href="">View</a>
-                                        <a class= "btn btn-header" href="">Resolve</a>
-                                        <form method="POST" action="" accept-charset="UTF-8">
+                                        <a class= "btn btn-header" href="{{url('admin/workshop-queries/'. $value->id)}}">View</a>
+                                        <form method="POST" action="{{url('admin/resolve-workshop-query/'. $value->id)}}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="PUT">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input class="btn btn-header btn-export" type="submit" value="Resolve">
+                                        </form>
+                                        <form method="POST" action="{{url('admin/workshop-queries/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input class="btn btn-header btn-export" type="submit" value="Delete">

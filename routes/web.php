@@ -94,8 +94,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
-        Route::resource('workshop-queries', 'WorkshopQueriesController');
+        Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit']]);
         Route::resource('cars', 'CarsController');
+        Route::put('resolve-workshop-query/{workshopQuery}', 'WorkshopQueriesController@resolve');
         Route::get('/home','AdminsController@home')->name('admin.home');
 
         Route::get('/inactive-cars', 'CarsController@inactive_cars');
