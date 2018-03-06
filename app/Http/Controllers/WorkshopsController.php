@@ -161,7 +161,6 @@ class WorkshopsController extends Controller
 
         if ($request->hasFile('profile_pic')) 
         {
-            // $ws_name = str_replace(' ', '_', $request->name);
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
            
             $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
@@ -289,7 +288,6 @@ class WorkshopsController extends Controller
         if($validator->fails()) {
             return Redirect::to('admin/workshops/' . $id . '/edit')
                 ->withErrors($validator);
-                // ->withInput(Input::except('password'));
         } 
 
          // Update workshop
@@ -309,7 +307,6 @@ class WorkshopsController extends Controller
 
         if ($request->hasFile('cnic_image')) 
         {
-            // $ws_name = str_replace(' ', '_', $request->name);
             $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
             $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
             $cnic_image = $cnic_pic_path;
@@ -357,7 +354,7 @@ class WorkshopsController extends Controller
             }
         }
         
-        // Session::flash('message', 'Successfully updated Workshop!');
+        Session::flash('message', 'Successfully updated Workshop!');
         return Redirect::to('admin/workshops');
     }
 
@@ -2495,9 +2492,17 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
 
+    public function authorized()
+    {
+        $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'Authorized')->get();
+        return View::make('workshop.authorized')->with('workshops', $workshops);
+    }
 
-
-
+    public function unauthorized()
+    {
+        $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'UnAuthorized')->get();
+        return View::make('workshop.unauthorized')->with('workshops', $workshops);
+    }
 
 }
 

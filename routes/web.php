@@ -117,7 +117,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
 
         Route::get('/top-up', 'WorkshopsController@topup');
-        Route::post('/update-balance', 'WorkshopsController@topupBalance');        
+        Route::post('/update-balance', 'WorkshopsController@topupBalance');  
+        
+        Route::get('/authorized-workshops', 'WorkshopsController@authorized');
+        Route::get('/unauthorized-workshops', 'WorkshopsController@unauthorized');
     });
 
 });
