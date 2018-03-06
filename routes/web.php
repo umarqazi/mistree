@@ -42,7 +42,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
     Route::group(['middleware' => 'workshop'], function (){
 
-    //    Route::get('/history', 'WorkshopsController@show_history');
         Route::get('/customers', 'WorkshopsController@show_customers');
         Route::get('/requests', 'WorkshopsController@show_requests');
 
