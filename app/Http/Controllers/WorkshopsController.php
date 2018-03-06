@@ -93,8 +93,10 @@ class WorkshopsController extends Controller
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
+            'team_slots'                     => 'integer',
             'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
+            'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
             'shop'                           => 'required|numeric',
             'building'                       => 'string|nullable',
@@ -108,7 +110,7 @@ class WorkshopsController extends Controller
             'service-times.*'                => 'required',
         ];
 
-        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
+        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city', 'services');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -117,31 +119,32 @@ class WorkshopsController extends Controller
                 ->withInput(Input::except('password','password_confirmation'));
         }
 
-        //Insert Workshop data from request 
+        //Insert Workshop data from request
         $workshop = Workshop::create([
-                                'name' => $request->name, 
-                                'owner_name' => $request->owner_name ,
-                                'email' => $request->email, 
-                                'password' => Hash::make($request->password), 
-                                'cnic' => $request->cnic, 
-                                'mobile' => $request->mobile, 
-                                'type' => $request->type,                                
-                                'open_time' => $request->open_time, 
-                                'close_time' => $request->close_time, 
-                                'is_approved' => 1
-                            ]);
+            'name'          => $request->name,
+            'owner_name'    => $request->owner_name,
+            'email'         => $request->email,
+            'password'      => Hash::make($request->password),
+            'cnic'          => $request->cnic,
+            'mobile'        => $request->mobile,
+            'type'          => $request->type,
+            'slots'         => $request->team_slot,
+            'open_time'     => $request->open_time,
+            'close_time'    => $request->close_time,
+            'is_approved'   => true,
+        ]);
 
         //Insert Address data from request
         $address = WorkshopAddress::create([
-                                        'shop' => $request->shop, 
-                                        'building' => $request->building, 
-                                        'street' => $request->street, 
-                                        'block' => $request->block,
-                                        'town' => $request->town, 
-                                        'city' => $request->city, 
-                                        'workshop_id' => $workshop->id, 
-                                        'coordinates' => NULL
-                                    ]);
+            'shop'          => $request->shop,
+            'building'      => $request->building,
+            'street'        => $request->street,
+            'block'         => $request->block,
+            'town'          => $request->town,
+            'city'          => $request->city,
+            'workshop_id'   => $workshop->id,
+            'coordinates'   => NULL
+        ]);
 
         //Insert Services data from request        
         foreach($request->services as $service)
@@ -149,69 +152,58 @@ class WorkshopsController extends Controller
             $workshop->services()->attach($service, ['service_rate' => Input::get('service-rates')[$service] , 'service_time' => Input::get('service-times')[$service] ]);
         }
 
-        $workshop_balance = new WorkshopBalance;        
+        $balance = new WorkshopBalance([ 'balance' => 0 ]);
+        $workshop->balance()->save($balance);
 
-        $workshop_balance->balance              = 0;
-        $workshop_balance->workshop_id          = $workshop->id;
-        $workshop_balance->save();
-
-        if ($request->hasFile('profile_pic')) 
+        if ($request->hasFile('profile_pic'))
         {
-            // $ws_name = str_replace(' ', '_', $request->name);
-            $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
+            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
            
-            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $profile_pic = $profile_pic_path;
+            $profile_pic = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$profile_pic;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();            
         }
         else
         {
-          $profile_pic         =  url('img/thumbnail.png');
-          $workshop->profile_pic   = $profile_pic;
-          $workshop->save();
+            $profile_pic         =  url('img/thumbnail.png');
+            $workshop->profile_pic   = $profile_pic;
+            $workshop->save();
         }
 
         if ($request->hasFile('cnic_image')) 
         {
-            $ws_name = str_replace(' ', '_', $request->name);
-            $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $cnic_image = $cnic_pic_path;
-            $workshop->cnic_image   = $cnic_image;            
+            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$cnic_image;
+            $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
         else
         { 
-          $cnic_image         =  url('img/thumbnail.png');
-          $workshop->cnic_image   = $cnic_image;       
-          $workshop->save();
+            $cnic_image         =  url('img/thumbnail.png');
+            $workshop->cnic_image   = $cnic_image;
+            $workshop->save();
         }
 
-        if ($request->hasFile('ws_images')) 
+        if ($request->hasFile('images'))
         {
-             $files = $request->file('ws_images');
-
-            foreach($files as $file)
+            foreach($request->file('images') as $file)
             {
                 $images = new WorkshopImages;                
-                $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/ws_images', new File($file), 'public');
-                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-                $images->url = $ws_pic_path;                
+                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
+                $image = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$image;
+                $images->url = $image;
                 $images->workshop()->associate($workshop);
                 $images->save();
             }
         }       
 
-        $name = $request->name;        
-        $email = $request->email;        
         $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code         
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
+        Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
+            function($mail) use ($request, $subject){
                 $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-                $mail->to($email, $name);
+                $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
 
@@ -242,9 +234,8 @@ class WorkshopsController extends Controller
     {
         // get the workshop
         $workshop = Workshop::find($id);
-        $services = Service::all();
         // show the edit form and pass the workshop        
-        return View::make('workshop.edit')->with('workshop', $workshop)->with('services',$services);            
+        return View::make('workshop.edit')->with('workshop', $workshop)->with('images', $workshop->images);
     }
 
     /**
@@ -257,45 +248,42 @@ class WorkshopsController extends Controller
     public function update(Request $request, $id)
     {             
         $rules = [
-
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',            
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11',
+            'landline'                       => 'digits:11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'type'                           => 'required',
-            'profile_pic'                    => 'image|mimes:jpg,png',  
-            'cnic_image'                     => 'image|mimes:jpg,png',  
+            'type'                           => 'required|in:Authorized,Unauthorized',
+            'team_slots'                     => 'integer',
+            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
+            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
+            'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
             'shop'                           => 'required|numeric',
-            'building'                       => 'regex:/^[\pL\s\-]+$/u',
-            'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'required|string',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'nullable|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'service_id.*'                   => 'required|integer:unique',
-            'service_rate.*'                 => 'required|integer',
-            'service_time.*'                 => 'required|alpha_dash' 
-        ];  
+        ];
 
-        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
+        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
-            return Redirect::to('admin/workshops/' . $id . '/edit')
+            $request->offsetUnset('password');
+            return Redirect::back()
                 ->withErrors($validator);
-                // ->withInput(Input::except('password'));
-        } 
+        }
 
          // Update workshop
         $workshop = Workshop::find($id);
 
         if ($request->hasFile('profile_pic')) 
         {            
-            $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-            $profile_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $profile_pic = $profile_pic_path;    
+            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
+            $profile_pic = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$profile_pic;
         }
         else
         {
@@ -305,10 +293,8 @@ class WorkshopsController extends Controller
 
         if ($request->hasFile('cnic_image')) 
         {
-            // $ws_name = str_replace(' ', '_', $request->name);
-            $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-            $cnic_image = $cnic_pic_path;
+            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$cnic_image;
         }
         else
         {
@@ -321,8 +307,9 @@ class WorkshopsController extends Controller
         $workshop->mobile           = Input::get('mobile');
         $workshop->landline         = Input::get('landline');
         $workshop->type             = Input::get('type');
+        $workshop->slots            = Input::get('team_slot');
         $workshop->profile_pic      = $profile_pic;
-        $workshop->cnic_image      =  $cnic_image;        
+        $workshop->cnic_image       = $cnic_image;
         $workshop->open_time        = Input::get('open_time');
         $workshop->close_time       = Input::get('close_time');        
         $workshop->save();   
@@ -338,15 +325,15 @@ class WorkshopsController extends Controller
                         
         $address->update();
 
-        if($request->hasFile('ws_images')) 
+        if($request->hasFile('images'))
         {
-            $files = $request->file('ws_images');
-            foreach($files as $file)
+            $workshop->images()->disassociate();
+            foreach($request->file('images') as $file)
             {
-                $images = new WorkshopImages;                
-                $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/ws_images', new File($file), 'public');
-                $ws_pic_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
-                $images->url = $ws_pic_path;
+                $images = new WorkshopImages;
+                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
+                $image = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$image;
+                $images->url = $image;
                 $images->save();
                 $workshop->images()->associate($images);
                 $workshop->save();

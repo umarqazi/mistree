@@ -137,6 +137,7 @@
                                         <option value="4" @if(old('team_slot') == "4"){{ "selected" }}@endif>4</option>
                                     </select>
                                 </div>
+
                               <div class="form-group">                              
                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
                                 <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}">
@@ -172,19 +173,19 @@
                               <div class="form-group">      
                                 <label class="control-label">Workshop Picture 1:</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" class="form-control" name="ws_images[]">
+                                <input type="file" class="form-control" name="images[]">
                               </div>
 
                               <div class="form-group">      
                                 <label class="control-label">Workshop Picture 2:</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" class="form-control" name="ws_images[]">
+                                <input type="file" class="form-control" name="images[]">
                               </div>
 
                               <div class="form-group">      
                                 <label class="control-label">Workshop Picture 3:</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" class="form-control" name="ws_images[]">
+                                <input type="file" class="form-control" name="images[]">
                               </div>
                               </div>
                             </div>
@@ -304,7 +305,7 @@
                                           <label class="control-label">Select Services <span class="manadatory">*</span></label>
                                           <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
                                             @foreach ($services as $service)
-                                            <option value="{{$service->id}}" @if(in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
+                                            <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
                                             @endforeach
                                           </select>
                                           @if ($errors->has('services'))
@@ -343,43 +344,6 @@
 
 </div>
 
-<script type="text/javascript" src="{{ url('js/workshop-profile.js') }}"></script>
-
-{{--<script>
-  c = 1;
-  x = 0;
-  function addmoreServices(event){
-    event.preventDefault();
-
-    c++;
-    x++;
-
-    var servicesSelectedVal = $('#services-box-'+x+' select').val();
-
-    if(servicesSelectedVal){
-      var servicesBox = $('#services-box-'+x).html();
-
-      $(".services-row").append('<div id="services-box-'+c+'" class="col-sm-4"></div>');
-      $("#services-box-"+c).append(servicesBox);
-
-      $('#services-box-'+c+' select option').each(function() {
-
-          if ( $(this).val() == servicesSelectedVal ) {
-              $(this).remove();
-          }
-      });
-    } else{
-      alert('Please select an option.');
-      c--;
-      x--;
-    }
-
-    //$(".services-row").append('<div class="col-sm-4"> <div class="child-box-wrap"><a class="pull-right" onclick="removeService(this);"> X </a><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service<span class="manadatory"> *</span></label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
-  }
-  function removeService(obj)
-  {
-     $(obj).parent('div').parent('div').remove();
-  }
-</script>--}}
+@include('workshop.workshop-profile-js')
 @include('partials.footer')
 @endsection
