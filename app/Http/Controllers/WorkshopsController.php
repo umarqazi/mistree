@@ -10,6 +10,7 @@ use App\Workshop;
 use App\WorkshopImages;
 use App\Service;
 use App\WorkshopAddress;
+use App\WorkshopQuery;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -1458,4 +1459,131 @@ class WorkshopsController extends Controller
         $workshop = Auth::guard('workshop')->user();
         return View::make('workshops.index')->with('workshop', $workshop);                       
     }
+
+    
+    /**
+     * Store a newly created Workshop Query.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/workshop/add-workshop-query",
+     *   summary="Add Workshop Query",
+     *   operationId="add_workshop_query",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   consumes={"application/xml", "application/json"},
+     *   produces={"application/xml", "application/json"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="subject",
+     *     in="formData",
+     *     description="Subject",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="message",
+     *     in="formData",
+     *     description="Message",
+     *     required=true,
+     *     type="text"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function add_workshop_query(Request $request){
+    {
+        $workshop_id = JWT::Authenticate()->id;
+        $rules = array(
+            'subject'      => 'required',
+            'message'      => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Incomplete Details!',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        } else {
+            // store
+            $workshopquery              = new WorkshopQuery;
+            $workshopquery->workshop_id = $request->workshop_id;
+            $workshopquery->subject     = $request->subject;
+            $workshopquery->message     = $request->message;
+            $workshopquery->status      = '';
+            $workshopquery->save();
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Query has been Added.',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+    }
+
+    /**
+     * Delete Workshop Query.
+     *
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/delete-workshop-query",
+     *   summary="Delete Workshop Query",
+     *   operationId="delete_workshop_query",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   consumes={"application/xml", "application/json"},
+     *   produces={"application/xml", "application/json"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Workshop Query Id",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function delete_workshop_query($id){
+    {
+        // delete
+        $workshopquery = WorkshopQuery::find($id);
+        $workshopquery->->delete();
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Query has been Deleted.',
+            'body' => ''
+        ],Response::HTTP_OK);
+
+    }
 }
+
+
