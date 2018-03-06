@@ -37,6 +37,13 @@ class Workshop extends Authenticatable
     protected $dates = ['deleted_at'];
 
     /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
+
+    /**
      * Get the phone record associated with the user.
      */
     public function address()
@@ -46,7 +53,7 @@ class Workshop extends Authenticatable
 
     public function services()
     {
-        return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time');
+        return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time')->withTimestamps();
     }
 
     public function bookings()
@@ -75,4 +82,25 @@ class Workshop extends Authenticatable
     {
         $this->notify(new WorkshopResetPassword($token));
     }
+//    Returns sum of the workshop
+    public function sumOfServiceRates($workshop)
+    {
+       $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
+        return $sum;
+    }
+
+    public function billings()
+    {
+        return $this->hasMany('App\Billing');
+    }
+
+    public function balance(){
+        return $this->hasOne('App\WorkshopBalance');       
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany('App\WorkshopLedger');
+    }
 }
+

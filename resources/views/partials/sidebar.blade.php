@@ -22,6 +22,12 @@
                         <p>Customers</p>
                     </a>
                 </li>
+                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars')) class="active" @endif >
+                    <a href="{{url('admin/cars')}}">
+                        <i class="ti-car"></i>
+                        <p>Cars</p>
+                    </a>
+                </li>
                 <li @if(Request::is('admin/workshops/*') || Request::is('admin/workshops')) class="active" @endif>
                     <a href="{{url('admin/workshops')}}">
                         <i class="ti-view-list-alt"></i>
@@ -32,6 +38,12 @@
                     <a href="{{url('admin/services')}}">
                         <i class="ti-panel"></i>
                         <p>Services</p>
+                    </a>
+                </li>
+                <li  @if(Request::is('admin/top-up/*') || Request::is('admin/top-up')) class="active" @endif >
+                    <a href="{{url('admin/top-up')}}">
+                        <i class="ti-panel"></i>
+                        <p>Top UP</p>
                     </a>
                 </li>
                 <li>

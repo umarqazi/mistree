@@ -28,7 +28,7 @@ class ResetPasswordController extends Controller
      *
      * @var string
      */
-    public $redirectTo = '/customer/home';
+    public $redirectTo = '/customer/successfully-recover';
 
 
     /**
@@ -36,10 +36,10 @@ class ResetPasswordController extends Controller
      *
      * @return void
      */
-    public function __construct()
+    /*public function __construct()
     {
         $this->middleware('customer.guest');
-    }
+    }*/
 
     /**
      * Display the password reset view for the given token.

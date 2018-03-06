@@ -20,13 +20,24 @@ class Booking extends Model
 
     public function workshop()
     {
-        return $this->belongsTo('App\Workshops');
+        return $this->belongsTo('App\Workshop');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo('App\Customer');
     }
 
     public function services()
     {
-        return $this->belongsToMany('App\Service');
+        return $this->belongsToMany('App\Service')->withPivot('name', 'service_rate', 'service_time', 'loyalty_points', 'lead_charges')->withTimestamps();
     }
+
+    public function billing()
+    {
+        return $this->hasOne('App\Billing');
+    }
+    
 
 
 }

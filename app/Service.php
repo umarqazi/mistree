@@ -29,17 +29,22 @@ class Service extends Model
 
     public function workshops()
     {
-        return $this->belongsToMany('App\Workshop', 'workshop_service');
+        return $this->belongsToMany('App\Workshop', 'workshop_service')->withTimestamps();
     }
 
     public function bookings()
     {
-        return $this->belongsToMany('App\Booking');
+        return $this->belongsToMany('App\Booking')->withPivot('name', 'service_rate', 'service_time', 'loyalty_points', 'lead_charges')->withTimestamps();
     }
 
     public function services()
     {
         return $this->hasMany('App\Service', 'service_parent');
+    }
+
+    public function parent($id)
+    {
+        return $this->find($id);
     }
 
 }

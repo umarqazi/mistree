@@ -26,11 +26,11 @@ class ServicesController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/workshop/getServices",
-     *   summary="All Services for Workshop",
+     *   path="/api/services",
+     *   summary="All Services for Workshops",
      *   operationId="select services",
      *   produces={"application/json"},
-     *   tags={"Workshops"},
+     *   tags={"Services"},
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -39,7 +39,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::all();
+        $services = Service::orderBy('created_at')->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -63,7 +63,7 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $services = Service::where('service_parent', 0)->get();
+        $services = Service::orderBy('service_parent')->get();
         return View::make('services.create')->with('services', $services);
     }
 
@@ -75,7 +75,7 @@ class ServicesController extends Controller
      */
     public function store(Request $request)
     {
-        $services   = Service::where('service_parent', 0)->get();
+        $services   = Service::all();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
@@ -144,7 +144,7 @@ class ServicesController extends Controller
     {
         // get the service
         $service = Service::find($id);
-        $services = Service::where('service_parent', 0)->where('id', '<>', $service->id)->get();
+        $services = Service::where('id', '<>', $service->id)->orderBy('service_parent')->get();
 
         // show the view and pass the service to it
         return View::make('services.edit', compact('service','services'));
@@ -159,7 +159,7 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $services   = Service::where('service_parent', 0)->where('id', '<>', $id)->get();
+        $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
@@ -214,5 +214,25 @@ class ServicesController extends Controller
         // redirect
         Session::flash('message', 'Successfully deleted the Service!');
         return Redirect::to('admin/services');
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        $service = Service::withTrashed()->find($id);
+        $service->restore();
+        return redirect ('/admin/service/inactive');
+    }
+
+    public function inactive_services()
+    {
+        $services = Service::onlyTrashed()->get();  
+        return View::make('services.inactive')
+        ->with('services', $services);
     }
 }
