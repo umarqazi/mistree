@@ -20,6 +20,7 @@ class CreateWorkshopQueries extends Migration
             $table->string('subject');
             $table->text('message');
             $table->string('status');
+            $table->boolean('is_resolved');
             $table->timestamps();
         });
     }
@@ -32,7 +33,7 @@ class CreateWorkshopQueries extends Migration
     public function down()
     {
         Schema::table('workshop_queries', function (Blueprint $table) {
-            $table->dropForeign('workshop_queries_customer_id_foreign');
+            $table->dropForeign('workshop_queries_workshop_id_foreign');
         });
         Schema::dropIfExists('workshop_queries');
     }
