@@ -53,8 +53,9 @@
                                     @else
                                     <td></td>
                                     @endif
-                                    <td>{{23*($key+1) }}</td>
-                                    <td>{{ 2*($key+1) }}</td>
+                                    <td>{{ $value->balance['balance'] }}</td>
+                                    @php $leads = $value->bookings->count(); @endphp
+                                    <td>{{ $leads }}</td>
                                     <td>
                                         @if( ! $value->is_approved )
                                             Not Approved
