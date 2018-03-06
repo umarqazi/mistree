@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Redirect;
 use Hash, DB, Config, Mail, View;
 use App\Customer;
 use App\Address;
+use App\CustomerQuery;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -658,5 +659,129 @@ class CustomersController extends Controller
         $customer = Customer::where('id', '=', $id)->first();
         $customer->update(['status' => 0]);        
         return Redirect::to('/admin/customers');
+    }
+
+    /**
+     * Store a newly created Customer Query.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/add-customer-query",
+     *   summary="Add Customer Query",
+     *   operationId="add_customer_query",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   consumes={"application/xml", "application/json"},
+     *   produces={"application/xml", "application/json"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="subject",
+     *     in="formData",
+     *     description="Subject",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="message",
+     *     in="formData",
+     *     description="Message",
+     *     required=true,
+     *     type="text"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function add_customer_query(Request $request){
+    {
+        $customer_id = JWT::Authenticate()->id;
+        $rules = array(
+            'subject'      => 'required',
+            'message'      => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'Incomplete Details!',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        } else {
+            // store
+            $customerquery              = new CustomerQuery;
+            $customerquery->customer_id = $request->customer_id;
+            $customerquery->subject     = $request->subject;
+            $customerquery->message     = $request->message;
+            $customerquery->status      = '';
+            $customerquery->save();
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Query has been Added.',
+                'body' => $request->all()
+            ],Response::HTTP_OK);
+        }
+    }
+
+    /**
+     * Delete Customer Query.
+     *
+     * @param $id
+     * @return \Illuminate\Http\Response
+     */
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/delete-customer-query",
+     *   summary="Delete Customer Query",
+     *   operationId="delete_customer_query",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   consumes={"application/xml", "application/json"},
+     *   produces={"application/xml", "application/json"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="id",
+     *     in="path",
+     *     description="Customer Query Id",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function delete_customer_query($id){
+    {
+        // delete
+        $customerquery = CustomerQuery::find($id);
+        $customerquery->->delete();
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Query has been Deleted.',
+            'body' => ''
+        ],Response::HTTP_OK);
+
     }
 }
