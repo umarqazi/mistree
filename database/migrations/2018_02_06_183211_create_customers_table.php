@@ -18,6 +18,7 @@ class CreateCustomersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('con_number')->nullable();
+            $table->unsignedInteger('loyalty_points')->default(0);
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

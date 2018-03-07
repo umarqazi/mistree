@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class Booking extends Model
 {
@@ -31,7 +32,7 @@ class Booking extends Model
 
     public function services()
     {
-        return $this->belongsToMany('App\Service')->withPivot('name', 'service_rate', 'service_time')->withTimestamps();
+        return $this->belongsToMany('App\Service')->withPivot('name', 'service_rate', 'service_time', 'loyalty_points', 'lead_charges')->withTimestamps();
     }
 
     public function billing()
@@ -42,6 +43,11 @@ class Booking extends Model
     public function car()
     {
         return $this->belongsTo('App\Car');
+    }
+  
+    public function getJobDateAttribute($date) 
+    { 
+        return Carbon::createFromFormat('Y-m-d', $date)->format('d-m-Y'); 
     }
 
 

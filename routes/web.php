@@ -18,6 +18,9 @@ Route::group(['prefix' => 'customer'], function () {
     Route::get('/password/reset', 'CustomerAuth\ForgotPasswordController@showLinkRequestForm')->name('password.reset');
     Route::get('/password/reset/{token}', 'CustomerAuth\ResetPasswordController@showResetForm');
     Route::get('/verify/{verification_code}', 'CustomersController@verifyEmail');
+    Route::get('successfully-recover', function (){
+        return view('customer.successfullyRecover');
+    });
 });
 // ========= Customer Routes End ===================================================
 // ========= Worshop Routes Start ==================================================
@@ -42,7 +45,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
     Route::group(['middleware' => 'workshop'], function (){
 
-        Route::get('/history', 'WorkshopsController@show_history');
         Route::get('/customers', 'WorkshopsController@show_customers');
         Route::get('/requests', 'WorkshopsController@show_requests');
 
@@ -50,6 +52,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
         Route::post('/profile/{id}', 'WorkshopsController@update_profile');
+        Route::get('/ledger', 'WorkshopsController@getLedger');
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
@@ -57,6 +60,10 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
+        
+        Route::get('leads','BookingsController@leadsHistory');
+        Route::get('leads/accepted','BookingsController@acceptedLeads');
+        Route::get('leads/rejected','BookingsController@rejectedLeads');
     });
 
 });
@@ -91,7 +98,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
+        Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit']]);
         Route::resource('cars', 'CarsController');
+        Route::put('resolve-workshop-query/{workshopQuery}', 'WorkshopQueriesController@resolve');
         Route::get('/home','AdminsController@home')->name('admin.home');
 
         Route::get('/inactive-cars', 'CarsController@inactive_cars');
@@ -112,10 +121,16 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/activate-customer/{id}', 'CustomersController@activateCustomer');
         Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
         Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
-        Route::get('/undo-approval-workshop/{id}', 'WorkshopsController@undoWorkshopApproval');
-      
+
         Route::get('/top-up', 'WorkshopsController@topup');
-        Route::post('/update-balance', 'WorkshopsController@topupBalance');        
+        Route::post('/update-balance', 'WorkshopsController@topupBalance');
+
+        Route::get('workshop/{workshop}/history', 'BookingsController@workshopHistory');
+        Route::get('workshop/{workshop}/history/rejected-leads', 'BookingsController@workshopRejectedLeads');                
+        Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
+        Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
+        Route::get('workshop/{id}/ledger', 'WorkshopsController@workshopLedger');
+                
     });
 
 });

@@ -11,6 +11,7 @@ use App\Customer;
 use App\Address;
 use App\Booking;
 use App\Billing;
+use App\Workshop;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -501,65 +502,22 @@ class CustomersController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    /**
-     * @SWG\Get(
-     *   path="/api/customer/verify-email",
-     *   summary="Verify Customer Email",
-     *   operationId="verifyEmail",
-     *   produces={"application/json"},
-     *   tags={"Customers"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
-     *   @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="verification_code",
-     *     in="query",
-     *     description="Verification Code",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *
-     */
     public function verifyEmail($verification_code)
     {
         $check = DB::table('customer_verifications')->where('token',$verification_code)->first();
         if(!is_null($check)){
-            $customer = Customer::find($check->id);
+            $customer = Customer::find($check->cust_id);
             if( $customer->is_verified ){
 
-                return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Account already verified.',
-                    'body' => null
-                ],Response::HTTP_OK);
+                return View::make('customer.thankyou')->with('message', 'Account already verified.');
             }
             $customer->update(['is_verified' => 1]);
             DB::table('customer_verifications')->where('token',$verification_code)->delete();
 
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'You have successfully verified your email address.',
-                'body' => null
-            ],Response::HTTP_OK);
+            return View::make('customer.thankyou')->with('message', 'Thank You For Verifying Your Email.');
         }
 
-        return response()->json([
-            'http-status' => Response::HTTP_OK,
-            'status' => false,
-            'message' => 'Verification code is invalid.',
-            'body' => null
-        ],Response::HTTP_OK);
+        return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
     }
 
     /**
@@ -1192,6 +1150,107 @@ class CustomersController extends Controller
                     'body' => $bookings
                 ],Response::HTTP_OK);        
         }        
+    }
+
+    /**
+     * API Lead Rating from Customer
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+
+     * @SWG\Patch(
+     *   path="/api/customer/leave-rating/{billing_id}",
+     *   summary="Lead Review and Rating",
+     *   operationId="insert",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="billing_id",
+     *     in="path",
+     *     description="Billing Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="review",
+     *     in="formData",
+     *     description="Lead Review",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="ratings",
+     *     in="formData",
+     *     description="Lead Ratings",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function insertRatings(Request $request, $billing_id){        
+        
+        $billing = Billing::find($billing_id);
+        $billing->review        = $request->review;
+        $billing->ratings       = $request->ratings;
+        $billing->save();
+
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Ratings Given',
+                'body' => $request->all()
+            ],Response::HTTP_OK);                
+    }
+
+    /**
+     * API Workshop Details for customer to create Bookings
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+
+     * @SWG\Get(
+     *   path="/api/customer/get-workshop/{workshop_id}",
+     *   summary="Get Workshop Details",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Customer's Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="path",
+     *     description="Workshop Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function getWorkshopDetails($workshop_id){        
+        
+        $workshop = Workshop::find($workshop_id);                
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Ratings Given',
+                'body' => $workshop->load('services')
+            ],Response::HTTP_OK);                
     }
 
 }

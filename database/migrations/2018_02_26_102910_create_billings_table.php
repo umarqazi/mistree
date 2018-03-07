@@ -22,7 +22,10 @@ class CreateBillingsTable extends Migration
             $table->integer('customer_id')->unsigned();
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->decimal('amount', 11, 2);            
-            $table->decimal('paid_amount', 11, 2)->nullable();    
+            $table->decimal('paid_amount', 11, 2)->nullable();
+            $table->decimal('lead_charges',7,2);
+            $table->tinyInteger('ratings')->nullable();    
+            $table->text('review')->nullable();
             $table->timestamps();
         });
     }
