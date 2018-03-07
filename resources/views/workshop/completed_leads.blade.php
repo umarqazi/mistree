@@ -3,6 +3,8 @@
 @section('content')
 
 @include('partials.header')
+
+    
 <div class="content">           
     <div class="container-fluid">
         <div class="row">
@@ -25,6 +27,7 @@
                                 <div class="current text-right">Current Balance: PKR {{$balance['balance']}}</div>
                                 <div class="total text-right">Total Earnings: PKR {{$total_earning}}</div>
 
+                                <div class="clear20"></div>
                                 <div class="row">
                                     <div class="col-sm-6 col-sm-offset-6 balance-info">                         
                                         <div class="clear10"></div>
@@ -33,16 +36,15 @@
                                            + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}">All Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}">Completed Leads</a>
+                                                 <a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}">All Leads</a>
                                                 <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}">Accepted Leads</a>
+                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}">Rejected Leads</a>
                                             </div>
                                         </div>
                                     </div>
-                                </div> 
-
-                                <div>
-                                    
+                                </div>
+                                <div>                            
+                                   
                                 </div>
                                 <div class="clear10"></div><div class="clear5"></div>
                             </div>

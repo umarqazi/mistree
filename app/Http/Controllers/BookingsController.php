@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
+use DB, Config, Mail, View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +23,7 @@ class BookingsController extends Controller
 
      /**
      * @SWG\Post(
-     *   path="/api/workshop/createbooking",
+     *   path="/api/workshop/create-booking",
      *   summary="Create Booking",
      *   operationId="booking",
      *   produces={"application/json"},
@@ -94,13 +95,13 @@ class BookingsController extends Controller
 		$rules = [
             'customer_id'                    => 'required|integer',
             'workshop_id'                    => 'required|integer',
-            'customer_car_id'                => 'required|integer',
+            'car_id'                         => 'required|integer',
             'job_date'                       => 'required',            
             'job_time'                       => 'required',
             'services'                       => 'required'             
         ];        
 
-        $input = $request->only('customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'services');
+        $input = $request->only('customer_id', 'workshop_id', 'car_id', 'job_date', 'job_time', 'services');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -116,7 +117,7 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $request->customer_id;
         $booking->workshop_id            = $request->workshop_id;
-		$booking->customer_car_id        = $request->customer_car_id;
+		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
         $booking->response 			     = 'waiting';
@@ -131,7 +132,7 @@ class BookingsController extends Controller
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
                 $service_info = $workshop->services()->where('service_id',$service)->first();
-                $booking->services()->attach($service,['name' => $service_info->name, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
+                $booking->services()->attach($service,['name' => $service_info->name, 'lead_charges' => $service_info->lead_charges, 'loyalty_points' => $service_info->loyalty_points, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
             }
         }        
 
@@ -224,7 +225,7 @@ class BookingsController extends Controller
 
      /**
      * @SWG\Post(
-     *   path="/api/customer/amount-paid",
+     *   path="/api/customer/billing/{billing_id}/amount-paid",
      *   summary="Bill Paid by customer",
      *   operationId="Paid Bill",
      *   produces={"application/json"},
@@ -238,7 +239,7 @@ class BookingsController extends Controller
      *   ),
      *   @SWG\Parameter(
      *     name="billing_id",
-     *     in="formData",
+     *     in="path",
      *     description="Billing ID",
      *     required=true,
      *     type="integer"
@@ -255,9 +256,9 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      */
-    public function customerpaidbill(Request $request){
+    public function customerpaidbill(Request $request, $billing_id){
 
-        $billing = Billing::find($request->billing_id);
+        $billing = Billing::find($billing_id);
         $billing->paid_amount = $request->paid_amount;
         $billing->save();
 
@@ -292,13 +293,6 @@ class BookingsController extends Controller
      *     required=true,
      *     type="integer"
      *   ),
-     *   @SWG\Parameter(
-     *     name="customer_id",
-     *     in="formData",
-     *     description="Customer ID",
-     *     required=true,
-     *     type="integer"
-     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -307,11 +301,10 @@ class BookingsController extends Controller
     public function completeLead(Request $request){
         $workshop_id = Auth::user()->id;
         $rules = [                        
-            'booking_id'                        => 'required|integer',
-            'customer_id'                       => 'required|integer'           
+            'booking_id'                        => 'required|integer',            
         ];   
         
-        $input = $request->only('booking_id', 'customer_id');
+        $input = $request->only('booking_id');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -326,26 +319,34 @@ class BookingsController extends Controller
         $booking = Booking::find($request->booking_id);                            
         $booking_services = $booking->services;
         $booking->job_status = 'completed';
-        $booking->save();
 
+        $loyalty_points = 0;
+        $lead_charges = 0;
         $bill = 0;
         foreach($booking_services as $service){
             $bill = $service->pivot->service_rate + $bill;            
+            $lead_charges = $service->pivot->lead_charges + $lead_charges;
+            $loyalty_points = $service->pivot->loyalty_points + $loyalty_points;
         }        
+        $booking->loyalty_points = $loyalty_points;
+        $booking->save();
 
         $billing = new Billing;
         $billing->workshop_id                = $workshop_id;         
         $billing->booking_id                 = $request->booking_id;
         $billing->amount                     = $bill;
-        $billing->customer_id                = $request->customer_id;
+        $billing->customer_id                = $booking->customer_id;
+        $billing->lead_charges               = $lead_charges;
 
         $billing->save();
 
-        $services_count = $booking->services->count();
-        $deduction = $services_count * 50;
         $workshop = Workshop::find($workshop_id);
         $balance = $workshop->balance->balance;        
-        $new_balance = $balance - $deduction;
+        $new_balance = $balance - $lead_charges;
+
+        $customer = Customer::find($booking->customer_id);
+        $customer->loyalty_points = $loyalty_points;        
+        $customer->save();
 
         $workshop->balance->update(['balance'=>$new_balance]);
 
@@ -353,7 +354,7 @@ class BookingsController extends Controller
 
         $transaction->workshop_id                   = $workshop_id;         
         $transaction->booking_id                    = $request->booking_id;         
-        $transaction->amount                        = $deduction;         
+        $transaction->amount                        = $lead_charges;         
         $transaction->transaction_type              = 'Job-Billing';         
         $transaction->unadjusted_balance            = $balance;         
         $transaction->adjusted_balance              = $new_balance;
@@ -364,8 +365,81 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Job Completed',
-                    'body' => ''
+                    'body' => ['billing'=> $billing]
                 ],Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/lead/{booking_id}/enter-millage",
+     *   summary="Completed Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="millage",
+     *     in="formData",
+     *     description="Millage at job date",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function insertMillage(Request $request, $booking_id){        
+        
+        $booking = Booking::find($booking_id);
+        $booking->millage =$request->millage;
+        $booking->save() ;
+
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Millage Entered',
+                'body' => ''
+            ],Response::HTTP_OK);      
+    }
+
+    public function workshopHistory(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.history',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings, 'workshop'=>$workshop]);
+    }
+
+    public function workshopRejectedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','rejected'), 'workshop'=>$workshop]);       
+    }
+
+    public function workshopAcceptedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','accepted'), 'workshop'=>$workshop]);       
+    }
+
+    public function workshopCompletedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status','completed'), 'workshop'=>$workshop]);       
     }    
 
     // Leads

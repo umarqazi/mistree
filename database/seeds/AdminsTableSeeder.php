@@ -19,7 +19,7 @@ class AdminsTableSeeder extends Seeder
 
         Admin::create([
             'name'      => 'Administrator',
-            'email'     => 'admin@wmp.com',
+            'email'     => 'admin@wmp.com.pk',
             'password'  => Hash::make('admin'),
             'con_number'=> '01234567890',
             'remember_token'    => str_random(10),

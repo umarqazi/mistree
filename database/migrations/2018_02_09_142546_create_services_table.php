@@ -19,6 +19,7 @@ class CreateServicesTable extends Migration
             $table->unsignedInteger('service_parent')->default(0);
             $table->unsignedInteger('loyalty_points')->default(0);
             $table->string('image', 2048)->nullable();
+            $table->decimal('lead_charges',7,2);
             $table->softDeletes();
             $table->timestamps();
         });

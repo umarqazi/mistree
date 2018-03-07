@@ -28,6 +28,11 @@
                         <p>Leads</p>
                     </a>
                 </li>
+                <li {{{ (Request::is('ledger') ? 'class=active' : '') }}}>
+                    <a href="{{url('/ledger')}}">
+                        <i class="ti-panel"></i>
+                        <p>Ledger</p>
+                    </a>
                 </li>
                 <li {{{ (Request::is('customers') ? 'class=active' : '') }}}>
                     <a href="{{url('/customers')}}">
