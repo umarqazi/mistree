@@ -112,8 +112,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
         Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
 
-        Route::get('/activate-customer/{id}', 'CustomersController@activateCustomer');
-        Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
+        Route::get('customer/unblock/{id}', 'CustomersController@unblockCustomer');
+        Route::get('/blocked-customers', 'CustomersController@blockedCustomers');
         Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
 
         Route::get('/top-up', 'WorkshopsController@topup');

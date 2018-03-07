@@ -24,7 +24,7 @@
                                 <div class="clear10"></div><div class="clear5"></div>
                                 <div class="text-right"><a href="{{ url('admin/workshops/create') }}" class="btn btn-header btn-export">Add New Workshop</a></div>
                                 <br> 
-                                <div class="text-right"><a href="{{ url('admin/workshops/block') }}" class="btn btn-header btn-export">Blocked Workshop</a></div>
+                                <div class="text-right"><a href="{{ url('admin/workshops/block') }}" class="btn btn-header btn-export">Blocked Workshops</a></div>
                             </div>
                         </div>
                     </div>
