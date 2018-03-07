@@ -6,6 +6,7 @@ use App\Notifications\WorkshopResetPassword;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use DB;
 
 class Workshop extends Authenticatable
 {
@@ -56,6 +57,11 @@ class Workshop extends Authenticatable
         return $this->belongsToMany('App\Service', 'workshop_service')->withPivot('id', 'service_rate', 'service_time')->withTimestamps();
     }
 
+    public function selectedServices($query, $name)
+    {
+        return $this->services()->where($query, 'LIKE', $name);
+    }
+
     public function bookings()
     {
         return $this->hasMany('App\Booking');
@@ -82,10 +88,10 @@ class Workshop extends Authenticatable
     {
         $this->notify(new WorkshopResetPassword($token));
     }
-//    Returns sum of the workshop
+    //    Returns sum of the workshop
     public function sumOfServiceRates($workshop)
     {
-       $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
+        $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
         return $sum;
     }
 
@@ -101,6 +107,35 @@ class Workshop extends Authenticatable
     public function transactions()
     {
         return $this->hasMany('App\WorkshopLedger');
+    }
+
+    public static function get_workshop_by_service($workshops, $service_name)
+    {
+        $services = explode(',', $service_name);
+        $services = array_map('trim', $services);
+        $workshops = $workshops->with(['services' => function($query) use ($services) {
+            foreach($services as $key => $service_name){
+                if($key == 0)
+                    $query->where('services.name', 'LIKE', '%'.$service_name.'%');
+                else
+                    $query->orwhere('services.name', 'LIKE', '%'.$service_name.'%');
+            }
+            return $query;
+        }]);
+        foreach ($services as $service) {
+            $workshops->whereHas('services', function($query) use ($service){
+                $query->where('services.name', 'LIKE', '%'.$service.'%');
+            });
+        }
+        return $workshops;
+    }
+    public static function get_workshop_by_address($workshops, $key, $value)
+    {
+        $workshops = $workshops->whereHas('address', function($query) use ($key, $value) {
+            $query->where($key, 'LIKE', '%'.$value.'%');
+            return $query;
+        });
+        return $workshops;
     }
 }
 

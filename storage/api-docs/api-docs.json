@@ -1449,13 +1449,6 @@
                         "type": "string"
                     },
                     {
-                        "name": "address_area",
-                        "in": "formData",
-                        "description": "Workshop Address Area",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
                         "name": "address_town",
                         "in": "formData",
                         "description": "Workshop Address Town",

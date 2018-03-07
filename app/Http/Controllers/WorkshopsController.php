@@ -1304,7 +1304,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="service_name",
      *     in="formData",
-     *     description="Sercice Name",
+     *     description="Service Name",
      *     required=false,
      *     type="string"
      *   ),
@@ -1312,13 +1312,6 @@ class WorkshopsController extends Controller
      *     name="address_block",
      *     in="formData",
      *     description="Workshop Address Block",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_area",
-     *     in="formData",
-     *     description="Workshop Address Area",
      *     required=false,
      *     type="string"
      *   ),
@@ -1343,48 +1336,26 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {   
-        // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
-        /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
-        $workshops = Workshop::with('address');
-        $workshop_ids = [];
+        $workshops      = Workshop::with('address');
         if ($request->has('name')) {
-            $workshops = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
+            $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
         if ($request->has('type')) {
-            $workshops = $workshops->where('type', $request->type);
-        }
-        // if ($request->has('geo_cord')) {
-        //     $workshops->where('geo_cord', $request->geo_cord);
-        // }
-        if ($request->has('service_name')) {
-            // $workshops = $workshops->where('services.name', $request->service_name);
-            $service_names = explode(", ",$request->service_name);
-            foreach($service_names as $service_name){
-                 $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', 'LIKE', '%'.$service_name.'%')->get()->pluck('workshop_id')->toArray();
-                $workshops = $workshops->whereIn('id', $workshop_ids);
-            }
-
-            $workshops=$workshops->with(['services' => function($query) use ($service_names) {
-                $query->whereIn('name', $service_names);
-            }]);
+            $workshops  = $workshops->where('type', $request->type);
         }
         if ($request->has('address_block')) {
-            $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
-        }
-        if ($request->has('address_area')) {
-            $workshops = $workshops->where('address.area', 'LIKE', '%'.$request->address_area.'%');
+            $workshops  = Workshop::get_workshop_by_address($workshops, 'block', $request->address_block);
         }
         if ($request->has('address_town')) {
-            $workshops = $workshops->where('address.town', 'LIKE', '%'.$request->address_town.'%');
+           $workshops  = Workshop::get_workshop_by_address($workshops, 'town', $request->address_town);
         }
         if ($request->has('address_city')) {
-            $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
+           $workshops  = Workshop::get_workshop_by_address($workshops, 'city', $request->address_city);
         }
-
-        $workshops = $workshops->with('services.pivot');
-        $workshops = $workshops->get();
-        $eachWorkShop = new Workshop();
-
+        if ($request->has('service_name')) {
+            $workshops = Workshop::get_workshop_by_service($workshops, $request->service_name);
+        }
+        $workshops          = $workshops->get();
         foreach ($workshops as $key =>$workshop) {
             $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
@@ -1392,7 +1363,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => '',
-            'body' => $workshops
+            'body' => $workshops,
         ],Response::HTTP_OK);
     }
 
