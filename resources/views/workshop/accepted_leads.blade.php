@@ -62,19 +62,12 @@
                                 </tr>
                             </thead>
                             <tbody>                            
-                                @foreach($leads as $lead)
-                                @php 
-                                    $ser = ''; 
-                                    foreach($lead->services as $service){
-                                        $ser .= $service->name.', ';
-                                    }
-                                @endphp
+                                @foreach($leads as $lead)                                
                                 <tr role="row" class="odd">                                    
                                     <td>{{$lead->job_date}}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>
-                                    <td>{{rtrim($ser, ', ')}}
-                                    </td>
+                                    <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
                                     <td>{{$lead->job_time}}</td>
                                     <td>{{$lead->billing['amount']}}</td>
                                     <td><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
