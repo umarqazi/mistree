@@ -93,13 +93,13 @@ class BookingsController extends Controller
 		$rules = [
             'customer_id'                    => 'required|integer',
             'workshop_id'                    => 'required|integer',
-            'customer_car_id'                => 'required|integer',
+            'car_id'                         => 'required|integer',
             'job_date'                       => 'required',            
             'job_time'                       => 'required',
             'services'                       => 'required'             
         ];        
 
-        $input = $request->only('customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'services');
+        $input = $request->only('customer_id', 'workshop_id', 'car_id', 'job_date', 'job_time', 'services');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -115,7 +115,7 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $request->customer_id;
         $booking->workshop_id            = $request->workshop_id;
-		$booking->customer_car_id        = $request->customer_car_id;
+		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
         $booking->response 			     = 'waiting';
@@ -363,7 +363,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Job Completed',
-                    'body' => ''
+                    'body' => ['billing'=> $billing]
                 ],Response::HTTP_OK);
     }
 

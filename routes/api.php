@@ -78,6 +78,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::post('address', 'WorkshopsController@updateAddress');
 		Route::post('update-images','WorkshopsController@updateImages');
 		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');
+		Route::patch('update-cnic-image','WorkshopsController@updateCnicImage');
 		Route::get('services','WorkshopsController@workshopServices');
 		Route::post('create-booking','BookingsController@createBooking');
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
@@ -92,5 +93,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
+//      Route For Workshop Customers
+        Route::get('get-customers', 'WorkshopsController@getCustomers');
     });
 });

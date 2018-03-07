@@ -53,6 +53,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
         Route::post('/profile/{id}', 'WorkshopsController@update_profile');
+        Route::get('/ledger', 'WorkshopsController@getLedger');
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
@@ -123,6 +124,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/rejected-leads', 'BookingsController@workshopRejectedLeads');                
         Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
+        Route::get('workshop/{id}/ledger', 'WorkshopsController@workshopLedger');
+                
     });
 
 });
