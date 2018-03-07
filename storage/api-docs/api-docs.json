@@ -589,47 +589,6 @@
                 }
             }
         },
-        "/api/customer/verify-email": {
-            "get": {
-                "tags": [
-                    "Customers"
-                ],
-                "summary": "Verify Customer Email",
-                "operationId": "verifyEmail",
-                "consumes": [
-                    "application/xml",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/xml",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "verification_code",
-                        "in": "query",
-                        "description": "Verification Code",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
         "/api/customer/password-reset": {
             "post": {
                 "tags": [
@@ -894,7 +853,42 @@
                 }
             }
         },
-         
+        "/api/customer/vehicle-history": {
+            "get": {
+                "tags": [
+                    "Customers"
+                ],
+                "summary": "Customer Vehile History",
+                "operationId": "history",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Customer's Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "vehicle_no",
+                        "in": "query",
+                        "description": "Customer's Vehicle No",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
         "/api/customer/leave-rating/{billing_id}": {
             "patch": {
                 "tags": [
@@ -945,13 +939,13 @@
                 }
             }
         },
-        "/api/customer/vehicle-history": {
+        "/api/customer/get-workshop/{workshop_id}": {
             "get": {
                 "tags": [
                     "Customers"
                 ],
-                "summary": "Customer Vehile History",
-                "operationId": "history",
+                "summary": "Get Workshop Details",
+                "operationId": "get",
                 "produces": [
                     "application/json"
                 ],
@@ -964,11 +958,11 @@
                         "type": "string"
                     },
                     {
-                        "name": "vehicle_no",
-                        "in": "query",
-                        "description": "Customer's Vehicle No",
+                        "name": "workshop_id",
+                        "in": "path",
+                        "description": "Workshop Id",
                         "required": true,
-                        "type": "string"
+                        "type": "integer"
                     }
                 ],
                 "responses": {
@@ -981,7 +975,7 @@
                 }
             }
         },
-        "/api/workshop/getServices": {
+        "/api/services": {
             "get": {
                 "tags": [
                     "Services"
@@ -1095,78 +1089,6 @@
                         "description": "Workshop Closing Time",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "name": "profile_pic",
-                        "in": "formData",
-                        "description": "Workshop Logo/Profile Picture",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "cnic_image",
-                        "in": "formData",
-                        "description": "CNIC Image",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "ws_images",
-                        "in": "formData",
-                        "description": "ws_images[base64,base64,base64]",
-                        "required": false,
-                        "type": "array",
-                        "items": "[base64strings]"
-                    },
-                    {
-                        "name": "shop",
-                        "in": "formData",
-                        "description": "Workshop Shop No",
-                        "required": false,
-                        "type": "number"
-                    },
-                    {
-                        "name": "building",
-                        "in": "formData",
-                        "description": "Workshop Building",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "street",
-                        "in": "formData",
-                        "description": "Workshop Street",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "block",
-                        "in": "formData",
-                        "description": "Workshop Block",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "town",
-                        "in": "formData",
-                        "description": "Workshop Town",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "city",
-                        "in": "formData",
-                        "description": "Workshop City",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "name": "services",
-                        "in": "formData",
-                        "description": "services[{service_id,service_rate,service_time}]",
-                        "required": false,
-                        "type": "array",
-                        "items": "[service_id,service_rate,service_time]"
                     }
                 ],
                 "responses": {
@@ -1222,7 +1144,7 @@
             }
         },
         "/api/workshop/logout": {
-            "get": {
+            "post": {
                 "tags": [
                     "Workshops"
                 ],
@@ -1268,50 +1190,6 @@
                         "name": "email",
                         "in": "formData",
                         "description": "Workshop Email",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "406": {
-                        "description": "not acceptable"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
-        "/api/workshop/verifyEmail": {
-            "get": {
-                "tags": [
-                    "Workshops"
-                ],
-                "summary": "Verify Workshop Email",
-                "operationId": "verifyEmail",
-                "consumes": [
-                    "application/xml",
-                    "application/json"
-                ],
-                "produces": [
-                    "application/xml",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "Token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "verification_code",
-                        "in": "query",
-                        "description": "Verification Code",
                         "required": true,
                         "type": "string"
                     }
@@ -1602,10 +1480,10 @@
                 }
             }
         },
-        "/api/workshop/insert-service": {
+        "/api/workshop/service": {
             "post": {
                 "tags": [
-                    "Workshops"
+                    "Services"
                 ],
                 "summary": "Add New Workshop Services",
                 "operationId": "insert",
@@ -1653,65 +1531,10 @@
                         "description": "internal server error"
                     }
                 }
-            }
-        },
-        "/api/workshop/update-service/{service_id}": {
-            "patch": {
+            },
+            "delete": {
                 "tags": [
-                    "Workshops"
-                ],
-                "summary": "Add New Workshop Services",
-                "operationId": "insert",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "in": "header",
-                        "description": "token",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "name": "service_id",
-                        "in": "path",
-                        "description": "service id",
-                        "required": true,
-                        "type": "integer"
-                    },
-                    {
-                        "name": "service_rate",
-                        "in": "formData",
-                        "description": "service rate",
-                        "required": true,
-                        "type": "number"
-                    },
-                    {
-                        "name": "service_time",
-                        "in": "formData",
-                        "description": "service time",
-                        "required": true,
-                        "type": "number"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    },
-                    "406": {
-                        "description": "not acceptable"
-                    },
-                    "500": {
-                        "description": "internal server error"
-                    }
-                }
-            }
-        },
-        "/api/workshop/unassign-service/{service_id}": {
-            "patch": {
-                "tags": [
-                    "Workshops"
+                    "Services"
                 ],
                 "summary": "Delete Workshop Service",
                 "operationId": "delete",
@@ -1728,10 +1551,61 @@
                     },
                     {
                         "name": "service_id",
-                        "in": "path",
+                        "in": "formData",
                         "description": "service id",
                         "required": true,
                         "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Services"
+                ],
+                "summary": "Edit Workshop Services",
+                "operationId": "insert",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "service_id",
+                        "in": "formData",
+                        "description": "service id",
+                        "required": true,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "service_rate",
+                        "in": "formData",
+                        "description": "service rate",
+                        "required": true,
+                        "type": "number"
+                    },
+                    {
+                        "name": "service_time",
+                        "in": "formData",
+                        "description": "service time",
+                        "required": true,
+                        "type": "number"
                     }
                 ],
                 "responses": {
@@ -1750,7 +1624,7 @@
         "/api/workshop/services": {
             "get": {
                 "tags": [
-                    "Workshops"
+                    "Services"
                 ],
                 "summary": "All services of Workshop",
                 "operationId": "fetch",
@@ -1809,9 +1683,7 @@
                         "description": "internal server error"
                     }
                 }
-            }
-        },
-        "/api/workshop/update-address": {
+            },
             "post": {
                 "tags": [
                     "Workshops"
@@ -1930,7 +1802,7 @@
                 "tags": [
                     "Workshops"
                 ],
-                "summary": "Update Workshop Images",
+                "summary": "Update Profile Images",
                 "operationId": "update",
                 "produces": [
                     "application/json"
@@ -1945,6 +1817,45 @@
                     },
                     {
                         "name": "profile_pic",
+                        "in": "formData",
+                        "description": "Base64 String",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/update-cnic-image": {
+            "patch": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Update Cnic Images",
+                "operationId": "update",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "name": "cnic_image",
                         "in": "formData",
                         "description": "Base64 String",
                         "required": true,
@@ -2185,6 +2096,38 @@
                         "name": "millage",
                         "in": "formData",
                         "description": "Millage at job date",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    },
+                    "406": {
+                        "description": "not acceptable"
+                    },
+                    "500": {
+                        "description": "internal server error"
+                    }
+                }
+            }
+        },
+        "/api/workshop/get-customers": {
+            "get": {
+                "tags": [
+                    "Workshops"
+                ],
+                "summary": "Get Workshop Customers",
+                "operationId": "get",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Authorization",
+                        "in": "header",
+                        "description": "Token",
                         "required": true,
                         "type": "string"
                     }
