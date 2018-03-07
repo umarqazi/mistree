@@ -64,6 +64,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('leads','BookingsController@leadsHistory');
         Route::get('leads/accepted','BookingsController@acceptedLeads');
         Route::get('leads/rejected','BookingsController@rejectedLeads');
+        Route::get('leads/completed','BookingsController@completedLeads');
     });
 
 });
