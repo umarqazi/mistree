@@ -793,9 +793,9 @@ class CustomersController extends Controller
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
                 'message'       => '',
-                'body'          => $customer->load(['cars' => function($query){
+                'body'          => ['customer' => $customer->load(['cars' => function($query){
                     $query->withTrashed();
-                }, 'addresses'])
+                }, 'addresses'])]
             ],Response::HTTP_OK);
         }
     }

@@ -11,13 +11,13 @@
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="title">Work History</h4>                                
+                                <h4 class="title">Rejected Leads</h4>                                
                             </div>                            
                         </div>
                         <div class="clear20"></div>
                         <div class="row">
                             <div class="col-sm-6">                                
-                                <h3>{{$workshop->name}} <a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a></h3>
+                                <h3>{{$workshop->name}} <a href="{{url('profile/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a></h3>
                                 <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
                                 <div class="phone">Mobile : {{$workshop->mobile}}</div>
                             </div>
@@ -33,12 +33,15 @@
                                            + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}">Completed Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}" >Accepted Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}">Rejected Leads</a>
+                                                <a href="{{url('/leads/')}}">All Leads</a>
+                                                <a href="{{url('/leads/completed')}}">Completed Leads</a>
+                                                <a href="{{url('/leads/accepted')}}">Accepted Leads</a>
                                             </div>
                                         </div>
                                     </div>
+                                </div> 
+                                <div>
+                                    
                                 </div>
                                 <div class="clear10"></div><div class="clear5"></div>
                             </div>
@@ -50,7 +53,7 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
                                 <tr role="row">                        
-                                    <th>Job Date</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 95px;">Job Date</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
@@ -60,9 +63,9 @@
                                 </tr>
                             </thead>
                             <tbody>                            
-                                @foreach($leads as $lead)                                
+                                @foreach($rejected_leads as $lead)                                
                                 <tr role="row" class="odd">                                    
-                                    <td>{{ $lead->job_date }}</td>
+                                    <td>{{$lead->job_date}}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
