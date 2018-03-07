@@ -39,7 +39,12 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::orderBy('created_at')->get();
+        $service_ids = $request->service_ids;
+        if(count($service_ids)>0){
+            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
+        }else{
+            $services = Service::orderBy('created_at')->get();
+        }        
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
