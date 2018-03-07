@@ -12,8 +12,8 @@
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="title">Registered Workshops</h4>
-                                <p class="category">List of all registered workshops.</p>
+                                <h4 class="title">Authorized Workshops</h4>
+                                <p class="category">List of all authorized workshops.</p>
                             </div>
                         </div>
                         <div class="clear20"></div>
@@ -25,10 +25,8 @@
                                    + More Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a href="{{ url('admin/workshops/create') }}" class="">Add New Workshop</a> 
-                                        <a href="{{ url('admin/workshops/block') }}" class="">Blocked Workshops</a>
-                                        <a href="{{ url('admin/authorized-workshops') }}" class="">Authorized Workshops</a> 
-                                        <a href="{{ url('admin/unauthorized-workshops') }}" class="">UnAuthorized Workshops</a>
+                                    <a href="{{ url('admin/workshops') }}" class="">All Workshops</a>
+                                    <a href="{{ url('admin/authorized-workshops') }}" class="">Authorized Workshops</a>
                                     </div>
                                 </div>
                             </div>

@@ -342,7 +342,7 @@ class WorkshopsController extends Controller
             }
         }
         
-        // Session::flash('message', 'Successfully updated Workshop!');
+        Session::flash('message', 'Successfully updated Workshop!');
         return Redirect::to('admin/workshops');
     }
 
@@ -2268,6 +2268,19 @@ class WorkshopsController extends Controller
             'body' => Customer::whereIn('id', $bookings)->get()
         ],Response::HTTP_OK);
     }
+
+    public function authorized()
+    {
+        $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'Authorized')->get();
+        return View::make('workshop.authorized')->with('workshops', $workshops);
+    }
+
+    public function unauthorized()
+    {
+        $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'UnAuthorized')->get();
+        return View::make('workshop.unauthorized')->with('workshops', $workshops);
+    }
+
 }
 
 
