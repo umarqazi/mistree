@@ -1795,19 +1795,30 @@ class WorkshopsController extends Controller
         }
 
         $workshop = Workshop::find($request->workshop_id);
-        $balance = $workshop->balance->balance;
-        $new_balance = $request->amount + $balance;
-        $workshop->balance->update(['balance' => $new_balance]); 
+        if(is_null($workshop->balance))
+        {
+            $workshop->balance()->create([
+                'balance'   => $request->amount
+            ]);
+        }
+        else
+        {
 
-        $transaction = new WorkshopLedger;
+            $transaction = new WorkshopLedger;
 
-        $transaction->amount                        = $request->amount;
-        $transaction->workshop_id                   = $request->workshop_id;
-        $transaction->transaction_type              = 'Top-Up';        
-        $transaction->unadjusted_balance            = $balance;
-        $transaction->adjusted_balance              = $new_balance;
-        
-        $transaction->save();
+            $transaction->amount                        = $request->amount;
+            $transaction->workshop_id                   = $request->workshop_id;
+            $transaction->transaction_type              = 'Top-Up';
+            $transaction->unadjusted_balance            = $workshop->balance->balance;
+
+            $workshop->balance->balance += doubleval($request->amount);
+            $transaction->adjusted_balance              = $workshop->balance->balance;
+
+            if($workshop->balance()->update(['balance' => $workshop->balance->balance]))
+            {
+                $transaction->save();
+            }
+        }
 
         return Redirect::to('admin/top-up');       
     }
