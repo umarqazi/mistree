@@ -87,6 +87,15 @@ $factory->define(App\WorkshopAddress::class, function(Faker\Generator $faker){
     ];
 });
 
+$factory->define(App\WorkshopBalance::class, function(Faker\Generator $faker){
+    return [
+        'balance'       => 0,
+        'created_at'    => $faker->dateTimeBetween('-5 days', 'now', 'Asia/Karachi'),
+        'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
+    ];
+});
+
+
 $factory->define(App\Car::class, function (Faker\Generator $faker) {
     return [
         'type'      => $faker->randomElement(['Honda', 'Toyota', 'Suzuki', 'Daihatsu', 'Nissan', 'Adam']),
