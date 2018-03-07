@@ -22,10 +22,10 @@
                         <p>Profile</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('history') ? 'class=active' : '') }}}>
-                    <a href="{{url('/history')}}">
+                <li {{{ (Request::is('leads') ? 'class=active' : '') }}}>
+                    <a href="{{url('/leads')}}">
                         <i class="ti-view-list-alt"></i>
-                        <p>Work History</p>
+                        <p>Leads</p>
                     </a>
                 </li>
                 <li {{{ (Request::is('ledger') ? 'class=active' : '') }}}>
