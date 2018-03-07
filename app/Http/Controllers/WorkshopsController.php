@@ -1447,7 +1447,6 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {   
-        $workshop_ids   = [];
         $workshops      = Workshop::with('address');
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
@@ -1455,36 +1454,17 @@ class WorkshopsController extends Controller
         if ($request->has('type')) {
             $workshops  = $workshops->where('type', $request->type);
         }
-        if ($request->has('service_name')) {
-            $service_names = explode(", ",$request->service_name);
-            foreach($service_names as $service_name){
-                $workshop_ids = Workshop::get_workshop_by_service($service_name);
-                $workshops    = $workshops->whereIn('id', $workshop_ids);
-            }
-            $workshops = $workshops->with(['services' => function($query) use ($service_names) {
-                foreach($service_names as $key => $service_name){
-                    if($key == 0)
-                        $query->where('services.name', 'LIKE', '%'.$service_name.'%');
-                    else
-                        $query->orwhere('services.name', 'LIKE', '%'.$service_name.'%');
-                }
-                return $query;
-            }]);
-        }
         if ($request->has('address_block')) {
-            $address_block  = $request->address_block;
-            $workshop_ids   = array_merge($workshop_ids, WorkshopAddress::where('block', 'LIKE', '%'.$address_block.'%')->get()->pluck('workshop_id')->toArray());
-            $workshops      = $workshops->whereIn('id', $workshop_ids);
+            $workshops  = Workshop::get_workshop_by_address($workshops, 'block', $request->address_block);
         }
         if ($request->has('address_town')) {
-            $address_town   = $request->address_town;
-            $workshop_ids   = array_merge($workshop_ids, WorkshopAddress::where('town', 'LIKE', '%'.$address_town.'%')->get()->pluck('workshop_id')->toArray());
-            $workshops      = $workshops->whereIn('id', $workshop_ids);
+           $workshops  = Workshop::get_workshop_by_address($workshops, 'town', $request->address_town);
         }
         if ($request->has('address_city')) {
-            $address_city   = $request->address_city;
-            $workshop_ids   = array_merge($workshop_ids, WorkshopAddress::where('city', 'LIKE', '%'.$address_city.'%')->get()->pluck('workshop_id')->toArray());
-            $workshops      = $workshops->whereIn('id', $workshop_ids);
+           $workshops  = Workshop::get_workshop_by_address($workshops, 'city', $request->address_city);
+        }
+        if ($request->has('service_name')) {
+            $workshops = Workshop::get_workshop_by_service($workshops, $request->service_name);
         }
         $workshops          = $workshops->get();
         foreach ($workshops as $key =>$workshop) {
