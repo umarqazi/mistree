@@ -204,7 +204,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
             function($mail) use ($request, $subject){
-                $mail->from(env('MAIL_USERNAME'));
+                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
@@ -545,7 +545,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(env('MAIL_USERNAME'));
+                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -940,7 +940,7 @@ class WorkshopsController extends Controller
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
-                $mail->from(env('MAIL_USERNAME'));
+                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                 $mail->to($workshop->email, $workshop->name);
                 $mail->subject($subject);
             });        
@@ -973,7 +973,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Workshop Details!',
-            'body' => $workshop->load(['address', 'services', 'balance', 'transactions', 'bookings'])
+            'body' => [ 'workshop' => $workshop->load(['address', 'services', 'balance', 'transactions', 'bookings']) ]
         ],Response::HTTP_OK);
     }
     /**
