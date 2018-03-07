@@ -25,6 +25,16 @@ class WorkshopQueriesController extends Controller
     }
 
     /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        return View::make('workshop.create_query');
+    }
+
+    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -36,7 +46,7 @@ class WorkshopQueriesController extends Controller
      *   summary="Add Workshop Query",
      *   operationId="add_workshop_query",
      *   produces={"application/json"},
-     *   tags={"Workshops"},
+     *   tags={"Queries"},
      *   consumes={"application/xml", "application/json"},
      *   produces={"application/xml", "application/json"},
      *   @SWG\Parameter(
@@ -56,9 +66,9 @@ class WorkshopQueriesController extends Controller
      *   @SWG\Parameter(
      *     name="message",
      *     in="formData",
-     *     description="Message",
+     *     description="Message Text",
      *     required=true,
-     *     type="text"
+     *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -67,7 +77,7 @@ class WorkshopQueriesController extends Controller
      */
     public function store(Request $request)
     {   
-            $workshop_id = JWT::Authenticate()->id;
+            $workshop = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
                 'message'      => 'required'
@@ -83,12 +93,12 @@ class WorkshopQueriesController extends Controller
                 ],Response::HTTP_OK);
             } else {
                 // store
-                $workshopQuery              = new WorkshopQuery;
-                $workshopQuery->workshop_id = $request->workshop_id;
-                $workshopQuery->subject     = $request->subject;
-                $workshopQuery->message     = $request->message;
-                $workshopQuery->status      = 'Open';
-                $workshopQuery->save();
+                $workshop->queries()->create([
+                    'subject'       => $request->subject,
+                    'message'       => $request->message,
+                    'status'        => 'Open',
+                    'is_resolved'   => false
+                ]);
 
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -128,34 +138,6 @@ class WorkshopQueriesController extends Controller
      * @param  \App\WorkshopQuery  $workshopQuery
      * @return \Illuminate\Http\Response
      */
-    /**
-     * @SWG\Delete(
-     *   path="/api/workshop/delete-workshop-query",
-     *   summary="Delete Workshop Query",
-     *   operationId="delete_workshop_query",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
-     *   @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="id",
-     *     in="path",
-     *     description="Workshop Query Id",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *
-     */
     public function destroy(WorkshopQuery $workshopQuery)
     {
        // delete
@@ -170,34 +152,6 @@ class WorkshopQueriesController extends Controller
      *
      * @param  \App\WorkshopQuery  $workshopQuery
      * @return \Illuminate\Http\Response
-     */
-    /**
-     * @SWG\Post(
-     *   path="/api/workshop/delete-workshop-query",
-     *   summary="Delete Workshop Query",
-     *   operationId="delete_workshop_query",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
-     *   @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="id",
-     *     in="path",
-     *     description="Workshop Query Id",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *
      */
     public function resolve(WorkshopQuery $workshopQuery)
     {

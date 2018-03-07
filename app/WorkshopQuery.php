@@ -17,10 +17,10 @@ class WorkshopQuery extends Model
      * @var array
      */
     protected $fillable = [
-        'workshop_id', 'subject', 'message', 'status'
+        'workshop_id', 'subject', 'message', 'status', 'is_resolved'
     ];
 
-    protected $cast = ['is_resolved' => 'boolean'];
+    protected $casts = ['is_resolved' => 'boolean'];
 
     public function workshop()
     {

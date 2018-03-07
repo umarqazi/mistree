@@ -11,7 +11,7 @@ use App\Workshop;
 use App\WorkshopImages;
 use App\Service;
 use App\Booking;
-use App\WorkshopAddress
+use App\WorkshopAddress;
 use App\WorkshopLedger;
 use App\WorkshopBalance;
 use Illuminate\Http\Response;
