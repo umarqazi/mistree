@@ -47,7 +47,10 @@
                                     <td>{{ $value->con_number }}</td>                                    
                                     <td>{{ $value->loyalty_points }}</td>  
                                     <td>
-                                        <a href="{{ url('admin/customer/unblock/'.$value->id) }}" class="btn btn-header btn-export">Unblock</a>
+                                        <form method="POST" action="{{ url('admin/customers/'.$value->id.'/unblock') }}" accept-charset="UTF-8">    
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input class="btn btn-header btn-export" type="submit" value="Unblock">
+                                        </form>                                                          
                                     </td>
                                 </tr>
                              @endforeach                                                                

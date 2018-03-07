@@ -1065,7 +1065,7 @@ class CustomersController extends Controller
         }
     }
 
-    public function unblockCustomer($id){
+    public function restore($id){
         $customer = Customer::withTrashed()->find($id)->restore();
         return Redirect::to('/admin/customers');
     }
