@@ -27,12 +27,22 @@
                             <div class="col-sm-6 col-sm-offset-6 balance-info">
                               
                                 <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right">
-                                	<a href="{{url('admin/workshop/'.$workshop->id.'/ledger')}}" class="btn btn-header btn-export">View Ledger</a>
-                                	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
-                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
-                                	<a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}" class="btn btn-header btn-export">Workshop History</a>
-                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-6 balance-info">                         
+                                        <div class="clear10"></div>
+                                        <div class="dropdown pull-right">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                           + More Options
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a href="{{url('admin/workshop/'.$workshop->id.'/ledger')}}" class="btn btn-header btn-export">View Ledger</a>
+			                                	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
+			                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
+			                                	<a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}" class="btn btn-header btn-export">Workshop History</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>                               
                             </div>
                         </div>
                     </div>
