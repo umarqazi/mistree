@@ -15,18 +15,11 @@
                   <form method="POST" action="{{ url('admin/workshops') }}" enctype="multipart/form-data">
                     {!! csrf_field() !!}
                       <div class="header">
-                        @if ($errors->any())
-                          <div class="row text-center alert alert-danger">
-                            @foreach($errors->all() as $error)
-                              <div><span class="manadatory">{{ $error }}</span></div>
-                            @endforeach                        
-                          </div>
-                        @endif 
-                          <div class="row">
-                              <div class="col-md-12">
-                                  <h4 class="title">Workshop Management - Create New</h4> 
-                              </div>
-                          </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h4 class="title">Workshop Management - Create New</h4>
+                                </div>
+                            </div>
                       </div>
                       <div class="clear20"></div>
                       
@@ -57,6 +50,20 @@
                                     </span>
                                 @endif
                               </div>
+
+                                <div class="form-group">
+                                    <label class="control-label">Type  <span class="manadatory">*</span></label>
+                                    <select name="type" class="form-control border-input">
+                                        <option value="">Please Select</option>
+                                        <option value="Authorized" @if(old('type') == "Authorized"){{ "selected" }}@endif>Authorized</option>
+                                        <option value="Unauthorized" @if(old('type') == "Unuthorized"){{ "selected" }}@endif>UnAuthorized</option>
+                                    </select>
+                                    @if ($errors->has('type'))
+                                        <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('type') }}</strong>
+                                    </span>
+                                    @endif
+                                </div>
 
                               <div class="form-group">
                                 <label class="control-label">Enter Email <span class="manadatory">*</span></label>
@@ -90,7 +97,7 @@
                               </div>  
 
                               <div class="form-group">
-                                <label class="control-label">Cnic Number <span class="manadatory">*</span></label>
+                                <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
                                 <input type="text" class="form-control border-input" name="cnic" value="{{ old('cnic') }}">
                                 @if ($errors->has('cnic'))
                                     <span class="help-block">
@@ -109,41 +116,28 @@
                               </div>                          
 
                               <div class="form-group">
-                                <label class="control-label">Landline Number <span class="manadatory"></span></label>
+                                <label class="control-label">Landline Number</label>
                                 <input type="text" class="form-control border-input" name="landline" value="{{ old('landline') }}">
                                 @if ($errors->has('landline'))
                                     <span class="help-block">
                                         <strong class="manadatory">{{ $errors->first('landline') }}</strong>
                                     </span>
                                 @endif
-                              </div>                          
+                              </div>
                             </div>
 
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Team Slot</label>
+                                    <select name="team_slot" class="form-control border-input">
+                                        <option value="">Please Select</option>
+                                        <option value="1" @if(old('team_slot') == "1"){{ "selected" }}@endif>1</option>
+                                        <option value="2" @if(old('team_slot') == "2"){{ "selected" }}@endif>2</option>
+                                        <option value="3" @if(old('team_slot') == "3"){{ "selected" }}@endif>3</option>
+                                        <option value="4" @if(old('team_slot') == "4"){{ "selected" }}@endif>4</option>
+                                    </select>
+                                </div>
 
-                              <div class="form-group">
-                                <label class="control-label">Type *</label>
-                                <select name="type" class="form-control border-input">
-                                  <option value="">Please Select</option>
-                                  <option value="Authorized">Authorized</option>
-                                  <option value="Unauthorized">UnAuthorized</option>
-                                </select>
-                              </div>
-
-                      {{--    <div class="form-group">
-                                <label class="control-label">Team Slot</label>
-                                <select name="team_slot" class="form-control border-input">
-                                  <option value="">Please Select</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                 </select>
-                              </div>
-                              --}} 
-                            </div>
-
-                            <div class="col-md-6">
                               <div class="form-group">                              
                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
                                 <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}">
@@ -179,19 +173,19 @@
                               <div class="form-group">      
                                 <label class="control-label">Workshop Picture 1:</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" class="form-control" name="ws_images[]">
+                                <input type="file" class="form-control" name="images[]">
                               </div>
 
                               <div class="form-group">      
                                 <label class="control-label">Workshop Picture 2:</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" class="form-control" name="ws_images[]">
+                                <input type="file" class="form-control" name="images[]">
                               </div>
 
                               <div class="form-group">      
                                 <label class="control-label">Workshop Picture 3:</label> 
                                 <div class="clear"></div>                   
-                                <input type="file" class="form-control" name="ws_images[]">
+                                <input type="file" class="form-control" name="images[]">
                               </div>
                               </div>
                             </div>
@@ -298,54 +292,33 @@
                           <div class="cn-section-3">
 
                             <div class="content">                                            
-                              <div class="row services-row">                                  
+                              <div class="row services-row">
+                              <div class="col-md-12">
                                 
-                                <div id="services-box-1" class="col-sm-4">
-                                  <div class="child-box-wrap">
+                                <div id="services-box-1">
+                                  <div id="services-container" class="child-box-wrap">
                                   <br>
-                                    <div class="row">
 
-                                      <div class="col-md-12">
+                                    <div class="row">
+                                        <div class="col-md-12">
                                         <div class="form-group">
-                                          <label class="control-label">Select Service <span class="manadatory">*</span></label>
-                                          <select class="form-control border-input" name="service_id[]">
-                                          <option value="" disabled selected>Select Service</option>
+                                          <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                          <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
                                             @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}</option>
+                                            <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
                                             @endforeach
                                           </select>
-                                          @if ($errors->has('service_id'))
+                                          @if ($errors->has('services'))
                                             <span class="help-block">
-                                                <strong class="manadatory">{{ $errors->first('service_id') }}</strong>
+                                                <strong class="manadatory">{{ $errors->first('services') }}</strong>
                                             </span>
                                           @endif
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="row">
-                                      <div class="col-md-6">
-                                        <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                        <input type="text" class="form-control border-input" name="service_rate[]">
-                                        @if ($errors->has('service_rate'))
-                                          <span class="help-block">
-                                              <strong class="manadatory">{{ $errors->first('service_rate') }}</strong>
-                                          </span>
-                                        @endif
-                                      </div>
-                                      <div class="col-md-6">
-                                        <label class="control-label">Enter Time <span class="manadatory">*</span></label>
-                                          <input type="text" class="form-control border-input" name="service_time[]">
-                                          @if ($errors->has('service_time'))
-                                            <span class="help-block">
-                                                <strong class="manadatory">{{ $errors->first('service_time') }}</strong>
-                                            </span>
-                                          @endif
-                                      </div>                                        
-                                    </div>
                                   </div>
                                 </div>
-                                
-
+                                </div>
                               </div>
                               <!-- End Row -->
 
@@ -371,50 +344,6 @@
 
 </div>
 
-<script>
-    $('#password, #confirm_password').on('keyup', function () {
-      if ($('#password').val() == $('#confirm_password').val()) {
-        $('#message').html('Matching').css('color', 'green');
-      } else 
-        $('#message').html('Not Matching').css('color', 'red');
-    });
-</script>
-
-<script>
-  c = 1;
-  x = 0;
-  function addmoreServices(event){
-    event.preventDefault();
-
-    c++;
-    x++;
-
-    var servicesSelectedVal = $('#services-box-'+x+' select').val();
-
-    if(servicesSelectedVal){
-      var servicesBox = $('#services-box-'+x).html();
-
-      $(".services-row").append('<div id="services-box-'+c+'" class="col-sm-4"></div>');
-      $("#services-box-"+c).append(servicesBox);
-
-      $('#services-box-'+c+' select option').each(function() {
-
-          if ( $(this).val() == servicesSelectedVal ) {
-              $(this).remove();
-          }
-      });
-    } else{
-      alert('Please select an option.');
-      c--;
-      x--;
-    }
-
-    //$(".services-row").append('<div class="col-sm-4"> <div class="child-box-wrap"><a class="pull-right" onclick="removeService(this);"> X </a><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service<span class="manadatory"> *</span></label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
-  }
-  function removeService(obj)
-  {
-     $(obj).parent('div').parent('div').remove();
-  }
-</script>
+@include('workshop.workshop-profile-js')
 @include('partials.footer')
 @endsection

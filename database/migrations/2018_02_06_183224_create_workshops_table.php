@@ -15,7 +15,8 @@ class CreateWorkshopsTable extends Migration
         Schema::create('workshops', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('owner_name')->nullable();
+            $table->string('owner_name');
+            $table->unsignedInteger('jazzcash_id')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
@@ -24,10 +25,11 @@ class CreateWorkshopsTable extends Migration
             $table->string('mobile');
             $table->string('landline')->nullable();
             $table->enum('type',['Authorized', 'Unauthorized']);
+            $table->unsignedInteger('slots')->default(1);
             $table->string('profile_pic',2048)->nullable();
-            $table->string('open_time');
-            $table->string('close_time');
-            $table->tinyInteger('is_approved')->default(0);
+            $table->time('open_time');
+            $table->time('close_time');
+            $table->boolean('is_approved')->default(0);
             $table->softDeletes();
             $table->timestamps();
         });
