@@ -2187,15 +2187,19 @@ class WorkshopsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function getLedger(){
-        $workshop_id = Auth::user()->id;
-        $ledger = Workshop::find($workshop_id)->transactions;
-        return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Workshop Ledger',
-                    'body' => ['transactions'=>$ledger]
-                ],Response::HTTP_OK);
+    public function getLedger(Request $request){
+        if($request->header('content-type') == "application/json"){
+            $workshop   = JWTAuth::authenticate()->load('transactions','balance');        
+            return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => true,
+                        'message' => 'Workshop Ledger',
+                        'body' => ['transactions'=>$workshop->transactions]
+                    ],Response::HTTP_OK);            
+        }else{
+            $workshop = Auth::guard('workshop')->user()->load('transactions','balance');                        
+            return view::make('workshop_profile.ledger')->with('workshop',$workshop);
+        }
     }
 
     /**
@@ -2470,11 +2474,16 @@ class WorkshopsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Millage Entered',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);      
     }
 
-    /**
+    public function workshopLedger($workshop_id){
+        $workshop = Workshop::find($workshop_id)->first()->load('transactions','balance');
+        return view::make('workshop.ledger')->with('workshop',$workshop);
+    }
+
+  /**
      * @SWG\Get(
      *   path="/api/workshop/get-customers",
      *   summary="Get Workshop Customers",
@@ -2522,11 +2531,6 @@ class WorkshopsController extends Controller
             'body' => Customer::whereIn('id', $bookings)->get()
         ],Response::HTTP_OK);
     }
-
-
-
-
-
 }
 
 
