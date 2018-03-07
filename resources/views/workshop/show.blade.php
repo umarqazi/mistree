@@ -31,6 +31,7 @@
                                 	<a href="{{url('admin/workshop/'.$workshop->id.'/ledger')}}" class="btn btn-header btn-export">View Ledger</a>
                                 	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
                                 	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
+                                	<a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}" class="btn btn-header btn-export">Workshop History</a>
                                 </div>
                             </div>
                         </div>

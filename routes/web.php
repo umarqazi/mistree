@@ -119,6 +119,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');
+
+        Route::get('workshop/{workshop}/history', 'BookingsController@workshopHistory');
+        Route::get('workshop/{workshop}/history/rejected-leads', 'BookingsController@workshopRejectedLeads');                
+        Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
+        Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{id}/ledger', 'WorkshopsController@workshopLedger');
                 
     });

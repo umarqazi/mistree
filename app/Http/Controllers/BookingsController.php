@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
+use DB, Config, Mail, View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
@@ -364,6 +365,79 @@ class BookingsController extends Controller
                     'message' => 'Job Completed',
                     'body' => ['billing'=> $billing]
                 ],Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/lead/{booking_id}/enter-millage",
+     *   summary="Completed Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="millage",
+     *     in="formData",
+     *     description="Millage at job date",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function insertMillage(Request $request, $booking_id){        
+        
+        $booking = Booking::find($booking_id);
+        $booking->millage =$request->millage;
+        $booking->save() ;
+
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Millage Entered',
+                'body' => ''
+            ],Response::HTTP_OK);      
+    }
+
+    public function workshopHistory(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.history',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings, 'workshop'=>$workshop]);
+    }
+
+    public function workshopRejectedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','rejected'), 'workshop'=>$workshop]);       
+    }
+
+    public function workshopAcceptedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','accepted'), 'workshop'=>$workshop]);       
+    }
+
+    public function workshopCompletedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status','completed'), 'workshop'=>$workshop]);       
     }    
     
 
