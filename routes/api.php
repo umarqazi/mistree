@@ -78,11 +78,11 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
 		Route::post('complete-job','BookingsController@completeLead');
 		Route::get('ledger','WorkshopsController@getLedger');
-		Route::get('leads-info','WorkshopsController@getLeadsInfo');
-		Route::get('history','WorkshopsController@leadsHistory');
-		Route::get('leads/accepted','WorkshopsController@acceptedLeads');
-		Route::get('leads/rejected','WorkshopsController@rejectedLeads');
-		Route::get('leads/completed','WorkshopsController@completedLeads');
+		Route::get('leads-info','BookingsController@getLeadsInfo');
+		Route::get('history','BookingsController@leadsHistory');
+		Route::get('leads/accepted','BookingsController@acceptedLeads');
+		Route::get('leads/rejected','BookingsController@rejectedLeads');
+		Route::get('leads/completed','BookingsController@completedLeads');
 
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
