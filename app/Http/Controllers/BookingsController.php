@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Hash, DB, Config, Mail, View;
+use Session;
 use App\Workshop;
 use App\Service;
 use App\Billing;
