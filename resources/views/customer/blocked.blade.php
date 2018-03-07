@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Customers</h4>
-                                <p class="category">List of active cutomers.</p>
+                                <p class="category">List of blocked cutomers.</p>
                             </div>
                         </div>
                         <div class="row">
@@ -22,7 +22,7 @@
                             <div class="col-sm-6 col-sm-offset-6 balance-info">
                               
                                 <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right"><a href="{{ url('admin/blocked-customers') }}" class="btn btn-header btn-export">Blocked Customers</a></div>
+                                <div class="text-right"><a href="{{ url('admin/customers') }}" class="btn btn-header btn-export">Active Customers</a></div>
                             </div>
                         </div>                        
                     </div>
@@ -47,10 +47,9 @@
                                     <td>{{ $value->con_number }}</td>                                    
                                     <td>{{ $value->loyalty_points }}</td>  
                                     <td>
-                                        <form method="POST" action="customers/{{ $value->id }}" accept-charset="UTF-8">
-                                            <input name="_method" type="hidden" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input class="btn btn-header btn-export" type="submit" value="Block">
+                                        <form method="POST" action="{{ url('admin/customers/'.$value->id.'/unblock') }}" accept-charset="UTF-8">    
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input class="btn btn-header btn-export" type="submit" value="Unblock">
                                         </form>                                                          
                                     </td>
                                 </tr>

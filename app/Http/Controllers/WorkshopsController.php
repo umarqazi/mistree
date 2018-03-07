@@ -446,6 +446,14 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="team_slots",
+     *     in="formData",
+     *     description="Team Slots",
+     *     required=false,
+     *     type="integer",
+     *     enum={"Authorized", "Unauthorized"}
+     *   ),
+     *   @SWG\Parameter(
      *     name="type",
      *     in="formData",
      *     description="Workshop Type",
@@ -488,6 +496,7 @@ class WorkshopsController extends Controller
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
+            'team_slots'                     => 'integer',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
             'landline'                       => 'digits_between:0,11',
@@ -496,7 +505,7 @@ class WorkshopsController extends Controller
             'type'                           => 'required|in:Authorized,Unauthorized'            
         ];        
 
-        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type');        
+        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'team_slots');        
         
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -518,6 +527,7 @@ class WorkshopsController extends Controller
                                 'mobile' => $request->mobile, 
                                 'landline' => $request->landline,
                                 'type' => $request->type,                                 
+                                'slots' => $request->team_slots,                                 
                                 'open_time' => $request->open_time, 
                                 'close_time' => $request->close_time, 
                                 'is_approved' => 0
@@ -1034,6 +1044,13 @@ class WorkshopsController extends Controller
      *     enum={"Authorized", "Unauthorized"}
      *   ),
      *   @SWG\Parameter(
+     *     name="team_slots",
+     *     in="formData",
+     *     description="Team Slots",
+     *     required=false,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
      *     name="open_time",
      *     in="formData",
      *     description="Workshop Opening Time",
@@ -1089,6 +1106,7 @@ class WorkshopsController extends Controller
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',            
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
+            'team_slots'                     => 'integer',
             'landline'                       => 'digits_between:0,11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
@@ -1110,6 +1128,7 @@ class WorkshopsController extends Controller
         $workshop->name             = $request->name;        
         $workshop->owner_name       = $request->owner_name;  
         $workshop->cnic             = $request->cnic;
+        $workshop->slots            = $request->team_slots;
         $workshop->mobile           = $request->mobile;
         $workshop->landline         = $request->landline;
         $workshop->open_time        = $request->open_time;
@@ -1797,28 +1816,27 @@ class WorkshopsController extends Controller
         $workshop = Workshop::find($request->workshop_id);
         if(is_null($workshop->balance))
         {
+            $balance = 0;
+            $new_balance = $request->amount;            
             $workshop->balance()->create([
-                'balance'   => $request->amount
+                'balance'   => $new_balance
             ]);
         }
         else
         {
-
-            $transaction = new WorkshopLedger;
-
-            $transaction->amount                        = $request->amount;
-            $transaction->workshop_id                   = $request->workshop_id;
-            $transaction->transaction_type              = 'Top-Up';
-            $transaction->unadjusted_balance            = $workshop->balance->balance;
-
-            $workshop->balance->balance += doubleval($request->amount);
-            $transaction->adjusted_balance              = $workshop->balance->balance;
-
-            if($workshop->balance()->update(['balance' => $workshop->balance->balance]))
-            {
-                $transaction->save();
-            }
+            $balance = $workshop->balance->balance;
+            $new_balance = $request->amount + $balance;
+            $workshop->balance->update(['balance' => $new_balance]);
         }
+
+        $transaction = new WorkshopLedger;
+        $transaction->amount                        = $request->amount;
+        $transaction->workshop_id                   = $request->workshop_id;
+        $transaction->transaction_type              = 'Top-Up';        
+        $transaction->unadjusted_balance            = $balance;
+        $transaction->adjusted_balance              = $new_balance;
+        
+        $transaction->save();
 
         return Redirect::to('admin/top-up');       
     }
@@ -2197,8 +2215,8 @@ class WorkshopsController extends Controller
         }
     }
 
-    public function workshopLedger($workshop_id){
-        $workshop = Workshop::find($workshop_id)->first()->load('transactions','balance');
+    public function workshopLedger(Workshop $workshop){
+        $workshop->load('transactions','balance');
         return view::make('workshop.ledger')->with('workshop',$workshop);
     }
 
