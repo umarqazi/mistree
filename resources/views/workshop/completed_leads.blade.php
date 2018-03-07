@@ -27,6 +27,7 @@
                                 <div class="current text-right">Current Balance: PKR {{$balance['balance']}}</div>
                                 <div class="total text-right">Total Earnings: PKR {{$total_earning}}</div>
 
+                                <div class="clear20"></div>
                                 <div class="row">
                                     <div class="col-sm-6 col-sm-offset-6 balance-info">                         
                                         <div class="clear10"></div>
@@ -35,12 +36,15 @@
                                            + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}">Completed Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}" >Accepted Leads</a>
+                                                 <a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}">All Leads</a>
+                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}">Accepted Leads</a>
                                                 <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}">Rejected Leads</a>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div>                            
+                                   
                                 </div>
                                 <div class="clear10"></div><div class="clear5"></div>
                             </div>
@@ -52,7 +56,7 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
                                 <tr role="row">                        
-                                    <th>Job Date</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 95px;">Job Date</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
@@ -69,8 +73,8 @@
                                         $ser .= $service->name.', ';
                                     }
                                 @endphp
-                                <tr role="row">                                    
-                                    <td>{{ $lead->job_date }}</td>
+                                <tr role="row" class="odd">                                    
+                                    <td>{{$lead->job_date}}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{rtrim($ser, ', ')}}

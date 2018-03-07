@@ -221,3 +221,17 @@ form .form-group {margin-bottom: 0px;}
     margin-bottom: 10px;
 }
 
+.dropdown-menu{
+    padding: 10px;
+    background: #fff;
+    min-width: 200px;
+}
+
+.dropdown-menu > a{
+    color: #666666;
+    font-size: 13px;
+    border-bottom: #f1efef solid 1px;
+    display: block;
+    margin: 0px;
+    padding: 6px 0px;
+}

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Carbon\Carbon;
 
 class Booking extends Model
 {
@@ -37,7 +38,10 @@ class Booking extends Model
     {
         return $this->hasOne('App\Billing');
     }
-    
+
+    public function getJobDateAttribute($date) { 
+        return Carbon::createFromFormat('Y-m-d', $date)->format('d-m-Y'); 
+    }
 
 
 }
