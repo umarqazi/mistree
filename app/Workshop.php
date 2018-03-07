@@ -61,6 +61,11 @@ class Workshop extends Authenticatable
         return $this->hasMany('App\Booking');
     }
 
+    public function queries()
+    {
+        return $this->hasMany('App\WorkshopQuery');
+    }
+
     public function images()
     {
         return $this->hasMany('App\WorkshopImages');

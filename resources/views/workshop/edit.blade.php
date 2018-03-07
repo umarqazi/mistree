@@ -15,16 +15,9 @@
                     <input type="hidden"  value="PATCH" name="_method">
                     {{ csrf_field() }}
                       <div class="header">
-                        @if ($errors->any())
-                          <div class="row text-center alert alert-danger">
-                            @foreach($errors->all() as $error)
-                              <div><span class="manadatory">{{ $error }}</span></div>
-                            @endforeach                        
-                          </div>
-                        @endif  
                           <div class="row">
                               <div class="col-md-12">
-                                  <h4 class="title">Workshop Management - Update Workshop</h4> 
+                                  <h4 class="title">Workshop Management - Update Workshop</h4>
                               </div>
                           </div>
                       </div>
@@ -58,20 +51,19 @@
                                 @endif
                               </div>
 
+                                <div class="form-group">
+                                    <label class="control-label">Type</label>
+                                    <select name="type" class="form-control border-input" required="required">
+                                        <option value="">Please Select</option>
+                                        <option value="Authorized" @if($workshop->type == "Authorized") {{"selected"}} @endif >Authorized</option>
+                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >UnAuthorized</option>
+                                    </select>
+                                </div>
+
                               <div class="form-group">
                                 <label class="control-label">Enter Email <span class="manadatory">*</span></label>
                                 <input type="email" class="form-control border-input" name="email" value="{{$workshop->email}}" readonly>
                               </div>
-
-                              <!-- <div class="form-group">
-                                <label class="control-label">Enter Passowrd</label>
-                                <input type="password" class="form-control border-input" name="password" value="" required>
-                              </div>
-
-                              <div class="form-group">
-                                <label class="control-label">Confirm Passowrd</label>
-                                <input type="password" class="form-control border-input" name="password_confirmation" required>
-                              </div>   -->
 
                               <div class="form-group">
                                 <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
@@ -104,27 +96,17 @@
                             </div>
 
                             <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="control-label">Team Slot</label>
+                                    <select name="team_slot" class="form-control border-input">
+                                        <option value="">Please Select</option>
+                                        <option value="1" @if($workshop->slots == "1"){{ "selected" }}@endif>1</option>
+                                        <option value="2" @if($workshop->slots == "2"){{ "selected" }}@endif>2</option>
+                                        <option value="3" @if($workshop->slots == "3"){{ "selected" }}@endif>3</option>
+                                        <option value="4" @if($workshop->slots == "4"){{ "selected" }}@endif>4</option>
+                                    </select>
+                                </div>
 
-                              <div class="form-group">
-                                <label class="control-label">Type</label>
-                                <select name="type" class="form-control border-input" required="required">
-                                  <option value="">Please Select</option>
-                                  <option value="Authorized" @if($workshop->type == "Authorized") selected @endif >Authorized</option>
-                                  <option value="Unauthorized" @if($workshop->type == "Unauthorized") selected @endif >UnAuthorized</option>
-                                </select>
-                              </div>
-                              {{-- 
-                              <div class="form-group">
-                                <label class="control-label">Team Slot</label>
-                                <select name="team_slot" class="form-control border-input" required="required">
-                                  <option value="">Please Select</option>
-                                  <option value="1" @if($workshop->team_slot == "1") selected @endif>1</option>
-                                  <option value="2" @if($workshop->team_slot == "2") selected @endif>2</option>
-                                  <option value="3" @if($workshop->team_slot == "3") selected @endif>3</option>
-                                  <option value="4" @if($workshop->team_slot == "4") selected @endif>4</option>
-                                 </select>
-                              </div>
-                              --}}
                               <div class="form-group">                              
                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
                                 <input type="time" class="form-control border-input" name="open_time" value="{{$workshop->open_time}}"> 
@@ -167,6 +149,42 @@
                                         <br>
                                 @endif
                               </div>
+                                @if($images)
+                                    <div class="well">
+                                        <div class="form-group">
+                                            <label class="control-label">Workshop Picture 1:</label>
+                                            <div class="clear"></div>
+                                            <input type="file" class="form-control" name="images[]">
+                                            @if(!empty($images[0]))
+                                                <img src="{{ $images[0]->url }}" width="80px" height="80px">
+                                            @else
+                                                <br>
+                                            @endif
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Workshop Picture 2:</label>
+                                            <div class="clear"></div>
+                                            <input type="file" class="form-control" name="images[]">
+                                            @if(!empty($images[1]))
+                                                <img src="{{ $images[1]->url }}" width="80px" height="80px">
+                                            @else
+                                                <br>
+                                            @endif
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Workshop Picture 3:</label>
+                                            <div class="clear"></div>
+                                            <input type="file" class="form-control" name="images[]">
+                                            @if(!empty($images[2]))
+                                                <img src="{{ $images[2]->url }}" width="80px" height="80px">
+                                            @else
+                                                <br>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endif
                             </div>
                           </div>                                                                                                     
                           <div class="row">
@@ -268,12 +286,5 @@
     </div>
 
 </div>
-
-<script>
-  function addmoreServices(event){
-    event.preventDefault();
-    $(".services-row").append('<div class="col-sm-4"><div class="child-box-wrap"><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service</label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="time" class="form-control border-input" name="service_time[]"></div></div></div></div>');
-  }
-</script>
 @include('partials.footer')
 @endsection

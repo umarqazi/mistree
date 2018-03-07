@@ -90,9 +90,11 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('leads/accepted','WorkshopsController@acceptedLeads');
 		Route::get('leads/rejected','WorkshopsController@rejectedLeads');
 		Route::get('leads/completed','WorkshopsController@completedLeads');
-		Route::patch('lead/{booking_id}/enter-millage', 'WorkshopsController@insertMillage');
+		Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
 //		Route For Workshop Password Reset
         Route::post('password-reset', 'WorkshopsController@passwordReset');
+//		Route For Workshop Support Query
+        Route::post('add-workshop-query', 'WorkshopQueriesController@store');
 //      Route For Workshop Customers
         Route::get('get-customers', 'WorkshopsController@getCustomers');
     });
