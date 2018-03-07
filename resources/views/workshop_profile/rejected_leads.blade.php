@@ -17,7 +17,7 @@
                         <div class="clear20"></div>
                         <div class="row">
                             <div class="col-sm-6">                                
-                                <h3>{{$workshop->name}} <a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a></h3>
+                                <h3>{{$workshop->name}} <a href="{{url('profile/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a></h3>
                                 <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
                                 <div class="phone">Mobile : {{$workshop->mobile}}</div>
                             </div>
@@ -33,14 +33,13 @@
                                            + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}">All Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}">Completed Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}">Accepted Leads</a>
+                                                <a href="{{url('/leads/')}}">All Leads</a>
+                                                <a href="{{url('/leads/completed')}}">Completed Leads</a>
+                                                <a href="{{url('/leads/accepted')}}">Accepted Leads</a>
                                             </div>
                                         </div>
                                     </div>
                                 </div> 
-
                                 <div>
                                     
                                 </div>
