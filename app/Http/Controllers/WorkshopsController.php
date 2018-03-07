@@ -2215,8 +2215,8 @@ class WorkshopsController extends Controller
         }
     }
 
-    public function workshopLedger($workshop_id){
-        $workshop = Workshop::find($workshop_id)->first()->load('transactions','balance');
+    public function workshopLedger(Workshop $workshop){
+        $workshop->load('transactions','balance');
         return view::make('workshop.ledger')->with('workshop',$workshop);
     }
 
