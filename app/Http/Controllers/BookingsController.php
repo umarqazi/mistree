@@ -8,7 +8,6 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
-use Hash, DB, Config, Mail, View;
 use Session;
 use App\Workshop;
 use App\Service;
@@ -507,6 +506,7 @@ class BookingsController extends Controller
      */
     public function leadsHistory(Request $request){
         $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
         $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
        
         // check request Type
@@ -530,7 +530,7 @@ class BookingsController extends Controller
         }
         else 
         {            
-                return View::make('workshop.history', ['bookings' => $bookings]);    
+                return View::make('workshop_profile.history', ['bookings' => $bookings, 'workshop'=>$workshop, 'total_earning'=>$total_earning,'balance'=>$workshop->balance]);    
 
         }
     }
@@ -563,7 +563,8 @@ class BookingsController extends Controller
     public function acceptedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
         $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->with('services')->get();
-         // check request Type
+        $total_earning = $workshop->billings->sum('amount');
+        // check request Type
          if( $request->header('Content-Type') == 'application/json')
          {
             if(count($accepted_leads) == 0){
@@ -584,7 +585,7 @@ class BookingsController extends Controller
         } 
         else
         {
-            return View::make('workshop.accepted_leads', ['accepted_leads' => $accepted_leads]); 
+            return View::make('workshop_profile.accepted_leads', ['accepted_leads' => $accepted_leads,'workshop'=>$workshop, 'total_earning'=>$total_earning,'balance'=>$workshop->balance]); 
         }           
     }
 
@@ -615,6 +616,7 @@ class BookingsController extends Controller
      */
     public function rejectedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
         $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->with('services')->get();
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -636,7 +638,7 @@ class BookingsController extends Controller
          }
          else
          {
-            return View::make('workshop.rejected_leads', ['rejected_leads' => $rejected_leads]);
+            return View::make('workshop_profile.rejected_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'rejected_leads' => $rejected_leads]);
          }        
     }
 
@@ -665,27 +667,31 @@ class BookingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function completedLeads(){
-        $workshop = Auth::user();
+    public function completedLeads(Request $request){
+        $workshop = Auth::guard('workshop')->user();
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->with('services')->get();
-
-        if(count($completed_leads) == 0){
-            return response()->json([
+        $total_earning = $workshop->billings->sum('amount');
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($completed_leads) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'No Completed Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{
+                return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => true,
-                        'message' => 'No Completed Leads Found',
-                        'body' => ''
+                        'message' => 'Completed Leads',
+                        'body' => $completed_leads
                     ],Response::HTTP_OK);            
-        }else{
-            return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Completed Leads',
-                    'body' => $completed_leads
-                ],Response::HTTP_OK);            
-        }         
+            }   
+        }   
+        else{
+            return View::make('workshop_profile.completed_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'completed_leads'=>$completed_leads]);
+        }   
         
     }
-    
-
 }
