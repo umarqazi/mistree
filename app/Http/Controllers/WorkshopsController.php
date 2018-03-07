@@ -11,6 +11,7 @@ use App\Workshop;
 use App\WorkshopImages;
 use App\Service;
 use App\Booking;
+use App\Car;
 use App\WorkshopAddress;
 use App\WorkshopLedger;
 use App\WorkshopBalance;
@@ -1233,7 +1234,9 @@ class WorkshopsController extends Controller
      */
     public function show_customers()
     {
-        return View::make('workshop.customers');
+        $workshop = Auth::guard('workshop')->user();
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
+        return View::make('workshop.customers', ['bookings' => $bookings]);
     }
 
     /**

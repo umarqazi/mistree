@@ -37,4 +37,8 @@ class Car extends Model
     {
         return $this->belongsToMany('App\Customer')->withPivot('millage', 'vehicle_no', 'insurance', 'year', 'removed_at')->withTimestamps();
     }
+    public function booking()
+    {
+        return $this->hasOne('App\Booking');
+    }
 }
