@@ -53,11 +53,13 @@
                                     </td>
                                     <td class="text-center">
                                         <a class= "btn btn-header" href="{{url('admin/workshop-queries/'. $value->id)}}">View</a>
+                                        @if($value->is_resolved == false)
                                         <form method="POST" action="{{url('admin/resolve-workshop-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input class="btn btn-header btn-export" type="submit" value="Resolve">
                                         </form>
+                                        @endif
                                         <form method="POST" action="{{url('admin/workshop-queries/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
