@@ -61,6 +61,9 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
+
+
+        Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'create','store']]);
     });
 
 });
@@ -95,9 +98,11 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
-        Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit']]);
+        Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit','store']]);
+        Route::resource('customer-queries', 'CustomerQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('cars', 'CarsController');
         Route::put('resolve-workshop-query/{workshopQuery}', 'WorkshopQueriesController@resolve');
+        Route::put('resolve-customer-query/{customerQuery}', 'CustomerQueriesController@resolve');
         Route::get('/home','AdminsController@home')->name('admin.home');
 
         Route::get('/inactive-cars', 'CarsController@inactive_cars');
