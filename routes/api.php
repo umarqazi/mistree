@@ -86,19 +86,21 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
 		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
 		Route::post('complete-job','BookingsController@completeLead');
+    
 		Route::get('ledger','WorkshopsController@getLedger');
-		Route::get('leads-info','WorkshopsController@getLeadsInfo');
-		Route::get('history','WorkshopsController@leadsHistory');
-		Route::get('leads/accepted','WorkshopsController@acceptedLeads');
-		Route::get('leads/rejected','WorkshopsController@rejectedLeads');
-		Route::get('leads/completed','WorkshopsController@completedLeads');
-		Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
+		Route::get('leads-info','BookingsController@getLeadsInfo');
+		Route::get('history','BookingsController@leadsHistory');
+		Route::get('leads/accepted','BookingsController@acceptedLeads');
+		Route::get('leads/rejected','BookingsController@rejectedLeads');
+		Route::get('leads/completed','BookingsController@completedLeads');
+    Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
+
 //		Route For Workshop Password Reset
-        Route::post('password-reset', 'WorkshopsController@passwordReset');
+    Route::post('password-reset', 'WorkshopsController@passwordReset');
 //		Route For Workshop Support Query
-        Route::post('add-workshop-query', 'WorkshopQueriesController@store');
 //      Route For Workshop Customers
         Route::get('get-customers', 'WorkshopsController@getCustomers');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'store']]);
+
     });
 });
