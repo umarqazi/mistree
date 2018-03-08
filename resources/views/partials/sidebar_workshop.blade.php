@@ -46,6 +46,12 @@
                         <p>Requests</p>
                     </a>
                 </li>
+                <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
+                    <a href="{{url('/workshop-queries/create/')}}">
+                        <i class="ti-help-alt"></i>
+                        <p>Support</p>
+                    </a>
+                </li>
                 <li>
                     <a href="{{ url('/logout') }}"
                         onclick="event.preventDefault();
