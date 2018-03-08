@@ -45,7 +45,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
     Route::group(['middleware' => 'workshop'], function (){
 
-        Route::get('/history', 'WorkshopsController@show_history');
         Route::get('/customers', 'WorkshopsController@show_customers');
         Route::get('/requests', 'WorkshopsController@show_requests');
 
@@ -61,9 +60,14 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
-
-
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'create','store']]);
+
+        
+        Route::get('leads','BookingsController@leadsHistory');
+        Route::get('leads/accepted','BookingsController@acceptedLeads');
+        Route::get('leads/rejected','BookingsController@rejectedLeads');
+        Route::get('leads/completed','BookingsController@completedLeads');
+
     });
 
 });
@@ -120,18 +124,22 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
         Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
 
-        Route::get('/activate-customer/{id}', 'CustomersController@activateCustomer');
-        Route::get('/deactivate-customer/{id}', 'CustomersController@deactivateCustomer');
+        Route::post('customers/{id}/unblock/', 'CustomersController@restore');
+        Route::get('/blocked-customers', 'CustomersController@blockedCustomers');
         Route::get('/approve-workshop/{id}', 'WorkshopsController@approveWorkshop');
 
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');
+        
+        
+        Route::get('/authorized-workshops', 'WorkshopsController@authorized');
+        Route::get('/unauthorized-workshops', 'WorkshopsController@unauthorized');
 
         Route::get('workshop/{workshop}/history', 'BookingsController@workshopHistory');
         Route::get('workshop/{workshop}/history/rejected-leads', 'BookingsController@workshopRejectedLeads');                
         Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
-        Route::get('workshop/{id}/ledger', 'WorkshopsController@workshopLedger');
+        Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
                 
     });
 

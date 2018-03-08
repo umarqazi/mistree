@@ -19,11 +19,11 @@ class CreateBookingsTable extends Migration
             $table->foreign('customer_id')->references('id')->on('customers');
             $table->integer('workshop_id')->unsigned();
             $table->foreign('workshop_id')->references('id')->on('workshops');
-            $table->integer('customer_car_id')->unsigned();
-            $table->foreign('customer_car_id')->references('id')->on('car_customer');
+            $table->integer('car_id')->unsigned();
+            $table->foreign('car_id')->references('id')->on('cars');
             $table->date('job_date');
             $table->time('job_time');
-            $table->string('response');
+            $table->boolean('is_accepted');
             $table->string('job_status');
             $table->string('vehicle_no');
             $table->unsignedInteger('loyalty_points')->default(0);
@@ -42,7 +42,7 @@ class CreateBookingsTable extends Migration
         Schema::table('bookings', function(Blueprint $table){
             $table->dropForeign('bookings_customer_id_foreign');
             $table->dropForeign('bookings_workshop_id_foreign');
-            $table->dropForeign('bookings_customer_car_id_foreign');        
+            $table->dropForeign('bookings_car_id_foreign');        
         });
         Schema::dropIfExists('bookings');
     }

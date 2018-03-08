@@ -11,6 +11,7 @@ use App\Workshop;
 use App\WorkshopImages;
 use App\Service;
 use App\Booking;
+use App\Car;
 use App\WorkshopAddress;
 use App\WorkshopLedger;
 use App\WorkshopBalance;
@@ -69,7 +70,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   
+    {
         $services = Service::all();        
         return View::make('workshop.create', ['services' => $services]);
     }
@@ -203,7 +204,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
             function($mail) use ($request, $subject){
-                $mail->from(env('MAIL_USERNAME'));
+                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
@@ -341,7 +342,7 @@ class WorkshopsController extends Controller
             }
         }
         
-        // Session::flash('message', 'Successfully updated Workshop!');
+        Session::flash('message', 'Successfully updated Workshop!');
         return Redirect::to('admin/workshops');
     }
 
@@ -445,6 +446,14 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="team_slots",
+     *     in="formData",
+     *     description="Team Slots",
+     *     required=false,
+     *     type="integer",
+     *     enum={"Authorized", "Unauthorized"}
+     *   ),
+     *   @SWG\Parameter(
      *     name="type",
      *     in="formData",
      *     description="Workshop Type",
@@ -487,6 +496,7 @@ class WorkshopsController extends Controller
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
+            'team_slots'                     => 'integer',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
             'landline'                       => 'digits_between:0,11',
@@ -495,7 +505,7 @@ class WorkshopsController extends Controller
             'type'                           => 'required|in:Authorized,Unauthorized'            
         ];        
 
-        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type');        
+        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'team_slots');        
         
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
@@ -517,6 +527,7 @@ class WorkshopsController extends Controller
                                 'mobile' => $request->mobile, 
                                 'landline' => $request->landline,
                                 'type' => $request->type,                                 
+                                'slots' => $request->team_slots,                                 
                                 'open_time' => $request->open_time, 
                                 'close_time' => $request->close_time, 
                                 'is_approved' => 0
@@ -544,7 +555,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(env('MAIL_USERNAME'));
+                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -939,7 +950,7 @@ class WorkshopsController extends Controller
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
-                $mail->from(env('MAIL_USERNAME'));
+                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
                 $mail->to($workshop->email, $workshop->name);
                 $mail->subject($subject);
             });        
@@ -972,7 +983,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Workshop Details!',
-            'body' => $workshop->load(['address', 'services', 'balance', 'transactions', 'bookings'])
+            'body' => [ 'workshop' => $workshop->load(['address', 'services', 'balance', 'transactions', 'bookings']) ]
         ],Response::HTTP_OK);
     }
     /**
@@ -1033,6 +1044,13 @@ class WorkshopsController extends Controller
      *     enum={"Authorized", "Unauthorized"}
      *   ),
      *   @SWG\Parameter(
+     *     name="team_slots",
+     *     in="formData",
+     *     description="Team Slots",
+     *     required=false,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
      *     name="open_time",
      *     in="formData",
      *     description="Workshop Opening Time",
@@ -1088,6 +1106,7 @@ class WorkshopsController extends Controller
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',            
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
+            'team_slots'                     => 'integer',
             'landline'                       => 'digits_between:0,11',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
@@ -1109,6 +1128,7 @@ class WorkshopsController extends Controller
         $workshop->name             = $request->name;        
         $workshop->owner_name       = $request->owner_name;  
         $workshop->cnic             = $request->cnic;
+        $workshop->slots            = $request->team_slots;
         $workshop->mobile           = $request->mobile;
         $workshop->landline         = $request->landline;
         $workshop->open_time        = $request->open_time;
@@ -1181,7 +1201,6 @@ class WorkshopsController extends Controller
      */
     public function storeWorkshopService(Request $request){
         $rules = [
-            // 'service_id'      => 'required|unique_with:workshop_service,workshop_id',
             'service_rate'    => 'required',            
             'service_time'    => 'required'                        
             ];
@@ -1234,7 +1253,9 @@ class WorkshopsController extends Controller
      */
     public function show_customers()
     {
-        return View::make('workshop.customers');
+        $workshop = Auth::guard('workshop')->user();
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
+        return View::make('workshop.customers', ['bookings' => $bookings]);
     }
 
     /**
@@ -1283,7 +1304,7 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="service_name",
      *     in="formData",
-     *     description="Sercice Name",
+     *     description="Service Name",
      *     required=false,
      *     type="string"
      *   ),
@@ -1291,13 +1312,6 @@ class WorkshopsController extends Controller
      *     name="address_block",
      *     in="formData",
      *     description="Workshop Address Block",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_area",
-     *     in="formData",
-     *     description="Workshop Address Area",
      *     required=false,
      *     type="string"
      *   ),
@@ -1322,48 +1336,26 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {   
-        // $workshops = Workshop::leftJoin('workshop_addresses', 'workshops.id', '=','workshop_addresses.workshop_id')->where('workshops.status', 1)->get();
-        /*$workshops = Workshop::join('workshop_service', 'workshops.id', '=','workshop_service.workshop_id')->leftJoin('services', 'workshop_service.service_id', '=','services.id')->where('workshops.status', 1)->with('address')->get();*/
-        $workshops = Workshop::with('address');
-        $workshop_ids = [];
+        $workshops      = Workshop::with('address');
         if ($request->has('name')) {
-            $workshops = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
+            $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
         if ($request->has('type')) {
-            $workshops = $workshops->where('type', $request->type);
-        }
-        // if ($request->has('geo_cord')) {
-        //     $workshops->where('geo_cord', $request->geo_cord);
-        // }
-        if ($request->has('service_name')) {
-            // $workshops = $workshops->where('services.name', $request->service_name);
-            $service_names = explode(", ",$request->service_name);
-            foreach($service_names as $service_name){
-                 $workshop_ids = Db::table('workshop_service')->join('services', 'workshop_service.service_id', '=', 'services.id')->select('workshop_service.workshop_id')->where('services.name', 'LIKE', '%'.$service_name.'%')->get()->pluck('workshop_id')->toArray();
-                $workshops = $workshops->whereIn('id', $workshop_ids);
-            }
-
-            $workshops=$workshops->with(['services' => function($query) use ($service_names) {
-                $query->whereIn('name', $service_names);
-            }]);
+            $workshops  = $workshops->where('type', $request->type);
         }
         if ($request->has('address_block')) {
-            $workshops = $workshops->where('address.block', 'LIKE', '%'.$request->address_block .'%');
-        }
-        if ($request->has('address_area')) {
-            $workshops = $workshops->where('address.area', 'LIKE', '%'.$request->address_area.'%');
+            $workshops  = Workshop::get_workshop_by_address($workshops, 'block', $request->address_block);
         }
         if ($request->has('address_town')) {
-            $workshops = $workshops->where('address.town', 'LIKE', '%'.$request->address_town.'%');
+           $workshops  = Workshop::get_workshop_by_address($workshops, 'town', $request->address_town);
         }
         if ($request->has('address_city')) {
-            $workshops = $workshops->where('address.city', 'LIKE', '%'.$request->address_city.'%');
+           $workshops  = Workshop::get_workshop_by_address($workshops, 'city', $request->address_city);
         }
-
-        $workshops = $workshops->with('services.pivot');
-        $workshops = $workshops->get();
-        $eachWorkShop = new Workshop();
-
+        if ($request->has('service_name')) {
+            $workshops = Workshop::get_workshop_by_service($workshops, $request->service_name);
+        }
+        $workshops          = $workshops->get();
         foreach ($workshops as $key =>$workshop) {
             $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
@@ -1371,7 +1363,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => '',
-            'body' => $workshops
+            'body' => $workshops,
         ],Response::HTTP_OK);
     }
 
@@ -1695,7 +1687,6 @@ class WorkshopsController extends Controller
                     $workshop->cnic_image      =  $cnic_image;
                     $workshop->open_time        = Input::get('open_time');
                     $workshop->close_time       = Input::get('close_time');
-                    // $workshop->status           = 1;
                     $workshop->save();   
             
                     // Update Workshop Address
@@ -1710,7 +1701,7 @@ class WorkshopsController extends Controller
                     $address->town              = Input::get('town');                
                     $address->update();
                     
-                    // Session::flash('message', 'Successfully updated Workshop!');
+                    Session::flash('message', 'Successfully updated Workshop!');
                     return Redirect::to('/profile');
     }
 
@@ -1722,7 +1713,6 @@ class WorkshopsController extends Controller
 
     public function storeProfileService(Request $request){        
         $rules = [
-            // 'service_id'      => 'required|unique_with:workshop_service,workshop_id',
             'service_rate'    => 'required',            
             'service_time'    => 'required'                        
             ];
@@ -1730,7 +1720,6 @@ class WorkshopsController extends Controller
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
-            // $request->offsetUnset('password');
             return Redirect::back()
                 ->withErrors($validator);                
         }        
@@ -1796,12 +1785,22 @@ class WorkshopsController extends Controller
         }
 
         $workshop = Workshop::find($request->workshop_id);
-        $balance = $workshop->balance->balance;
-        $new_balance = $request->amount + $balance;
-        $workshop->balance->update(['balance' => $new_balance]); 
+        if(is_null($workshop->balance))
+        {
+            $balance = 0;
+            $new_balance = $request->amount;            
+            $workshop->balance()->create([
+                'balance'   => $new_balance
+            ]);
+        }
+        else
+        {
+            $balance = $workshop->balance->balance;
+            $new_balance = $request->amount + $balance;
+            $workshop->balance->update(['balance' => $new_balance]);
+        }
 
         $transaction = new WorkshopLedger;
-
         $transaction->amount                        = $request->amount;
         $transaction->workshop_id                   = $request->workshop_id;
         $transaction->transaction_type              = 'Top-Up';        
@@ -2187,231 +2186,8 @@ class WorkshopsController extends Controller
         }
     }
 
-    /**
-     * @SWG\Get(
-     *   path="/api/workshop/leads-info",
-     *   summary="Leads Information",
-     *   operationId="get",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *    @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *    
-     * Getting Workshop Ledger.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function getLeadsInfo(){
-        $workshop = Auth::user();
-        $accepted_leads = $workshop->bookings()->where('response','accepted')->get()->count();
-        $completed_leads = $workshop->bookings()->where('job_status', 'completed')->get()->count();
-        $received_leads = $workshop->bookings()->count();
-        $balance = $workshop->balance->balance;
-        return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Workshop Ledger',
-                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance]
-                ],Response::HTTP_OK);
-    }
-
-    /**
-     * @SWG\Get(
-     *   path="/api/workshop/history",
-     *   summary="Leads History",
-     *   operationId="get",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *    @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *    
-     * Getting Workshop Ledger.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function leadsHistory(){
-        $workshop = Auth::user();
-        $bookings = Booking::where('workshop_id', $workshop->id)->with('billing')->get();
-        
-        if(count($bookings) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => 'No Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{            
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'Workshop History',
-                        'body' => $bookings
-                    ],Response::HTTP_OK);
-        }
-    }
-
-    /**
-     * @SWG\Get(
-     *   path="/api/workshop/leads/accepted",
-     *   summary="Accepted Leads",
-     *   operationId="get",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *    @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *    
-     * Getting Workshop Ledger.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function acceptedLeads(){
-        $workshop = Auth::user();
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('response','accepted')->with('services')->get();
-
-        if(count($accepted_leads) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'No Accepted Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{            
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'Accepted Leads',
-                        'body' => $accepted_leads
-                    ],Response::HTTP_OK);
-        }                 
-    }
-
-    /**
-     * @SWG\Get(
-     *   path="/api/workshop/leads/rejected",
-     *   summary="Rejected Leads",
-     *   operationId="get",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *    @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *    
-     * Getting Workshop Ledger.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function rejectedLeads(){
-        $workshop = Auth::user();
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('response','rejected')->with('services')->get();
-        if(count($rejected_leads) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'No rejected Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'Rejected Leads',
-                        'body' => $rejected_leads
-                    ],Response::HTTP_OK);            
-        }         
-    }
-
-    /**
-     * @SWG\Get(
-     *   path="/api/workshop/leads/completed",
-     *   summary="Completed Leads",
-     *   operationId="get",
-     *   produces={"application/json"},
-     *   tags={"Workshops"},
-     *    @SWG\Parameter(
-     *     name="Authorization",
-     *     in="header",
-     *     description="Token",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Response(response=200, description="successful operation"),
-     *   @SWG\Response(response=406, description="not acceptable"),
-     *   @SWG\Response(response=500, description="internal server error")
-     * )
-     *    
-     * Getting Workshop Ledger.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function completedLeads(){
-        $workshop = Auth::user();
-        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->with('services')->get();
-
-        if(count($completed_leads) == 0){
-            return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => true,
-                        'message' => 'No Completed Leads Found',
-                        'body' => ''
-                    ],Response::HTTP_OK);            
-        }else{
-            return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Completed Leads',
-                    'body' => $completed_leads
-                ],Response::HTTP_OK);            
-        }         
-        
-    }
-
-    public function workshopLedger($workshop_id){
-        $workshop = Workshop::find($workshop_id)->first()->load('transactions','balance');
+    public function workshopLedger(Workshop $workshop){
+        $workshop->load('transactions','balance');
         return view::make('workshop.ledger')->with('workshop',$workshop);
     }
 
@@ -2463,6 +2239,19 @@ class WorkshopsController extends Controller
             'body' => Customer::whereIn('id', $bookings)->get()
         ],Response::HTTP_OK);
     }
+
+    public function authorized()
+    {
+        $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'Authorized')->get();
+        return View::make('workshop.authorized')->with('workshops', $workshops);
+    }
+
+    public function unauthorized()
+    {
+        $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'UnAuthorized')->get();
+        return View::make('workshop.unauthorized')->with('workshops', $workshops);
+    }
+
 }
 
 

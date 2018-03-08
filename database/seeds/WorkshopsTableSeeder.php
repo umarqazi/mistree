@@ -18,6 +18,7 @@ class WorkshopsTableSeeder extends Seeder
             'password'  => bcrypt('workshop')
         ])->each(function($w){
             $w->address()->save(factory(App\WorkshopAddress::class)->make());
+            $w->balance()->save(factory(App\WorkshopBalance::class)->make());
         });
 
         Model::reguard();

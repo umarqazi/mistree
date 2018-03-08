@@ -222,3 +222,19 @@ form .form-group {margin-bottom: 0px;}
 .query_links{position: relative;}
 .query_links i.ti-angle-down,.query_links i.ti-angle-up {position: absolute;right: 20px;font-size: 10px;margin: 0;top: 10px;}
 .subnav a {border: none !important;}
+
+.dropdown-menu{
+    padding: 10px;
+    background: #fff;
+    min-width: 200px;
+}
+
+.dropdown-menu > a{
+    color: #666666;
+    font-size: 13px;
+    border-bottom: #f1efef solid 1px;
+    display: block;
+    margin: 0px;
+    padding: 6px 0px;
+}
+

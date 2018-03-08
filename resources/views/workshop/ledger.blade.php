@@ -19,22 +19,18 @@
                             </div>
                         </div>
                         <div class="clear20"></div>
-                        <div class="row">
-                         
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                              
-                                <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right">
-                                	<a href="{{url('admin/workshop/'.$workshop->id.'/ledger')}}" class="btn btn-header btn-export">View Ledger</a>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </div>
 
 					<div class="content">
 					    <div class="container-fluid">
 					        <div class="row">
-					            <div class="col-md-12">
+					            <div class="col-md-12"> 
+				            		@if(!$workshop->transactions)
+				            			<div>
+				            				<h3>No transactions found</h3>
+				            			</div>
+				            		@else
 					            	<div class="table-responsive">					            		
 										<table class="table table-striped dataTable table-bordered no-footer" role="grid" style="padding: 10px;">          	         
 											<thead>
@@ -74,6 +70,7 @@
 						                    </tbody>
 						                </table>
 					                </div>
+					                @endif					                
 					            </div>
 					        </div>
 
