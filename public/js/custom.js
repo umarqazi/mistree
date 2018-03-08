@@ -388,8 +388,7 @@ $(document).ready(function(){
 
 
 
-    $('#jsTable').DataTable();
-    // $('.datepick').datepicker();    
+    $('#jsTable').DataTable();  
 
     $(".nav > li a.query_links").click(function(e){
       e.preventDefault();
