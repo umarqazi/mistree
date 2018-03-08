@@ -25,10 +25,10 @@
                                    + More Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a href="{{ url('admin/workshops/create') }}" class="">Add New Workshop</a> 
-                                        <a href="{{ url('admin/workshops/block') }}" class="">Blocked Workshops</a>
-                                        <a href="{{ url('admin/authorized-workshops') }}" class="">Authorized Workshops</a> 
-                                        <a href="{{ url('admin/unauthorized-workshops') }}" class="">UnAuthorized Workshops</a>
+                                        <a href="{{ url('admin/workshops/create') }}" class="dropdown-buttons">Add New Workshop</a> 
+                                        <a href="{{ url('admin/workshops/block') }}" class="dropdown-buttons">Blocked Workshops</a>
+                                        <a href="{{ url('admin/authorized-workshops') }}" class="dropdown-buttons">Authorized Workshops</a> 
+                                        <a href="{{ url('admin/unauthorized-workshops') }}" class="dropdown-buttons">UnAuthorized Workshops</a>
                                     </div>
                                 </div>
                             </div>

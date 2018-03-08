@@ -105,7 +105,7 @@ class ServicesController extends Controller
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $img_path = config('app.s3_bucket_url').$s3_path;
                 $service->image          = $img_path;
             }
             else
@@ -190,7 +190,7 @@ class ServicesController extends Controller
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $img_path = config('app.s3_bucket_url').$s3_path;
                 $service->image          = $img_path;
             }
             else

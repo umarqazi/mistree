@@ -264,7 +264,7 @@ class CustomersController extends Controller
         $subject = "Please verify your email address.";
         Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "umar.farooq@gems.techverx.com");
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
