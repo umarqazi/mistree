@@ -1820,10 +1820,10 @@ class WorkshopsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function Dashboard() {
+    public function showHome() {
 
         $workshop        = Auth::guard('workshop')->user();
-        $leads           = Booking::where('workshop_id', $workshop->id)->first()->load(['customer']);
+        $leads           = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
