@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Create New Workshop')
+@section('title', 'Create New Workshop Query')
 @section('content')
 
 @include('partials.header')
@@ -11,8 +11,25 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-
-                  <form method="POST" action="{{ url('admin/workshops') }}">
+                   @if (session('success_message'))
+                    <div class="row">
+                        <div class="col-md-12">
+                                <div class="alert alert-success">
+                                    {{ session('success_message') }}
+                                </div>
+                        </div>
+                    </div>
+                    @endif
+                    @if (session('error_message'))
+                    <div class="row">
+                        <div class="col-md-12">
+                                <div class="alert alert-danger">
+                                    {{ session('error_message') }}
+                                </div>
+                        </div>
+                    </div>
+                    @endif
+                  <form method="POST" action="{{ url('workshop-queries') }}">
                     {!! csrf_field() !!}
                       <div class="header">
                         @if ($errors->any())

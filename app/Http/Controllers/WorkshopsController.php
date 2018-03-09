@@ -70,7 +70,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {   
+    {
         $services = Service::all();        
         return View::make('workshop.create', ['services' => $services]);
     }
