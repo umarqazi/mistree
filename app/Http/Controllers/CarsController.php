@@ -190,6 +190,16 @@ class CarsController extends Controller
         return Redirect::to('admin/cars')->with('message', 'Success! Car Restored.');
     }
 
+    public function delete_car($id)
+    {
+       // delete
+        $car = Car::find($id);
+        $car->forceDelete();
+
+        // redirect
+        return Redirect::to('admin/cars')->with('message', 'Success! Car Deleted.');
+    }
+
     public function inactive_cars()
     {
         $cars = Car::onlyTrashed()->get();  

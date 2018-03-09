@@ -105,6 +105,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('customer-queries', 'CustomerQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('cars', 'CarsController');
+        Route::delete('car/{id}', 'CarsController@delete_car');
         Route::put('resolve-workshop-query/{workshopQuery}', 'WorkshopQueriesController@resolve');
         Route::put('resolve-customer-query/{customerQuery}', 'CustomerQueriesController@resolve');
         Route::get('/home','AdminsController@showHome')->name('admin.home');

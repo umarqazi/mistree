@@ -46,6 +46,11 @@
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
                                             <button type="submit" class="btn btn-header btn-export">Publish</button>
                                         </form>
+                                        <form method="POST" action="{{url('admin/car/'.$value->id)}}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
+                                            <button type="submit" class="btn btn-header btn-export">Delete</button>
+                                        </form>
                                     </td>
                                 </tr>
                                  @endforeach
