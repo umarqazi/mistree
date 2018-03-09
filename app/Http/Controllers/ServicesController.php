@@ -120,7 +120,7 @@ class ServicesController extends Controller
             $service->save();
 
             // redirect
-            Session::flash('message', 'Successfully created service!');
+            Session::flash('message', 'Success! Service Created.');
             return Redirect::to('admin/services');
         }
     }
@@ -204,7 +204,7 @@ class ServicesController extends Controller
             $service->update();
 
             // redirect
-            Session::flash('message', 'Successfully updated the Service!');
+            Session::flash('message', 'Success! Service Updated.');
             return Redirect::to('admin/services');
         }
     }
@@ -221,7 +221,7 @@ class ServicesController extends Controller
         $service->delete();
 
         // redirect
-        Session::flash('message', 'Successfully deleted the Service!');
+        Session::flash('message', 'Success! Service Deactivated');
         return Redirect::to('admin/services');
     }
 

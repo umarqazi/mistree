@@ -22,7 +22,7 @@
                         <p>Customers</p>
                     </a>
                 </li>
-                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars')) class="active" @endif >
+                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars') || Request::is('admin/inactive-cars')) class="active" @endif >
                     <a href="{{url('admin/cars')}}">
                         <i class="ti-car"></i>
                         <p>Cars</p>

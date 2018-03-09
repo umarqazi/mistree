@@ -18,6 +18,15 @@
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
+                                @if (session('message'))
+                                    <div class="alert alert-success">
+                                        {{ session('message') }}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
                                 <h4 class="title">Services</h4>
                                 <p class="category">List of all services.</p>
                             </div>

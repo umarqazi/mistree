@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Cars</h4>
-                                <p class="category">List of all active cars.</p>
+                                <p class="category">List of all unpublished cars.</p>
                             </div>
                         </div>
                         <div class="row">
