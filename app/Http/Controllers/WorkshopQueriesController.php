@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\WorkshopQuery;
 use Illuminate\Http\Request;
-use JWTAuth, Session, Config, View;
+use JWTAuth, Session, Config, View, Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +13,28 @@ use Illuminate\Support\Facades\Input;
 
 class WorkshopQueriesController extends Controller
 {
+    /**
+     * Fetching Guard.
+     *
+     * @return Auth::guard()
+     */
+    protected function guard()
+    {
+        return Auth::guard('workshop');
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param  \Illuminate\Contracts\Auth\Guard  $auth
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->auth = app('auth')->guard('workshop');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -102,8 +124,8 @@ class WorkshopQueriesController extends Controller
             $email = "jazib.javed@gems.techverx.com";        
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+            function($mail) use ($email, $subject){
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email);
                 $mail->subject($subject);
             });
@@ -114,8 +136,7 @@ class WorkshopQueriesController extends Controller
                 'body' => null
             ],Response::HTTP_OK);
         }else{
-            Config::set('auth.providers.users.model', \App\Workshop::class);
-            $workshop = Auth::user();
+            $workshop = Auth::guard('workshop')->user();
             $rules = array(
                 'subject'      => 'required',
                 'message'      => 'required'
@@ -135,8 +156,8 @@ class WorkshopQueriesController extends Controller
             $email = "jazib.javed@gems.techverx.com";        
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+            function($mail) use ($email, $subject){
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email);
                 $mail->subject($subject);
             });
