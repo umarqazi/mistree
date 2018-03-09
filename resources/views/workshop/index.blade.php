@@ -10,6 +10,11 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="header">
+                    @if (session('message'))
+                            <div class="alert alert-success">
+                                {{ session('message') }}
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Registered Workshops</h4>

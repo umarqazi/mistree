@@ -4,7 +4,7 @@
 
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="dashboard.html" class="simple-text">
+                <a href="{{url('admin/home')}}" class="simple-text">
                     <img src="{{asset('img/car-logo.png')}}" class="img-responsive center-block">
                 </a>
             </div>
@@ -22,7 +22,7 @@
                         <p>Customers</p>
                     </a>
                 </li>
-                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars')) class="active" @endif >
+                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars') || Request::is('admin/inactive-cars')) class="active" @endif >
                     <a href="{{url('admin/cars')}}">
                         <i class="ti-car"></i>
                         <p>Cars</p>
@@ -47,13 +47,13 @@
                     </a>
                 </li>
                 <li>
-                    <a href="notifications.html">
+                    <a href="#">
                         <i class="ti-comment-alt"></i>
                         <p>Notifications</p>
                     </a>
                 </li>
                 <li>
-                    <a href="balance.html">
+                    <a href="#">
                         <i class="ti-pencil-alt"></i>
                         <p>Balance Trail</p>
                     </a>
