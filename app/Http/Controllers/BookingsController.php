@@ -49,9 +49,9 @@ class BookingsController extends Controller
      *     type="integer"
      *   ),
      *   @SWG\Parameter(
-     *     name="customer_car_id",
+     *     name="car_id",
      *     in="formData",
-     *     description="Customer Car ID",
+     *     description="Car ID",
      *     required=true,
      *     type="integer"
      *   ),
