@@ -467,14 +467,14 @@ class WorkshopsController extends Controller
      *   @SWG\Parameter(
      *     name="open_time",
      *     in="formData",
-     *     description="Workshop Opening Time",
+     *     description="format : 09:00:00",
      *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="close_time",
      *     in="formData",
-     *     description="Workshop Closing Time",
+     *     description="format : 022:00:00",
      *     required=true,
      *     type="string"
      *   ),
@@ -492,7 +492,7 @@ class WorkshopsController extends Controller
      *
      */
     public function register(Request $request)
-    {
+    {        
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -516,7 +516,7 @@ class WorkshopsController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
+                    'message' => $validator->messages()->first(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         }      
@@ -543,8 +543,8 @@ class WorkshopsController extends Controller
         $workshop_balance->save();
 
          //Insert Services data from request        
-        $services = $request->services;
-        if(count($services) > 0){
+        $services = json_decode($request->services);
+        if(count($services) > 0){            
             foreach($services as $service){
                 $workshop->services()->attach($service->service_id,['service_rate' => $service->service_rate, 'service_time' => $service->service_time]);
             }
