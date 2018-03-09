@@ -26,6 +26,13 @@ class Service extends Model
      */
     protected $dates = ['deleted_at'];
 
+    /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_doorstep' => 'boolean'];
+
 
     public function workshops()
     {
