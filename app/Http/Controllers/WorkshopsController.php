@@ -1839,11 +1839,30 @@ class WorkshopsController extends Controller
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
 
-        $leads_count     = count($leads);
-        $customer_count  = count($leads->customer);
-        $completed_leads = count($completed_leads);
-        $accepted_leads  = count($accepted_leads);
-        $rejected_leads  = count($rejected_leads);
+        if(count($leads)){
+            $leads_count     = count($leads);
+            $customer_count  = count($leads->customer);
+        }
+        else{
+            $leads_count     = 0;
+            $customer_count  = 0;
+        }
+        if(count($completed_leads)){
+            $completed_leads = count($completed_leads);
+        }
+        else{
+            $completed_leads = 0;
+        }
+        if(count($accepted_leads)){
+            $accepted_leads  = count($accepted_leads);
+        }else{
+            $accepted_leads  = 0;
+        }
+        if(count($rejected_leads)){
+            $rejected_leads  = count($rejected_leads);
+        }else{
+            $rejected_leads  = 0;
+        }
 
         return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=> $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,'customer_count'=> $customer_count ]);
       
