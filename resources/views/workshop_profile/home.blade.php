@@ -17,14 +17,14 @@
                                 <div class="col-xs-8">
                                     <div class="numbers">
                                         <p>CUSTOMERS</p>
-                                        540
+                                        {{$customer_count}}
                                     </div>
                                 </div>
                             </div>
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{url('/customers')}}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>
@@ -41,40 +41,15 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="numbers">
-                                        <p>HISTORY</p>
-                                        39
+                                        <p>LEADS</p>
+                                        {{$leads_count}}
                                     </div>
                                 </div>
                             </div>
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-sm-6">
-                    <div class="card">
-                        <div class="content">
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <div class="icon-big icon-danger text-center">
-                                        <i class="ti-comment-alt"></i>
-                                    </div>
-                                </div>
-                                <div class="col-xs-8">
-                                    <div class="numbers">
-                                        <p>REQUESTS</p>
-                                        04
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="footer">
-                                <hr />
-                                <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{url('/leads')}}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>
@@ -91,22 +66,21 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="numbers">
-                                        <p>ACTIVE LEADS</p>
-                                        87
+                                        <p>COMPLETED LEADS</p>
+                                        {{$completed_leads}}
                                     </div>
                                 </div>
                             </div>
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{url('/leads/completed')}}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
         </div>  
 
     </div>

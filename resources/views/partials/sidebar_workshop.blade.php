@@ -40,16 +40,10 @@
                         <p>Customers</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('requests') ? 'class=active' : '') }}}>
-                    <a href="{{url('/requests')}}">
-                        <i class="ti-panel"></i>
-                        <p>Requests</p>
-                    </a>
-                </li>
                 <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
                     <a href="{{url('/workshop-queries/create/')}}">
                         <i class="ti-help-alt"></i>
-                        <p>Support</p>
+                        <p>Request</p>
                     </a>
                 </li>
                 <li>

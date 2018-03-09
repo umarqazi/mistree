@@ -1776,8 +1776,8 @@ class WorkshopsController extends Controller
 
     public function topupBalance(Request $request){
         $rules = [
-            'amount'                          => 'required|numeric',
-            'workshop_id'                     => 'required|integer'
+            'amount'         => 'required|numeric',
+            'workshop_id'    => 'required|integer'
         ];        
 
         $input = $request->only('amount', 'workshop_id');
@@ -1790,7 +1790,7 @@ class WorkshopsController extends Controller
         $workshop = Workshop::find($request->workshop_id);
         if(is_null($workshop->balance))
         {
-            $balance = 0;
+            $balance     = 0;
             $new_balance = $request->amount;            
             $workshop->balance()->create([
                 'balance'   => $new_balance
@@ -1798,7 +1798,7 @@ class WorkshopsController extends Controller
         }
         else
         {
-            $balance = $workshop->balance->balance;
+            $balance     = $workshop->balance->balance;
             $new_balance = $request->amount + $balance;
             $workshop->balance->update(['balance' => $new_balance]);
         }
@@ -1821,7 +1821,21 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function Dashboard() {
-        return view('workshop_profile.home');
+
+        $workshop        = Auth::guard('workshop')->user();
+        $leads           = Booking::where('workshop_id', $workshop->id)->first()->load(['customer']);
+        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
+        $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
+        $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
+
+        $leads_count     = count($leads);
+        $customer_count  = count($leads->customer);
+        $completed_leads = count($completed_leads);
+        $accepted_leads  = count($accepted_leads);
+        $rejected_leads  = count($rejected_leads);
+
+        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=> $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,'customer_count'=> $customer_count ]);
+      
     }
 
     /**
