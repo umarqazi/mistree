@@ -1820,8 +1820,8 @@ class WorkshopsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showHome() {
-        return view('workshop.home');
+    public function Dashboard() {
+        return view('workshop_profile.home');
     }
 
     /**

@@ -48,7 +48,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/customers', 'WorkshopsController@show_customers');
         Route::get('/requests', 'WorkshopsController@show_requests');
 
-        Route::get('/home', 'WorkshopsController@showHome')->name('home');
+        Route::get('/home', 'WorkshopsController@dashboard')->name('home');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
         Route::post('/profile/{id}', 'WorkshopsController@update_profile');
