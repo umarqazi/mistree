@@ -2,49 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\WorkshopQuery;
+use App\CustomerQuery;
 use Illuminate\Http\Request;
-use JWTAuth, Session, Config, View;
+use JWTAuth, Session, View;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 
-class WorkshopQueriesController extends Controller
+class CustomerQueriesController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display a listing of the customerQueries.
      *
      * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        $workshopQueries = WorkshopQuery::all()->load('workshop');
-        return View::make('workshop.index_workshop_query')->with('workshopQueries', $workshopQueries);
+        $customerQueries = CustomerQuery::all()->load('customer');
+        return View::make('customer.index_customer_query')->with('customerQueries', $customerQueries);
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        return View::make('workshop.create_workshop_query');
-    }
-
-    /**
-     * Store a newly created resource in storage.
+     * Store a newly created customerQuery in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     /**
      * @SWG\Post(
-     *   path="/api/workshop/add-workshop-query",
-     *   summary="Add Workshop Query",
-     *   operationId="add_workshop_query",
+     *   path="/api/customer/add-customer-query",
+     *   summary="Add Customer Query",
+     *   operationId="add_customer_query",
      *   produces={"application/json"},
      *   tags={"Queries"},
      *   consumes={"application/xml", "application/json"},
@@ -76,9 +66,9 @@ class WorkshopQueriesController extends Controller
      *
      */
     public function store(Request $request)
-    {   
-        if( $request->header('Content-Type') == 'application/json'){
-            $workshop = JWTAuth::Authenticate();
+    {
+       if( $request->header('Content-Type') == 'application/json'){
+            $customer = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
                 'message'      => 'required'
@@ -93,7 +83,7 @@ class WorkshopQueriesController extends Controller
                         'body' => $request->all()
                     ],Response::HTTP_OK);
             }
-            $workshop->queries()->create([
+            $customer->queries()->create([
                 'subject'       => $request->subject,
                 'message'       => $request->message,
                 'status'        => 'Open',
@@ -105,43 +95,29 @@ class WorkshopQueriesController extends Controller
                 'message' => 'Query has been Added.',
                 'body' => ''
             ],Response::HTTP_OK);
-        }else{
-            Config::set('auth.providers.users.model', \App\Workshop::class);
-            $workshop = Auth::user();
-            $rules = array(
-                'subject'      => 'required',
-                'message'      => 'required'
-            );
-            $validator = Validator::make($request->all(), $rules);
-
-            if ($validator->fails()) {
-                Session::flash('error_message', 'Invalid Details!');
-                return Redirect::to('workshop-queries/create');
-            }
-            Session::flash('success_message', 'Successfully Added the Request!');
-            return Redirect::to('workshop-queries/create');
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\WorkshopQuery  $workshopQuery
+     * @param  \App\CustomerQuery  $customerQuery
      * @return \Illuminate\Http\Response
      */
-    public function show(WorkshopQuery $workshopQuery)
+    public function show(CustomerQuery $customerQuery)
     {
-        return View::make('workshop.show_workshop_query')->with('workshopQuery', $workshopQuery);
+        return View::make('customer.show_customer_query')->with('customerQuery', $customerQuery);
     }
+
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\WorkshopQuery  $workshopQuery
+     * @param  \App\CustomerQuery  $customerQuery
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, WorkshopQuery $workshopQuery)
+    public function update(Request $request, CustomerQuery $customerQuery)
     {
         //
     }
@@ -149,31 +125,31 @@ class WorkshopQueriesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\WorkshopQuery  $workshopQuery
+     * @param  \App\CustomerQuery  $customerQuery
      * @return \Illuminate\Http\Response
      */
-    public function destroy(WorkshopQuery $workshopQuery)
+    public function destroy(CustomerQuery $customerQuery)
     {
-       // delete
-        $workshopQuery->delete();
+        // delete
+        $customerQuery->delete();
 
         Session::flash('success_message', 'Successfully deleted the request!');
-        return Redirect::to('admin/workshop-queries');
+        return Redirect::to('admin/customer-queries');
     }
 
     /**
-     * Resolve the specified workshopQuery from storage.
+     * Resolve the specified customerQuery from storage.
      *
-     * @param  \App\WorkshopQuery  $workshopQuery
+     * @param  \App\CustomerQuery  $customerQuery
      * @return \Illuminate\Http\Response
      */
-    public function resolve(WorkshopQuery $workshopQuery)
+    public function resolve(CustomerQuery $customerQuery)
     {
-        $workshopQuery->status      = 'Closed';
-        $workshopQuery->is_resolved = true;
-        $workshopQuery->save();
+        $customerQuery->status      = 'Closed';
+        $customerQuery->is_resolved = true;
+        $customerQuery->save();
 
         Session::flash('success_message', 'Successfully updated the Status!');
-        return Redirect::to('admin/workshop-queries');
+        return Redirect::to('admin/customer-queries/');
     }
 }

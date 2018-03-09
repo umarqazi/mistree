@@ -1226,5 +1226,4 @@ class CustomersController extends Controller
                 'body' => $workshop->load('services')
             ],Response::HTTP_OK);                
     }
-
 }
