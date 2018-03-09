@@ -10,6 +10,11 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="header">
+                    @if (session('message'))
+                            <div class="alert alert-success">
+                                {{ session('message') }}
+                            </div>
+                        @endif
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Registered Workshops</h4>
@@ -18,13 +23,19 @@
                         </div>
                         <div class="clear20"></div>
                         <div class="row">
-                         
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                              
-                                <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right"><a href="{{ url('admin/workshops/create') }}" class="btn btn-header btn-export">Add New Workshop</a></div>
-                                <br> 
-                                <div class="text-right"><a href="{{ url('admin/workshops/block') }}" class="btn btn-header btn-export">Blocked Workshop</a></div>
+                            <div class="col-sm-6 col-sm-offset-6 balance-info">                         
+                                <div class="clear10"></div>
+                                <div class="dropdown pull-right">
+                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                   + More Options
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <a href="{{ url('admin/workshops/create') }}" class="dropdown-buttons">Add New Workshop</a> 
+                                        <a href="{{ url('admin/workshops/block') }}" class="dropdown-buttons">Blocked Workshops</a>
+                                        <a href="{{ url('admin/authorized-workshops') }}" class="dropdown-buttons">Authorized Workshops</a> 
+                                        <a href="{{ url('admin/unauthorized-workshops') }}" class="dropdown-buttons">UnAuthorized Workshops</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -53,8 +64,9 @@
                                     @else
                                     <td></td>
                                     @endif
-                                    <td>{{23*($key+1) }}</td>
-                                    <td>{{ 2*($key+1) }}</td>
+                                    <td>{{ $value->balance['balance'] }}</td>
+                                    @php $leads = $value->bookings->count(); @endphp
+                                    <td>{{ $leads }}</td>
                                     <td>
                                         @if( ! $value->is_approved )
                                             Not Approved

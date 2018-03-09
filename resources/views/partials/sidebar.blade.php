@@ -4,7 +4,7 @@
 
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="dashboard.html" class="simple-text">
+                <a href="{{url('admin/home')}}" class="simple-text">
                     <img src="{{asset('img/car-logo.png')}}" class="img-responsive center-block">
                 </a>
             </div>
@@ -22,7 +22,7 @@
                         <p>Customers</p>
                     </a>
                 </li>
-                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars')) class="active" @endif >
+                <li  @if(Request::is('admin/cars/*') || Request::is('admin/cars') || Request::is('admin/inactive-cars')) class="active" @endif >
                     <a href="{{url('admin/cars')}}">
                         <i class="ti-car"></i>
                         <p>Cars</p>
@@ -47,16 +47,27 @@
                     </a>
                 </li>
                 <li>
-                    <a href="notifications.html">
+                    <a href="#">
                         <i class="ti-comment-alt"></i>
                         <p>Notifications</p>
                     </a>
                 </li>
                 <li>
-                    <a href="balance.html">
+                    <a href="#">
                         <i class="ti-pencil-alt"></i>
                         <p>Balance Trail</p>
                     </a>
+                </li>
+                <li  @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*') || Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') )   class="active" @endif >
+                    <a href="" class="query_links">
+                        <i class="ti-help-alt"></i>
+                        <p>Requests</p>
+                        <i class="ti-angle-down"></i>
+                     </a>
+                    <ul class="subnav @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*') || Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') ) show_ul @endif">
+                        <li @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*'))   class="active" @endif ><a href="/admin/customer-queries/">Customer Queries</a></li>
+                        <li @if(Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') )   class="active" @endif ><a href="/admin/workshop-queries/">Workshop Queries</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ url('/admin/logout') }}"

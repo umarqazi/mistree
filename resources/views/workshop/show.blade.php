@@ -6,7 +6,7 @@
 
 <div class="content">
     
-    <div class="container-fluid">
+    <div>
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -14,29 +14,36 @@
                 	<div class="header">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
-                                <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
-								<div>
-									<img src="{{$workshop->profile_pic}}" alt="workshop_logo" width="100px" width="90px" style="padding-top:20px;"> 
-								</div>
+
+	                            <div class="avtar-block">
+	                            	<img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
+	                            	<div class="name-info">
+	                            		<h4 class="title">Workshop Name : {{$workshop->name}}</h4>
+	                                	<h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
+	                                	<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
+	                                	<div class="phone">Mobile : {{$workshop->mobile}}</div>
+	                                	<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
+	                                </div>
+	                                <div class="dropdown pull-right">
+	                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	                                   + More Options
+	                                    </button>
+	                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+	                                    	<a href="{{url('admin/workshop/'.$workshop->id.'/gallery')}}" class="dropdown-buttons">View Gallery</a>
+	                                        <a href="{{url('admin/workshop/'.$workshop->id.'/ledger')}}" class="dropdown-buttons">View Ledger</a>
+		                                	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="dropdown-buttons">Edit Workshop</a>
+		                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="dropdown-buttons">Add Services</a>
+		                                	<a href="{{ url('admin/workshop/'.$workshop->id.'/history') }}" class="dropdown-buttons">Workshop History</a>
+	                                    </div>
+	                                </div>
+	                            </div>
+								
                             </div>
-                        </div>
-                        <div class="clear20"></div>
-                        <div class="row">
-                         
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                              
-                                <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right">
-                                	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a>
-                                	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="btn btn-header btn-export">Add Services</a>
-                                </div>
-                            </div>
-                        </div>
+                        </div>                                                
                     </div>
 
 					<div class="content">
-					    <div class="container-fluid">
+					    <div>
 					        <div class="row">
 					            <div class="col-md-12">
 					            	<div class="table-responsive">
@@ -71,8 +78,8 @@
 												<tr> 
 						                        	<td>Landline Number</td>
 						                        	<td>{{ $workshop->landline}}</td>
-													<td></td>
-						                        	<td></td>
+													<td>Team Slots</td>
+						                        	<td>{{ $workshop->slots }}</td>
 						                        </tr>
 						                        <tr> 
 						                        	<td>Opening Time</td>

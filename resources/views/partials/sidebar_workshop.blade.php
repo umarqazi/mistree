@@ -1,43 +1,54 @@
-
 <div class="wrapper">
 <div class="sidebar" data-background-color="white" data-active-color="danger">
 
     	<div class="sidebar-wrapper">
             <div class="logo">
-                <a href="dashboard.html" class="simple-text">
+                <a href="{{url('/home')}}" class="simple-text">
                     <img src="{{asset('img/car-logo.png')}}" class="img-responsive center-block">
                 </a>
             </div>
 
             <ul class="nav">
-                <li {{{ (Request::is('workshop/home') ? 'class=active' : '') }}}>
+                <li {{{ (Request::is('home') ? 'class=active' : '') }}}>
                     <a href="{{url('/home')}}">
                         <i class="ti-dashboard"></i>
                         <p>Dashboard</p>
                     </a>
-                </li>
-                <li {{{ (Request::is('workshop/profile') ? 'class=active' : '') }}}>
-                    <a href="{{url('/profile')}}">
+                </li>            
+                <li @if(Request::is('profile/*') || Request::is('profile')) class="active" @endif >
+                    <a href="{{url('/profile/')}}">
                         <i class="ti-user"></i>
                         <p>Profile</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/history') ? 'class=active' : '') }}}>
-                    <a href="{{url('/history')}}">
+                <li @if(Request::is('leads/*') || Request::is('leads')) class="active" @endif >
+                    <a href="{{url('/leads/')}}">
                         <i class="ti-view-list-alt"></i>
-                        <p>Work History</p>
+                        <p>Leads</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/customers') ? 'class=active' : '') }}}>
-                    <a href="{{url('/customers')}}">
+                <li @if(Request::is('ledger/*') || Request::is('ledger')) class="active" @endif >
+                    <a href="{{url('/ledger/')}}">
+                        <i class="ti-panel"></i>
+                        <p>Ledger</p>
+                    </a>
+                </li>
+                <li @if(Request::is('customers/*') || Request::is('customer')) class="active" @endif >
+                    <a href="{{url('/customers/')}}">
                         <i class="ti-user"></i>
                         <p>Customers</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop/requests') ? 'class=active' : '') }}}>
-                    <a href="{{url('/requests')}}">
+                <li  @if(Request::is('requests/*') || Request::is('request')) class="active" @endif}>
+                    <a href="{{url('/requests/')}}">
                         <i class="ti-panel"></i>
                         <p>Requests</p>
+                    </a>
+                </li>
+                <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
+                    <a href="{{url('/workshop-queries/create/')}}">
+                        <i class="ti-help-alt"></i>
+                        <p>Request</p>
                     </a>
                 </li>
                 <li>

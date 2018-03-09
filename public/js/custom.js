@@ -388,8 +388,11 @@ $(document).ready(function(){
 
 
 
-    $('#jsTable').DataTable();
-    $('.datepick').datepicker();    
+    $('#jsTable').DataTable();  
 
-
+    $(".nav > li a.query_links").click(function(e){
+      e.preventDefault();
+      $(".subnav").toggleClass("show_ul");
+      $(this).children("i").last().toggleClass("ti-angle-down ti-angle-up");
+    });
 });

@@ -64,8 +64,8 @@ $factory->define(App\Workshop::class, function (Faker\Generator $faker) {
         'landline'      => '0423'.$faker->numberBetween(4,6).$faker->randomNumber(6, true),
         'type'          => $faker->randomElement(['Authorized', 'Unauthorized']),
         'profile_pic'   => $faker->imageUrl(640,480,'business',true),
-        'open_time'     => $faker->numberBetween(10,11).':00am',
-        'close_time'    => $faker->numberBetween(10,11).':00pm',
+        'open_time'     => $faker->numberBetween(10,11).':00',
+        'close_time'    => $faker->numberBetween(20,21).':00',
         'is_approved'   => 1,
         'remember_token'=> str_random(10),
         'created_at'    => $faker->dateTimeBetween('-5 days', 'now', 'Asia/Karachi'),
@@ -86,6 +86,15 @@ $factory->define(App\WorkshopAddress::class, function(Faker\Generator $faker){
         'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
     ];
 });
+
+$factory->define(App\WorkshopBalance::class, function(Faker\Generator $faker){
+    return [
+        'balance'       => 0,
+        'created_at'    => $faker->dateTimeBetween('-5 days', 'now', 'Asia/Karachi'),
+        'updated_at'    => $faker->dateTimeBetween('-3 days', 'now', 'Asia/Karachi'),
+    ];
+});
+
 
 $factory->define(App\Car::class, function (Faker\Generator $faker) {
     return [

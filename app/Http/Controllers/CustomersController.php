@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomerAddress;
 use JWTAuth;
-
+use Session;
 use Illuminate\Support\Facades\Redirect;
 use Hash, DB, Config, Mail, View;
 use App\Customer;
@@ -54,8 +54,7 @@ class CustomersController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        return View::make('customer.index')->with('customers', $customers);
-        // return View::make('customer.index');
+        return View::make('customer.index')->with('customers', $customers);        
     }
 
     /**
@@ -65,7 +64,7 @@ class CustomersController extends Controller
      */
     public function create()
     {
-        return View::make('customers.create');
+
     }
 
     /**
@@ -101,7 +100,6 @@ class CustomersController extends Controller
             $customer->save();
 
             // redirect
-            Session::flash('message', 'Successfully created customer!');
             return Redirect::to('customer');
         }
     }
@@ -114,10 +112,7 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        $customer = Customer::find($id);
-
-        return View::make('customers.show')
-            ->with('customer', $customer);
+        
     }
 
     /**
@@ -128,10 +123,7 @@ class CustomersController extends Controller
      */
     public function edit($id)
     {
-        $customer = Customer::find($id);
-
-        return View::make('customers.edit')
-            ->with('customer', $customer);
+                
     }
 
     /**
@@ -167,8 +159,7 @@ class CustomersController extends Controller
             $customer->save();
 
             // redirect
-            Session::flash('message', 'Successfully updated customer!');
-            return Redirect::to('customers');
+            return Redirect::to('customers')->with('message', 'Success! Customer Updated.');
         }
     }
 
@@ -178,30 +169,12 @@ class CustomersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Customer $customer)
     {
-        // soft delete
-        $customer = Customer::find($id);
+        // soft delete        
         $customer->delete();
-
         // redirect
-        Session::flash('message', 'Successfully deleted the customer!');
-        return Redirect::to('customers');
-    }
-
-    /**
-     * Restore the specified customer from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function restore($id){
-        $customer   = Customer::withTrashed()->where('id', $id)->get();
-        $customer->restore();
-
-        // redirect
-        Session::flash('message', 'Successfully activated the customer!');
-        return Redirect::to('customers');
+        return Redirect::to('admin/customers')->with('message', 'Success! Customer Blocked');
     }
 
     /**
@@ -282,13 +255,12 @@ class CustomersController extends Controller
         $email = $request->email;
         $password = $request->password;
         $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1, 'con_number' => $con_number]);
-        // return $this->login($request);
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
         $subject = "Please verify your email address.";
         Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "umar.farooq@gems.techverx.com");
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -340,7 +312,7 @@ class CustomersController extends Controller
         ];
 
         try {
-            // Config::set('jwt.user' , "App\Customer");
+
             Config::set('auth.providers.users.model', \App\Customer::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
@@ -352,7 +324,7 @@ class CustomersController extends Controller
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
-        } catch (JWTException $e) {
+            } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
 
@@ -362,7 +334,7 @@ class CustomersController extends Controller
                 'message' => 'Failed to login, please try again.',
                 'body' => $request->all()
             ],Response::HTTP_OK);
-        }
+            }
         // all good so return the token
         $customer = Auth::user();
 
@@ -793,9 +765,9 @@ class CustomersController extends Controller
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
                 'message'       => '',
-                'body'          => $customer->load(['cars' => function($query){
+                'body'          => ['customer' => $customer->load(['cars' => function($query){
                     $query->withTrashed();
-                }, 'addresses'])
+                }, 'addresses'])]
             ],Response::HTTP_OK);
         }
     }
@@ -1089,16 +1061,14 @@ class CustomersController extends Controller
         }
     }
 
-    public function activateCustomer($id){        
-        $customer = Customer::where('id', '=', $id)->first();
-        $customer->update(['status' => 1]);        
-        return Redirect::to('/admin/customers');
+    public function restore($id){
+        $customer = Customer::withTrashed()->find($id)->restore();
+        return Redirect::to('/admin/customers')->with('message', 'Success! Customer Unblocked.');
     }
 
-    public function deactivateCustomer($id){        
-        $customer = Customer::where('id', '=', $id)->first();
-        $customer->update(['status' => 0]);        
-        return Redirect::to('/admin/customers');
+    public function blockedCustomers(){                
+        $customers = Customer::onlyTrashed()->get();
+        return View::make('customer.blocked')->with('customers', $customers); 
     }
 
     /**
@@ -1252,5 +1222,4 @@ class CustomersController extends Controller
                 'body' => $workshop->load('services')
             ],Response::HTTP_OK);                
     }
-
 }

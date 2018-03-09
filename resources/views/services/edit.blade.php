@@ -44,6 +44,16 @@
                                   </div>
 
                                   <div class="form-group">  
+                                    <label class="control-label">Lead Charges</label>
+                                    <input type="text" class="form-control border-input" value="{{ $service->lead_charges }}" name="lead-charges">                                    
+                                    @if ($errors->has('lead-charges'))
+                                        <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('lead-charges') }}</strong>
+                                        </span>
+                                     @endif
+                                  </div>
+
+                                  <div class="form-group">  
                                     <label class="control-label">Parent</label>
                                     <select class="form-control border-input" name="service-parent" >
                                       <option value="0">Select Option</option>

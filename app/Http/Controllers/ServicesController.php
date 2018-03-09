@@ -39,7 +39,12 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::orderBy('created_at')->get();
+        $service_ids = $request->service_ids;
+        if(count($service_ids)>0){
+            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
+        }else{
+            $services = Service::orderBy('created_at')->get();
+        }        
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -82,10 +87,11 @@ class ServicesController extends Controller
         $rules = array(
             'name'              => 'required|unique:services|max:255',            
             'loyalty-points'    => 'required|numeric',
+            'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
             'image'             => 'mimes:jpeg,jpg,png',         
         );
-        $inputs = $request->only('name','loyalty-points','service-parent');
+        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges');
 
         $validator = Validator::make($inputs, $rules);
 
@@ -99,7 +105,7 @@ class ServicesController extends Controller
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $img_path = config('app.s3_bucket_url').$s3_path;
                 $service->image          = $img_path;
             }
             else
@@ -110,10 +116,11 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
+            $service->lead_charges = Input::get('lead-charges');
             $service->save();
 
             // redirect
-            Session::flash('message', 'Successfully created service!');
+            Session::flash('message', 'Success! Service Created.');
             return Redirect::to('admin/services');
         }
     }
@@ -159,19 +166,20 @@ class ServicesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        // dd($request);
         $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
         // validate
         // read more on validation at http://laravel.com/docs/validation
-
         $rules = array(
             'name'           => 'required|unique:services,id,'.$id.'|max:255',
             'loyalty-points' => 'required|numeric',
+            'lead-charges'   => 'required|numeric',
             'service-parent' => 'in:0,'.$services,
             'image'          => 'mimes:jpeg,jpg,png',          
         );
 
-        $inputs = $request->only('name', 'service-parent','loyalty-points');
+        $inputs = $request->only('name', 'service-parent','loyalty-points', 'lead-charges');
         $validator = Validator::make($inputs, $rules);
 
         if ($validator->fails()) {
@@ -182,7 +190,7 @@ class ServicesController extends Controller
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $img_path = config('app.s3_bucket_url').$s3_path;
                 $service->image          = $img_path;
             }
             else
@@ -192,10 +200,11 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
-            $service->save();
+            $service->lead_charges   = Input::get('lead-charges');
+            $service->update();
 
             // redirect
-            Session::flash('message', 'Successfully updated the Service!');
+            Session::flash('message', 'Success! Service Updated.');
             return Redirect::to('admin/services');
         }
     }
@@ -212,7 +221,7 @@ class ServicesController extends Controller
         $service->delete();
 
         // redirect
-        Session::flash('message', 'Successfully deleted the Service!');
+        Session::flash('message', 'Success! Service Deactivated');
         return Redirect::to('admin/services');
     }
 

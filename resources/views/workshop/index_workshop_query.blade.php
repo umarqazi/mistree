@@ -9,15 +9,15 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
+                    @if (session('success_message'))
                     <div class="row">
                         <div class="col-md-12">
-                            @if (session('success_message'))
                                 <div class="alert alert-success">
                                     {{ session('success_message') }}
                                 </div>
-                            @endif
                         </div>
                     </div>
+                    @endif
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">

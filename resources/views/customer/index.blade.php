@@ -11,45 +11,52 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="header">
+                    @if (session('message'))
+                    <div class="alert alert-success">
+                        {{ session('message') }}
+                    </div>
+                     @endif
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Customers</h4>
-                                <p class="category">List of all cutomers.</p>
+                                <p class="category">List of active cutomers.</p>
                             </div>
                         </div>
-                        <div class="clear20"></div>
-                        <div class="row" style="margin-right: 5px;">
-                            <div class="text-right"><a href="#" class="btn btn-header btn-export">Export</a></div>
-                        </div>
+                        <div class="row">
+                         
+                            <div class="col-sm-6 col-sm-offset-6 balance-info">
+                              
+                                <div class="clear10"></div><div class="clear5"></div>
+                                <div class="text-right"><a href="{{ url('admin/blocked-customers') }}" class="btn btn-header btn-export">Blocked Customers</a></div>
+                            </div>
+                        </div>                        
                     </div>
                     <div class="clear20"></div>
                     <div class="content table-responsive table-full-width">
                         <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
-                                <tr role="row"><th class="sorting_asc" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Lead ID: activate to sort column descending" style="width: 77px;">ID</th><th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 150px;">Name</th><th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 156px;">Email</th><th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Contact No.</th><th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Status</th>
-                                <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Action</th>
-<!--                                 <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Total: activate to sort column ascending" style="width: 54px;">Total</th><th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Rating: activate to sort column ascending" style="width: 69px;">Rating</th><th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">&nbsp;</th> -->
-                                </tr></thead>
+                                <tr role="row">                                    
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 150px;">Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 156px;">Email</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Contact No.</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Loyalty Points</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Status</th>
+                                </tr>
+                            </thead>
                             <tbody>
                              @foreach($customers as $key => $value)
-                                 <tr role="row" class="odd">
-                                    <td class="sorting_1">{{ $value->id }}</td>
+                                 <tr role="row" class="odd">                                    
                                     <td>{{ $value->name }}</td>
                                     <td>{{ $value->email }}</td>
-                                    <td>{{ $value->con_number }}</td>
-                                    <td>@if($value->status == 0)
-                                            Inactive
-                                        @else
-                                            Active
-                                        @endif
-                                    </td>
+                                    <td>{{ $value->con_number }}</td>                                    
+                                    <td>{{ $value->loyalty_points }}</td>  
                                     <td>
-                                        @if($value->status == 0)
-                                            <a href="{{url('admin/activate-customer/'.$value->id)}}" class="btn btn-header btn-export">Activate</a>
-                                        @else
-                                            <a href="{{url('admin/deactivate-customer/'.$value->id)}}" class="btn btn-header btn-export">Deactivate</a>
-                                        @endif</a>
+                                        <form method="POST" action="customers/{{ $value->id }}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <input class="btn btn-header btn-export" type="submit" value="Block">
+                                        </form>                                                          
                                     </td>
                                 </tr>
                              @endforeach                                                                

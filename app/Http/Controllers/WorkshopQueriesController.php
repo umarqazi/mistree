@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\WorkshopQuery;
 use Illuminate\Http\Request;
-use JWTAuth, Session, View;
+use JWTAuth, Session, Config, View;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -31,7 +31,7 @@ class WorkshopQueriesController extends Controller
      */
     public function create()
     {
-        return View::make('workshop.create_query');
+        return View::make('workshop.create_workshop_query');
     }
 
     /**
@@ -77,6 +77,7 @@ class WorkshopQueriesController extends Controller
      */
     public function store(Request $request)
     {   
+        if( $request->header('Content-Type') == 'application/json'){
             $workshop = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
@@ -85,35 +86,41 @@ class WorkshopQueriesController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Incomplete Details!',
-                    'body' => $request->all()
-                ],Response::HTTP_OK);
-            } else {
-                // store
-                $workshop->queries()->create([
-                    'subject'       => $request->subject,
-                    'message'       => $request->message,
-                    'status'        => 'Open',
-                    'is_resolved'   => false
-                ]);      
-                $email = "jazib.javed@gems.techverx.com";        
-                $subject = "Workshop Query - ".$request->subject;
-                Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
-                function($mail) use ($email, $name, $subject){
-                    $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
-                    $mail->to($email);
-                    $mail->subject($subject);
-                });
-                return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Query has been Added.',
-                    'body' => ''
-                ],Response::HTTP_OK);
+                    return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => false,
+                        'message' => 'Incomplete Details!',
+                        'body' => $request->all()
+                    ],Response::HTTP_OK);
             }
+            $workshop->queries()->create([
+                'subject'       => $request->subject,
+                'message'       => $request->message,
+                'status'        => 'Open',
+                'is_resolved'   => false
+            ]);
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Query has been Added.',
+                'body' => ''
+            ],Response::HTTP_OK);
+        }else{
+            Config::set('auth.providers.users.model', \App\Workshop::class);
+            $workshop = Auth::user();
+            $rules = array(
+                'subject'      => 'required',
+                'message'      => 'required'
+            );
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                Session::flash('error_message', 'Invalid Details!');
+                return Redirect::to('workshop-queries/create');
+            }
+            Session::flash('success_message', 'Successfully Added the Request!');
+            return Redirect::to('workshop-queries/create');
+        }
     }
 
     /**
@@ -151,7 +158,7 @@ class WorkshopQueriesController extends Controller
         $workshopQuery->delete();
 
         Session::flash('success_message', 'Successfully deleted the request!');
-        return Redirect::to('admin/workshopQuery');
+        return Redirect::to('admin/workshop-queries');
     }
 
     /**
@@ -167,6 +174,6 @@ class WorkshopQueriesController extends Controller
         $workshopQuery->save();
 
         Session::flash('success_message', 'Successfully updated the Status!');
-        return Redirect::to('admin/workshopQuery/');
+        return Redirect::to('admin/workshop-queries');
     }
 }

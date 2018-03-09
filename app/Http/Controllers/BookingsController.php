@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use JWTAuth;
+use DB, Config, Mail, View;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Session;
 use App\Workshop;
 use App\Service;
 use App\Billing;
@@ -92,13 +94,13 @@ class BookingsController extends Controller
 		$rules = [
             'customer_id'                    => 'required|integer',
             'workshop_id'                    => 'required|integer',
-            'customer_car_id'                => 'required|integer',
+            'car_id'                         => 'required|integer',
             'job_date'                       => 'required',            
             'job_time'                       => 'required',
             'services'                       => 'required'             
         ];        
 
-        $input = $request->only('customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'services');
+        $input = $request->only('customer_id', 'workshop_id', 'car_id', 'job_date', 'job_time', 'services');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -114,7 +116,7 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $request->customer_id;
         $booking->workshop_id            = $request->workshop_id;
-		$booking->customer_car_id        = $request->customer_car_id;
+		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
         $booking->response 			     = 'waiting';
@@ -362,9 +364,334 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Job Completed',
-                    'body' => ''
+                    'body' => ['billing'=> $billing]
                 ],Response::HTTP_OK);
-    }    
-    
+    }
 
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/lead/{booking_id}/enter-millage",
+     *   summary="Completed Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="millage",
+     *     in="formData",
+     *     description="Millage at job date",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function insertMillage(Request $request, $booking_id){        
+        
+        $booking = Booking::find($booking_id);
+        $booking->millage =$request->millage;
+        $booking->save() ;
+
+        return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Millage Entered',
+                'body' => ''
+            ],Response::HTTP_OK);      
+    }
+
+    public function workshopHistory(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.history',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings, 'workshop'=>$workshop]);
+    }
+
+    public function workshopRejectedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','rejected'), 'workshop'=>$workshop]);       
+    }
+
+    public function workshopAcceptedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','accepted'), 'workshop'=>$workshop]);       
+    }
+
+    public function workshopCompletedLeads(Workshop $workshop){        
+        $total_earning = $workshop->billings->sum('amount');
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status','completed'), 'workshop'=>$workshop]);       
+    }    
+
+    // Leads
+
+     /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads-info",
+     *   summary="Leads Information",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getLeadsInfo(){
+        $workshop = Auth::guard('workshop')->user();
+        $accepted_leads = $workshop->bookings()->where('response','accepted')->get()->count();
+        $completed_leads = $workshop->bookings()->where('job_status', 'completed')->get()->count();
+        $received_leads = $workshop->bookings()->count();
+        $balance = $workshop->balance->balance;
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Workshop Ledger',
+                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance]
+                ],Response::HTTP_OK);
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/history",
+     *   summary="Leads History",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop LeadHistory.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function leadsHistory(Request $request){
+        $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
+       
+        // check request Type
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($bookings) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => false,
+                            'message' => 'No Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{            
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'Workshop History',
+                            'body' => $bookings
+                        ],Response::HTTP_OK);
+            }
+        }
+        else 
+        {            
+                return View::make('workshop_profile.history', ['bookings' => $bookings, 'workshop'=>$workshop, 'total_earning'=>$total_earning,'balance'=>$workshop->balance]);    
+
+        }
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/accepted",
+     *   summary="Accepted Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop AcceptedLeads.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function acceptedLeads(Request $request){
+        $workshop = Auth::guard('workshop')->user();
+        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->with('services')->get();
+        $total_earning = $workshop->billings->sum('amount');
+        // check request Type
+         if( $request->header('Content-Type') == 'application/json')
+         {
+            if(count($accepted_leads) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'No Accepted Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{            
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'Accepted Leads',
+                            'body' => $accepted_leads
+                        ],Response::HTTP_OK);
+            }     
+        } 
+        else
+        {
+            return View::make('workshop_profile.accepted_leads', ['accepted_leads' => $accepted_leads,'workshop'=>$workshop, 'total_earning'=>$total_earning,'balance'=>$workshop->balance]); 
+        }           
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/rejected",
+     *   summary="Rejected Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop rejectedLeads.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function rejectedLeads(Request $request){
+        $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
+        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->with('services')->get();
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($rejected_leads) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'No rejected Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'Rejected Leads',
+                            'body' => $rejected_leads
+                        ],Response::HTTP_OK);            
+            } 
+         }
+         else
+         {
+            return View::make('workshop_profile.rejected_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'rejected_leads' => $rejected_leads]);
+         }        
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/completed",
+     *   summary="Completed Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function completedLeads(Request $request){
+        $workshop = Auth::guard('workshop')->user();
+        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->with('services')->get();
+        $total_earning = $workshop->billings->sum('amount');
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($completed_leads) == 0){
+                return response()->json([
+                            'http-status' => Response::HTTP_OK,
+                            'status' => true,
+                            'message' => 'No Completed Leads Found',
+                            'body' => ''
+                        ],Response::HTTP_OK);            
+            }else{
+                return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => true,
+                        'message' => 'Completed Leads',
+                        'body' => $completed_leads
+                    ],Response::HTTP_OK);            
+            }   
+        }   
+        else{
+            return View::make('workshop_profile.completed_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'completed_leads'=>$completed_leads]);
+        }   
+        
+    }
 }
