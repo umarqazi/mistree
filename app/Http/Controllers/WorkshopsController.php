@@ -212,7 +212,7 @@ class WorkshopsController extends Controller
         $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code         
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
+        Mail::send('workshop.emails.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
                 $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
                 $mail->to($email, $name);
@@ -543,7 +543,7 @@ class WorkshopsController extends Controller
         $verification_code = str_random(30); //Generate verification code
 
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
+        Mail::send('workshop.emails.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
                 $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
                 $mail->to($email, $name);
@@ -931,7 +931,7 @@ class WorkshopsController extends Controller
         $workshop->is_approved       = 1;
         $workshop->save();
         $subject = "Conragulations! Your workshop has been approved by Admin.";
-           Mail::send('workshop.confirmationEmail', ['name' => $workshop->name],
+           Mail::send('workshop.emails.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
                 $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
                 $mail->to($workshop->email, $workshop->name);
