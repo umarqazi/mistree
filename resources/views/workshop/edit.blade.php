@@ -80,10 +80,16 @@
                                     <label class="control-label">Team Slot</label>
                                     <select name="team_slot" class="form-control border-input">
                                         <option value="">Please Select</option>
+                                        <option value="0" @if($workshop->slots == "0"){{ "selected" }}@endif>0</option>
                                         <option value="1" @if($workshop->slots == "1"){{ "selected" }}@endif>1</option>
                                         <option value="2" @if($workshop->slots == "2"){{ "selected" }}@endif>2</option>
                                         <option value="3" @if($workshop->slots == "3"){{ "selected" }}@endif>3</option>
                                         <option value="4" @if($workshop->slots == "4"){{ "selected" }}@endif>4</option>
+                                        <option value="5" @if($workshop->slots == "5"){{ "selected" }}@endif>5</option>
+                                        <option value="6" @if($workshop->slots == "6"){{ "selected" }}@endif>6</option>
+                                        <option value="7" @if($workshop->slots == "7"){{ "selected" }}@endif>7</option>
+                                        <option value="8" @if($workshop->slots == "8"){{ "selected" }}@endif>8</option>
+                                        <option value="9" @if($workshop->slots == "9"){{ "selected" }}@endif>9</option>
                                     </select>
                                 </div>
 

@@ -26,7 +26,7 @@ class ServicesController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/services",
+     *   path="/api/sign-up/services",
      *   summary="All Services for Workshops",
      *   operationId="select services",
      *   produces={"application/json"},
@@ -39,12 +39,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $service_ids = $request->service_ids;
-        if(count($service_ids)>0){
-            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
-        }else{
-            $services = Service::orderBy('created_at')->get();
-        }        
+        $services = Service::orderBy('created_at')->get();            
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -243,5 +238,49 @@ class ServicesController extends Controller
         $services = Service::onlyTrashed()->get();  
         return View::make('services.inactive')
         ->with('services', $services);
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/services",
+     *   summary="All Services for Workshops",
+     *   operationId="select services",
+     *   produces={"application/json"},
+     *   tags={"Services"},     
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Workshop Services",
+     *     required=false,
+     *     type="array",
+     *     items = "service_ids"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )     
+     */
+    public function filteredServices(Request $request)
+    {        
+        // get all the services
+        $service_ids = $request->service_ids;
+        if(count($service_ids)>0){
+            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
+        }else{
+            $services = Service::orderBy('created_at')->get();
+        }        
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'all services',
+            'body' => [ 'services' => $services ]
+        ],Response::HTTP_OK);        
     }
 }

@@ -471,11 +471,12 @@ class BookingsController extends Controller
         $completed_leads = $workshop->bookings()->where('job_status', 'completed')->get()->count();
         $received_leads = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
+        $matured_revenue = $workshop->billings->sum('amount');
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Workshop Ledger',
-                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance]
+                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ]
                 ],Response::HTTP_OK);
     }
 

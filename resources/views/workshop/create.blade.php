@@ -131,10 +131,16 @@
                                                 <label class="control-label">Team Slot</label>
                                                 <select name="team_slot" class="form-control border-input">
                                                     <option value="">Please Select</option>
+                                                    <option value="0" @if(old('team_slot') == "0"){{ "selected" }}@endif>0</option>
                                                     <option value="1" @if(old('team_slot') == "1"){{ "selected" }}@endif>1</option>
                                                     <option value="2" @if(old('team_slot') == "2"){{ "selected" }}@endif>2</option>
                                                     <option value="3" @if(old('team_slot') == "3"){{ "selected" }}@endif>3</option>
                                                     <option value="4" @if(old('team_slot') == "4"){{ "selected" }}@endif>4</option>
+                                                    <option value="5" @if(old('team_slot') == "5"){{ "selected" }}@endif>5</option>
+                                                    <option value="6" @if(old('team_slot') == "6"){{ "selected" }}@endif>6</option>
+                                                    <option value="7" @if(old('team_slot') == "7"){{ "selected" }}@endif>7</option>
+                                                    <option value="8" @if(old('team_slot') == "8"){{ "selected" }}@endif>8</option>
+                                                    <option value="9" @if(old('team_slot') == "9"){{ "selected" }}@endif>9</option>
                                                 </select>
                                             </div>
 
