@@ -209,7 +209,7 @@ class WorkshopsController extends Controller
                 $mail->subject($subject);
             });
 
-        return Redirect::to('admin/workshops');       
+        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');       
     }
 
     /**
@@ -345,7 +345,7 @@ class WorkshopsController extends Controller
             }
         }
         
-        Session::flash('message', 'Successfully updated Workshop!');
+        Session::flash('message', 'Success! Workshop Updated');
         return Redirect::to('admin/workshops');
     }
 
@@ -362,7 +362,7 @@ class WorkshopsController extends Controller
         $workshop->delete();
 
         // redirect
-        Session::flash('message', 'Successfully deleted the Workshop!');
+        Session::flash('message', 'Success! Workshop Blocked');
         return Redirect::to('admin/workshops');      
     }
 
@@ -376,6 +376,7 @@ class WorkshopsController extends Controller
     public function restore($id) 
     {
         $workshop = Workshop::withTrashed()->find($id)->restore();
+        Session::flash('message', 'Success! Workshop Restored.');
         return redirect ('admin/workshops');
     }
     
@@ -1106,14 +1107,24 @@ class WorkshopsController extends Controller
     {                
         $rules = [                        
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',            
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'team_slots'                     => 'integer',
-            'landline'                       => 'digits_between:0,11',
+            'landline'                       => 'digits:11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
-            'type'                           => 'required|in:Authorized,Unauthorized'
+            'type'                           => 'required|in:Authorized,Unauthorized',
+            'team_slots'                     => 'integer',
+            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
+            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
+            'images.*'                       => 'image|mimes:jpg,png,jpeg',
+
+            'shop'                           => 'required|numeric',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'nullable|string',
+            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
         ];          
 
         $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type');
@@ -1704,7 +1715,7 @@ class WorkshopsController extends Controller
                     $address->town              = Input::get('town');                
                     $address->update();
                     
-                    Session::flash('message', 'Successfully updated Workshop!');
+                    Session::flash('message', 'Success! Workshop Updated.');
                     return Redirect::to('/profile');
     }
 
