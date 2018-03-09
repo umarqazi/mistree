@@ -99,11 +99,19 @@ class WorkshopQueriesController extends Controller
                 'status'        => 'Open',
                 'is_resolved'   => false
             ]);
+            $email = "jazib.javed@gems.techverx.com";        
+            $subject = "Workshop Query - ".$request->subject;
+            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email);
+                $mail->subject($subject);
+            });
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Query has been Added.',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }else{
             Config::set('auth.providers.users.model', \App\Workshop::class);
@@ -118,6 +126,20 @@ class WorkshopQueriesController extends Controller
                 Session::flash('error_message', 'Invalid Details!');
                 return Redirect::to('workshop-queries/create');
             }
+            $workshop->queries()->create([
+                'subject'       => $request->subject,
+                'message'       => $request->message,
+                'status'        => 'Open',
+                'is_resolved'   => false
+            ]);
+            $email = "jazib.javed@gems.techverx.com";        
+            $subject = "Workshop Query - ".$request->subject;
+            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
+            function($mail) use ($email, $name, $subject){
+                $mail->from(getenv('MAIL_USERNAME'), "jazib.javed@gems.techverx.com");
+                $mail->to($email);
+                $mail->subject($subject);
+            });
             Session::flash('success_message', 'Successfully Added the Request!');
             return Redirect::to('workshop-queries/create');
         }
