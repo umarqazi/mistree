@@ -61,7 +61,7 @@
                 <li  @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*') || Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') )   class="active" @endif >
                     <a href="" class="query_links">
                         <i class="ti-help-alt"></i>
-                        <p>Support Queries</p>
+                        <p>Requests</p>
                         <i class="ti-angle-down"></i>
                      </a>
                     <ul class="subnav @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*') || Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') ) show_ul @endif">

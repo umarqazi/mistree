@@ -48,7 +48,7 @@
                 <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
                     <a href="{{url('/workshop-queries/create/')}}">
                         <i class="ti-help-alt"></i>
-                        <p>Support</p>
+                        <p>Request</p>
                     </a>
                 </li>
                 <li>

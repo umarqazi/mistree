@@ -107,7 +107,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('cars', 'CarsController');
         Route::put('resolve-workshop-query/{workshopQuery}', 'WorkshopQueriesController@resolve');
         Route::put('resolve-customer-query/{customerQuery}', 'CustomerQueriesController@resolve');
-        Route::get('/home','AdminsController@home')->name('admin.home');
+        Route::get('/home','AdminsController@showHome')->name('admin.home');
 
         Route::get('/inactive-cars', 'CarsController@inactive_cars');
         Route::post('/car/restore/{id}', 'CarsController@restore');
