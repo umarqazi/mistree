@@ -140,6 +140,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
+        Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
                 
     });
 

@@ -33,9 +33,9 @@
                                            + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}">Completed Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}" >Accepted Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}">Rejected Leads</a>
+                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}" class="dropdown-buttons">Completed Leads</a>
+                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}" class="dropdown-buttons">Accepted Leads</a>
+                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}" class="dropdown-buttons">Rejected Leads</a>
                                             </div>
                                         </div>
                                     </div>

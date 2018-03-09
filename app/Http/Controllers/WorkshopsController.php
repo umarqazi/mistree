@@ -161,7 +161,7 @@ class WorkshopsController extends Controller
         {
             $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
            
-            $profile_pic = env('S3_BUCKET_URL').$profile_pic;
+            $profile_pic = config('app.s3_bucket_url').$profile_pic;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();            
         }
@@ -175,7 +175,7 @@ class WorkshopsController extends Controller
         if ($request->hasFile('cnic_image')) 
         {
             $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  env('S3_BUCKET_URL').$cnic_image;
+            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
             $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
@@ -192,7 +192,7 @@ class WorkshopsController extends Controller
             {
                 $images = new WorkshopImages;                
                 $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  env('S3_BUCKET_URL').$image;
+                $image =  config('app.s3_bucket_url').$image;
                 $images->url = $image;
                 $images->workshop()->associate($workshop);
                 $images->save();
@@ -204,7 +204,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $request->name, 'verification_code' => $verification_code],
             function($mail) use ($request, $subject){
-                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
@@ -233,7 +233,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
-    {
+    {           
         // get the workshop
         $workshop = Workshop::find($id);
         // show the edit form and pass the workshop        
@@ -248,7 +248,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {             
+    {                     
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -280,12 +280,11 @@ class WorkshopsController extends Controller
         }
 
          // Update workshop
-        $workshop = Workshop::find($id);
-
+        $workshop = Workshop::find($id);        
         if ($request->hasFile('profile_pic')) 
         {            
             $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-            $profile_pic =  env('S3_BUCKET_URL').$profile_pic;
+            $profile_pic =  config('app.s3_bucket_url').$profile_pic;
         }
         else
         {
@@ -296,7 +295,7 @@ class WorkshopsController extends Controller
         if ($request->hasFile('cnic_image')) 
         {
             $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  env('S3_BUCKET_URL').$cnic_image;
+            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
         }
         else
         {
@@ -324,21 +323,25 @@ class WorkshopsController extends Controller
         $address->block             = Input::get('block');
         $address->town              = Input::get('town');
         $address->city              = Input::get('city');
-                        
-        $address->update();
+        $address->update();        
 
         if($request->hasFile('images'))
         {
-            $workshop->images()->disassociate();
+            if(!is_null($workshop->images)){
+                $images = $workshop->images;
+                foreach($images as $image){
+                    $image = WorkshopImages::find($image->id);                                    
+                    $image->delete();                    
+                }
+            }            
             foreach($request->file('images') as $file)
             {
                 $images = new WorkshopImages;
                 $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  env('S3_BUCKET_URL').$image;
-                $images->url = $image;
+                $image =  config('app.s3_bucket_url').$image;
+                $images->url            = $image;
+                $images->workshop_id    = $workshop->id;
                 $images->save();
-                $workshop->images()->associate($images);
-                $workshop->save();
             }
         }
         
@@ -555,7 +558,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -950,7 +953,7 @@ class WorkshopsController extends Controller
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
-                $mail->from(env('MAIL_USERNAME'), env('APP_NAME'));
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($workshop->email, $workshop->name);
                 $mail->subject($subject);
             });        
@@ -1655,7 +1658,7 @@ class WorkshopsController extends Controller
                         $ws_name = str_replace(' ', '_', $request->name);
                         $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
                        
-                        $profile_pic_path = env('S3_BUCKET_URL').$s3_path;
+                        $profile_pic_path = config('app.s3_bucket_url').$s3_path;
                         $profile_pic = $profile_pic_path;
                         
                     }
@@ -1669,7 +1672,7 @@ class WorkshopsController extends Controller
                     {
                         $ws_name = str_replace(' ', '_', $request->name);
                         $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
-                        $cnic_pic_path = env('S3_BUCKET_URL').$s3_path;
+                        $cnic_pic_path = config('app.s3_bucket_url').$s3_path;
                         $cnic_image = $cnic_pic_path;
                     }
                     else
@@ -2141,7 +2144,7 @@ class WorkshopsController extends Controller
         fwrite($file, base64_decode($file_data));
         fclose($file);
         $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File($full_path), 'public');
-        $workshop_image = env('S3_BUCKET_URL').$s3_path;
+        $workshop_image = config('app.s3_bucket_url').$s3_path;
         Storage::delete($path.'/'.basename($full_path));
         return $workshop_image;
     }
@@ -2250,6 +2253,10 @@ class WorkshopsController extends Controller
     {
         $workshops = Workshop::orderBy('created_at', 'desc')->where('type', 'UnAuthorized')->get();
         return View::make('workshop.unauthorized')->with('workshops', $workshops);
+    }
+
+    public function workshopGallery(Workshop $workshop){
+        return view::make('workshop.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
     }
 
 }

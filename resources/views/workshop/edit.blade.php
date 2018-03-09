@@ -6,7 +6,6 @@
 
 
 <div class="content">
-    
     <div class="container-fluid">                
         <div class="row">
             <div class="col-md-12">
@@ -73,26 +72,7 @@
                                         <strong class="manadatory">{{ $errors->first('cnic') }}</strong>
                                     </span>
                                 @endif
-                              </div>
-
-                              <div class="form-group">
-                                <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                <input type="text" class="form-control border-input" name="mobile" value="{{$workshop->mobile}}">
-                                @if ($errors->has('mobile'))
-                                    <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
-                                    </span>
-                                @endif
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label">Landline Number <span class="manadatory"></span></label>
-                                <input type="text" class="form-control border-input" name="landline" value="{{$workshop->landline}}">
-                                @if ($errors->has('landline'))
-                                    <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('landline') }}</strong>
-                                    </span>
-                                @endif
-                              </div>                           
+                              </div>                                                         
                             </div>
 
                             <div class="col-md-6">
@@ -126,66 +106,77 @@
                                     </span>
                                 @endif                                        
                               </div>
-                              
-                              <div class="form-group">      
-                                <label class="control-label">Profile Picture</label> 
-                                <div class="clear"></div>                   
-                                <input type="file" id="profile_picture" class="form-control" name="profile_pic">
-                                <br>
-                                @if($workshop->profile_pic)
-                                <img src="{{ $workshop->profile_pic }}" width="80px" height="80px">
-                                @else
-                                        <br>
+
+                              <div class="form-group">
+                                <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="mobile" value="{{$workshop->mobile}}">
+                                @if ($errors->has('mobile'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
+                                    </span>
                                 @endif
                               </div>
-
-                              <div class="form-group">      
-                                <label class="control-label">CNIC Picture</label> 
-                                <div class="clear"></div>                   
-                                <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
-                                @if($workshop->cnic_image)
-                                <img src="{{ $workshop->cnic_image }}" width="80px" height="80px">
-                                @else
-                                        <br>
+                              <div class="form-group">
+                                <label class="control-label">Landline Number <span class="manadatory"></span></label>
+                                <input type="text" class="form-control border-input" name="landline" value="{{$workshop->landline}}">
+                                @if ($errors->has('landline'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('landline') }}</strong>
+                                    </span>
                                 @endif
                               </div>
-                                @if($images)
-                                    <div class="well">
-                                        <div class="form-group">
-                                            <label class="control-label">Workshop Picture 1:</label>
-                                            <div class="clear"></div>
-                                            <input type="file" class="form-control" name="images[]">
-                                            @if(!empty($images[0]))
-                                                <img src="{{ $images[0]->url }}" width="80px" height="80px">
-                                            @else
-                                                <br>
-                                            @endif
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label">Workshop Picture 2:</label>
-                                            <div class="clear"></div>
-                                            <input type="file" class="form-control" name="images[]">
-                                            @if(!empty($images[1]))
-                                                <img src="{{ $images[1]->url }}" width="80px" height="80px">
-                                            @else
-                                                <br>
-                                            @endif
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label">Workshop Picture 3:</label>
-                                            <div class="clear"></div>
-                                            <input type="file" class="form-control" name="images[]">
-                                            @if(!empty($images[2]))
-                                                <img src="{{ $images[2]->url }}" width="80px" height="80px">
-                                            @else
-                                                <br>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endif
+                                                                
                             </div>
+
+                            <div class="col-md-12">
+
+                            <ul class="profile-edit-listing">
+                                <li>
+                                  <div class="form-group">
+                                  @if($workshop->profile_pic)
+                                    <img src="{{ $workshop->profile_pic }}" width="100px" height="80px">
+                                    @else
+                                            <br>
+                                    @endif
+                                    <label class="control-label">Profile Picture</label>
+                                    <input type="file" id="profile_picture" class="form-control" name="profile_pic">
+                                    <br>
+                                    
+                                  </div>
+                                </li>
+
+                                <li>
+                                    <div class="form-group">  
+                                      @if($workshop->cnic_image)
+                                        <img src="{{ $workshop->cnic_image }}" width="100px" height="80px">
+                                        @else
+                                            <br>
+                                        @endif    
+                                        <label class="control-label">CNIC Picture</label>                    
+                                        <div class="clear"></div>
+                                        <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
+                                    </div>
+                                </li>                                                              
+                                @if($images)
+                                @for($i = 0; $i < 3; $i++)
+                                <li>    
+                                    <div class="form-group">
+                                    @if(!empty($images[$i]))
+                                        <img src="{{ $images[$i]->url }}" width="100px" height="80px">
+                                    @else
+                                        <br>
+                                    @endif
+                                        <label class="control-label">Workshop Picture {{ $i + 1 }}:</label>
+                                        <div class="clear"></div>
+                                        <input type="file" class="form-control" name="images[]">
+                                    </div>
+                                </li>
+                                @endfor
+                                @endif
+                              </ul>
+
+                            </div>
+
                           </div>                                                                                                     
                           <div class="row">
                             <div class="col-md-12 text-center">

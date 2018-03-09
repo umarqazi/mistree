@@ -235,4 +235,7 @@ return [
 
     ],
 
+    's3_bucket_url' => env('S3_BUCKET_URL','https://s3-us-west-2.amazonaws.com/mymystri-staging/'),
+    'L5_SWAGGER_GENERATE_ALWAYS' => env('L5_SWAGGER_GENERATE_ALWAYS', 'true'),
+    'mail_username' => env('MAIL_USERNAME', 'jazib.javed@gems.techverx.com'),    
 ];
