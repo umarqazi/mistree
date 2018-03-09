@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Notifications\WorkshopResetPassword;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -77,36 +78,35 @@ class Workshop extends Authenticatable
         return $this->hasMany('App\WorkshopImages');
     }
 
-    /**
-     * Send the password reset notification.
-     *
-     * @param  string  $token
-     * @return void
-     */
-
-    public function sendPasswordResetNotification($token)
-    {
-        $this->notify(new WorkshopResetPassword($token));
-    }
-    //    Returns sum of the workshop
-    public function sumOfServiceRates($workshop)
-    {
-        $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
-        return $sum;
-    }
-
     public function billings()
     {
         return $this->hasMany('App\Billing');
     }
 
     public function balance(){
-        return $this->hasOne('App\WorkshopBalance');       
+        return $this->hasOne('App\WorkshopBalance');
     }
 
     public function transactions()
     {
         return $this->hasMany('App\WorkshopLedger');
+    }
+
+    public function getOpenTimeAttribute($time)
+    {
+        return Carbon::parse($time)->format('g:i A');
+    }
+
+    public function getCloseTimeAttribute($time)
+    {
+        return Carbon::parse($time)->format('g:i A');
+    }
+
+    //    Returns sum of the workshop
+    public function sumOfServiceRates($workshop)
+    {
+        $sum = array_sum($workshop->services->pluck('pivot')->pluck('service_rate')->toArray());
+        return $sum;
     }
 
     public static function get_workshop_by_service($workshops, $service_name)
@@ -136,6 +136,18 @@ class Workshop extends Authenticatable
             return $query;
         });
         return $workshops;
+    }
+
+    /**
+     * Send the password reset notification.
+     *
+     * @param  string  $token
+     * @return void
+     */
+
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new WorkshopResetPassword($token));
     }
 }
 

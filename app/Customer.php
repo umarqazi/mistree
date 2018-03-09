@@ -60,6 +60,11 @@ class Customer extends Authenticatable
         return $this->hasMany('App\Booking');
     }
 
+    public function queries()
+    {
+        return $this->hasMany('App\CustomerQuery');
+    }
+
     public function billings()
     {
         return $this->hasMany('App\Billing');

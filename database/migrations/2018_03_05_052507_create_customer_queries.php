@@ -20,6 +20,7 @@ class CreateCustomerQueries extends Migration
             $table->string('subject');
             $table->text('message');
             $table->string('status');
+            $table->boolean('is_resolved');
             $table->timestamps();
         });
     }
