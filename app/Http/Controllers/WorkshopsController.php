@@ -2143,7 +2143,7 @@ class WorkshopsController extends Controller
         $file   = fopen($full_path, "wb");        
         fwrite($file, base64_decode($file_data));
         fclose($file);
-        $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File($full_path), 'public');
+        $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/images', new File($full_path), 'public');
         $workshop_image = config('app.s3_bucket_url').$s3_path;
         Storage::delete($path.'/'.basename($full_path));
         return $workshop_image;
