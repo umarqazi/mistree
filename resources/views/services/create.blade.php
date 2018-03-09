@@ -33,6 +33,15 @@
                                         </span>
                                      @endif
                                   </div>
+                                  <div class="form-group">
+                                      <label class="control-label">Provided at doorstep?</label>
+                                      <input type="checkbox" class="form-control border-input" name="is_doorstep"  value="1" />
+                                      @if ($errors->has('is_doorstep'))
+                                          <span class="help-block">
+                                            <strong class="manadatory">{{ $errors->first('is_doorstep') }}</strong>
+                                        </span>
+                                      @endif
+                                  </div>
                                   <div class="form-group">  
                                     <label class="control-label">Loyalty Points</label>
                                     <input type="text" class="form-control border-input" name="loyalty-points" value="{{ old('loyalty-points',0) }}">
@@ -95,7 +104,4 @@
      </div>
 
   </div>
-</div>
-
-</div>
 @endsection

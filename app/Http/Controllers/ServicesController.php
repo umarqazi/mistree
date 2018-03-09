@@ -85,7 +85,7 @@ class ServicesController extends Controller
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required|unique:services|max:255',            
+            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,0|max:255',
             'loyalty-points'    => 'required|numeric',
             'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
@@ -116,7 +116,8 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
-            $service->lead_charges = Input::get('lead-charges');
+            $service->lead_charges   = Input::get('lead-charges');
+            $service->is_doorstep    = Input::get('is_doorstep');
             $service->save();
 
             // redirect
