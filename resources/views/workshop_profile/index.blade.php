@@ -71,8 +71,8 @@
 												<tr> 
 						                        	<td>Landline Number</td>
 						                        	<td>{{ $workshop->landline}}</td>
-													<td></td>
-						                        	<td></td>
+													<td>Team Slots</td>
+						                        	<td>{{ $workshop->slots }}</td>
 						                        </tr>
 						                        <tr> 
 						                        	<td>Opening Time</td>
