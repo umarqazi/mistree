@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomerQuery;
 use Illuminate\Http\Request;
-use JWTAuth, Session, View;
+use JWTAuth, Session, View, Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -89,6 +89,14 @@ class CustomerQueriesController extends Controller
                 'status'        => 'Open',
                 'is_resolved'   => false
             ]);
+            $email = "jazib.javed@gems.techverx.com";        
+            $subject = "Customer Query - ".$request->subject;
+            Mail::send('customer.emails.query', ['customer' => $customer, 'subject' => $request->subject, 'message' => $request->message],
+            function($mail) use ($email, $subject){
+                $mail->from(config('app.mail_username'), config('app.name'));
+                $mail->to($email);
+                $mail->subject($subject);
+            });
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
