@@ -119,8 +119,8 @@ class BookingsController extends Controller
 		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->is_accepted 			 = 0;
-        $booking->job_status 			 = 'not-started';
+        $booking->is_accepted 			 = false;
+        $booking->job_status 			 = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
 
         $booking->save();
@@ -138,8 +138,8 @@ class BookingsController extends Controller
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Booking create',
-                    'body' => $request->all()
+                    'message' => 'Booking created',
+                    'body' => ['booking' => $booking, 'services'=> $booking->services ]
                 ],Response::HTTP_OK);
 
 	}
@@ -174,7 +174,7 @@ class BookingsController extends Controller
     public function acceptBooking($booking_id){
         $workshop_id = Auth::user()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => 1]);
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -213,7 +213,8 @@ class BookingsController extends Controller
     public function rejectBooking($booking_id){
         $workshop_id = Auth::user()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => 0]);
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => false, 'job_status' => 
+            'rejected']);
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -344,7 +345,7 @@ class BookingsController extends Controller
         $new_balance = $balance - $lead_charges;
 
         $customer = Customer::find($booking->customer_id);
-        $customer->loyalty_points = $loyalty_points;        
+        $customer->loyalty_points = $loyalty_points + $customer->loyalty_points;        
         $customer->save();
 
         $workshop->balance->update(['balance'=>$new_balance]);
@@ -428,17 +429,17 @@ class BookingsController extends Controller
 
     public function workshopRejectedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','rejected'), 'workshop'=>$workshop]);       
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'rejected')->where('is_accepted' , false ), 'workshop'=>$workshop]);       
     }
 
     public function workshopAcceptedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','accepted'), 'workshop'=>$workshop]);       
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('is_accepted',true), 'workshop'=>$workshop]);       
     }
 
     public function workshopCompletedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status','completed'), 'workshop'=>$workshop]);       
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'completed')->where('is_accepted' , true ), 'workshop'=>$workshop]);       
     }    
 
     // Leads
@@ -467,8 +468,9 @@ class BookingsController extends Controller
      */
     public function getLeadsInfo(){
         $workshop   = JWTAuth::authenticate();        
-        $accepted_leads = $workshop->bookings()->where('response','accepted')->get()->count();
-        $completed_leads = $workshop->bookings()->where('job_status', 'completed')->get()->count();
+        $accepted_leads = $workshop->bookings()->where('is_accepted', true)->get()->count();
+        $completed_leads = $workshop->bookings()->where('is_accepted', true)->where('job_status', 'completed')->get()->count();
+        $rejected_leads = $workshop->bookings()->where('is_accepted', false)->where('job_status', 'rejected')->get()->count();
         $received_leads = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
@@ -525,7 +527,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'Workshop History',
-                            'body' => $bookings
+                            'body' => ['bookings' => $bookings]
                         ],Response::HTTP_OK);
             }
         }
@@ -563,7 +565,7 @@ class BookingsController extends Controller
      */
     public function acceptedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->with('services')->get();
+        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -618,7 +620,7 @@ class BookingsController extends Controller
     public function rejectedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->with('services')->get();
+        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -670,7 +672,7 @@ class BookingsController extends Controller
      */
     public function completedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
-        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->with('services')->get();
+        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {

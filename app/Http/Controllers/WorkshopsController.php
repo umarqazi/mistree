@@ -1965,12 +1965,12 @@ class WorkshopsController extends Controller
         $address->town          =  $request->town;
         $address->city          =  $request->city;        
         $workshop->address()->save($address);
-        
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $request->all()
+                    'body' => ['workshop' => $workshop ]
                 ],Response::HTTP_OK);               
     }
 
@@ -2144,7 +2144,7 @@ class WorkshopsController extends Controller
         $file   = fopen($full_path, "wb");        
         fwrite($file, base64_decode($file_data));
         fclose($file);
-        $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/ws_images', new File($full_path), 'public');
+        $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/images', new File($full_path), 'public');
         $workshop_image = config('app.s3_bucket_url').$s3_path;
         Storage::delete($path.'/'.basename($full_path));
         return $workshop_image;
@@ -2186,7 +2186,8 @@ class WorkshopsController extends Controller
                     ],Response::HTTP_OK);            
         }else{
             $workshop = Auth::guard('workshop')->user()->load('transactions','balance');                        
-            return view::make('workshop_profile.ledger')->with('workshop',$workshop);
+            $total_earning = $workshop->billings->sum('amount');
+            return view::make('workshop_profile.ledger')->with('workshop',$workshop)->with('total_earning', $total_earning);
         }
     }
 
@@ -2260,6 +2261,10 @@ class WorkshopsController extends Controller
         return view::make('workshop.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
     }
 
+    public function workshop_gallery(){
+        $workshop = Auth::guard('workshop')->user();
+        return view::make('workshop_profile.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
+    }
 }
 
 

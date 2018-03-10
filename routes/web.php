@@ -50,6 +50,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('/home', 'WorkshopsController@showHome')->name('home');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
+        Route::get('/gallery', 'WorkshopsController@workshop_gallery');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
         Route::post('/profile/{id}', 'WorkshopsController@update_profile');
         Route::get('/ledger', 'WorkshopsController@getLedger');
