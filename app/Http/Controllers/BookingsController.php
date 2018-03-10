@@ -119,14 +119,14 @@ class BookingsController extends Controller
 		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->response 			     = 'waiting';
+        $booking->is_accepted 			 = 0;
         $booking->job_status 			 = 'not-started';
         $booking->vehicle_no             = $request->vehicle_no;
 
         $booking->save();
 
         //Insert Services data from request        
-        $services = $request->services;        
+        $services = json_decode($request->services);        
         if(!empty($services)){
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
@@ -174,7 +174,7 @@ class BookingsController extends Controller
     public function acceptBooking($booking_id){
         $workshop_id = Auth::user()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['response' => 'accepted']);
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => 1]);
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -213,7 +213,7 @@ class BookingsController extends Controller
     public function rejectBooking($booking_id){
         $workshop_id = Auth::user()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['response' => 'rejected']);
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => 0]);
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -466,7 +466,7 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getLeadsInfo(){
-        $workshop = Auth::guard('workshop')->user();
+        $workshop   = JWTAuth::authenticate();        
         $accepted_leads = $workshop->bookings()->where('response','accepted')->get()->count();
         $completed_leads = $workshop->bookings()->where('job_status', 'completed')->get()->count();
         $received_leads = $workshop->bookings()->count();
