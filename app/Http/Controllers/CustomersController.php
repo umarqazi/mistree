@@ -17,9 +17,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
-use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 
 class CustomersController extends Controller
@@ -1221,5 +1222,64 @@ class CustomersController extends Controller
                 'message' => 'Ratings Given',
                 'body' => $workshop->load('services')
             ],Response::HTTP_OK);                
+    }
+
+
+    /** 
+    * @SWG\Patch( 
+    * path="/api/customer/update-profile-image", 
+    * summary="Update Profile Images", 
+    * operationId="update", 
+    * produces={"application/json"}, 
+    * tags={"Customers"}, 
+    * @SWG\Parameter( 
+    * name="Authorization", 
+    * in="header", 
+    * description="Token", 
+    * required=true, 
+    * type="string" 
+    * ), 
+    * @SWG\Parameter( 
+    * name="profile_pic", 
+    * in="formData", 
+    * description="Base64 String", 
+    * required=true, 
+    * type="string" 
+    * ), 
+    * @SWG\Response(response=200, description="successful operation"),
+    * @SWG\Response(response=500, description="internal server error") 
+    * ) 
+    * 
+    * Update the specified resource in storage. 
+    * 
+    * @param \Illuminate\Http\Request $request 
+    * @param int $id 
+    * @return \Illuminate\Http\Response 
+    */ 
+    public function updateProfileImage(Request $request) { 
+        $customer       = JWTAuth::authenticate(); 
+        $file_data      = $request->profile_pic; 
+        $url            = $this->upload_image($file_data,$customer->id); 
+        $profile_image  = $customer->update(['profile_pic_url' => $url]); 
+        return response()->json([ 
+            'http-status'   => Response::HTTP_OK, 
+            'status'        => true, 
+            'message'       => 'success', 
+            'body'          => $url 
+        ],Response::HTTP_OK); 
+    }
+
+    public function upload_image($file_data , $customers_id){ 
+        $full_path      = storage_path()."/app/customer/temp/".md5(microtime()).".jpg"; 
+        $path           = "/customer/temp"; 
+        if(!is_dir($path)) { 
+            Storage::makeDirectory($path);
+        } 
+        $file           = fopen($full_path, "wb"); 
+        fwrite($file, base64_decode($file_data));
+        fclose($file); 
+        $s3_path        = Storage::disk('s3')->putFile('customers/'. $customers_id . '/images', new File($full_path), 'public');
+        $customer_image = config('app.s3_bucket_url').$s3_path; Storage::delete($path.'/'.basename($full_path)); 
+        return $customer_image; 
     }
 }

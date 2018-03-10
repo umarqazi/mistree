@@ -53,6 +53,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
       Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
 
       Route::resource('customer-queries', 'CustomerQueriesController', ['only' => ['store']]);
+      Route::patch('update-profile-image','CustomersController@updateProfileImage');
 
 	});
 });
