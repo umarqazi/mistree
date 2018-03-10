@@ -77,16 +77,19 @@ class ServicesController extends Controller
     {
         $services   = Service::all();
         $services   = implode(',',$services->pluck('id')->toArray());
+
+        $is_doorstep    = Input::get('is_doorstep') ? 1:0;
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required|unique:services|max:255',            
+            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,'.$is_doorstep.'|max:255',
             'loyalty-points'    => 'required|numeric',
             'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
+            'is_doorstep'       => 'nullable|in:1',
             'image'             => 'mimes:jpeg,jpg,png',         
         );
-        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges');
+        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges', 'is_doorstep');
 
         $validator = Validator::make($inputs, $rules);
 
@@ -111,7 +114,8 @@ class ServicesController extends Controller
             $service->name           = Input::get('name');
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
-            $service->lead_charges = Input::get('lead-charges');
+            $service->lead_charges   = Input::get('lead-charges');
+            $service->is_doorstep    = Input::get('is_doorstep') ? Input::get('is_doorstep'):false;
             $service->save();
 
             // redirect
