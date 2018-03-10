@@ -56,6 +56,7 @@
                                 <th class="sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
                                 <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
                                 <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent</th>
+                                <th class="text-center" tabindex="0" rowspan="1" colspan="1">Doorstep</th>
                                 <th style="width: 286px">Action</th></tr>
                             </thead>
                         <tbody>
@@ -65,6 +66,11 @@
                                 <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
                                 <td>{{$value->name}}</td>
                                 <td class="text-center">{{$value->parent($value->service_parent)['name']}}</td>
+                                <td class="text-center">
+                                    @if($value->is_doorstep)
+                                        <i class="ti-check"></i>
+                                    @endif
+                                </td>
                                 <td>
                                     <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
                                      <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
