@@ -208,8 +208,14 @@ class WorkshopsController extends Controller
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
-
-        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');       
+        if(Auth::guard('admin')->user())
+        {    
+        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');  
+        }
+        else
+        {
+            return Redirect::to('/home')->with('message', 'Success! Workshop Created.');
+        }     
     }
 
     /**
