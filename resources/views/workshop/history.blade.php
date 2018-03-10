@@ -7,44 +7,37 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
+                <div class="card">                    
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="title">Work History</h4>                                
-                            </div>                            
-                        </div>
-                        <div class="clear20"></div>
-                        <div class="row">
-                            <div class="col-sm-6">                                
-                                <h3>{{$workshop->name}} <a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="btn btn-header btn-export">Edit Workshop</a></h3>
-                                <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
-                                <div class="phone">Mobile : {{$workshop->mobile}}</div>
-                            </div>
-                            <div class="col-sm-6 balance-info">
-                                <div class="current text-right">Current Balance: PKR {{$balance['balance']}}</div>
-                                <div class="total text-right">Total Earnings: PKR {{$total_earning}}</div>
 
-                                <div class="row">
-                                    <div class="col-sm-6 col-sm-offset-6 balance-info">                         
-                                        <div class="clear10"></div>
-                                        <div class="dropdown pull-right">
-                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                           + More Options
-                                            </button>
-                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}" class="dropdown-buttons">Completed Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}" class="dropdown-buttons">Accepted Leads</a>
-                                                <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}" class="dropdown-buttons">Rejected Leads</a>
-                                            </div>
+                                <div class="avtar-block">
+                                    <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
+                                    <div class="name-info">
+                                        <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
+                                        <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
+                                        <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
+                                        <div class="phone">Mobile : {{$workshop->mobile}}</div>
+                                        <div>Current Balance : {{$workshop->balance->balance}}</div>
+                                        <div>Total Earnings : PKR {{$total_earning}}</div>
+                                    </div>
+                                    <div class="dropdown pull-right">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                       + More Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a href="{{url('admin/workshop/'.$workshop->id.'/history/completed-leads')}}" class="dropdown-buttons">Completed Leads</a>
+                                            <a href="{{url('admin/workshop/'.$workshop->id.'/history/accepted-leads')}}" class="dropdown-buttons">Accepted Leads</a>
+                                            <a href="{{url('admin/workshop/'.$workshop->id.'/history/rejected-leads')}}" class="dropdown-buttons">Rejected Leads</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="clear10"></div><div class="clear5"></div>
+                                
                             </div>
-                        </div>
+                        </div>                                                
                     </div>
-                    <div class="clear20"></div>
+                    
                     <div class="content table-responsive table-full-width">
                         <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">                      
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
