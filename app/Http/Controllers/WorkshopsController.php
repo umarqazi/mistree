@@ -567,6 +567,7 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
+        Config::set('auth.providers.users.model', \App\Workshop::class);
         $token = JWTAuth::attempt($credentials);
 
         return response()->json([
