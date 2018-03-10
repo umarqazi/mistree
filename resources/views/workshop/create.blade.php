@@ -1,8 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Create New Workshop')
 @section('content')
-
-    @include('partials.header')
+@include('partials.header')
 
 
     <div class="content">
@@ -22,7 +21,6 @@
                                 </div>
                             </div>
                             <div class="clear20"></div>
-
 
 
                             <!--###############################################-->
