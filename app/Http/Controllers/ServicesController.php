@@ -9,8 +9,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Session;
 use Illuminate\Support\Facades\Storage;
@@ -87,7 +85,7 @@ class ServicesController extends Controller
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,'.$is_doorstep.'|max:255',
+            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,'.$is_doorstep.',deleted_at,NULL|max:255',
             'loyalty-points'    => 'required|numeric',
             'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
@@ -116,7 +114,7 @@ class ServicesController extends Controller
               $service->image        =  url('img/thumbnail.png');
             }
 
-            $service->name           = Input::get('name');
+            $service->name           = trim(Input::get('name'));
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
             $service->lead_charges   = Input::get('lead-charges');
@@ -173,10 +171,13 @@ class ServicesController extends Controller
         // dd($request);
         $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
+
+        $service = Service::find($id);
+
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'           => 'required|unique:services,id,'.$id.'|max:255',
+            'name'           => 'required|unique:services,name,'.$id.',id,is_doorstep,'.$service->is_doorstep.',deleted_at,NULL|max:255',
             'loyalty-points' => 'required|numeric',
             'lead-charges'   => 'required|numeric',
             'service-parent' => 'in:0,'.$services,
@@ -189,9 +190,7 @@ class ServicesController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         } else {
-            $service = Service::find($id);
-         
-            if ($request->hasFile('image')) 
+            if ($request->hasFile('image'))
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
                 $img_path = config('app.s3_bucket_url').$s3_path;
@@ -201,7 +200,7 @@ class ServicesController extends Controller
             {
               $service->image        = $service->image;
             }
-            $service->name           = Input::get('name');
+            $service->name           = trim(Input::get('name'));
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
             $service->lead_charges   = Input::get('lead-charges');

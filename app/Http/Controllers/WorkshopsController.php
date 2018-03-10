@@ -1201,9 +1201,9 @@ class WorkshopsController extends Controller
      * @param $workshop
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addWorkshopService($workshop){
-        $workshop = Workshop::find($workshop);
-        $services = Service::all();        
+    public function addWorkshopService(Workshop $workshop){
+        $services   = $workshop->services()->pluck('service_id')->toArray();
+        $services = Service::whereNotIn('id',$services)->get();
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
     }
     
