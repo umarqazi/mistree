@@ -123,7 +123,7 @@ class BookingsController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
+                    'message' => $validator->messages()->first(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         }
@@ -331,7 +331,7 @@ class BookingsController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
+                    'message' => $validator->messages()->first(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         }             
