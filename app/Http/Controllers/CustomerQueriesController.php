@@ -89,12 +89,11 @@ class CustomerQueriesController extends Controller
                 'status'        => 'Open',
                 'is_resolved'   => false
             ]);
-            $email = "jazib.javed@gems.techverx.com";        
             $subject = "Customer Query - ".$request->subject;
             Mail::send('customer.emails.query', ['customer' => $customer, 'subject' => $request->subject, 'message' => $request->message],
-            function($mail) use ($email, $subject){
+            function($mail) use ($subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email);
+                $mail->to(config('app.mail_username'));
                 $mail->subject($subject);
             });
             return response()->json([
