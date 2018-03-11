@@ -1,8 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Create New Workshop')
 @section('content')
-
-    @include('partials.header')
+@include('partials.header')
 
 
     <div class="content">
@@ -22,7 +21,6 @@
                                 </div>
                             </div>
                             <div class="clear20"></div>
-
 
 
                             <!--###############################################-->
@@ -131,10 +129,16 @@
                                                 <label class="control-label">Team Slot</label>
                                                 <select name="team_slot" class="form-control border-input">
                                                     <option value="">Please Select</option>
+                                                    <option value="0" @if(old('team_slot') == "0"){{ "selected" }}@endif>0</option>
                                                     <option value="1" @if(old('team_slot') == "1"){{ "selected" }}@endif>1</option>
                                                     <option value="2" @if(old('team_slot') == "2"){{ "selected" }}@endif>2</option>
                                                     <option value="3" @if(old('team_slot') == "3"){{ "selected" }}@endif>3</option>
                                                     <option value="4" @if(old('team_slot') == "4"){{ "selected" }}@endif>4</option>
+                                                    <option value="5" @if(old('team_slot') == "5"){{ "selected" }}@endif>5</option>
+                                                    <option value="6" @if(old('team_slot') == "6"){{ "selected" }}@endif>6</option>
+                                                    <option value="7" @if(old('team_slot') == "7"){{ "selected" }}@endif>7</option>
+                                                    <option value="8" @if(old('team_slot') == "8"){{ "selected" }}@endif>8</option>
+                                                    <option value="9" @if(old('team_slot') == "9"){{ "selected" }}@endif>9</option>
                                                 </select>
                                             </div>
 
@@ -305,7 +309,7 @@
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
                                                                 <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
                                                                     @foreach ($services as $service)
-                                                                        <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
+                                                                        <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
                                                                     @endforeach
                                                                 </select>
                                                                 @if ($errors->has('services'))
@@ -344,10 +348,9 @@
                                     <div class="row text-center">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <button type="button" class="btn btn-header">Cancel</button>
+                                                <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                                 <button type="button" class="btn btn-header btn-back-2">Back</button>
-                                                <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
-                                                <input type="submit" value="Save Workshop" class="btn btn-header">
+                                                <input type="submit" value="Create Workshop" class="btn btn-header">
                                             </div>
                                         </div>
                                     </div>

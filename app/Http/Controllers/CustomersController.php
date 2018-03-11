@@ -100,7 +100,6 @@ class CustomersController extends Controller
             $customer->save();
 
             // redirect
-            Session::flash('message', 'Successfully created customer!');
             return Redirect::to('customer');
         }
     }
@@ -160,8 +159,7 @@ class CustomersController extends Controller
             $customer->save();
 
             // redirect
-            Session::flash('message', 'Successfully updated customer!');
-            return Redirect::to('customers');
+            return Redirect::to('customers')->with('message', 'Success! Customer Updated.');
         }
     }
 
@@ -176,8 +174,7 @@ class CustomersController extends Controller
         // soft delete        
         $customer->delete();
         // redirect
-        Session::flash('message', 'Successfully deleted the customer!');
-        return Redirect::to('admin/customers');
+        return Redirect::to('admin/customers')->with('message', 'Success! Customer Blocked');
     }
 
     /**
@@ -258,13 +255,12 @@ class CustomersController extends Controller
         $email = $request->email;
         $password = $request->password;
         $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1, 'con_number' => $con_number]);
-        // return $this->login($request);
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
         $subject = "Please verify your email address.";
         Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(getenv('MAIL_USERNAME'), "umar.farooq@gems.techverx.com");
+                $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -316,7 +312,7 @@ class CustomersController extends Controller
         ];
 
         try {
-            // Config::set('jwt.user' , "App\Customer");
+
             Config::set('auth.providers.users.model', \App\Customer::class);
             if (! $token = JWTAuth::attempt($credentials)) {
                 $request->offsetUnset('password');
@@ -328,7 +324,7 @@ class CustomersController extends Controller
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
-        } catch (JWTException $e) {
+            } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
 
@@ -338,7 +334,7 @@ class CustomersController extends Controller
                 'message' => 'Failed to login, please try again.',
                 'body' => $request->all()
             ],Response::HTTP_OK);
-        }
+            }
         // all good so return the token
         $customer = Auth::user();
 
@@ -1067,11 +1063,11 @@ class CustomersController extends Controller
 
     public function restore($id){
         $customer = Customer::withTrashed()->find($id)->restore();
-        return Redirect::to('/admin/customers');
+        return Redirect::to('/admin/customers')->with('message', 'Success! Customer Unblocked.');
     }
 
     public function blockedCustomers(){                
-        $customers = Customer::onlyTrashed()->get();  
+        $customers = Customer::onlyTrashed()->get();
         return View::make('customer.blocked')->with('customers', $customers); 
     }
 
@@ -1121,7 +1117,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Vehicle History',
-                    'body' => $bookings
+                    'body' => ['history'    => $bookings]
                 ],Response::HTTP_OK);        
         }        
     }

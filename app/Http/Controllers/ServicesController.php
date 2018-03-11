@@ -9,8 +9,6 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Redirect;
 use Session;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +24,7 @@ class ServicesController extends Controller
      */
     /**
      * @SWG\Get(
-     *   path="/api/services",
+     *   path="/api/sign-up/services",
      *   summary="All Services for Workshops",
      *   operationId="select services",
      *   produces={"application/json"},
@@ -39,12 +37,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $service_ids = $request->service_ids;
-        if(count($service_ids)>0){
-            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
-        }else{
-            $services = Service::orderBy('created_at')->get();
-        }        
+        $services = Service::orderBy('created_at')->get();            
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -82,16 +75,19 @@ class ServicesController extends Controller
     {
         $services   = Service::all();
         $services   = implode(',',$services->pluck('id')->toArray());
+
+        $is_doorstep    = Input::get('is_doorstep') ? 1:0;
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required|unique:services|max:255',            
+            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,'.$is_doorstep.',deleted_at,NULL|max:255',
             'loyalty-points'    => 'required|numeric',
             'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
+            'is_doorstep'       => 'nullable|in:1',
             'image'             => 'mimes:jpeg,jpg,png',         
         );
-        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges');
+        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges', 'is_doorstep');
 
         $validator = Validator::make($inputs, $rules);
 
@@ -105,7 +101,7 @@ class ServicesController extends Controller
             if ($request->hasFile('image')) 
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $img_path = config('app.s3_bucket_url').$s3_path;
                 $service->image          = $img_path;
             }
             else
@@ -113,14 +109,15 @@ class ServicesController extends Controller
               $service->image        =  url('img/thumbnail.png');
             }
 
-            $service->name           = Input::get('name');
+            $service->name           = trim(Input::get('name'));
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
-            $service->lead_charges = Input::get('lead-charges');
+            $service->lead_charges   = Input::get('lead-charges');
+            $service->is_doorstep    = Input::get('is_doorstep') ? Input::get('is_doorstep'):false;
             $service->save();
 
             // redirect
-            Session::flash('message', 'Successfully created service!');
+            Session::flash('message', 'Success! Service Created.');
             return Redirect::to('admin/services');
         }
     }
@@ -169,10 +166,13 @@ class ServicesController extends Controller
         // dd($request);
         $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
+
+        $service = Service::find($id);
+
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'           => 'required|unique:services,id,'.$id.'|max:255',
+            'name'           => 'required|unique:services,name,'.$id.',id,is_doorstep,'.$service->is_doorstep.',deleted_at,NULL|max:255',
             'loyalty-points' => 'required|numeric',
             'lead-charges'   => 'required|numeric',
             'service-parent' => 'in:0,'.$services,
@@ -185,26 +185,24 @@ class ServicesController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         } else {
-            $service = Service::find($id);
-         
-            if ($request->hasFile('image')) 
+            if ($request->hasFile('image'))
             {
                 $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = 'https://s3-us-west-2.amazonaws.com/mymystri-staging/'.$s3_path;
+                $img_path = config('app.s3_bucket_url').$s3_path;
                 $service->image          = $img_path;
             }
             else
             {
               $service->image        = $service->image;
             }
-            $service->name           = Input::get('name');
+            $service->name           = trim(Input::get('name'));
             $service->service_parent = Input::get('service-parent');
             $service->loyalty_points = Input::get('loyalty-points');
             $service->lead_charges   = Input::get('lead-charges');
             $service->update();
 
             // redirect
-            Session::flash('message', 'Successfully updated the Service!');
+            Session::flash('message', 'Success! Service Updated.');
             return Redirect::to('admin/services');
         }
     }
@@ -221,7 +219,7 @@ class ServicesController extends Controller
         $service->delete();
 
         // redirect
-        Session::flash('message', 'Successfully deleted the Service!');
+        Session::flash('message', 'Success! Service Deactivated');
         return Redirect::to('admin/services');
     }
 
@@ -243,5 +241,49 @@ class ServicesController extends Controller
         $services = Service::onlyTrashed()->get();  
         return View::make('services.inactive')
         ->with('services', $services);
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/services",
+     *   summary="All Services for Workshops",
+     *   operationId="select services",
+     *   produces={"application/json"},
+     *   tags={"Services"},     
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),     
+     *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Workshop Services",
+     *     required=false,
+     *     type="array",
+     *     items = "service_ids"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )     
+     */
+    public function filteredServices(Request $request)
+    {        
+        // get all the services
+        $service_ids = $request->service_ids;
+        if(count($service_ids)>0){
+            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
+        }else{
+            $services = Service::orderBy('created_at')->get();
+        }        
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'all services',
+            'body' => [ 'services' => $services ]
+        ],Response::HTTP_OK);        
     }
 }

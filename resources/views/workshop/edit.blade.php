@@ -6,7 +6,6 @@
 
 
 <div class="content">
-    
     <div class="container-fluid">                
         <div class="row">
             <div class="col-md-12">
@@ -56,7 +55,7 @@
                                     <select name="type" class="form-control border-input" required="required">
                                         <option value="">Please Select</option>
                                         <option value="Authorized" @if($workshop->type == "Authorized") {{"selected"}} @endif >Authorized</option>
-                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >UnAuthorized</option>
+                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >Unauthorized</option>
                                     </select>
                                 </div>
 
@@ -73,26 +72,7 @@
                                         <strong class="manadatory">{{ $errors->first('cnic') }}</strong>
                                     </span>
                                 @endif
-                              </div>
-
-                              <div class="form-group">
-                                <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                <input type="text" class="form-control border-input" name="mobile" value="{{$workshop->mobile}}">
-                                @if ($errors->has('mobile'))
-                                    <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
-                                    </span>
-                                @endif
-                              </div>
-                              <div class="form-group">
-                                <label class="control-label">Landline Number <span class="manadatory"></span></label>
-                                <input type="text" class="form-control border-input" name="landline" value="{{$workshop->landline}}">
-                                @if ($errors->has('landline'))
-                                    <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('landline') }}</strong>
-                                    </span>
-                                @endif
-                              </div>                           
+                              </div>                                                         
                             </div>
 
                             <div class="col-md-6">
@@ -100,10 +80,16 @@
                                     <label class="control-label">Team Slot</label>
                                     <select name="team_slot" class="form-control border-input">
                                         <option value="">Please Select</option>
+                                        <option value="0" @if($workshop->slots == "0"){{ "selected" }}@endif>0</option>
                                         <option value="1" @if($workshop->slots == "1"){{ "selected" }}@endif>1</option>
                                         <option value="2" @if($workshop->slots == "2"){{ "selected" }}@endif>2</option>
                                         <option value="3" @if($workshop->slots == "3"){{ "selected" }}@endif>3</option>
                                         <option value="4" @if($workshop->slots == "4"){{ "selected" }}@endif>4</option>
+                                        <option value="5" @if($workshop->slots == "5"){{ "selected" }}@endif>5</option>
+                                        <option value="6" @if($workshop->slots == "6"){{ "selected" }}@endif>6</option>
+                                        <option value="7" @if($workshop->slots == "7"){{ "selected" }}@endif>7</option>
+                                        <option value="8" @if($workshop->slots == "8"){{ "selected" }}@endif>8</option>
+                                        <option value="9" @if($workshop->slots == "9"){{ "selected" }}@endif>9</option>
                                     </select>
                                 </div>
 
@@ -126,66 +112,77 @@
                                     </span>
                                 @endif                                        
                               </div>
-                              
-                              <div class="form-group">      
-                                <label class="control-label">Profile Picture</label> 
-                                <div class="clear"></div>                   
-                                <input type="file" id="profile_picture" class="form-control" name="profile_pic">
-                                <br>
-                                @if($workshop->profile_pic)
-                                <img src="{{ $workshop->profile_pic }}" width="80px" height="80px">
-                                @else
-                                        <br>
+
+                              <div class="form-group">
+                                <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
+                                <input type="text" class="form-control border-input" name="mobile" value="{{$workshop->mobile}}">
+                                @if ($errors->has('mobile'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
+                                    </span>
                                 @endif
                               </div>
-
-                              <div class="form-group">      
-                                <label class="control-label">CNIC Picture</label> 
-                                <div class="clear"></div>                   
-                                <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
-                                @if($workshop->cnic_image)
-                                <img src="{{ $workshop->cnic_image }}" width="80px" height="80px">
-                                @else
-                                        <br>
+                              <div class="form-group">
+                                <label class="control-label">Landline Number <span class="manadatory"></span></label>
+                                <input type="text" class="form-control border-input" name="landline" value="{{$workshop->landline}}">
+                                @if ($errors->has('landline'))
+                                    <span class="help-block">
+                                        <strong class="manadatory">{{ $errors->first('landline') }}</strong>
+                                    </span>
                                 @endif
                               </div>
-                                @if($images)
-                                    <div class="well">
-                                        <div class="form-group">
-                                            <label class="control-label">Workshop Picture 1:</label>
-                                            <div class="clear"></div>
-                                            <input type="file" class="form-control" name="images[]">
-                                            @if(!empty($images[0]))
-                                                <img src="{{ $images[0]->url }}" width="80px" height="80px">
-                                            @else
-                                                <br>
-                                            @endif
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label">Workshop Picture 2:</label>
-                                            <div class="clear"></div>
-                                            <input type="file" class="form-control" name="images[]">
-                                            @if(!empty($images[1]))
-                                                <img src="{{ $images[1]->url }}" width="80px" height="80px">
-                                            @else
-                                                <br>
-                                            @endif
-                                        </div>
-
-                                        <div class="form-group">
-                                            <label class="control-label">Workshop Picture 3:</label>
-                                            <div class="clear"></div>
-                                            <input type="file" class="form-control" name="images[]">
-                                            @if(!empty($images[2]))
-                                                <img src="{{ $images[2]->url }}" width="80px" height="80px">
-                                            @else
-                                                <br>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endif
+                                                                
                             </div>
+
+                            <div class="col-md-12">
+
+                            <ul class="profile-edit-listing">
+                                <li>
+                                  <div class="form-group">
+                                  @if($workshop->profile_pic)
+                                    <img src="{{ $workshop->profile_pic }}" width="100px" height="80px">
+                                    @else
+                                            <br>
+                                    @endif
+                                    <label class="control-label">Profile Picture</label>
+                                    <input type="file" id="profile_picture" class="form-control" name="profile_pic">
+                                    <br>
+                                    
+                                  </div>
+                                </li>
+
+                                <li>
+                                    <div class="form-group">  
+                                      @if($workshop->cnic_image)
+                                        <img src="{{ $workshop->cnic_image }}" width="100px" height="80px">
+                                        @else
+                                            <br>
+                                        @endif    
+                                        <label class="control-label">CNIC Picture</label>                    
+                                        <div class="clear"></div>
+                                        <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
+                                    </div>
+                                </li>                                                              
+                                @if($images)
+                                @for($i = 0; $i < 3; $i++)
+                                <li>    
+                                    <div class="form-group">
+                                    @if(!empty($images[$i]))
+                                        <img src="{{ $images[$i]->url }}" width="100px" height="80px">
+                                    @else
+                                        <br>
+                                    @endif
+                                        <label class="control-label">Workshop Picture {{ $i + 1 }}:</label>
+                                        <div class="clear"></div>
+                                        <input type="file" class="form-control" name="images[]">
+                                    </div>
+                                </li>
+                                @endfor
+                                @endif
+                              </ul>
+
+                            </div>
+
                           </div>                                                                                                     
                           <div class="row">
                             <div class="col-md-12 text-center">
@@ -217,7 +214,7 @@
                                     @endif
                                   </div>
                                   <div class="form-group">                              
-                                    <label class="control-label">Building No <span class="manadatory"></span></label>
+                                    <label class="control-label">Building <span class="manadatory"></span></label>
                                     <input type="text" class="form-control border-input" name="building" value="{{$address->building}}">
                                     @if ($errors->has('building'))
                                         <span class="help-block">
@@ -269,7 +266,7 @@
                               <div class="row">                                                   
                                 <div class="col-md-12 text-center">
                                   <div class="form-group">
-                                    <button type="button" class="btn btn-header">Cancel</button>
+                                    <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                     <button class="btn btn-header btn-back-1">Back</button>
                                     <input type="submit" value="Update" class="btn btn-header">
                                   </div>

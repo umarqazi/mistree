@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'MyMistri'),
 
     /*
     |--------------------------------------------------------------------------
@@ -235,4 +235,6 @@ return [
 
     ],
 
+    'mail_username' => env('MAIL_USERNAME', 'jazib.javed@gems.techverx.com'),
+    's3_bucket_url' => env('S3_BUCKET_URL','https://s3-us-west-2.amazonaws.com/mymystri-staging/'),
 ];

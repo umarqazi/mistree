@@ -39,7 +39,7 @@
                                           <select class="form-control border-input" name="service_id">
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}</option>
+                                            <option value="{{$service->id}}">{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
                                             @endforeach
                                           </select>
                                           @if ($errors->has('service_id'))

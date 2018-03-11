@@ -33,8 +33,8 @@ Route::group(['middleware' => 'admin.guest'], function (){
     Route::post('/login', 'WorkshopAuth\LoginController@login');
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
-
-    Route::post('/register', 'WorkshopAuth\RegisterController@register');
+    Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('/register', 'WorkshopsController@store');
 
     Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
     Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
@@ -50,8 +50,9 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('/home', 'WorkshopsController@showHome')->name('home');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
+        Route::get('/gallery', 'WorkshopsController@workshop_gallery');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
-        Route::post('/profile/{id}', 'WorkshopsController@update_profile');
+        Route::patch('/profile/{id}', 'WorkshopsController@update_profile');
         Route::get('/ledger', 'WorkshopsController@getLedger');
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
@@ -105,9 +106,10 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('customer-queries', 'CustomerQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('cars', 'CarsController');
+        Route::delete('car/{id}', 'CarsController@delete_car');
         Route::put('resolve-workshop-query/{workshopQuery}', 'WorkshopQueriesController@resolve');
         Route::put('resolve-customer-query/{customerQuery}', 'CustomerQueriesController@resolve');
-        Route::get('/home','AdminsController@home')->name('admin.home');
+        Route::get('/home','AdminsController@showHome')->name('admin.home');
 
         Route::get('/inactive-cars', 'CarsController@inactive_cars');
         Route::post('/car/restore/{id}', 'CarsController@restore');
@@ -140,6 +142,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
+        Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
                 
     });
 

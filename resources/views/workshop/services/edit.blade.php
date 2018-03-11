@@ -11,13 +11,12 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="header">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <h4 class="title">Edit Workshop Service</h4>                                
-                            </div>
-                            <div class="clear10"></div><div class="clear5"></div>
-                            <div class="clear10"></div><div class="clear5"></div>                            
-                            <div class="col-md-12">
+                        <div class="row">                            
+                            <div class="col-md-12 text-center">
+                            
+                                <div class="work-service-block">
+
+                                <h4 class="title select-service-title">Edit Workshop Service</h4>
                                 @if ($errors->any())
                                   <div class="row text-center alert alert-danger">
                                     @foreach($errors->all() as $error)
@@ -25,14 +24,14 @@
                                     @endforeach                        
                                   </div>
                                 @endif
-                                <div class="row">
+
                                     <form method="POST" action="{{ url('admin/update-workshop-service/')}}">
                                     <!-- <input type="hidden" value="PATCH" name="_method"> -->
                                     <input type="hidden" value="{{$workshop_service->workshop_id}}" name="workshop_id">
                                     <input type="hidden" value="{{$workshop_service->service_id}}" name="service_id">
                                     <input type="hidden" value="{{$workshop_service->id}}" name="workshop_service_id">
                                     {{ csrf_field() }}
-                                        <div class="col-sm-4">
+                                        <div >
                                             <div class="child-box-wrap">
                                                 <div class="row">
                                                     <div class="col-md-12">
@@ -41,7 +40,7 @@
                                                           <select class="form-control border-input" disabled>
                                                             <option value="" disabled selected>Select Service</option>
                                                             @foreach ($services as $service)
-                                                            <option value="{{$service->id}}" @if($service->id == $workshop_service->service_id ) selected @endif>{{ $service->name }}</option>
+                                                            <option value="{{$service->id}}" @if($service->id == $workshop_service->service_id ) selected @endif>{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
                                                             @endforeach
                                                           </select>
                                                         </div>

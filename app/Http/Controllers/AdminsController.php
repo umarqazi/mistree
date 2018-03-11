@@ -15,7 +15,7 @@ class AdminsController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function home()
+    public function showHome()
     {
         $customers = Customer::all();
         $CustomerCount = count($customers);
@@ -101,7 +101,4 @@ class AdminsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function showHome() {
-        return view('admin.home');
-    }
 }

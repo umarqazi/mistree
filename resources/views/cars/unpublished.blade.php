@@ -13,7 +13,7 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4 class="title">Cars</h4>
-                                <p class="category">List of all active cars.</p>
+                                <p class="category">List of all unpublished cars.</p>
                             </div>
                         </div>
                         <div class="row">
@@ -45,6 +45,11 @@
                                             <input type="hidden" name="car_id" value="{{$value->id }}"> 
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
                                             <button type="submit" class="btn btn-header btn-export">Publish</button>
+                                        </form>
+                                        <form method="POST" action="{{url('admin/car/'.$value->id)}}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
+                                            <button type="submit" class="btn btn-header btn-export">Delete</button>
                                         </form>
                                     </td>
                                 </tr>

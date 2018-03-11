@@ -94,7 +94,7 @@ class CarsController extends Controller
             $car->save();
 
             // redirect
-            Session::flash('message', 'Successfully created car!');
+            Session::flash('message', 'Success! Car Created.');
             return Redirect::to('admin/cars');
         }
     }
@@ -154,8 +154,7 @@ class CarsController extends Controller
             $car->save();
 
             // redirect
-            Session::flash('message', 'Successfully updated car!');
-            return Redirect::to('admin/cars');
+            return Redirect::to('admin/cars')->with('message', 'Success! Car Updated');
         }
     }
 
@@ -172,10 +171,9 @@ class CarsController extends Controller
         $car->delete();
 
         // redirect
-        Session::flash('message', 'Successfully de-activated the car!');
-        return Redirect::to('admin/cars');
+        return Redirect::to('admin/cars')->with('message', 'Success! Car Deactivated.');
     }
-
+    
     /**
      * Restore the specified car from storage.
      *
@@ -189,8 +187,17 @@ class CarsController extends Controller
         $car->restore();
 
         // redirect
-        Session::flash('message', 'Successfully activated the car!');
-        return Redirect::to('admin/cars');
+        return Redirect::to('admin/cars')->with('message', 'Success! Car Restored.');
+    }
+
+    public function delete_car($id)
+    {
+       // delete
+        $car = Car::find($id);
+        $car->forceDelete();
+
+        // redirect
+        return Redirect::to('admin/cars')->with('message', 'Success! Car Deleted.');
     }
 
     public function inactive_cars()
@@ -211,8 +218,7 @@ class CarsController extends Controller
         $car = Car::find($request->car_id);      
         $car->is_published = 1;        
         $car->update();         
-        Session::flash('message', 'Successfully created car!');
-         return Redirect::to('admin/cars');
+         return Redirect::to('admin/cars')->with('message', 'Success! Car Published.');
     }
 
     /**
