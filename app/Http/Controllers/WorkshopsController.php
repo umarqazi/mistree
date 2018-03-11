@@ -1384,7 +1384,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => '',
-            'body' => $workshops,
+            'body' => ['workshops' => $workshops],
         ],Response::HTTP_OK);
     }
 
