@@ -120,13 +120,12 @@ class WorkshopQueriesController extends Controller
                 'message'       => $request->message,
                 'status'        => 'Open',
                 'is_resolved'   => false
-            ]);
-            $email = "jazib.javed@gems.techverx.com";        
+            ]);      
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
-            function($mail) use ($email, $subject){
+            function($mail) use ($subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email);
+                $mail->to(config('app.mail_username'));
                 $mail->subject($subject);
             });
             return response()->json([
@@ -152,13 +151,12 @@ class WorkshopQueriesController extends Controller
                 'message'       => $request->message,
                 'status'        => 'Open',
                 'is_resolved'   => false
-            ]);
-            $email = "jazib.javed@gems.techverx.com";        
+            ]);      
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
-            function($mail) use ($email, $subject){
+            function($mail) use ($subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email);
+                $mail->to(config('app.mail_username'));
                 $mail->subject($subject);
             });
             Session::flash('success_message', 'Successfully Added the Request!');
