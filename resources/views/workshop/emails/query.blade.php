@@ -13,7 +13,7 @@
     <br>
     <br>
     <p>From:</p><br>
-    <p>{{$worksop->name}}</p><br>
+    <p>{{$workshop->name}}</p><br>
     <p>{{$workshop->email}},</p><br>
     <p>{{$workshop->landline}},</p><br>
     <p>{{$workshop->mobile}}.</p>
