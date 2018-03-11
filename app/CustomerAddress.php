@@ -30,4 +30,9 @@ class CustomerAddress extends Model
 	{
 	    return $this->belongsTo('App\Customer');
 	}
+
+    public function booking()
+    {
+        return $this->belongsTo('App\Booking');
+    }
 }

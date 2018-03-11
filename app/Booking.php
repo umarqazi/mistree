@@ -19,7 +19,7 @@ class Booking extends Model
         'customer_id', 'workshop_id', 'customer_car_id', 'job_date', 'job_time', 'is_accepted', 'job_status',
     ];	
 
-    protected $casts = ['is_accepted' => 'boolean'];
+    protected $casts = ['is_accepted' => 'boolean', 'is_doorstep' => 'boolean'];
     public function workshop()
     {
         return $this->belongsTo('App\Workshop');
@@ -28,6 +28,11 @@ class Booking extends Model
     public function customer()
     {
         return $this->belongsTo('App\Customer');
+    }
+
+    public function customer_address()
+    {
+        return $this->hasOne('App\CustomerAddress');
     }
 
     public function services()
