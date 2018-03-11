@@ -52,7 +52,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
       	Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
       	Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
 
-      	Route::resource('customerQueries', 'CustomerQueriesController', ['only' => ['store']]);
+      	Route::resource('customer-queries', 'CustomerQueriesController', ['only' => ['store']]);
 
 	});
 });

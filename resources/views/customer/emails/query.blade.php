@@ -9,13 +9,13 @@
     <h3>{{$subject}}</h3>
     <br>
     <br>
-    <p>{{$message}}}}</p>
+    <p>{{$msg}}</p>
     <br>
     <br>
     <p>From:</p><br>
-    <p>{{$customer->name}}</p><br>
-    <p>{{$customer->email}},</p><br>
-    <p>{{$workshop->con_number}}.</p>
+    <p>{{$customer_name}}</p><br>
+    <p>{{$customer_email}},</p><br>
+    <p>{{$customer_phone}}.</p>
 </div>
 
 </body>
