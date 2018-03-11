@@ -32,7 +32,7 @@ class CustomerQueriesController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/customer/add-customer-query",
+     *   path="/api/customer/customer-queries",
      *   summary="Add Customer Query",
      *   operationId="add_customer_query",
      *   produces={"application/json"},
@@ -67,7 +67,6 @@ class CustomerQueriesController extends Controller
      */
     public function store(Request $request)
     {
-       if( $request->header('Content-Type') == 'application/json'){
             $customer = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
@@ -91,7 +90,7 @@ class CustomerQueriesController extends Controller
             ]);
             $email = "jazib.javed@gems.techverx.com";        
             $subject = "Customer Query - ".$request->subject;
-            Mail::send('customer.emails.query', ['customer' => $customer, 'subject' => $request->subject, 'message' => $request->message],
+            Mail::send('customer.emails.query', ['customer_name' => $customer->name, 'customer_email' => $customer->email, 'customer_phone' => $customer->con_number,'subject' => 'haris', 'msg' => 'haris' ],
             function($mail) use ($email, $subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email);
@@ -101,9 +100,8 @@ class CustomerQueriesController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Query has been Added.',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
-        }
     }
 
     /**

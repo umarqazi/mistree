@@ -64,13 +64,13 @@ class WorkshopQueriesController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/workshop/add-workshop-query",
+     *   path="/api/workshop/workshop-queries",
      *   summary="Add Workshop Query",
      *   operationId="add_workshop_query",
      *   produces={"application/json"},
      *   tags={"Queries"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
+     *   consumes={"application/json"},
+     *   produces={"application/json"},
      *   @SWG\Parameter(
      *     name="Authorization",
      *     in="header",
@@ -123,7 +123,7 @@ class WorkshopQueriesController extends Controller
             ]);
             $email = "jazib.javed@gems.techverx.com";        
             $subject = "Workshop Query - ".$request->subject;
-            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
+            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
             function($mail) use ($email, $subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email);
@@ -155,7 +155,7 @@ class WorkshopQueriesController extends Controller
             ]);
             $email = "jazib.javed@gems.techverx.com";        
             $subject = "Workshop Query - ".$request->subject;
-            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
+            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
             function($mail) use ($email, $subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email);
