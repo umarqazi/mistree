@@ -99,7 +99,7 @@ class WorkshopQueriesController extends Controller
      */
     public function store(Request $request)
     {   
-        if( $request->header('Content-Type') == 'application/json'){
+        if( $request->header('Content-Type') == 'application/x-www-form-urlencoded'){
             $workshop = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
