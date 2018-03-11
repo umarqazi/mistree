@@ -214,7 +214,7 @@
                                     @endif
                                   </div>
                                   <div class="form-group">                              
-                                    <label class="control-label">Building No <span class="manadatory"></span></label>
+                                    <label class="control-label">Building <span class="manadatory"></span></label>
                                     <input type="text" class="form-control border-input" name="building" value="{{$address->building}}">
                                     @if ($errors->has('building'))
                                         <span class="help-block">
