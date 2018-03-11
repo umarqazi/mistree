@@ -266,7 +266,7 @@
                               <div class="row">                                                   
                                 <div class="col-md-12 text-center">
                                   <div class="form-group">
-                                    <button type="button" class="btn btn-header">Cancel</button>
+                                    <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                     <button class="btn btn-header btn-back-1">Back</button>
                                     <input type="submit" value="Update" class="btn btn-header">
                                   </div>

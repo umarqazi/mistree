@@ -1738,7 +1738,7 @@ class WorkshopsController extends Controller
         }
         
         Session::flash('message', 'Success! Workshop Updated');
-        return Redirect::to('/home');
+        return Redirect::to('/profile');
     }
 
     public function addProfileService($workshop){       
