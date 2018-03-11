@@ -1218,7 +1218,7 @@ class CustomersController extends Controller
         return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
-                'message' => 'Ratings Given',
+                'message' => 'Workshop Details',
                 'body' => $workshop->load('services')
             ],Response::HTTP_OK);                
     }

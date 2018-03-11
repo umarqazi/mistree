@@ -2221,11 +2221,26 @@ class WorkshopsController extends Controller
      *   summary="Workshop Legder",
      *   operationId="get",
      *   produces={"application/json"},
+     *   consumes={"application/json"},
      *   tags={"Workshops"},
      *    @SWG\Parameter(
      *     name="Authorization",
      *     in="header",
      *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="from",
+     *     in="query",
+     *     description="From Date",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="to",
+     *     in="query",
+     *     description="To Date",
      *     required=true,
      *     type="string"
      *   ),
@@ -2241,15 +2256,18 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getLedger(Request $request){
-        if($request->header('content-type') == "application/json"){
-            $workshop   = JWTAuth::authenticate()->load('transactions','balance');        
+        if($request->header('Content-Type') == 'application/json'){            
+            $workshop   = JWTAuth::authenticate();
+            $from = $request->input('from_date');
+            $to = $request->input('to_date');
+            $transactions = WorkshopLedger::where('workshop_id', $workshop->id)->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->get();                    
             return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => true,
-                        'message' => 'Workshop Ledger',
-                        'body' => ['transactions'=>$workshop->transactions]
+                        'message' => 'Workshop Ledger',                        
+                        'body' => ['transactions' => $transactions, 'balance'=> $workshop->balance->balance ]
                     ],Response::HTTP_OK);            
-        }else{
+        }else{            
             $workshop = Auth::guard('workshop')->user()->load('transactions','balance');                        
             $total_earning = $workshop->billings->sum('amount');
             return view::make('workshop_profile.ledger')->with('workshop',$workshop)->with('total_earning', $total_earning);
