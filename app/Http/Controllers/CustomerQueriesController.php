@@ -90,7 +90,7 @@ class CustomerQueriesController extends Controller
             ]);
             $email = "jazib.javed@gems.techverx.com";
             $subject = "Customer Query - ".$request->subject;
-            Mail::send('customer.emails.query', ['customer_name' => $customer->name, 'customer_email' => $customer->email, 'customer_phone' => $customer->con_number,'subject' => 'haris', 'msg' => 'haris' ],
+            Mail::send('customer.emails.query', ['customer_name' => $customer->name, 'customer_email' => $customer->email, 'customer_phone' => $customer->con_number,'subject' => $request->subject, 'msg' => $request->message ],
             function($mail) use ($email, $subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
                 $mail->to($email);
