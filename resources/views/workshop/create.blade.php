@@ -309,7 +309,7 @@
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
                                                                 <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
                                                                     @foreach ($services as $service)
-                                                                        <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
+                                                                        <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
                                                                     @endforeach
                                                                 </select>
                                                                 @if ($errors->has('services'))

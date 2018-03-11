@@ -158,7 +158,7 @@
 						                    	@if($specialty)
 						                    	@foreach($specialty as $spec)
 						                        <tr> 
-						                        	<td>{{ $spec->name }}</td>
+						                        	<td>{{ $spec->name }}@if($spec->is_doorstep){{ " at doorstep" }}@endif</td>
 						                        	<td>{{ $spec->pivot->service_rate }}</td>
 						                        	<td>{{ $spec->pivot->service_time }}</td>	
 						                        	<td>						                        	
