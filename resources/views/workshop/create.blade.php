@@ -348,10 +348,9 @@
                                     <div class="row text-center">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <button type="button" class="btn btn-header">Cancel</button>
+                                                <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                                 <button type="button" class="btn btn-header btn-back-2">Back</button>
-                                                <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
-                                                <input type="submit" value="Save Workshop" class="btn btn-header">
+                                                <input type="submit" value="Create Workshop" class="btn btn-header">
                                             </div>
                                         </div>
                                     </div>
