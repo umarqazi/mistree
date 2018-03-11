@@ -1117,7 +1117,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Vehicle History',
-                    'body' => $bookings
+                    'body' => ['history'    => $bookings]
                 ],Response::HTTP_OK);        
         }        
     }
