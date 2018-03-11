@@ -33,8 +33,8 @@ Route::group(['middleware' => 'admin.guest'], function (){
     Route::post('/login', 'WorkshopAuth\LoginController@login');
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
-
-    Route::post('/register', 'WorkshopAuth\RegisterController@register');
+    Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('/register', 'WorkshopsController@store');
 
     Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
     Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
@@ -50,6 +50,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('/home', 'WorkshopsController@showHome')->name('home');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
+        Route::get('/gallery', 'WorkshopsController@workshop_gallery');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
         Route::post('/profile/{id}', 'WorkshopsController@update_profile');
         Route::get('/ledger', 'WorkshopsController@getLedger');

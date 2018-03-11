@@ -344,3 +344,11 @@ form .form-group {margin-bottom: 0px;}
     border-radius:5px;
     text-align: center;
 }
+.register-form{
+    margin-bottom: 50px; 
+    margin-top: 50px;
+}
+.reg-logo{
+    margin-top: -50px;
+    margin-bottom: 50px;
+}

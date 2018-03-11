@@ -25,7 +25,7 @@
 					                </div>
 					                
 				                    <div class="pull-right">
-				                    	<a href="{{url('admin/workshops/'.$workshop->id.'/')}}" class="btn btn-header export">Back</a>				
+				                    	<a href="{{url('profile')}}" class="btn btn-header export">Back</a>				
 				                    </div>
 					                
 					            </div>
@@ -64,6 +64,6 @@
 		</div>
 	</div>
 </div>
-
+  
 @include('partials.footer')
 @endsection

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WorkshopAuth;
 
 use App\Workshop;
 use Validator;
+use App\Service, View;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
@@ -77,7 +78,8 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        return view('workshop.auth.register');
+        $services = Service::all(); 
+        return View::make('workshop.auth.register', ['services' => $services]);
     }
 
     /**

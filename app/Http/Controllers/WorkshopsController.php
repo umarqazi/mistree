@@ -208,8 +208,14 @@ class WorkshopsController extends Controller
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
-
-        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');       
+        if(Auth::guard('admin')->user())
+        {    
+        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');  
+        }
+        else
+        {
+            return Redirect::to('/home')->with('message', 'Success! Workshop Created.');
+        }     
     }
 
     /**
@@ -568,6 +574,7 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
+        Config::set('auth.providers.users.model', \App\Workshop::class);
         $token = JWTAuth::attempt($credentials);
 
         return response()->json([
@@ -1201,9 +1208,9 @@ class WorkshopsController extends Controller
      * @param $workshop
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addWorkshopService($workshop){
-        $workshop = Workshop::find($workshop);
-        $services = Service::all();        
+    public function addWorkshopService(Workshop $workshop){
+        $services   = $workshop->services()->pluck('service_id')->toArray();
+        $services = Service::whereNotIn('id',$services)->get();
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
     }
     
@@ -2008,12 +2015,12 @@ class WorkshopsController extends Controller
         $address->town          =  $request->town;
         $address->city          =  $request->city;        
         $workshop->address()->save($address);
-        
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $request->all()
+                    'body' => ['workshop' => $workshop ]
                 ],Response::HTTP_OK);               
     }
 
@@ -2229,7 +2236,8 @@ class WorkshopsController extends Controller
                     ],Response::HTTP_OK);            
         }else{
             $workshop = Auth::guard('workshop')->user()->load('transactions','balance');                        
-            return view::make('workshop_profile.ledger')->with('workshop',$workshop);
+            $total_earning = $workshop->billings->sum('amount');
+            return view::make('workshop_profile.ledger')->with('workshop',$workshop)->with('total_earning', $total_earning);
         }
     }
 
@@ -2303,6 +2311,10 @@ class WorkshopsController extends Controller
         return view::make('workshop.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
     }
 
+    public function workshop_gallery(){
+        $workshop = Auth::guard('workshop')->user();
+        return view::make('workshop_profile.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
+    }
 }
 
 
