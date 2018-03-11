@@ -99,9 +99,9 @@ class CustomerQueriesController extends Controller
             });
             return response()->json([
                 'http-status' => Response::HTTP_OK,
-                'status' => true,
+                'status' => 'success',
                 'message' => 'Query has been Added.',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         }
     }
