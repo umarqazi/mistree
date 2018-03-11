@@ -83,9 +83,9 @@
 						                        </tr>
 						                        <tr> 
 						                        	<td>Opening Time</td>
-						                        	<td>{{ $workshop->open_time}}</td>
+						                        	<td>{{ \Carbon\Carbon::parse($workshop->open_time)->format('g:i A') }}</td>
 						                        	<td>Closing Time</td>
-						                        	<td>{{ $workshop->close_time}}</td>
+						                        	<td>{{ \Carbon\Carbon::parse($workshop->close_time)->format('g:i A') }}</td>
 						                        </tr>  
 						                                            
 						                    </tbody>

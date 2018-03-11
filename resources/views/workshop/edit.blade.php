@@ -55,7 +55,7 @@
                                     <select name="type" class="form-control border-input" required="required">
                                         <option value="">Please Select</option>
                                         <option value="Authorized" @if($workshop->type == "Authorized") {{"selected"}} @endif >Authorized</option>
-                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >UnAuthorized</option>
+                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >Unauthorized</option>
                                     </select>
                                 </div>
 
