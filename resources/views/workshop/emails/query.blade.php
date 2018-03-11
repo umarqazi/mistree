@@ -9,7 +9,7 @@
     <h3>{{$subject}}</h3>
     <br>
     <br>
-    <p>{{$message}}}}</p>
+    <p>{{$msg}}}}</p>
     <br>
     <br>
     <p>From:</p><br>
