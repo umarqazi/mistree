@@ -99,6 +99,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/workshops/block', 'WorkshopsController@inactive_workshops');
         Route::get('/workshops/{id}/unblock', 'WorkshopsController@restore');
+        Route::get('/pending-workshops', 'WorkshopsController@pending_workshops');
+        Route::get('/workshops/{id}/approve', 'WorkshopsController@approveWorkshop');
 
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');

@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Dashboard')
+@section('title', 'Authhorized Workshops')
 @section('content')
 
 @include('partials.header')

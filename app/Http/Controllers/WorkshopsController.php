@@ -121,6 +121,15 @@ class WorkshopsController extends Controller
                 ->withInput(Input::except('password','password_confirmation'));
         }
 
+        if(Auth::guard('admin')->user())
+        {
+            $is_approved = true;
+        }
+        else
+        {
+            $is_approved = false;
+        }
+
         //Insert Workshop data from request
         $workshop = Workshop::create([
             'name'          => $request->name,
@@ -133,7 +142,7 @@ class WorkshopsController extends Controller
             'slots'         => $request->team_slot,
             'open_time'     => $request->open_time,
             'close_time'    => $request->close_time,
-            'is_approved'   => true,
+            'is_approved'   => $is_approved,
         ]);
 
         //Insert Address data from request
@@ -384,6 +393,12 @@ class WorkshopsController extends Controller
         $workshop = Workshop::withTrashed()->find($id)->restore();
         Session::flash('message', 'Success! Workshop Restored.');
         return redirect ('admin/workshops');
+    }
+
+    public function pending_workshops()
+    {        
+        $workshops = Workshop::where('is_approved',false)->orderBy('created_at', 'desc')->get();
+        return View::make('workshop.pending')->with('workshops', $workshops);;
     }
     
     /**
@@ -956,7 +971,7 @@ class WorkshopsController extends Controller
     public function approveWorkshop($id){
         //Approve Workshop
         $workshop = Workshop::find($id);
-        $workshop->is_approved       = 1;
+        $workshop->is_approved       = true;
         $workshop->save();
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.emails.confirmationEmail', ['name' => $workshop->name],
