@@ -32,7 +32,7 @@ class CustomerQueriesController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/customer/customer-queries",
+     *   path="/api/customer/customerQueries",
      *   summary="Add Customer Query",
      *   operationId="add_customer_query",
      *   produces={"application/json"},
