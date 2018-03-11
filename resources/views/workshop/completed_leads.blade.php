@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Dashboard')
+@section('title', 'Completed Leads')
 @section('content')
 
 @include('partials.header')
