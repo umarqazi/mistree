@@ -758,7 +758,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => 'Invalid Customer!',
-                'body' => ''
+                'body' => null
             ],Response::HTTP_OK);
         } else {
             return response()->json([
@@ -1110,7 +1110,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => 'No History Found',
-                    'body' => ''
+                    'body' => null
                 ],Response::HTTP_OK);        
         }else{
             return response()->json([

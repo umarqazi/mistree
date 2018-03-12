@@ -340,7 +340,7 @@ class CarsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Car Added!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);
     }
 
@@ -464,7 +464,7 @@ class CarsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => 'Invalid Request!',
-                    'body' => ''
+                    'body' => null
                 ],Response::HTTP_OK);
         } else {
             return response()->json([

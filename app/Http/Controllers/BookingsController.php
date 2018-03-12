@@ -35,13 +35,6 @@ class BookingsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="customer_id",
-     *     in="formData",
-     *     description="Customer id",
-     *     required=true,
-     *     type="integer"
-     *   ),
-     *   @SWG\Parameter(
      *     name="workshop_id",
      *     in="formData",
      *     description="Workshop ID",
@@ -105,18 +98,19 @@ class BookingsController extends Controller
      *
      */
 	public function createBooking(Request $request){
-		$rules = [
-            'customer_id'                    => 'required|integer',
+        $customer_id = JWTAuth::authenticate()->id;        
+		$rules = [            
             'workshop_id'                    => 'required|integer',
             'car_id'                         => 'required|integer',
             'job_date'                       => 'required',            
             'job_time'                       => 'required',
             'services'                       => 'required',             
-            'is_doorstep'                    => 'required|boolean',
-            'customer_address_id'            => 'required|integer'
+            'is_doorstep'                    => 'required',
+            'customer_address_id'            => 'required|integer',
+            'vehicle_no'                     => 'regex:^[A-Z]{2}[A-Z]{0,2}[-]0?[1-9]{1}\d{0,3}$'
         ];        
 
-        $input = $request->only('customer_id', 'workshop_id', 'car_id', 'job_date', 'job_time', 'services', 'is_doorstep', 'customer_address_id');
+        $input = $request->only('workshop_id', 'car_id', 'job_date', 'job_time', 'services', 'is_doorstep', 'customer_address_id');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -130,7 +124,7 @@ class BookingsController extends Controller
 
         $booking = new Booking;
 
-        $booking->customer_id            = $request->customer_id;
+        $booking->customer_id            = $customer_id;
         $booking->workshop_id            = $request->workshop_id;
 		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
@@ -198,7 +192,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking Accepted',
-                    'body' => ''
+                    'body' => null
                 ],Response::HTTP_OK);
     }
 
@@ -238,7 +232,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking Rejected',
-                    'body' => ''
+                    'body' => null
                 ],Response::HTTP_OK);
     }
 
@@ -543,7 +537,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => false,
                             'message' => 'No Leads Found',
-                            'body' => ''
+                            'body' => null
                         ],Response::HTTP_OK);            
             }else{            
                 return response()->json([
@@ -598,7 +592,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'No Accepted Leads Found',
-                            'body' => ''
+                            'body' => null
                         ],Response::HTTP_OK);            
             }else{            
                 return response()->json([
@@ -651,7 +645,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'No rejected Leads Found',
-                            'body' => ''
+                            'body' => null
                         ],Response::HTTP_OK);            
             }else{
                 return response()->json([
@@ -704,7 +698,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'No Completed Leads Found',
-                            'body' => ''
+                            'body' => null
                         ],Response::HTTP_OK);            
             }else{
                 return response()->json([
