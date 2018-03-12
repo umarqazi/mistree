@@ -33,8 +33,8 @@ Route::group(['middleware' => 'admin.guest'], function (){
     Route::post('/login', 'WorkshopAuth\LoginController@login');
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
-
-    Route::post('/register', 'WorkshopAuth\RegisterController@register');
+    Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
+    Route::post('/register', 'WorkshopsController@store');
 
     Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
     Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
@@ -50,8 +50,9 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('/home', 'WorkshopsController@showHome')->name('home');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
+        Route::get('/gallery', 'WorkshopsController@workshop_gallery');
         Route::get('/profile/{id}/edit', 'WorkshopsController@edit_profile');
-        Route::post('/profile/{id}', 'WorkshopsController@update_profile');
+        Route::patch('/profile/{id}', 'WorkshopsController@update_profile');
         Route::get('/ledger', 'WorkshopsController@getLedger');
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
@@ -98,6 +99,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/workshops/block', 'WorkshopsController@inactive_workshops');
         Route::get('/workshops/{id}/unblock', 'WorkshopsController@restore');
+        Route::get('/pending-workshops', 'WorkshopsController@pending_workshops');
+        Route::get('/workshops/{id}/approve', 'WorkshopsController@approveWorkshop');
 
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');

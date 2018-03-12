@@ -121,6 +121,15 @@ class WorkshopsController extends Controller
                 ->withInput(Input::except('password','password_confirmation'));
         }
 
+        if(Auth::guard('admin')->user())
+        {
+            $is_approved = true;
+        }
+        else
+        {
+            $is_approved = false;
+        }
+
         //Insert Workshop data from request
         $workshop = Workshop::create([
             'name'          => $request->name,
@@ -133,7 +142,7 @@ class WorkshopsController extends Controller
             'slots'         => $request->team_slot,
             'open_time'     => $request->open_time,
             'close_time'    => $request->close_time,
-            'is_approved'   => true,
+            'is_approved'   => $is_approved,
         ]);
 
         //Insert Address data from request
@@ -208,8 +217,14 @@ class WorkshopsController extends Controller
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
-
-        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');       
+        if(Auth::guard('admin')->user())
+        {    
+        return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');  
+        }
+        else
+        {
+            return Redirect::to('/home')->with('message', 'Success! Workshop Created.');
+        }     
     }
 
     /**
@@ -378,6 +393,12 @@ class WorkshopsController extends Controller
         $workshop = Workshop::withTrashed()->find($id)->restore();
         Session::flash('message', 'Success! Workshop Restored.');
         return redirect ('admin/workshops');
+    }
+
+    public function pending_workshops()
+    {        
+        $workshops = Workshop::where('is_approved',false)->orderBy('created_at', 'desc')->get();
+        return View::make('workshop.pending')->with('workshops', $workshops);;
     }
     
     /**
@@ -568,6 +589,7 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'password' => $request->password,
         ];
+        Config::set('auth.providers.users.model', \App\Workshop::class);
         $token = JWTAuth::attempt($credentials);
 
         return response()->json([
@@ -949,7 +971,7 @@ class WorkshopsController extends Controller
     public function approveWorkshop($id){
         //Approve Workshop
         $workshop = Workshop::find($id);
-        $workshop->is_approved       = 1;
+        $workshop->is_approved       = true;
         $workshop->save();
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.emails.confirmationEmail', ['name' => $workshop->name],
@@ -1201,9 +1223,9 @@ class WorkshopsController extends Controller
      * @param $workshop
      * @return \Illuminate\Http\JsonResponse
      */
-    public function addWorkshopService($workshop){
-        $workshop = Workshop::find($workshop);
-        $services = Service::all();        
+    public function addWorkshopService(Workshop $workshop){
+        $services   = $workshop->services()->pluck('service_id')->toArray();
+        $services = Service::whereNotIn('id',$services)->get();
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
     }
     
@@ -1377,7 +1399,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => '',
-            'body' => $workshops,
+            'body' => ['workshops' => $workshops],
         ],Response::HTTP_OK);
     }
 
@@ -1629,94 +1651,109 @@ class WorkshopsController extends Controller
      $workshop = Workshop::find($id);
      $services = Service::all();
      // show the edit form and pass the workshop   
-     return View::make('workshop_profile.edit')->with('workshop', $workshop)->with('services',$services);                         
+     return View::make('workshop_profile.edit')->with('workshop', $workshop)->with('services',$services)->with('images', $workshop->images);                         
     }
 
     public function update_profile(Request $request, $id)
     {
-        $rules = [           
-                        'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
-                        'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-                        'cnic'                           => 'required|digits:13',
-                        'mobile'                         => 'required|digits:11',
-                        'landline'                       => 'digits:11',
-                        'open_time'                      => 'required',
-                        'close_time'                     => 'required',
-                        'type'                           => 'required',
-                        'profile_pic'                    => 'image|mimes:jpg,png',  
-                        'cnic_image'                     => 'image|mimes:jpg,png',  
-            
-                        'shop'                           => 'required|numeric',
-                        'building'                       => 'regex:/^[\pL\s\-]+$/u',
-                        'block'                          => 'regex:/^[\pL\s\-]+$/u',
-                        'street'                         => 'required|string',
-                        'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-                        'city'                           => 'required|regex:/^[\pL\s\-]+$/u'
-                    ];  
-                                
-                    $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'street', 'town', 'city');
-                    $validator = Validator::make($input, $rules);
-                    if($validator->fails()) {
-                        return Redirect::back()
-                            ->withErrors($validator);
-                    } 
-            
-                     // Update workshop
-                    $workshop = Workshop::find($id);
-            
-                    if ($request->hasFile('profile_pic')) 
-                    {
-                        $ws_name = str_replace(' ', '_', $request->name);
-                        $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/logo', new File($request->profile_pic), 'public');
-                       
-                        $profile_pic_path = config('app.s3_bucket_url').$s3_path;
-                        $profile_pic = $profile_pic_path;
-                        
-                    }
-                    else
-                    {
-                      $profile_pic         =  $workshop->profile_pic;
-                    }
-            
-            
-                    if ($request->hasFile('cnic_image')) 
-                    {
-                        $ws_name = str_replace(' ', '_', $request->name);
-                        $s3_path =  Storage::disk('s3')->putFile('workshops/'.$ws_name.'/cnic', new File($request->cnic_image), 'public');
-                        $cnic_pic_path = config('app.s3_bucket_url').$s3_path;
-                        $cnic_image = $cnic_pic_path;
-                    }
-                    else
-                    {
-                      $cnic_image         =  $workshop->cnic_image;
-                    }
-            
-                    $workshop->name             = Input::get('name');        
-                    $workshop->owner_name       = Input::get('owner_name');  
-                    $workshop->cnic             = Input::get('cnic');
-                    $workshop->mobile           = Input::get('mobile');
-                    $workshop->landline         = Input::get('landline');
-                    $workshop->type             = Input::get('type');
-                    $workshop->profile_pic      = $profile_pic;
-                    $workshop->cnic_image      =  $cnic_image;
-                    $workshop->open_time        = Input::get('open_time');
-                    $workshop->close_time       = Input::get('close_time');
-                    $workshop->save();   
-            
-                    // Update Workshop Address
-                    $address = WorkshopAddress::find($workshop->address->id);
-                                
-                    $address->shop              = Input::get('shop');
-                    $address->building          = Input::get('building');
-                    $address->street         = Input::get('street');
-                    $address->block             = Input::get('block');
-                    $address->town              = Input::get('town');
-                    $address->city              = Input::get('city');
-                    $address->town              = Input::get('town');                
-                    $address->update();
-                    
-                    Session::flash('message', 'Success! Workshop Updated.');
-                    return Redirect::to('/profile');
+        $rules = [
+            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
+            'cnic'                           => 'required|digits:13',
+            'mobile'                         => 'required|digits:11',
+            'landline'                       => 'digits:11|nullable',
+            'open_time'                      => 'required',
+            'close_time'                     => 'required',
+            'type'                           => 'required|in:Authorized,Unauthorized',
+            'team_slots'                     => 'integer',
+            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
+            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
+            'images.*'                       => 'image|mimes:jpg,png,jpeg',
+
+            'shop'                           => 'required|numeric',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'nullable|string',
+            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+        ];
+
+        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $request->offsetUnset('password');
+            return Redirect::back()
+                ->withErrors($validator);
+        }
+
+         // Update workshop
+        $workshop = Workshop::find($id);        
+        if ($request->hasFile('profile_pic')) 
+        {            
+            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
+            $profile_pic =  config('app.s3_bucket_url').$profile_pic;
+        }
+        else
+        {
+            $profile_pic         =  $workshop->profile_pic;
+        }
+
+
+        if ($request->hasFile('cnic_image')) 
+        {
+            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
+        }
+        else
+        {
+            $cnic_image         =  $workshop->cnic_image;
+        }
+
+        $workshop->name             = Input::get('name');        
+        $workshop->owner_name       = Input::get('owner_name');  
+        $workshop->cnic             = Input::get('cnic');
+        $workshop->mobile           = Input::get('mobile');
+        $workshop->landline         = Input::get('landline');
+        $workshop->type             = Input::get('type');
+        $workshop->slots            = Input::get('team_slot');
+        $workshop->profile_pic      = $profile_pic;
+        $workshop->cnic_image       = $cnic_image;
+        $workshop->open_time        = Input::get('open_time');
+        $workshop->close_time       = Input::get('close_time');        
+        $workshop->save();   
+
+        // Update Workshop Address
+        $address = WorkshopAddress::find($workshop->address->id);        
+        $address->shop              = Input::get('shop');
+        $address->building          = Input::get('building');
+        $address->street            = Input::get('street');
+        $address->block             = Input::get('block');
+        $address->town              = Input::get('town');
+        $address->city              = Input::get('city');
+        $address->update();        
+
+        if($request->hasFile('images'))
+        {
+            if(!is_null($workshop->images)){
+                $images = $workshop->images;
+                foreach($images as $image){
+                    $image = WorkshopImages::find($image->id);                                    
+                    $image->delete();                    
+                }
+            }            
+            foreach($request->file('images') as $file)
+            {
+                $images = new WorkshopImages;
+                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
+                $image =  config('app.s3_bucket_url').$image;
+                $images->url            = $image;
+                $images->workshop_id    = $workshop->id;
+                $images->save();
+            }
+        }
+        
+        Session::flash('message', 'Success! Workshop Updated');
+        return Redirect::to('/profile');
     }
 
     public function addProfileService($workshop){       
@@ -1841,7 +1878,7 @@ class WorkshopsController extends Controller
 
         if(count($leads)){
             $leads_count     = count($leads);
-            $customer_count  = count($leads->customer);
+            $customer_count  = 0;
         }
         else{
             $leads_count     = 0;
@@ -2008,12 +2045,12 @@ class WorkshopsController extends Controller
         $address->town          =  $request->town;
         $address->city          =  $request->city;        
         $workshop->address()->save($address);
-        
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $request->all()
+                    'body' => ['workshop' => $workshop ]
                 ],Response::HTTP_OK);               
     }
 
@@ -2199,11 +2236,26 @@ class WorkshopsController extends Controller
      *   summary="Workshop Legder",
      *   operationId="get",
      *   produces={"application/json"},
+     *   consumes={"application/json"},
      *   tags={"Workshops"},
      *    @SWG\Parameter(
      *     name="Authorization",
      *     in="header",
      *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="from",
+     *     in="query",
+     *     description="From Date",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="to",
+     *     in="query",
+     *     description="To Date",
      *     required=true,
      *     type="string"
      *   ),
@@ -2219,17 +2271,21 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getLedger(Request $request){
-        if($request->header('content-type') == "application/json"){
-            $workshop   = JWTAuth::authenticate()->load('transactions','balance');        
+        if($request->header('Content-Type') == 'application/json'){            
+            $workshop   = JWTAuth::authenticate();
+            $from = $request->input('from_date');
+            $to = $request->input('to_date');
+            $transactions = WorkshopLedger::where('workshop_id', $workshop->id)->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->get();                    
             return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => true,
-                        'message' => 'Workshop Ledger',
-                        'body' => ['transactions'=>$workshop->transactions]
+                        'message' => 'Workshop Ledger',                        
+                        'body' => ['transactions' => $transactions, 'balance'=> $workshop->balance->balance ]
                     ],Response::HTTP_OK);            
-        }else{
+        }else{            
             $workshop = Auth::guard('workshop')->user()->load('transactions','balance');                        
-            return view::make('workshop_profile.ledger')->with('workshop',$workshop);
+            $total_earning = $workshop->billings->sum('amount');
+            return view::make('workshop_profile.ledger')->with('workshop',$workshop)->with('total_earning', $total_earning);
         }
     }
 
@@ -2303,6 +2359,10 @@ class WorkshopsController extends Controller
         return view::make('workshop.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
     }
 
+    public function workshop_gallery(){
+        $workshop = Auth::guard('workshop')->user();
+        return view::make('workshop_profile.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
+    }
 }
 
 

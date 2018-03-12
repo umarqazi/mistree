@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Dashboard')
+@section('title', 'Workshops')
 @section('content')
 
 @include('partials.header')
@@ -34,6 +34,7 @@
                                         <a href="{{ url('admin/workshops/block') }}" class="dropdown-buttons">Blocked Workshops</a>
                                         <a href="{{ url('admin/authorized-workshops') }}" class="dropdown-buttons">Authorized Workshops</a> 
                                         <a href="{{ url('admin/unauthorized-workshops') }}" class="dropdown-buttons">UnAuthorized Workshops</a>
+                                        <a href="{{ url('admin/pending-workshops') }}" class="dropdown-buttons">Pending Approvals</a>
                                     </div>
                                 </div>
                             </div>

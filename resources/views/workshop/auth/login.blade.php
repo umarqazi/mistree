@@ -51,11 +51,14 @@
                                         </div>
                                         <div class="form-group">
                                             <div class="col-md-12">
-                                                <div class="checkbox ckhbx">
+                                                <div class="ckhbx">
                                                     <label>
                                                         <input type="checkbox" name="remember"> Remember Me
                                                     </label>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <a href="{{ url('/register') }}">Click Here Register New Workshop </a>
                                             </div>
                                         </div>
                                         <div class="row">

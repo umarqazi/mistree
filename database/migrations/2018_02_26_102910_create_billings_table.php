@@ -24,8 +24,9 @@ class CreateBillingsTable extends Migration
             $table->decimal('amount', 11, 2);            
             $table->decimal('paid_amount', 11, 2)->nullable();
             $table->decimal('lead_charges',7,2);
-            $table->tinyInteger('ratings')->nullable();    
+            $table->decimal('ratings', 2,1)->nullable();    
             $table->text('review')->nullable();
+            $table->boolean('is_free')->default(0);
             $table->timestamps();
         });
     }

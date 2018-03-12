@@ -16,8 +16,7 @@
                                   <p>Add Services</p>
                               </div>
                           </div>
-                  </div>
-                  <h1>Adeel Junior Dev</h1>
+                  </div>                  
                   <form method="POST" action="{{ url('profile/store-profile-service/') }}">
                     <input type="hidden" value="{{$workshop->id}}" name="workshop_id">
                     <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">

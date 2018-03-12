@@ -1,8 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Create New Workshop')
 @section('content')
-
-    @include('partials.header')
+@include('partials.header')
 
 
     <div class="content">
@@ -22,7 +21,6 @@
                                 </div>
                             </div>
                             <div class="clear20"></div>
-
 
 
                             <!--###############################################-->
@@ -224,7 +222,7 @@
                                                 @endif
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label">Building No. <span class="manadatory"></span></label>
+                                                <label class="control-label">Building <span class="manadatory"></span></label>
                                                 <input type="text" class="form-control border-input" name="building" value="{{ old('building') }}">
                                                 @if ($errors->has('building'))
                                                     <span class="help-block">
@@ -311,7 +309,7 @@
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
                                                                 <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
                                                                     @foreach ($services as $service)
-                                                                        <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
+                                                                        <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
                                                                     @endforeach
                                                                 </select>
                                                                 @if ($errors->has('services'))
@@ -350,10 +348,9 @@
                                     <div class="row text-center">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <button type="button" class="btn btn-header">Cancel</button>
+                                                <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                                 <button type="button" class="btn btn-header btn-back-2">Back</button>
-                                                <button type="button" class="btn btn-header" onclick="addmoreServices(event)">Add More Services</button>
-                                                <input type="submit" value="Save Workshop" class="btn btn-header">
+                                                <input type="submit" value="Create Workshop" class="btn btn-header">
                                             </div>
                                         </div>
                                     </div>

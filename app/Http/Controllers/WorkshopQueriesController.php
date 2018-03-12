@@ -64,13 +64,13 @@ class WorkshopQueriesController extends Controller
      */
     /**
      * @SWG\Post(
-     *   path="/api/workshop/add-workshop-query",
+     *   path="/api/workshop/workshop-queries",
      *   summary="Add Workshop Query",
      *   operationId="add_workshop_query",
      *   produces={"application/json"},
      *   tags={"Queries"},
-     *   consumes={"application/xml", "application/json"},
-     *   produces={"application/xml", "application/json"},
+     *   consumes={"application/json"},
+     *   produces={"application/json"},
      *   @SWG\Parameter(
      *     name="Authorization",
      *     in="header",
@@ -99,7 +99,7 @@ class WorkshopQueriesController extends Controller
      */
     public function store(Request $request)
     {   
-        if( $request->header('Content-Type') == 'application/json'){
+        if( $request->header('Content-Type') == 'application/x-www-form-urlencoded'){
             $workshop = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
@@ -120,13 +120,12 @@ class WorkshopQueriesController extends Controller
                 'message'       => $request->message,
                 'status'        => 'Open',
                 'is_resolved'   => false
-            ]);
-            $email = "jazib.javed@gems.techverx.com";        
+            ]);      
             $subject = "Workshop Query - ".$request->subject;
-            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
-            function($mail) use ($email, $subject){
+            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
+            function($mail) use ($subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email);
+                $mail->to(config('app.mail_username'));
                 $mail->subject($subject);
             });
             return response()->json([
@@ -152,13 +151,12 @@ class WorkshopQueriesController extends Controller
                 'message'       => $request->message,
                 'status'        => 'Open',
                 'is_resolved'   => false
-            ]);
-            $email = "jazib.javed@gems.techverx.com";        
+            ]);      
             $subject = "Workshop Query - ".$request->subject;
-            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'message' => $request->message],
-            function($mail) use ($email, $subject){
+            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
+            function($mail) use ($subject){
                 $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email);
+                $mail->to(config('app.mail_username'));
                 $mail->subject($subject);
             });
             Session::flash('success_message', 'Successfully Added the Request!');

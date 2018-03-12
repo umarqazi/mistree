@@ -46,15 +46,13 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::get('get-workshop/{workshop_id}','CustomersController@getWorkshopDetails');		
 
 //		Route For Customer Password Reset
-      Route::post('password-reset', 'CustomersController@passwordReset');
-      Route::get('profile', 'CustomersController@getCustomerAddressAndCars');
-      Route::post('add-customer-address', 'CustomersController@addCustomerAddress');
-      Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
-      Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
-
-      Route::resource('customer-queries', 'CustomerQueriesController', ['only' => ['store']]);
-      Route::patch('update-profile-image','CustomersController@updateProfileImage');
-
+      	Route::post('password-reset', 'CustomersController@passwordReset');
+      	Route::get('profile', 'CustomersController@getCustomerAddressAndCars');
+      	Route::post('add-customer-address', 'CustomersController@addCustomerAddress');
+      	Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
+      	Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
+      	Route::resource('customer-queries', 'CustomerQueriesController', ['only' => ['store']]);
+        Route::patch('update-profile-image','CustomersController@updateProfileImage');
 	});
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
@@ -95,10 +93,10 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('leads/accepted','BookingsController@acceptedLeads');
 		Route::get('leads/rejected','BookingsController@rejectedLeads');
 		Route::get('leads/completed','BookingsController@completedLeads');
-    Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
+    	Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
 
 //		Route For Workshop Password Reset
-    Route::post('password-reset', 'WorkshopsController@passwordReset');
+    	Route::post('password-reset', 'WorkshopsController@passwordReset');
 //		Route For Workshop Support Query
 //      Route For Workshop Customers
         Route::get('get-customers', 'WorkshopsController@getCustomers');

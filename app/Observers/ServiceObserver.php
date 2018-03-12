@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Service;
+use Session;
 
 class ServiceObserver
 {
@@ -14,7 +15,11 @@ class ServiceObserver
      */
     public function created(Service $service)
     {
-        //
+        $inactive_services  = Service::onlyTrashed()->where('name',$service->name)->where('is_doorstep',$service->is_doorstep)->get();
+        foreach($inactive_services as $inactive_service)
+        {
+            $inactive_service->forcedelete();
+        }
     }
 
     /**

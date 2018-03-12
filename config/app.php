@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'MyMistri'),
 
     /*
     |--------------------------------------------------------------------------
@@ -235,11 +235,6 @@ return [
 
     ],
 
-    'L5_SWAGGER_GENERATE_ALWAYS' => env('L5_SWAGGER_GENERATE_ALWAYS', 'true'),
-    'mail_username' => env('MAIL_USERNAME', 'jazib.javed@gems.techverx.com'),  
-    's3_key' => env('S3_KEY', 'AKIAJSC4IOOJZAZG2W2A'),
-    's3_secret' => env('S3_SECRET', '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'),
-    's3_region' => env('S3_REGION','us-west-2'),
-    's3_bucket' => env('S3_BUCKET', 'mymystri-staging'),
+    'mail_username' => env('MAIL_USERNAME', 'jazib.javed@gems.techverx.com'),
     's3_bucket_url' => env('S3_BUCKET_URL','https://s3-us-west-2.amazonaws.com/mymystri-staging/'),
 ];

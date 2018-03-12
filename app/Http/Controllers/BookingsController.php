@@ -84,6 +84,20 @@ class BookingsController extends Controller
      *     required=true,
      *     type="string"     
      *   ),
+     *   @SWG\Parameter(
+     *     name="is_doorstep",
+     *     in="formData",
+     *     description="Doorstep or not",
+     *     required=true,
+     *     type="boolean"     
+     *   ),
+     *   @SWG\Parameter(
+     *     name="customer_address_id",
+     *     in="formData",
+     *     description="Customer Address for booking",
+     *     required=true,
+     *     type="integer"     
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -97,17 +111,19 @@ class BookingsController extends Controller
             'car_id'                         => 'required|integer',
             'job_date'                       => 'required',            
             'job_time'                       => 'required',
-            'services'                       => 'required'             
+            'services'                       => 'required',             
+            'is_doorstep'                    => 'required|boolean',
+            'customer_address_id'            => 'required|integer'
         ];        
 
-        $input = $request->only('customer_id', 'workshop_id', 'car_id', 'job_date', 'job_time', 'services');
+        $input = $request->only('customer_id', 'workshop_id', 'car_id', 'job_date', 'job_time', 'services', 'is_doorstep', 'customer_address_id');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
+                    'message' => $validator->messages()->first(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         }
@@ -119,14 +135,16 @@ class BookingsController extends Controller
 		$booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->response 			     = 'waiting';
-        $booking->job_status 			 = 'not-started';
+        $booking->is_accepted 			 = false;
+        $booking->job_status 			 = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
+        $booking->customer_address_id    = $request->customer_address_id;
+        $booking->is_doorstep            = $request->is_doorstep;
 
         $booking->save();
 
         //Insert Services data from request        
-        $services = $request->services;        
+        $services = json_decode($request->services);        
         if(!empty($services)){
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
@@ -135,11 +153,12 @@ class BookingsController extends Controller
             }
         }        
 
+        $booking->services;
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Booking create',
-                    'body' => $request->all()
+                    'message' => 'Booking created',
+                    'body' => ['booking' => $booking ]
                 ],Response::HTTP_OK);
 
 	}
@@ -172,9 +191,9 @@ class BookingsController extends Controller
      *
     */
     public function acceptBooking($booking_id){
-        $workshop_id = Auth::user()->id;
+        $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['response' => 'accepted']);
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -211,9 +230,10 @@ class BookingsController extends Controller
      * )     
     */
     public function rejectBooking($booking_id){
-        $workshop_id = Auth::user()->id;
+        $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['response' => 'rejected']);
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => false, 'job_status' => 
+            'rejected']);
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -267,7 +287,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking Services',
-                    'body' => $billing
+                    'body' => [ 'billing' => $billing ]
                 ],Response::HTTP_OK);
     }
 
@@ -298,7 +318,8 @@ class BookingsController extends Controller
      * )
      */
     public function completeLead(Request $request){
-        $workshop_id = Auth::user()->id;
+        $workshop   = JWTAuth::authenticate();
+        $workshop_id = $workshop->id;
         $rules = [                        
             'booking_id'                        => 'required|integer',            
         ];   
@@ -310,55 +331,58 @@ class BookingsController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
+                    'message' => $validator->messages()->first(),
                     'body' => $request->all()
                 ],Response::HTTP_OK);
         }             
 
-        $booking = Booking::find($request->booking_id);                            
-        $booking_services = $booking->services;
+        $booking = Booking::find($request->booking_id);                                    
+        $bill = $booking->services->pluck('pivot')->sum('service_rate');
+        $lead_charges = $booking->services->pluck('pivot')->sum('lead_charges');
+        $loyalty_points = $booking->services->pluck('pivot')->sum('loyalty_points');
+        
         $booking->job_status = 'completed';
-
-        $loyalty_points = 0;
-        $lead_charges = 0;
-        $bill = 0;
-        foreach($booking_services as $service){
-            $bill = $service->pivot->service_rate + $bill;            
-            $lead_charges = $service->pivot->lead_charges + $lead_charges;
-            $loyalty_points = $service->pivot->loyalty_points + $loyalty_points;
-        }        
         $booking->loyalty_points = $loyalty_points;
         $booking->save();
 
+        $customer = Customer::find($booking->customer_id);
+        $customer->loyalty_points = $loyalty_points + $customer->loyalty_points;        
+        $customer->save();
+
+            
         $billing = new Billing;
         $billing->workshop_id                = $workshop_id;         
         $billing->booking_id                 = $request->booking_id;
         $billing->amount                     = $bill;
         $billing->customer_id                = $booking->customer_id;
-        $billing->lead_charges               = $lead_charges;
 
-        $billing->save();
+        if($workshop->billings->count()>=10){
+            $billing->lead_charges           = $lead_charges;
+            $billing->is_free                = false;
+            $billing->save();
 
-        $workshop = Workshop::find($workshop_id);
-        $balance = $workshop->balance->balance;        
-        $new_balance = $balance - $lead_charges;
+            $workshop = Workshop::find($workshop_id);
+            $balance = $workshop->balance->balance;        
+            $new_balance = $balance - $lead_charges;
+            
+            $workshop->balance->update(['balance'=>$new_balance]);
 
-        $customer = Customer::find($booking->customer_id);
-        $customer->loyalty_points = $loyalty_points;        
-        $customer->save();
+            $transaction = new WorkshopLedger;
+            $transaction->workshop_id                   = $workshop_id;         
+            $transaction->booking_id                    = $request->booking_id;         
+            $transaction->amount                        = $lead_charges;         
+            $transaction->transaction_type              = 'Job-Billing';         
+            $transaction->unadjusted_balance            = $balance;         
+            $transaction->adjusted_balance              = $new_balance;
 
-        $workshop->balance->update(['balance'=>$new_balance]);
+            $transaction->save();
 
-        $transaction = new WorkshopLedger;
 
-        $transaction->workshop_id                   = $workshop_id;         
-        $transaction->booking_id                    = $request->booking_id;         
-        $transaction->amount                        = $lead_charges;         
-        $transaction->transaction_type              = 'Job-Billing';         
-        $transaction->unadjusted_balance            = $balance;         
-        $transaction->adjusted_balance              = $new_balance;
-
-        $transaction->save();
+        }else{
+            $billing->lead_charges           = 0;
+            $billing->is_free                = true;           
+            $billing->save();
+        }
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -417,7 +441,7 @@ class BookingsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Millage Entered',
-                'body' => ''
+                'body' => ['booking' => $booking ]
             ],Response::HTTP_OK);      
     }
 
@@ -428,17 +452,17 @@ class BookingsController extends Controller
 
     public function workshopRejectedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','rejected'), 'workshop'=>$workshop]);       
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'rejected')->where('is_accepted' , false ), 'workshop'=>$workshop]);       
     }
 
     public function workshopAcceptedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('response','accepted'), 'workshop'=>$workshop]);       
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('is_accepted',true), 'workshop'=>$workshop]);       
     }
 
     public function workshopCompletedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status','completed'), 'workshop'=>$workshop]);       
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'completed')->where('is_accepted' , true ), 'workshop'=>$workshop]);       
     }    
 
     // Leads
@@ -466,9 +490,10 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getLeadsInfo(){
-        $workshop = Auth::guard('workshop')->user();
-        $accepted_leads = $workshop->bookings()->where('response','accepted')->get()->count();
-        $completed_leads = $workshop->bookings()->where('job_status', 'completed')->get()->count();
+        $workshop   = JWTAuth::authenticate();        
+        $accepted_leads = $workshop->bookings()->where('is_accepted', true)->get()->count();
+        $completed_leads = $workshop->bookings()->where('is_accepted', true)->where('job_status', 'completed')->get()->count();
+        $rejected_leads = $workshop->bookings()->where('is_accepted', false)->where('job_status', 'rejected')->get()->count();
         $received_leads = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
@@ -525,7 +550,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'Workshop History',
-                            'body' => $bookings
+                            'body' => ['bookings' => $bookings]
                         ],Response::HTTP_OK);
             }
         }
@@ -563,7 +588,7 @@ class BookingsController extends Controller
      */
     public function acceptedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->with('services')->get();
+        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -580,7 +605,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'Accepted Leads',
-                            'body' => $accepted_leads
+                            'body' => ['accepted_leads' => $accepted_leads]
                         ],Response::HTTP_OK);
             }     
         } 
@@ -618,7 +643,7 @@ class BookingsController extends Controller
     public function rejectedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->with('services')->get();
+        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -633,7 +658,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'Rejected Leads',
-                            'body' => $rejected_leads
+                            'body' => ['rejected_leads' => $rejected_leads]
                         ],Response::HTTP_OK);            
             } 
          }
@@ -670,7 +695,7 @@ class BookingsController extends Controller
      */
     public function completedLeads(Request $request){
         $workshop = Auth::guard('workshop')->user();
-        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->with('services')->get();
+        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -686,7 +711,7 @@ class BookingsController extends Controller
                         'http-status' => Response::HTTP_OK,
                         'status' => true,
                         'message' => 'Completed Leads',
-                        'body' => $completed_leads
+                        'body' => ['completed_leads' => $completed_leads]
                     ],Response::HTTP_OK);            
             }   
         }   
