@@ -40,6 +40,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::patch('car', 'CarsController@unassignCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
+		Route::post('create-booking','BookingsController@createBooking');
 		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
 		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');
 		Route::patch('leave-rating/{billing_id}', 'CustomersController@insertRatings');
@@ -82,8 +83,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::post('update-images','WorkshopsController@updateImages');
 		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');
 		Route::patch('update-cnic-image','WorkshopsController@updateCnicImage');
-		Route::get('services','WorkshopsController@workshopServices');
-		Route::post('create-booking','BookingsController@createBooking');
+		Route::get('services','WorkshopsController@workshopServices');		
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
 		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
 		Route::post('complete-job','BookingsController@completeLead');

@@ -818,7 +818,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'A reset email has been sent! Please check your email.',
-            'body' => ''
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -1478,7 +1478,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service Added!!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);                  
     }
      /**
@@ -1552,7 +1552,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service Updated!!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);             
 
     }
@@ -1608,7 +1608,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service deleted!!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);
     }
     /**
@@ -1637,7 +1637,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'success',
-            'body'          => $workshop->services
+            'body'          => ['services' => $workshop->services]
         ],Response::HTTP_OK);   
     }
 
@@ -1935,7 +1935,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'success',
-            'body' => $workshop->address
+            'body' => ['address' => $workshop->address]
         ],Response::HTTP_OK);
     }
 
@@ -2117,7 +2117,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Images Uploaded Successfully!',
-                    'body' => $url_array
+                    'body' => ['images' => $url_array]
                 ],Response::HTTP_OK);               
     }
 
@@ -2164,7 +2164,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $url
+                    'body' => ['profile_picture' => $url]
                 ],Response::HTTP_OK);               
     }
 
@@ -2211,7 +2211,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $url
+                    'body' => ['cnic_image' => $url]
                 ],Response::HTTP_OK);               
     }
 
@@ -2339,7 +2339,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'success',
-            'body' => Customer::whereIn('id', $bookings)->get()
+            'body' => ['customers' => Customer::whereIn('id', $bookings)->get()]
         ],Response::HTTP_OK);
     }
 
