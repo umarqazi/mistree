@@ -1878,7 +1878,7 @@ class WorkshopsController extends Controller
 
         if(count($leads)){
             $leads_count     = count($leads);
-            $customer_count  = count($leads->customer);
+            $customer_count  = 0;
         }
         else{
             $leads_count     = 0;
