@@ -1875,7 +1875,7 @@ class WorkshopsController extends Controller
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
-
+        //   dd($workshop->customers);
         if(count($leads)){
             $leads_count     = count($leads);
             $customer_count  = 0;
