@@ -18,6 +18,13 @@ class Billing extends Model
         'workshop_id', 'booking_id', 'amount', 'customer_id'
     ];
 
+    /**
+     * The attributes that should be mutated to boolean.
+     *
+     * @var array
+     */
+    protected $casts = ['is_free' => 'boolean'];
+
     public function workshop()
     {
         return $this->belongsTo('App\Workshop');

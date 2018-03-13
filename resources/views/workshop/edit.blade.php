@@ -55,7 +55,7 @@
                                     <select name="type" class="form-control border-input" required="required">
                                         <option value="">Please Select</option>
                                         <option value="Authorized" @if($workshop->type == "Authorized") {{"selected"}} @endif >Authorized</option>
-                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >UnAuthorized</option>
+                                        <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >Unauthorized</option>
                                     </select>
                                 </div>
 
@@ -214,7 +214,7 @@
                                     @endif
                                   </div>
                                   <div class="form-group">                              
-                                    <label class="control-label">Building No <span class="manadatory"></span></label>
+                                    <label class="control-label">Building <span class="manadatory"></span></label>
                                     <input type="text" class="form-control border-input" name="building" value="{{$address->building}}">
                                     @if ($errors->has('building'))
                                         <span class="help-block">
@@ -266,7 +266,7 @@
                               <div class="row">                                                   
                                 <div class="col-md-12 text-center">
                                   <div class="form-group">
-                                    <button type="button" class="btn btn-header">Cancel</button>
+                                    <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                     <button class="btn btn-header btn-back-1">Back</button>
                                     <input type="submit" value="Update" class="btn btn-header">
                                   </div>

@@ -92,16 +92,6 @@ class Workshop extends Authenticatable
         return $this->hasMany('App\WorkshopLedger');
     }
 
-    public function getOpenTimeAttribute($time)
-    {
-        return Carbon::parse($time)->format('g:i A');
-    }
-
-    public function getCloseTimeAttribute($time)
-    {
-        return Carbon::parse($time)->format('g:i A');
-    }
-
     //    Returns sum of the workshop
     public function sumOfServiceRates($workshop)
     {

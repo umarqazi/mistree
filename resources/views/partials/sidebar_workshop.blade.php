@@ -39,12 +39,6 @@
                         <p>Customers</p>
                     </a>
                 </li>
-                <li  @if(Request::is('requests/*') || Request::is('request')) class="active" @endif}>
-                    <a href="{{url('/requests/')}}">
-                        <i class="ti-panel"></i>
-                        <p>Requests</p>
-                    </a>
-                </li>
                 <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
                     <a href="{{url('/workshop-queries/create/')}}">
                         <i class="ti-help-alt"></i>

@@ -1118,7 +1118,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Vehicle History',
-                    'body' => $bookings
+                    'body' => ['history'    => $bookings]
                 ],Response::HTTP_OK);        
         }        
     }
@@ -1219,7 +1219,7 @@ class CustomersController extends Controller
         return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
-                'message' => 'Ratings Given',
+                'message' => 'Workshop Details',
                 'body' => [ 'workshop' => $workshop->load('services') ]
             ],Response::HTTP_OK);                
     }

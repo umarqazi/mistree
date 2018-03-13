@@ -9,13 +9,15 @@
     <h3>{{$subject}}</h3>
     <br>
     <br>
-    <p>{{$message}}}}</p>
+    <p>{{$msg}}</p>
     <br>
     <br>
     <p>From:</p><br>
-    <p>{{$worksop->name}}</p><br>
+    <p>{{$workshop->name}}</p><br>
     <p>{{$workshop->email}},</p><br>
-    <p>{{$workshop->landline}},</p><br>
+    @if($workshop->landline)
+        <p>{{$workshop->landline}},</p><br>
+    @endif
     <p>{{$workshop->mobile}}.</p>
 </div>
 
