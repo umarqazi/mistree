@@ -4,7 +4,9 @@ namespace App\Providers;
 
 use App\Service;
 use App\WorkshopImages;
+use App\Workshop;
 use App\Observers\ServiceObserver;
+use App\Observers\WorkshopObserver;
 use App\Observers\WorkshopImagesObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
@@ -21,6 +23,7 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Service::observe(ServiceObserver::class);
         WorkshopImages::observe(WorkshopImagesObserver::class);
+        Workshop::observe(WorkshopObserver::class);
 
     }
 
