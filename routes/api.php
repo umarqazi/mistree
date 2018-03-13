@@ -80,7 +80,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 
 		Route::get('address', 'WorkshopsController@getAddress');
 		Route::post('address', 'WorkshopsController@updateAddress');
-		Route::post('update-images','WorkshopsController@updateImages');
+		Route::post('update-image','WorkshopsController@updateImages');
 		Route::patch('update-profile-image','WorkshopsController@updateProfileImage');
 		Route::patch('update-cnic-image','WorkshopsController@updateCnicImage');
 		Route::get('services','WorkshopsController@workshopServices');		
