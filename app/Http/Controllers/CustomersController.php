@@ -1220,7 +1220,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Ratings Given',
-                'body' => $workshop->load('services')
+                'body' => [ 'workshop' => $workshop->load('services') ]
             ],Response::HTTP_OK);                
     }
 
@@ -1265,7 +1265,7 @@ class CustomersController extends Controller
             'http-status'   => Response::HTTP_OK, 
             'status'        => true, 
             'message'       => 'success', 
-            'body'          => $url 
+            'body'          => [ 'url' => $url ] 
         ],Response::HTTP_OK); 
     }
 
