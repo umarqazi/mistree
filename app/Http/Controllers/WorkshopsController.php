@@ -82,7 +82,8 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
+    {        
+        dd(storage_path(''));
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -159,9 +160,9 @@ class WorkshopsController extends Controller
 
         if ($request->hasFile('profile_pic'))
         {
-            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
+            $profile_pic =  Storage::disk('local')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
            
-            $profile_pic = config('app.s3_bucket_url').$profile_pic;
+            $profile_pic = storage_path('app/').$profile_pic;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();            
         }
@@ -174,8 +175,8 @@ class WorkshopsController extends Controller
 
         if ($request->hasFile('cnic_image')) 
         {
-            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
+            $cnic_image =  Storage::disk('local')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image =  storage_path('app/').$cnic_image;
             $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
@@ -191,8 +192,8 @@ class WorkshopsController extends Controller
             foreach($request->file('images') as $file)
             {
                 $images = new WorkshopImages;                
-                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  config('app.s3_bucket_url').$image;
+                $image =  Storage::disk('local')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
+                // $image =  ('app/').$image;
                 $images->url = $image;
                 $images->workshop()->associate($workshop);
                 $images->save();
@@ -2083,13 +2084,9 @@ class WorkshopsController extends Controller
         $workshop = JWTAuth::authenticate();
         $workshop_id = $workshop->id;
         $image = $request->workshop_image;
-        $old_url = $request->old_url;
-        // $url_array = [];
-        // foreach($images as $image){
-        // $file_data = $image;                                 
+        $old_url = $request->old_url;                                    
         if( (empty($old_url)) && (!empty($image)) ){            
-            $url = $this->upload_image($image,$workshop_id);
-            // array_push($url_array, $url);
+            $url = $this->upload_image($image,$workshop_id);            
             $workshop_image = new WorkshopImages;
             $workshop_image->url            = $url;
             $workshop_image->workshop_id    = $workshop_id;

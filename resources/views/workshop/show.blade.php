@@ -15,7 +15,7 @@
                         <div class="row">
                             <div class="col-md-12">
 
-	                            <div class="avtar-block">
+	                            <div class="avtar-block">	                            
 	                            	<img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
 	                            	<div class="name-info">
 	                            		<h4 class="title">Workshop Name : {{$workshop->name}}</h4>

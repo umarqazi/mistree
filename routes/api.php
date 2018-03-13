@@ -41,6 +41,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('create-booking','BookingsController@createBooking');
+		Route::get('bookings', 'BookingsController@customerBookings');
 		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
 		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');
 		Route::patch('leave-rating/{billing_id}', 'CustomersController@insertRatings');
@@ -95,6 +96,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('leads/rejected','BookingsController@rejectedLeads');
 		Route::get('leads/completed','BookingsController@completedLeads');
     	Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
+    	Route::get('leads/pending', 'BookingsController@pendingLeads');
 
 //		Route For Workshop Password Reset
     	Route::post('password-reset', 'WorkshopsController@passwordReset');
