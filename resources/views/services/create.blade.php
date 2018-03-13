@@ -25,7 +25,7 @@
                                     <div class="col-md-3"></div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Service Name</label>
+                                            <label class="control-label">Service Name <span class="manadatory">*</span></label>
                                             <input type="text" class="form-control border-input" name="name" required="required" value="{{ old('name') }}" />
                                             @if ($errors->has('name'))
                                                 <span class="help-block">
@@ -43,7 +43,7 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label">Loyalty Points</label>
+                                            <label class="control-label">Loyalty Points <span class="manadatory">*</span></label>
                                             <input type="text" class="form-control border-input" name="loyalty-points" value="{{ old('loyalty-points',0) }}">
                                             @if ($errors->has('loyalty-points'))
                                                 <span class="help-block">
@@ -53,7 +53,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="control-label">Lead Charges</label>
+                                            <label class="control-label">Lead Charges <span class="manadatory">*</span></label>
                                             <input type="text" class="form-control border-input" name="lead-charges" value="{{ old('lead-charges',0) }}">
                                             @if ($errors->has('lead-charges'))
                                                 <span class="help-block">
@@ -73,6 +73,21 @@
                                             @if ($errors->has('service-parent'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('service-parent') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label">Category <span class="manadatory">*</span></label>
+                                            <select class="form-control border-input" name="category" required >
+                                                <option value="0">Select Category</option>
+                                                @foreach($categories as $category)
+                                                    <option value="{{$category->id}}" @if(old('category') == $category->id){{"selected"}}@endif>{{$category->name}}</option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('category'))
+                                                <span class="help-block">
+                                                    <strong class="manadatory">{{ $errors->first('category') }}</strong>
                                                 </span>
                                             @endif
                                         </div>

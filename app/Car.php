@@ -41,4 +41,9 @@ class Car extends Model
     {
         return $this->hasOne('App\Booking');
     }
+
+    public function category()
+    {
+        return $this->belongsTo('App\Category');
+    }
 }
