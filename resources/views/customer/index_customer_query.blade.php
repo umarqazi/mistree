@@ -57,13 +57,13 @@
                                     <td class="text-center">{{ $value->customer->name }}</td>
                                     <td class="text-center">{{ $value->created_at }}</td>
                                     <td class="text-center">
-                                        @if($value->is_resolved == true)
+                                        @if($value->is_resolved)
                                         <i class="ti-check"></i>
                                         @endif
                                     </td>
                                     <td class="text-center">
                                         <a class= "btn btn-header" href="{{url('admin/customer-queries/'. $value->id)}}">View</a>
-                                        @if($value->is_resolved == false)
+                                        @if(!$value->is_resolved)
                                         <form method="POST" action="{{url('admin/resolve-customer-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">

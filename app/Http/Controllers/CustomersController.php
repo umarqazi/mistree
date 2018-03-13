@@ -112,7 +112,8 @@ class CustomersController extends Controller
      */
     public function show($id)
     {
-        
+        $customer = Customer::find($id)->load(['cars', 'addresses', 'bookings']);
+        return View::make('customer.show', ['customer' => $customer]);
     }
 
     /**
