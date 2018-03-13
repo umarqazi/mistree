@@ -34,7 +34,7 @@
                             <tbody>   
                             @foreach($bookings as $booking)                          
                             <tr role="row" class="odd">
-                                    <td class="sorting_1  text-center">{{$key + 1}}</td>
+                                    <td class="text-center">{{$key + 1}}</td>
                                     <td class="text-center">{{$booking->customer->name}}</td>
                                     <td class="text-center">{{$booking->customer->email}}</td>
                                     <td class="text-center">{{$booking->customer->con_number}}</td>
