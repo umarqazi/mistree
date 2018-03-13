@@ -82,8 +82,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {        
-        dd(storage_path(''));
+    {                
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
