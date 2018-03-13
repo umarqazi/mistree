@@ -30,7 +30,13 @@
                             </a>
                             <ul class="dropdown-menu">
                                 @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)
-                                    <li><a href="#">{{$notification -> type}}</a></li>
+                                    <li><a href="#">
+                                            {{$notification -> data['msg']}}
+                                            <div class="text-left">
+                                                {{$notification->created_at}}
+                                            </div>
+                                        </a>
+                                    </li>
                                 @endforeach
                                 <li><a href="#">Other Notifications</a></li>
                             </ul>

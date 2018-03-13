@@ -12,9 +12,9 @@ use Notification;
 class WorkshopObserver
 {
 	public function saving(Workshop $workshop)
-    {	
+    {
     	$admins = Admin::all();
-    	Notification::send($admins, new NewWorkshop());
+    	Notification::send($admins, new NewWorkshop($workshop));
     }
 
 }

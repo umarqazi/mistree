@@ -13,14 +13,16 @@ class NewWorkshop extends Notification
 {
     use Queueable;
 
+    protected $workshop;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($workshop)
     {
-        //
+        $this->workshop = $workshop;
     }
 
     /**
@@ -43,7 +45,9 @@ class NewWorkshop extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'created_at' => Carbon::now()
+            'created_at'        => Carbon::now(),
+            'notification_url'  => '/admin/workshops',
+            'msg'           => 'A new workshop by name "'.$this->workshop->name.'" has been registered'
         ];
     }
 
