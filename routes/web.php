@@ -152,3 +152,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
 
 /* ========= Admin Routes End ====================================================== */
+/* ========= Other Routes Starts ====================================================== */
+/*Notification Routes*/
+        Route::get('/notifications/markasread', 'NotificationsController@markOneAsRead');
+/* ========= Other Routes Ends ====================================================== */
