@@ -6,6 +6,7 @@ use JWTAuth;
 use Hash, DB, Config, Mail, View, Session;
 use Illuminate\Support\Facades\Redirect;
 use App\Car;
+use App\Category;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -63,7 +64,8 @@ class CarsController extends Controller
      */
     public function create()
     {
-        return View::make('cars.create');
+        $types = Category::all();
+        return View::make('cars.create')->with('types', $types);
     }
 
     /**
@@ -73,9 +75,14 @@ class CarsController extends Controller
      */
     public function store()
     {
+        $types  = Category::all();
+        $types  = implode(',',$types->pluck('id')->toArray());
+
+        // validate
         $rules = array(
+            'type'       => 'required|in:'.$types,
             'make'       => 'required',
-            'model'      => 'required'
+            'model'      => 'required|unique:cars,model,NULL,id,make,'.trim(Input::get('make')),
         );
 
         $validator = Validator::make(Input::all(), $rules);
@@ -87,10 +94,11 @@ class CarsController extends Controller
         } else {
             // store
             $car = new Car;
-            $car->type       = Input::get('type');
-            $car->make       = Input::get('make');
-            $car->model      = Input::get('model');
-            $car->picture    = '';
+            $car->make       = trim(Input::get('make'));
+            $car->model      = trim(Input::get('model'));
+
+            $car->category()->associate(Category::find(Input::get('type')));
+
             $car->save();
 
             // redirect
@@ -119,10 +127,11 @@ class CarsController extends Controller
      */
     public function edit($id)
     {
-        $car = Car::find($id);
+        $car    = Car::find($id);
+        $types  = Category::all();
 
         return View::make('cars.edit')
-            ->with('car', $car);
+            ->with('car', $car)->with('types', $types);
     }
 
     /**
@@ -133,9 +142,13 @@ class CarsController extends Controller
      */
     public function update($id)
     {
+        $types  = Category::all();
+        $types  = implode(',',$types->pluck('id')->toArray());
+
         $rules = array(
+            'type'       => 'required|in:'.$types,
             'make'       => 'required',
-            'model'      => 'required'
+            'model'      => 'required|unique:cars,model,'.$id.',id,make,'.trim(Input::get('make'))
         );
         $validator = Validator::make(Input::all(), $rules);
 
@@ -147,10 +160,11 @@ class CarsController extends Controller
         } else {
             // store
             $car = Car::find($id);
-            $car->type       = Input::get('type');
             $car->make       = Input::get('make');
             $car->model      = Input::get('model');
-            $car->picture    = '';
+
+            $car->category()->associate(Category::find(Input::get('type')));
+
             $car->save();
 
             // redirect
