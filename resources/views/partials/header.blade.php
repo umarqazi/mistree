@@ -28,7 +28,7 @@
                                 @endif
                                 <b class="caret"></b>
                             </a>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu notifications">
                                 @if(Auth::guard('admin')->check())
                                     @if( count(Auth::guard('admin')->user()->unreadNotifications) )
                                         @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)

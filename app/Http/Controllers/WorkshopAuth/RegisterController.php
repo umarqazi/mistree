@@ -133,7 +133,7 @@ class RegisterController extends Controller
         $balance = new WorkshopBalance([ 'balance' => 0 ]);
         $workshop->balance()->save($balance);
 
-        if ($data['profile_pic'])
+        if (!empty($data['profile_pic']))
         {
             $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($data['profile_pic']), 'public');
 
@@ -148,7 +148,7 @@ class RegisterController extends Controller
             $workshop->save();
         }
 
-        if ($data['cnic_image'])
+        if (!empty($data['cnic_image']))
         {
             $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($data['cnic_image']), 'public');
             $cnic_image =  config('app.s3_bucket_url').$cnic_image;
@@ -162,7 +162,7 @@ class RegisterController extends Controller
             $workshop->save();
         }
 
-        if ($data['images'])
+        if (!empty($data['images']))
         {
             foreach($data['images'] as $file)
             {

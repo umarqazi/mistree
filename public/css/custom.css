@@ -355,6 +355,10 @@ form .form-group {margin-bottom: 0px;}
 
 
 /*Header Custom Styles*/
+.notifications{
+    overflow-y: scroll;
+    max-height: 500px;
+}
 .notification_msg{
     font-size: 10px;
 }
