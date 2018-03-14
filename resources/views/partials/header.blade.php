@@ -20,16 +20,25 @@
                     <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="ti-bell"></i>
-                                <p class="notification">5</p>
                                 <p>Notifications</p>
+                                @if(Auth::guard('admin')->check())
+                                    <span class="badge notification_badge">{{count(Auth::guard('admin')->user()->unreadNotifications)}}</span>
+                                @elseif(Auth::guard('workshop')->check())
+                                    <span class="badge notification_badge">{{count(Auth::guard('workshop')->user()->unreadNotifications)}}</span>
+                                @endif
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                            <li><a href="#">Notification 1</a></li>
-                            <li><a href="#">Notification 2</a></li>
-                            <li><a href="#">Notification 3</a></li>
-                            <li><a href="#">Notification 4</a></li>
-                            <li><a href="#">Another notification</a></li>
+                                @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)
+                                    <li><a href="#">
+                                            {{$notification -> data['msg']}}
+                                            <div class="text-left">
+                                                {{$notification->created_at}}
+                                            </div>
+                                        </a>
+                                    </li>
+                                @endforeach
+                                <li><a href="#">Other Notifications</a></li>
                             </ul>
                     </li>
                     <li>
