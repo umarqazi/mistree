@@ -69,6 +69,8 @@ class Customer extends Authenticatable
     {
         return $this->hasMany('App\Billing');
     }
+
+    
     /**
      * Send the password reset notification.
      *

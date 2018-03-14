@@ -23,8 +23,6 @@
                           </div>
                       </div>
                       <div class="clear20"></div>
-						
-
                             <div class="content">                                            
                               <div class="row services-row">
                                 <div class="col-md-3">
@@ -32,11 +30,10 @@
                                 <div class="col-md-6">
                                   <div class="child-box-wrap">
                                     <div class="row">
-
                                       <div class="col-md-12">
                                         <div class="form-group">
                                           <label class="control-label">Select Service <span class="manadatory">*</span></label>
-                                          <select class="form-control border-input" name="service_id">
+                                          <select class="form-control select-search border-input" name="service_id">
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>

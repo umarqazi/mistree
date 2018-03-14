@@ -111,11 +111,11 @@
 						                        <tr> 
 						                        	<td>Shop No</td>
 						                        	<td>{{ $address->shop }}</td>
-						                        	<td>Street No</td>
+						                        	<td>Street</td>
 						                        	<td>{{ $address->street}}</td>
 						                        </tr>
 						                        <tr> 
-													<td>Building No</td>
+													<td>Building</td>
 						                        	<td>{{$address->building}}</td>
 						                        
 						                        	<td>Block</td>

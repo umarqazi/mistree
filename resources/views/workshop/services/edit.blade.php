@@ -53,7 +53,27 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="control-label">Enter Time</label>
-                                                        <input type="text" class="form-control border-input" name="service_time" value="{{$workshop_service->service_time}}">
+                                                        <select name ="service_time" class="form-control select-search border-input">
+                                                            <option value="1">1 hr</option>
+                                                            <option value="1.5">1.5 hr</option>
+                                                            <option value="2">2 hr</option>
+                                                            <option value="2.5">2.5 hr</option>
+                                                            <option value="3">3 hr</option>
+                                                            <option value="3.5">3.5 hr</option>
+                                                            <option value="4">4 hr</option>
+                                                            <option value="4.5">4.5 hr</option>
+                                                            <option value="5">5 hr</option>
+                                                            <option value="5.5">5.5 hr</option>
+                                                            <option value="6">6 hr</option>
+                                                            <option value="6.5">6.5 hr</option>
+                                                            <option value="7">7 hr</option>
+                                                            <option value="7.5">7.5 hr</option>
+                                                            <option value="8">8 hr</option>
+                                                            <option value="8.5">8.5 hr</option>
+                                                            <option value="9">9 hr</option>
+                                                            <option value="9.5">9.5 hr</option>
+                                                            <option value="10">10 hr</option>
+                                                        </select>
                                                     </div>                                        
                                                 </div>
                                             </div>

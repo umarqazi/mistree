@@ -32,7 +32,7 @@
                                       <div class="col-md-12">
                                         <div class="form-group">
                                           <label class="control-label">Select Service <span class="manadatory">*</span></label>
-                                          <select class="form-control border-input" name="service_id">
+                                          <select class="form-control select-search border-input" name="service_id">
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}</option>

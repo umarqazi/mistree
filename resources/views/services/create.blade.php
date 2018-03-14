@@ -64,7 +64,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Parent</label>
-                                            <select class="form-control border-input" name="service-parent" >
+                                            <select class="form-control select-search border-input" name="service-parent" >
                                                 <option value="0">Select Parent</option>
                                                 @foreach($services as $service)
                                                     <option value="{{$service->id}}" @if(old('service-parent') == $service->id){{"selected"}}@endif>@if($service->parent($service->service_parent)){{$service->parent($service->service_parent)['name'].' - '}}@endif{{$service->name}}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
