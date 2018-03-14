@@ -17,7 +17,7 @@
                             <p>Stats</p>
                         </a>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown notification_dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="ti-bell"></i>
                                 <p>Notifications</p>
@@ -29,16 +29,31 @@
                                 <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)
-                                    <li><a href="#">
-                                            {{$notification -> data['msg']}}
-                                            <div class="text-left">
-                                                {{$notification->created_at}}
-                                            </div>
-                                        </a>
-                                    </li>
-                                @endforeach
-                                <li><a href="#">Other Notifications</a></li>
+                                @if(count(Auth::guard('admin')->user()->unreadNotifications) != 0)
+                                    @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)
+                                        <li><a class="notification_links clearfix" notif-id="{{$notification->id}}" >
+                                                <div class="notification_image">
+                                                    @if(snake_case(class_basename($notification->type )) == 'new_workshop')
+                                                        <img src="{{URL::to('/img/workshop-icon.png')}}">
+                                                    @else
+                                                        <img src="{{URL::to('/img/Dummy-image.jpg')}}">
+                                                    @endif
+                                                </div>
+                                                <div class="notification_text">
+                                                    <div class="notification_msg">
+                                                        {{$notification -> data['msg']}}
+                                                    </div>
+                                                    <div class="text-left notification_date">
+                                                        {{$notification->created_at->format('d-m-Y h:i')}}
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                    <li><a href="#">Other Notifications</a></li>
+                                @else
+                                    <li>No New Notifications</li>
+                                @endif
                             </ul>
                     </li>
                     <li>
