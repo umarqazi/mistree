@@ -57,7 +57,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
-        Route::patch('profile/updateProfileService/', 'WorkshopsController@updateProfileService');
+        Route::patch('profileServiceUpdate', 'WorkshopsController@updateProfileService');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');

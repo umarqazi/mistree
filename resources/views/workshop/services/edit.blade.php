@@ -53,26 +53,26 @@
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="control-label">Enter Time</label>
-                                                        <select name ="service_time" class="form-control select-search border-input">
-                                                            <option value="1">1 hr</option>
-                                                            <option value="1.5">1.5 hr</option>
-                                                            <option value="2">2 hr</option>
-                                                            <option value="2.5">2.5 hr</option>
-                                                            <option value="3">3 hr</option>
-                                                            <option value="3.5">3.5 hr</option>
-                                                            <option value="4">4 hr</option>
-                                                            <option value="4.5">4.5 hr</option>
-                                                            <option value="5">5 hr</option>
-                                                            <option value="5.5">5.5 hr</option>
-                                                            <option value="6">6 hr</option>
-                                                            <option value="6.5">6.5 hr</option>
-                                                            <option value="7">7 hr</option>
-                                                            <option value="7.5">7.5 hr</option>
-                                                            <option value="8">8 hr</option>
-                                                            <option value="8.5">8.5 hr</option>
-                                                            <option value="9">9 hr</option>
-                                                            <option value="9.5">9.5 hr</option>
-                                                            <option value="10">10 hr</option>
+                                                        <select name ="service_time" class="form-control chosen-select border-input">
+                                                            <option @if($workshop_service->service_time == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
+                                                            <option @if($workshop_service->service_time == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
+                                                            <option @if($workshop_service->service_time == "10.0"){{"selected"}}@endif value="10">10 hr</option>
                                                         </select>
                                                     </div>                                        
                                                 </div>

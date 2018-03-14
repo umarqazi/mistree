@@ -1830,11 +1830,11 @@ class WorkshopsController extends Controller
 
     }
     
-    public function updateProfileService(Request $request){        
+    public function updateProfileService(Request $request){     
         $rules = [            
             'service_rate'    => 'required|numeric',            
             'service_time'    => 'required'                        
-            ];        
+            ];       
         $input = $request->only('service_rate', 'service_time' );
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {

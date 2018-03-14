@@ -352,8 +352,6 @@ form .form-group {margin-bottom: 0px;}
     margin-top: -50px;
     margin-bottom: 50px;
 }
-
-
 /*Header Custom Styles*/
 .notification_msg{
     font-size: 10px;
@@ -395,7 +393,9 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
     font-weight: bold;
     padding-bottom: 5px;
 }
-.select2-selection{
+
+.chosen-single{   
+     
     padding: 7px 18px !important ;
     height: 40px !important;
 

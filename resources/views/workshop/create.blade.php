@@ -332,7 +332,27 @@
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
-                                                                            <input type="text" class="form-control border-input" name="service-times[{{ $key }}]" value="{{ old('service-times.'.$key) }}">
+                                                                            <select name ="service-times[{{ $key }}]" class="form-control chosen-select border-input">
+                                                                                <option @if(old('service-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
+                                                                                <option @if(old('service-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
+                                                                        </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
