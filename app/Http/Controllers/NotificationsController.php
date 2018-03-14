@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Workshop;
+use View;
 
 class NotificationsController extends Controller
 {
@@ -15,5 +17,10 @@ class NotificationsController extends Controller
 
             echo true;
         }
+    }
+
+    public function index()
+    {
+        return View::make('notification.index');
     }
 }

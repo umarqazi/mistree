@@ -47,7 +47,7 @@ class NewWorkshop extends Notification
         return [
             'created_at'        => Carbon::now(),
             'notification_url'  => '/admin/workshops',
-            'msg'           => 'A new workshop by name "'.$this->workshop->name.'" has been registered'
+            'msg'           => 'A new workshop by name "'.$this->workshop->name.'" has been registered.'
         ];
     }
 
