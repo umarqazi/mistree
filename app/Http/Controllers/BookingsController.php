@@ -22,7 +22,7 @@ class BookingsController extends Controller
 
      /**
      * @SWG\Post(
-     *   path="/api/workshop/create-booking",
+     *   path="/api/customer/create-booking",
      *   summary="Create Booking",
      *   operationId="booking",
      *   produces={"application/json"},
@@ -714,4 +714,82 @@ class BookingsController extends Controller
         }   
         
     }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/pending",
+     *   summary="Pending Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pendingLeads(Request $request){
+        $workshop = JWTAuth::authenticate();
+        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();        
+                
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Pending Bookings',
+                    'body' => ['pending_bookings' => $pending_leads]
+                ],Response::HTTP_OK);                        
+        
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/bookings/",
+     *   summary="Customer Bookings",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function customerBookings(Request $request){
+        $customer = JWTAuth::authenticate();
+        $bookings = Booking::where('customer_id', $customer->id)->with('services')->get();        
+                
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Pending Bookings',
+                    'body' => ['bookings' => $bookings]
+                ],Response::HTTP_OK);                        
+        
+    }
+
+
 }
