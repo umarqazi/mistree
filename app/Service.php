@@ -49,9 +49,14 @@ class Service extends Model
         return $this->hasMany('App\Service', 'service_parent');
     }
 
-    public function parent($id)
+    public function children()
     {
-        return $this->find($id);
+        return $this->services()->with('children');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Service', 'service_parent');
     }
 
     public function category()

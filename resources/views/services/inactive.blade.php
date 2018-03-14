@@ -45,7 +45,7 @@
                                     <td class="sorting_1">{{$value->id}}</td>
                                     <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
                                     <td>{{$value->name}}</td>
-                                    <td class="text-center">{{$value->parent($value->service_parent)['name']}}</td>
+                                    <td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>
                                     <td>
                                         <form method="POST" action="{{ URL::to('admin/services/restore/'. $value->id) }}" accept-charset="UTF-8">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
