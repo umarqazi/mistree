@@ -68,6 +68,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('leads/accepted','BookingsController@acceptedLeads');
         Route::get('leads/rejected','BookingsController@rejectedLeads');
         Route::get('leads/completed','BookingsController@completedLeads');
+        Route::get('/notification', 'NotificationController@index');
 
     });
 
@@ -145,6 +146,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
         Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
+        Route::get('/notification', 'NotificationController@index');
                 
     });
 
@@ -152,4 +154,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
 
 /* ========= Admin Routes End ====================================================== */
-        Route::get('/notification', 'NotificationController@index');
+
+/* ========= Other Routes Starts ====================================================== */
+/*Notification Routes*/
+        Route::get('/notifications/markasread', 'NotificationsController@markOneAsRead');
+/* ========= Other Routes Ends ====================================================== */
