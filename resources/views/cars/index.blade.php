@@ -51,7 +51,7 @@
                                 <tr role="row" class="odd">
                                     <td class="text-center">{{ $value->make }}</td>
                                     <td class="text-center">{{ $value->model }}</td>
-                                    <td class="text-center">{{ $value->type }}</td>
+                                    <td class="text-center">@if(!is_null($value->category)){{ $value->category->name }}@endif</td>
                                     <td class="text-center">
                                         <a href="{{url('admin/cars/'. $value->id.'/edit')}}" class="btn btn-header btn-export">Edit</a>
                                         <form method="POST" action="cars/{{ $value->id }}" accept-charset="UTF-8">

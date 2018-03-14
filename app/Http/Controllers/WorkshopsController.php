@@ -596,7 +596,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => ['workshop'=>'', 'token'=>$token]
+            'body' => ['token'=>$token]
         ],Response::HTTP_OK);
     }
 
@@ -818,7 +818,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'A reset email has been sent! Please check your email.',
-            'body' => ''
+            'body' => null
         ],Response::HTTP_OK);
     }
 
@@ -1478,7 +1478,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service Added!!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);                  
     }
      /**
@@ -1552,7 +1552,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service Updated!!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);             
 
     }
@@ -1608,7 +1608,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service deleted!!',
-            'body'          => ''
+            'body'          => null
         ],Response::HTTP_OK);
     }
     /**
@@ -1637,7 +1637,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'success',
-            'body'          => $workshop->services
+            'body'          => ['services' => $workshop->services]
         ],Response::HTTP_OK);   
     }
 
@@ -1875,10 +1875,15 @@ class WorkshopsController extends Controller
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
-
+        
         if(count($leads)){
+            $customer_ids  = [];
+            foreach($leads as $lead){
+                array_push($customer_ids, $lead->customer->id);
+            }
+            $customer_ids = array_unique($customer_ids);
             $leads_count     = count($leads);
-            $customer_count  = 0;
+            $customer_count  = count($customer_ids);
         }
         else{
             $leads_count     = 0;
@@ -1935,7 +1940,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'success',
-            'body' => $workshop->address
+            'body' => ['address' => $workshop->address]
         ],Response::HTTP_OK);
     }
 
@@ -2056,7 +2061,7 @@ class WorkshopsController extends Controller
 
     /**
      * @SWG\Post(
-     *   path="/api/workshop/update-images",
+     *   path="/api/workshop/update-image",
      *   summary="Update Workshop Images",
      *   operationId="update",
      *   produces={"application/json"},
@@ -2069,12 +2074,18 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="images",
+     *     name="workshop_image",
      *     in="formData",
-     *     description="[{old_url,new_image}]",
+     *     description="Base64 Image",
      *     required=true,
-     *     type="array",
-     *     items="[old_url,new_image]"
+     *     type="string",     
+     *   ),
+     *   @SWG\Parameter(
+     *     name="old_url",
+     *     in="formData",
+     *     description="Old Url of image",
+     *     required=false,
+     *     type="string",     
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
@@ -2089,35 +2100,33 @@ class WorkshopsController extends Controller
      */
     public function updateImages(Request $request)
     {            
-        $workshop_id = JWTAuth::authenticate()->id;
-        $images = $request->images;
-        $url_array = [];
-        foreach($images as $image){
-            $file_data = $image->new_image;                                 
-            if( (empty($image->old_url)) && (!empty($image->new_image)) ){
-
-                $url = $this->upload_image($file_data,$workshop_id);
-                array_push($url_array, $url);
-                $workshop_image = new WorkshopImages;
-                $workshop_image->url            = $url;
-                $workshop_image->workshop_id    = $workshop_id;
-                $workshop->save();
-                       
-            }elseif( (!empty($image->old_url)) && (!empty($image->new_image)) ){
-
-                $url = $this->upload_image($file_data,$workshop_id);                                
-                array_push($url_array, $url);
-                WorkshopImages::where('url', $image->old_url)
-                                ->where('workshop_id',$workshop_id)
-                                ->update(['url' => $url]);                
-            }            
-        }        
+        $workshop = JWTAuth::authenticate();
+        $workshop_id = $workshop->id;
+        $image = $request->workshop_image;
+        $old_url = $request->old_url;
+        // $url_array = [];
+        // foreach($images as $image){
+        // $file_data = $image;                                 
+        if( (empty($old_url)) && (!empty($image)) ){            
+            $url = $this->upload_image($image,$workshop_id);
+            // array_push($url_array, $url);
+            $workshop_image = new WorkshopImages;
+            $workshop_image->url            = $url;
+            $workshop_image->workshop_id    = $workshop_id;
+            $workshop_image->save();
+                   
+        }elseif( (!empty($old_url)) && (!empty($image)) ){
+            $url = $this->upload_image($image,$workshop_id);                                            
+            WorkshopImages::where('url', $old_url)
+                            ->where('workshop_id',$workshop_id)
+                            ->update(['url' => $url]);                
+        }                                
         
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Images Uploaded Successfully!',
-                    'body' => $url_array
+                    'body' => ['image' => $url]
                 ],Response::HTTP_OK);               
     }
 
@@ -2164,7 +2173,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $url
+                    'body' => ['profile_picture' => $url]
                 ],Response::HTTP_OK);               
     }
 
@@ -2211,7 +2220,7 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'success',
-                    'body' => $url
+                    'body' => ['cnic_image' => $url]
                 ],Response::HTTP_OK);               
     }
 
@@ -2339,7 +2348,7 @@ class WorkshopsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'success',
-            'body' => Customer::whereIn('id', $bookings)->get()
+            'body' => ['customers' => Customer::whereIn('id', $bookings)->get()]
         ],Response::HTTP_OK);
     }
 

@@ -263,7 +263,7 @@ form .form-group {margin-bottom: 0px;}
 .avtar-block img{
     display: inline-block;
     vertical-align: middle;
-    width: 220px;
+    width: auto;
 }
 
 .avtar-block .name-info{
@@ -353,6 +353,7 @@ form .form-group {margin-bottom: 0px;}
     margin-bottom: 50px;
 }
 
+
 /*Header Custom Styles*/
 .notification_msg{
     font-size: 10px;
@@ -393,4 +394,9 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
     color: #000;
     font-weight: bold;
     padding-bottom: 5px;
+}
+.select2-selection{
+    padding: 7px 18px !important ;
+    height: 40px !important;
+
 }

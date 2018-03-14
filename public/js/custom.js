@@ -387,14 +387,18 @@ $(document).ready(function(){
 
 
 
-
-    $('#jsTable').DataTable();  
+    $('#jsTable').DataTable({
+       /* Disable initial sort */
+      "aaSorting": []
+    });  
+    
 
     $(".nav > li a.query_links").click(function(e){
       e.preventDefault();
       $(".subnav").toggleClass("show_ul");
       $(this).children("i").last().toggleClass("ti-angle-down ti-angle-up");
     });
+
 
     /* Header Notification Code */
     $('.notification_links').click(function () {
@@ -416,4 +420,7 @@ $(document).ready(function(){
             }
         });
     });
+    $(document).ready(function() {
+        $('.select-search').select2();
+     });
 });
