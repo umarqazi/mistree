@@ -25,23 +25,28 @@
                       <div class="content">
                         <div class="row">
                           <div class="col-md-6">
-                            <div class="form-group">
-                              <label class="control-label">Car Type <span class="manadatory">*</span></label>
-                              <input type="text" class="form-control border-input" name="type" value="{{$car->type}}">
-                              @if ($errors->has('type'))
-                                  <span class="help-block">
-                                      <strong class="manadatory">{{ $errors->first('type') }}</strong>
-                                  </span>
-                              @endif
-                            </div>
+                              <div class="form-group">
+                                  <label class="control-label">Type <span class="manadatory">*</span></label>
+                                  <select class="form-control border-input" name="type" required >
+                                      <option value="0">Select Type</option>
+                                      @foreach($types as $type)
+                                          <option value="{{$type->id}}" @if(!is_null($car->category) && $car->category->id == $type->id){{"selected"}}@endif>{{$type->name}}</option>
+                                      @endforeach
+                                  </select>
+                                  @if ($errors->has('type'))
+                                      <span class="help-block">
+                                          <strong class="manadatory">{{ $errors->first('type') }}</strong>
+                                      </span>
+                                  @endif
+                              </div>
 
                               <div class="form-group">
                                   <label class="control-label">Car Make <span class="manadatory">*</span></label>
                                   <input type="text" class="form-control border-input" name="make" value="{{$car->make}}">
                                   @if ($errors->has('make'))
                                       <span class="help-block">
-                                      <strong class="manadatory">{{ $errors->first('make') }}</strong>
-                                  </span>
+                                        <strong class="manadatory">{{ $errors->first('make') }}</strong>
+                                      </span>
                                   @endif
                               </div>
 

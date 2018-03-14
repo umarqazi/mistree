@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Service;
 use DB, View;
 use Illuminate\Http\Request;
@@ -61,8 +62,9 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $services = Service::orderBy('service_parent')->get();
-        return View::make('services.create')->with('services', $services);
+        $services   = Service::orderBy('service_parent')->get();
+        $categories = Category::all();
+        return View::make('services.create')->with('services', $services)->with('categories', $categories);
     }
 
     /**
@@ -75,25 +77,28 @@ class ServicesController extends Controller
     {
         $services   = Service::all();
         $services   = implode(',',$services->pluck('id')->toArray());
+        $categories = Category::all();
+        $categories = implode(',',$categories->pluck('id')->toArray());
 
         $is_doorstep    = Input::get('is_doorstep') ? 1:0;
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,'.$is_doorstep.',deleted_at,NULL|max:255',
+            'name'              => 'required|unique:services,name,NULL,id,is_doorstep,'.$is_doorstep.',deleted_at,NULL,category_id,'.Input::get('category').'|max:255',
             'loyalty-points'    => 'required|numeric',
             'lead-charges'      => 'required|numeric',
             'service-parent'    => 'in:0,'.$services,
             'is_doorstep'       => 'nullable|in:1',
+            'category'          => 'required|in:'.$categories,
             'image'             => 'mimes:jpeg,jpg,png',         
         );
-        $inputs = $request->only('name','loyalty-points','service-parent', 'lead-charges', 'is_doorstep');
 
-        $validator = Validator::make($inputs, $rules);
+        $validator = Validator::make(Input::all(), $rules);
 
-        // process the login
         if ($validator->fails()) {
-            return Redirect::back()->withInput()->withErrors($validator);
+            return Redirect::back()
+                ->withInput()
+                ->withErrors($validator);
         } else {
             // store
             $service = new Service;
@@ -114,6 +119,9 @@ class ServicesController extends Controller
             $service->loyalty_points = Input::get('loyalty-points');
             $service->lead_charges   = Input::get('lead-charges');
             $service->is_doorstep    = Input::get('is_doorstep') ? Input::get('is_doorstep'):false;
+
+            $service->category()->associate(Category::find(Input::get('category')));
+
             $service->save();
 
             // redirect
@@ -147,11 +155,12 @@ class ServicesController extends Controller
     public function edit($id)
     {
         // get the service
-        $service = Service::find($id);
-        $services = Service::where('id', '<>', $service->id)->orderBy('service_parent')->get();
+        $service    = Service::find($id);
+        $services   = Service::where('id', '<>', $service->id)->orderBy('service_parent')->get();
+        $categories = Category::all();
 
         // show the view and pass the service to it
-        return View::make('services.edit', compact('service','services'));
+        return View::make('services.edit', compact('service','services', 'categories'));
     }
 
     /**
@@ -167,12 +176,14 @@ class ServicesController extends Controller
         $services   = Service::where('id', '<>', $id)->get();
         $services   = implode(',',$services->pluck('id')->toArray());
 
-        $service = Service::find($id);
+        $service    = Service::find($id);
+
+        $category   = !is_null($service->category) ? $service->category->id : NULL;
 
         // validate
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'name'           => 'required|unique:services,name,'.$id.',id,is_doorstep,'.$service->is_doorstep.',deleted_at,NULL|max:255',
+            'name'           => 'required|unique:services,name,'.$id.',id,is_doorstep,'.$service->is_doorstep.',deleted_at,NULL,category_id,'.$category.'|max:255',
             'loyalty-points' => 'required|numeric',
             'lead-charges'   => 'required|numeric',
             'service-parent' => 'in:0,'.$services,
