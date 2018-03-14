@@ -152,3 +152,4 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
 
 /* ========= Admin Routes End ====================================================== */
+        Route::get('/notification', 'NotificationController@index');
