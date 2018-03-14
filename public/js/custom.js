@@ -401,7 +401,9 @@ $(document).ready(function(){
 
 
     /* Header Notification Code */
-    $('.notification_links').click(function () {
+    $('.notification_links, .notification_lnks').click(function (e) {
+        var a_element = $(this);
+        e.preventDefault();
         var notif_id = $(this).attr('notif-id');
 
         $.ajax({
@@ -411,10 +413,7 @@ $(document).ready(function(){
             success: function (data) {
                 if(data){
                     if(data == 1){
-                        $('.notification_badge').text($('.notification_badge').text()-1);
-                        if($('.notification_badge').text() == 0){
-                            $('.notification_badge').remove();
-                        }
+                      window.location.href = a_element.attr("href");
                     }
                 }
             }
