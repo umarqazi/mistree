@@ -54,7 +54,7 @@ class CustomersController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
+        $customers = Customer::orderBy('created_at', 'desc')->get();
         return View::make('customer.index')->with('customers', $customers);        
     }
 

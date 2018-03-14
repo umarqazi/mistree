@@ -352,3 +352,51 @@ form .form-group {margin-bottom: 0px;}
     margin-top: -50px;
     margin-bottom: 50px;
 }
+
+
+/*Header Custom Styles*/
+.notification_msg{
+    font-size: 10px;
+}
+.notification_date{
+    font-size: 10px;
+}
+.notification_links{
+    clear: both;
+    float: none;
+    padding: 10px !important;
+}
+.notification_links:hover{
+    background-color: #666666 !important;
+}
+.notification_links:hover .notification_msg,
+.notification_links:hover .notification_date{
+    color: #ffffff;
+}
+.notification_image {
+    width: 50px;
+    overflow: hidden;
+    margin: 0;
+    height: 50px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.notification_image img{display: block;
+height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
+.notification_text {
+    width: calc(100% - 60px);
+    padding: 0 10px;
+    display: inline-block;
+    vertical-align: middle;
+}
+.notification_msg {
+    font-size: 12px;
+    color: #000;
+    font-weight: bold;
+    padding-bottom: 5px;
+}
+.select2-selection{
+    padding: 7px 18px !important ;
+    height: 40px !important;
+
+}

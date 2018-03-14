@@ -1875,10 +1875,15 @@ class WorkshopsController extends Controller
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
-
+        
         if(count($leads)){
+            $customer_ids  = [];
+            foreach($leads as $lead){
+                array_push($customer_ids, $lead->customer->id);
+            }
+            $customer_ids = array_unique($customer_ids);
             $leads_count     = count($leads);
-            $customer_count  = 0;
+            $customer_count  = count($customer_ids);
         }
         else{
             $leads_count     = 0;
