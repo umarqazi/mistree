@@ -11,7 +11,7 @@
                 <div class="col-md-12">
                     <div class="card">
 
-                        <form method="POST" action="{{ url('admin/workshops') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ Auth::guard('admin')->check() ? url('admin/workshops') : url('/register')}}" enctype="multipart/form-data">
                             {!! csrf_field() !!}
                             <div class="header">
                                 <div class="row">
