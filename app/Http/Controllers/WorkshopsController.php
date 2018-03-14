@@ -82,7 +82,7 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {                
+    {              
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -156,12 +156,19 @@ class WorkshopsController extends Controller
 
         $balance = new WorkshopBalance([ 'balance' => 0 ]);
         $workshop->balance()->save($balance);
+        
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
 
         if ($request->hasFile('profile_pic'))
         {
-            $profile_pic =  Storage::disk('local')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
+            if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
+                $path = $workshops_path.$workshop->id.'/logo';
+                Storage::MakeDirectory($path, 0775, true);
+            }            
+            $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
            
-            $profile_pic = storage_path('app/').$profile_pic;
+            $profile_pic = url('/').'/'.$profile_pic;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();            
         }
@@ -174,8 +181,13 @@ class WorkshopsController extends Controller
 
         if ($request->hasFile('cnic_image')) 
         {
-            $cnic_image =  Storage::disk('local')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  storage_path('app/').$cnic_image;
+            if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
+                $path = $workshops_path.$workshop->id.'/cnic';
+                Storage::MakeDirectory($path, 0775, true);
+            }                        
+
+            $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image =  url('/').'/'.$cnic_image;
             $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
@@ -187,13 +199,16 @@ class WorkshopsController extends Controller
         }
 
         if ($request->hasFile('images'))
-        {
+        {   
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                Storage::MakeDirectory($path, 0775, true);
+            }                        
             foreach($request->file('images') as $file)
             {
                 $images = new WorkshopImages;                
-                $image =  Storage::disk('local')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                // $image =  ('app/').$image;
-                $images->url = $image;
+                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');                
+                $images->url = url('/').'/'.$image;                
                 $images->workshop()->associate($workshop);
                 $images->save();
             }
@@ -286,11 +301,19 @@ class WorkshopsController extends Controller
         }
 
          // Update workshop
-        $workshop = Workshop::find($id);        
+        $workshop = Workshop::find($id);
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
         if ($request->hasFile('profile_pic')) 
-        {            
-            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-            $profile_pic =  config('app.s3_bucket_url').$profile_pic;
+        {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
+                $path = $workshops_path.$workshop->id.'/logo';
+                Storage::MakeDirectory($path, 0775, true);
+            }            
+            $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
+           
+            $profile_pic = url('/').'/'.$profile_pic;            
         }
         else
         {
@@ -299,9 +322,14 @@ class WorkshopsController extends Controller
 
 
         if ($request->hasFile('cnic_image')) 
-        {
-            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
+        {   
+            if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
+                $path = $workshops_path.$workshop->id.'/cnic';
+                Storage::MakeDirectory($path, 0775, true);
+            }                        
+
+            $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image =  url('/').'/'.$cnic_image;           
         }
         else
         {
@@ -339,13 +367,17 @@ class WorkshopsController extends Controller
                     $image = WorkshopImages::find($image->id);                                    
                     $image->delete();                    
                 }
+            }
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                Storage::MakeDirectory($path, 0775, true);
             }            
             foreach($request->file('images') as $file)
             {
                 $images = new WorkshopImages;
-                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  config('app.s3_bucket_url').$image;
-                $images->url            = $image;
+
+                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');                                
+                $images->url            = url('/').'/'.$image;
                 $images->workshop_id    = $workshop->id;
                 $images->save();
             }
@@ -1121,20 +1153,10 @@ class WorkshopsController extends Controller
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
-            'team_slots'                     => 'integer',
-            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
-            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
-            'images.*'                       => 'image|mimes:jpg,png,jpeg',
-
-            'shop'                           => 'required|numeric',
-            'building'                       => 'string|nullable',
-            'block'                          => 'string|nullable',
-            'street'                         => 'nullable|string',
-            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'team_slots'                     => 'integer'
         ];          
 
-        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type');
+        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'team_slots');
 
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {            
@@ -1463,7 +1485,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service Added!!',
-            'body'          => null
+            'body'          => ['workshop' => $workshop]
         ],Response::HTTP_OK);                  
     }
      /**
@@ -1673,10 +1695,17 @@ class WorkshopsController extends Controller
 
          // Update workshop
         $workshop = Workshop::find($id);        
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
         if ($request->hasFile('profile_pic')) 
         {            
-            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($request->profile_pic), 'public');
-            $profile_pic =  config('app.s3_bucket_url').$profile_pic;
+            if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
+                $path = $workshops_path.$workshop->id.'/logo';
+                Storage::MakeDirectory($path, 0775, true);                
+            }            
+            $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
+           
+            $profile_pic = url('/').'/'.$profile_pic;            
         }
         else
         {
@@ -1685,9 +1714,14 @@ class WorkshopsController extends Controller
 
 
         if ($request->hasFile('cnic_image')) 
-        {
-            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
+        {   
+            if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
+                $path = $workshops_path.$workshop->id.'/cnic';
+                Storage::MakeDirectory($path, 0775, true);                
+            }                        
+
+            $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
+            $cnic_image =  url('/').'/'.$cnic_image;            
         }
         else
         {
@@ -1725,13 +1759,18 @@ class WorkshopsController extends Controller
                     $image = WorkshopImages::find($image->id);                                    
                     $image->delete();                    
                 }
-            }            
+            }
+
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';                
+                Storage::MakeDirectory($path, 0775, true);
+            }
+
             foreach($request->file('images') as $file)
             {
                 $images = new WorkshopImages;
-                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  config('app.s3_bucket_url').$image;
-                $images->url            = $image;
+                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');                                
+                $images->url            = url('/').'/'.$image;
                 $images->workshop_id    = $workshop->id;
                 $images->save();
             }
@@ -2083,16 +2122,28 @@ class WorkshopsController extends Controller
         $workshop = JWTAuth::authenticate();
         $workshop_id = $workshop->id;
         $image = $request->workshop_image;
-        $old_url = $request->old_url;                                    
-        if( (empty($old_url)) && (!empty($image)) ){            
-            $url = $this->upload_image($image,$workshop_id);            
+        $old_url = $request->old_url;
+
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
+        if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+            $path = $workshops_path.$workshop->id.'/images';            
+            Storage::MakeDirectory($path, 0775, true);
+        }            
+        
+        $full_path = $workshops_path.$workshop->id.'/images/'.md5(microtime()).".jpg";            
+        if( (empty($old_url)) && (!empty($image)) ){
+            $url = $this->upload_image($image,$workshop_id,$full_path);
+            $url = url('/').'/'.$specified_workshop_path.'/images/'.basename($url);  
             $workshop_image = new WorkshopImages;
             $workshop_image->url            = $url;
             $workshop_image->workshop_id    = $workshop_id;
             $workshop_image->save();
                    
         }elseif( (!empty($old_url)) && (!empty($image)) ){
-            $url = $this->upload_image($image,$workshop_id);                                            
+            $url = $this->upload_image($image,$workshop_id,$full_path);                                            
+            $url = url('/').'/'.$specified_workshop_path.'/images/'.basename($url);  
             WorkshopImages::where('url', $old_url)
                             ->where('workshop_id',$workshop_id)
                             ->update(['url' => $url]);                
@@ -2142,7 +2193,18 @@ class WorkshopsController extends Controller
     {            
         $workshop   = JWTAuth::authenticate();
         $file_data = $request->profile_pic;
-        $url = $this->upload_image($file_data,$workshop->id);
+
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
+        if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
+            $path = $workshops_path.$workshop->id.'/logo';
+            Storage::MakeDirectory($path, 0775, true);
+        }            
+        
+        $full_path = $workshops_path.$workshop->id.'/logo/'.md5(microtime()).".jpg";        
+        $url = $this->upload_image($file_data,$workshop->id,$full_path);
+        $url = url('/').'/'.$specified_workshop_path.'/logo/'.basename($url);                
         $profile_image = $workshop->update(['profile_pic' => $url]);
 
         return response()->json([
@@ -2188,8 +2250,19 @@ class WorkshopsController extends Controller
     public function updateCnicImage(Request $request)
     {            
         $workshop   = JWTAuth::authenticate();
-        $file_data = $request->cnic_image;
-        $url = $this->upload_image($file_data,$workshop->id);
+        $file_data = $request->cnic_image;        
+
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
+        if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
+            $path = $workshops_path.$workshop->id.'/cnic';
+            Storage::MakeDirectory($path, 0775, true);
+        }            
+        
+        $full_path = $workshops_path.$workshop->id.'/cnic/'.md5(microtime()).".jpg";        
+        $url = $this->upload_image($file_data,$workshop->id,$full_path);
+        $url = url('/').'/'.$specified_workshop_path.'/cnic/'.basename($url);        
         $cnic_image = $workshop->update(['cnic_image' => $url]);
 
         return response()->json([
@@ -2200,20 +2273,13 @@ class WorkshopsController extends Controller
                 ],Response::HTTP_OK);               
     }
 
-    public function upload_image($file_data , $workshop_id){
-        $full_path = storage_path()."/app/workshop/temp/".md5(microtime()).".jpg";
-        $path = "/workshop/temp";
-        if(!is_dir($path)) {
-            Storage::makeDirectory($path);            
-        }
+    public function upload_image($file_data , $workshop_id, $full_path){                
         $file   = fopen($full_path, "wb");        
         fwrite($file, base64_decode($file_data));
-        fclose($file);
-        $s3_path =  Storage::disk('s3')->putFile('workshops/'. $workshop_id . '/images', new File($full_path), 'public');
-        $workshop_image = config('app.s3_bucket_url').$s3_path;
-        Storage::delete($path.'/'.basename($full_path));
-        return $workshop_image;
+        fclose($file);                
+        return $full_path;
     }
+
 
     /**
      * @SWG\Get(
