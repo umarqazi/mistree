@@ -398,8 +398,4 @@ $(document).ready(function(){
       $(".subnav").toggleClass("show_ul");
       $(this).children("i").last().toggleClass("ti-angle-down ti-angle-up");
     });
-
-    $(document).ready(function() {
-        $('.select-search').select2();
-        });
 });
