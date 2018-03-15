@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\CategoryScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
@@ -32,6 +33,18 @@ class Car extends Model
      * @var array
      */
     protected $casts = ['is_published' => 'boolean'];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new CategoryScope);
+    }
 
     public function customers()
     {
