@@ -34,7 +34,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
     Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('/register', 'WorkshopsController@store');
+    Route::post('/register', 'WorkshopAuth\RegisterController@register');
 
     Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
     Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
@@ -57,7 +57,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
-        Route::patch('profile/updateProfileService/', 'WorkshopsController@updateProfileService');
+        Route::patch('profileServiceUpdate', 'WorkshopsController@updateProfileService');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
@@ -68,6 +68,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('leads/accepted','BookingsController@acceptedLeads');
         Route::get('leads/rejected','BookingsController@rejectedLeads');
         Route::get('leads/completed','BookingsController@completedLeads');
+        Route::get('/notification', 'NotificationController@index');
 
     });
 
@@ -148,6 +149,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
         Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
+        Route::get('/notification', 'NotificationsController@index');
                 
     });
 
@@ -155,6 +157,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
 
 /* ========= Admin Routes End ====================================================== */
+
 /* ========= Other Routes Starts ====================================================== */
 /*Notification Routes*/
         Route::get('/notifications/markasread', 'NotificationsController@markOneAsRead');

@@ -65,7 +65,7 @@
                             <tbody>                            
                                 @foreach($bookings as $lead)                                
                                 <tr role="row" class="odd">                                    
-                                    <td>{{ $lead->job_date }}</td>
+                                    <td>{{$lead->job_date }}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
