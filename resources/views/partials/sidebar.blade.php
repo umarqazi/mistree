@@ -52,12 +52,6 @@
                         <p>Notifications</p>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
-                        <i class="ti-pencil-alt"></i>
-                        <p>Balance Trail</p>
-                    </a>
-                </li>
                 <li  @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*') || Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') )   class="active" @endif >
                     <a href="" class="query_links">
                         <i class="ti-help-alt"></i>

@@ -52,18 +52,20 @@
                         <div id="jsTable_wrapper" class="dataTables_wrapper">
                         <table class="table table-striped dataTable" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
-                                <th class="sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
-                                <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
-                                <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent</th>
-                                <th class="text-center" tabindex="0" rowspan="1" colspan="1">Doorstep</th>
+                                <th class="text-center sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
+                                <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
+                                <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent Service</th>
+                                <th class="text-center sorting">Category</th>
+                                <th class="text-center sorting" tabindex="0" rowspan="1" colspan="1">Doorstep</th>
                                 <th style="width: 286px">Action</th></tr>
                             </thead>
                         <tbody>
                         @foreach($services as $key => $value)
                             <tr role="row" class="odd">
                                 <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
-                                <td>{{$value->name}}</td>
-                                <td class="text-center">{{$value->parent($value->service_parent)['name']}}</td>
+                                <td class="text-center">{{$value->name}}</td>
+                                <td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>
+                                <td class="text-center">@if($value->category){{$value->category->name}}@endif</td>
                                 <td class="text-center">
                                     @if($value->is_doorstep)
                                         <i class="ti-check"></i>

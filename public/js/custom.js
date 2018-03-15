@@ -387,12 +387,36 @@ $(document).ready(function(){
 
 
 
-
-    $('#jsTable').DataTable();  
+    $('#jsTable').DataTable({
+       /* Disable initial sort */
+      "aaSorting": []
+    });  
+    
 
     $(".nav > li a.query_links").click(function(e){
       e.preventDefault();
       $(".subnav").toggleClass("show_ul");
       $(this).children("i").last().toggleClass("ti-angle-down ti-angle-up");
+    });
+
+
+    /* Header Notification Code */
+    $('.notification_links, .notification_lnks').click(function (e) {
+        var a_element = $(this);
+        e.preventDefault();
+        var notif_id = $(this).attr('notif-id');
+
+        $.ajax({
+            url: '/notifications/markasread',
+            type: 'GET',
+            data: {id: notif_id},
+            success: function (data) {
+                if(data){
+                    if(data == 1){
+                      window.location.href = a_element.attr("href");
+                    }
+                }
+            }
+        });
     });
 });

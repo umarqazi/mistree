@@ -24,7 +24,7 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
-                                    '<input type="text" class="form-control border-input" name="service-times[' + params.selected +']">' +
+                                    '<select name ="service-times[' + params.selected +']" class="form-control chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +

@@ -37,21 +37,22 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
                                 <tr role="row">                                    
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 150px;">Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 156px;">Email</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Contact No.</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Loyalty Points</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Status</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 150px;">Name</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 156px;">Email</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Contact No.</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Loyalty Points</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 107px;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                              @foreach($customers as $key => $value)
                                  <tr role="row" class="odd">                                    
-                                    <td>{{ $value->name }}</td>
-                                    <td>{{ $value->email }}</td>
-                                    <td>{{ $value->con_number }}</td>                                    
-                                    <td>{{ $value->loyalty_points }}</td>  
-                                    <td>
+                                    <td class="text-center">{{ $value->name }}</td>
+                                    <td class="text-center">{{ $value->email }}</td>
+                                    <td class="text-center">{{ $value->con_number }}</td>                                    
+                                    <td class="text-center">{{ $value->loyalty_points }}</td>  
+                                    <td class="text-center">
+                                        <a class= "btn btn-header" href="{{url('admin/customers/'. $value->id)}}">View</a>
                                         <form method="POST" action="customers/{{ $value->id }}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">

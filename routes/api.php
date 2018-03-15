@@ -53,9 +53,8 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
       	Route::post('add-customer-address', 'CustomersController@addCustomerAddress');
       	Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
       	Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
-
       	Route::resource('customer-queries', 'CustomerQueriesController', ['only' => ['store']]);
-
+        Route::patch('update-profile-image','CustomersController@updateProfileImage');
 	});
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){

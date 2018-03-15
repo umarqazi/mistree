@@ -29,7 +29,7 @@
                       <div class="col-md-6 top-up-form">
                         <div class="form-group">
                           <label class="control-label">Workshop <span class="manadatory">*</span></label>
-                          <select name="workshop_id" class="form-control border-input">
+                          <select name="workshop_id" class="form-control chosen-select  border-input">
                             <option value="">Select Workshop</option>
                             @foreach($workshops as $workshop)
                             <option value="{{$workshop->id}}">{{$workshop->name}}</option> 
