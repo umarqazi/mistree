@@ -64,4 +64,9 @@ class Service extends Model
         return $this->belongsTo('App\Category');
     }
 
+    public function scopeParentLevel($query)
+    {
+        return $query->where('service_parent',0);
+    }
+
 }

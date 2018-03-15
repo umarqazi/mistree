@@ -38,7 +38,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::orderBy('created_at', 'desc')->get();      
+        $services = Service::parentLevel()->orderBy('created_at', 'desc')->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -296,5 +296,10 @@ class ServicesController extends Controller
             'message' => 'all services',
             'body' => [ 'services' => $services ]
         ],Response::HTTP_OK);        
+    }
+
+    public function getChildServices(Service $service)
+    {
+        return view::make('services.child_services')->with('services',$service->children);
     }
 }

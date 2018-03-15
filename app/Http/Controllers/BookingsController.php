@@ -491,11 +491,15 @@ class BookingsController extends Controller
         $received_leads = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
+        $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
+        $completed_leads,
+        'received_leads' =>
+            $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ];
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Workshop Ledger',
-                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ]
+                    'body' => ['leads'=> $leads]
                 ],Response::HTTP_OK);
     }
 
@@ -750,15 +754,15 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();        
+        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();
                 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Pending Bookings',
                     'body' => ['pending_bookings' => $pending_leads]
-                ],Response::HTTP_OK);                        
-        
+                ],Response::HTTP_OK);
+
     }
 
     /**
@@ -793,7 +797,7 @@ class BookingsController extends Controller
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Pending Bookings',
+                    'message' => 'Bookings',
                     'body' => ['bookings' => $bookings]
                 ],Response::HTTP_OK);                        
         

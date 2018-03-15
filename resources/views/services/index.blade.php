@@ -54,18 +54,22 @@
                             <thead>
                                 <th class="text-center sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
                                 <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
-                                <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent Service</th>
+                                {{--<th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent Service</th>--}}
                                 <th class="text-center sorting">Category</th>
+                                <th class="text-center sorting">Loyalty Points</th>
+                                <th class="text-center sorting">Lead Charges</th>
                                 <th class="text-center sorting" tabindex="0" rowspan="1" colspan="1">Doorstep</th>
-                                <th style="width: 286px">Action</th></tr>
+                                <th style="width: 286px" class="text-center">Action</th></tr>
                             </thead>
                         <tbody>
                         @foreach($services as $key => $value)
                             <tr role="row" class="odd">
                                 <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
                                 <td class="text-center">{{$value->name}}</td>
-                                <td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>
+                                {{--<td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>--}}
                                 <td class="text-center">@if($value->category){{$value->category->name}}@endif</td>
+                                <td class="text-center">{{$value->loyalty_points}}</td>
+                                <td class="text-center">{{$value->lead_charges}}</td>
                                 <td class="text-center">
                                     @if($value->is_doorstep)
                                         <i class="ti-check"></i>
@@ -78,6 +82,10 @@
                                      <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                      <input class="btn btn-header btn-export" type="submit" value="Deactivate">
                                      </form>
+                                    @if(!$value->children->isEmpty())
+                                        <a href="{{ URL::to('admin/services/'.$value->id.'/child-services') }}"
+                                           class="btn btn-header">View Child Services</a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach
