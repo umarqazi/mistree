@@ -149,11 +149,18 @@ class RegisterController extends Controller
         $balance = new WorkshopBalance([ 'balance' => 0 ]);
         $workshop->balance()->save($balance);
 
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
         if (!empty($data['profile_pic']))
         {
-            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($data['profile_pic']), 'public');
+            if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
+                $path = $workshops_path.$workshop->id.'/logo';
+                Storage::MakeDirectory($path, 0775, true);
+            }
+            $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($data['profile_pic']), 'public');
 
-            $profile_pic = config('app.s3_bucket_url').$profile_pic;
+            $profile_pic = url('/').'/'.$profile_pic;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();
         }
@@ -166,11 +173,17 @@ class RegisterController extends Controller
 
         if (!empty($data['cnic_image']))
         {
-            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($data['cnic_image']), 'public');
-            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
+            if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
+                $path = $workshops_path.$workshop->id.'/cnic';
+                Storage::MakeDirectory($path, 0775, true);
+            }
+
+            $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($data['cnic_image']), 'public');
+            $cnic_image =  url('/').'/'.$cnic_image;
             $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
+
         else
         {
             $cnic_image         =  url('img/thumbnail.png');
@@ -180,12 +193,15 @@ class RegisterController extends Controller
 
         if (!empty($data['images']))
         {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                Storage::MakeDirectory($path, 0775, true);
+            }
             foreach($data['images'] as $file)
             {
                 $images = new WorkshopImages;
-                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  config('app.s3_bucket_url').$image;
-                $images->url = $image;
+                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');
+                $images->url = url('/').'/'.$image;
                 $images->workshop()->associate($workshop);
                 $images->save();
             }
