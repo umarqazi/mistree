@@ -524,12 +524,20 @@ class BookingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function leadsHistory(Request $request){
-        $workshop = Auth::guard('workshop')->user();
-        $total_earning = $workshop->billings->sum('amount');
+    public function leadsHistory(Request $request){                
+        $req = $request->header('Content-Type');
+        if($req == 'application/json'){            
+            $workshop = JWTAuth::authenticate();            
+        }else{                    
+            $workshop = Auth::guard('workshop')->user();
+        }        
+        if($workshop->billings != null){            
+            $total_earning = $workshop->billings->sum('amount');
+        }else{
+            $total_earning = null;
+        }
         $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
-       
-        // check request Type
+               
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($bookings) == 0){
@@ -544,7 +552,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'Workshop History',
-                            'body' => ['bookings' => $bookings]
+                            'body' => ['bookings' => $bookings, 'total_earning' => $total_earning]
                         ],Response::HTTP_OK);
             }
         }
