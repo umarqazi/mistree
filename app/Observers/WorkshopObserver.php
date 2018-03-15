@@ -13,8 +13,8 @@ class WorkshopObserver
 {
 	public function saving(Workshop $workshop)
     {
-    	$admins = Admin::all();
-    	Notification::send($admins, new NewWorkshop($workshop));
+    	/*$admins = Admin::all();
+    	Notification::send($admins, new NewWorkshop($workshop));*/
     }
 
 }

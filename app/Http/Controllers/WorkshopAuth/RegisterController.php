@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\WorkshopAuth;
 
+use App\Events\NewWorkshopEvent;
 use App\Workshop;
 use App\WorkshopAddress;
 use App\WorkshopBalance;
 use App\WorkshopImages;
+use Illuminate\Console\Scheduling\Event;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -184,6 +186,9 @@ class RegisterController extends Controller
                 $mail->to($data['email'], $data['name']);
                 $mail->subject($subject);
             });
+
+        //Firing an Event to Generate Notifications
+        event(new NewWorkshopEvent($workshop));
 
         return $workshop;
     }

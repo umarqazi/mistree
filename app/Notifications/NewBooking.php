@@ -11,12 +11,14 @@ class NewBooking extends Notification
 {
     use Queueable;
 
+    protected $booking;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($booking)
     {
         $this->booking = $booking;
     }

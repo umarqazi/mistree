@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewBookingEvent;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -75,7 +76,7 @@ class BookingsController extends Controller
      *     in="formData",
      *     description="Vehicle Number",
      *     required=true,
-     *     type="string"     
+     *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="is_doorstep",
@@ -148,6 +149,10 @@ class BookingsController extends Controller
         }        
 
         $booking->services;
+
+        //Firing an Event to Generate Notifications
+        event(new NewBookingEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,

@@ -3,7 +3,7 @@
 namespace App\Observers;
 
 use App\Workshop;
-use App\Bokking;
+use App\Booking;
 use App\Admin;
 use App\Notifications\NewBooking;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +14,8 @@ class BookingObserver
 {
 	public function saved(Booking $booking)
     {
-    	$workshop = $booking->workshop();
-    	Notification::send($workshop, new NewBooking($booking));
+    	/*$workshop = $booking->workshop();
+    	Notification::send($workshop, new NewBooking($booking));*/
     }
 
 }
