@@ -593,7 +593,7 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function acceptedLeads(Request $request){
-        if($request->header('content-type')){
+        if($request->header('content-type') == 'application/json'){
             $workshop = JWTAuth::authenticate();
         }else{
             $workshop = Auth::guard('workshop')->user();
@@ -651,7 +651,7 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rejectedLeads(Request $request){
-        if($request->header('content-type')){
+        if($request->header('content-type') == 'application/json'){
             $workshop = JWTAuth::authenticate();
         }else{
             $workshop = Auth::guard('workshop')->user();
@@ -708,7 +708,7 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function completedLeads(Request $request){
-        if($request->header('content-type')){
+        if($request->header('content-type') == 'application/json'){
             $workshop = JWTAuth::authenticate();
         }else{
             $workshop = Auth::guard('workshop')->user();
