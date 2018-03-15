@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\CategoryScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +34,17 @@ class Service extends Model
      */
     protected $casts = ['is_doorstep' => 'boolean'];
 
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new CategoryScope);
+    }
 
     public function workshops()
     {

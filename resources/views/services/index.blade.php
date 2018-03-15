@@ -70,6 +70,7 @@
                                 <td class="text-center">@if($value->category){{$value->category->name}}@endif</td>
                                 <td class="text-center">{{$value->loyalty_points}}</td>
                                 <td class="text-center">{{$value->lead_charges}}</td>
+
                                 <td class="text-center">
                                     @if($value->is_doorstep)
                                         <i class="ti-check"></i>

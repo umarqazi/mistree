@@ -38,6 +38,7 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
+
         $services = Service::parentLevel()->orderBy('created_at', 'desc')->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
