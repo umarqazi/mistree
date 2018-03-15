@@ -46,8 +46,8 @@
                         <p>Top UP</p>
                     </a>
                 </li>
-                <li>
-                    <a href="#">
+                <li @if(Request::is('admin/notifications') || Request::is('admin/notifications/')) class="active" @endif >
+                    <a href="{{url('admin/notifications/')}}">
                         <i class="ti-comment-alt"></i>
                         <p>Notifications</p>
                     </a>

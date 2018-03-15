@@ -33,7 +33,7 @@
                                     @if( count(Auth::guard('admin')->user()->unreadNotifications) )
                                         @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)
                                             <li>
-                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" >
+                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" href="{{$notification->data['notification_url']}}">
                                                 <div class="notification_image">
                                                     @if(snake_case(class_basename($notification->type )) == 'new_workshop')
                                                         <img src="{{URL::to('/img/workshop-icon.png')}}">
@@ -52,13 +52,16 @@
                                             </a>
                                           </li>
                                         @endforeach
-                                        <li><a href="#">Other Notifications</a></li>
+                                        <li><a href="{{url('admin/notifications/')}}">Other Notifications</a></li>
+                                    @else
+                                        <li class="text-center">No New Notifications</li>
+                                        <li><a href="{{url('admin/notifications/')}}">Show All Notifications</a></li>
                                     @endif
                                 @elseif(Auth::guard('workshop')->check())
                                     @if( count(Auth::guard('workshop')->user()->unreadNotifications) )
                                         @foreach(Auth::guard('workshop')->user()->unreadNotifications as $key => $notification)
                                             <li>
-                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" >
+                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" href="{{$notification->data['notification_url']}}">
                                                 <div class="notification_image">
                                                     @if(snake_case(class_basename($notification->type )) == 'new_workshop')
                                                         <img src="{{URL::to('/img/workshop-icon.png')}}">
@@ -77,7 +80,10 @@
                                             </a>
                                           </li>
                                         @endforeach
-                                        <li><a href="#">Other Notifications</a></li>
+                                        <li><a href="{{url('notifications/')}}">Other Notifications</a></li>
+                                    @else
+                                        <li class="text-center">No New Notifications</li>
+                                        <li><a href="{{url('admin/notifications/')}}">Show All Notifications</a></li>
                                     @endif
                                 @endif
                             </ul>
