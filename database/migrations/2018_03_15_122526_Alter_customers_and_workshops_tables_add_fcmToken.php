@@ -14,10 +14,10 @@ class AlterCustomersAndWorkshopsTablesAddFcmToken extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            $table->string('fcm_token');
+            $table->string('fcm_token')->nullable();
         });
         Schema::table('workshops', function (Blueprint $table) {
-            $table->string('fcm_token');
+            $table->string('fcm_token')->nullable();
         });
     }
 
