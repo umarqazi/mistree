@@ -106,7 +106,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
-        Route::get('services/{service}/child-services', 'ServicesController@getChildServices');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('customer-queries', 'CustomerQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('cars', 'CarsController');
