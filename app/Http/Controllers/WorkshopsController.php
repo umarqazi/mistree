@@ -1899,6 +1899,7 @@ class WorkshopsController extends Controller
         
         $transaction->save();
 
+        Session::flash('message', 'Rs '.$request->amount .' has been topped up to '.$workshop->name);
         return Redirect::to('admin/top-up');       
     }
 
