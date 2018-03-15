@@ -25,9 +25,6 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Service::observe(ServiceObserver::class);
         WorkshopImages::observe(WorkshopImagesObserver::class);
-        Workshop::observe(WorkshopObserver::class);
-        Booking::observe(BookingObserver::class);
-
     }
 
     /**
