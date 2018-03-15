@@ -64,10 +64,10 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Parent <span class="manadatory">*</span></label>
-                                            <select class="form-control border-input" name="service-parent" >
+                                            <select class="form-control chosen-select border-input" name="service-parent" >
                                                 <option value="0">Select Option</option>
                                                 @foreach($services as $key => $value)
-                                                    <option value="{{$value->id}}" @if($service->service_parent == $value->id) {{"selected"}} @endif>@if($value->parent($value->service_parent)){{$value->parent($value->service_parent)['name'].' - '}}@endif{{$value->name}}@if($value->is_doorstep){{ " at doorstep" }}@endif</option>
+                                                    <option value="{{$value->id}}" @if($service->service_parent == $value->id) {{"selected"}} @endif>@if(!is_null($value->parent)){{$value->parent->name.' - '}}@endif{{$value->name}}@if($value->is_doorstep){{ " at doorstep" }}@endif</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('service-parent'))

@@ -42,8 +42,14 @@
                 </li>
                 <li  @if(Request::is('admin/top-up/*') || Request::is('admin/top-up')) class="active" @endif >
                     <a href="{{url('admin/top-up')}}">
-                        <i class="ti-panel"></i>
+                        <i class="ti-money"></i>
                         <p>Top UP</p>
+                    </a>
+                </li>
+                <li @if(Request::is('admin/booking/*') || Request::is('admin/booking')) class="active" @endif>
+                    <a href="{{url('admin/booking')}}">
+                        <i class="ti-agenda"></i>
+                        <p>Bookings</p>
                     </a>
                 </li>
                 <li @if(Request::is('admin/notifications') || Request::is('admin/notifications/')) class="active" @endif >

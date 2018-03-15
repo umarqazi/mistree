@@ -66,15 +66,15 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="numbers">
-                                        <p>ACTIVE LEADS</p>
-                                        87
+                                        <p>ACTIVE BOOKINGS</p>
+                                       {{ $BookingsCount }}
                                     </div>
                                 </div>
                             </div>
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="#"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{ url( 'admin/booking/') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>

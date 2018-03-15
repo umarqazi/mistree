@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewBookingEvent;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class BookingsController extends Controller
 
      /**
      * @SWG\Post(
-     *   path="/api/workshop/create-booking",
+     *   path="/api/customer/create-booking",
      *   summary="Create Booking",
      *   operationId="booking",
      *   produces={"application/json"},
@@ -75,7 +76,7 @@ class BookingsController extends Controller
      *     in="formData",
      *     description="Vehicle Number",
      *     required=true,
-     *     type="string"     
+     *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="is_doorstep",
@@ -148,6 +149,10 @@ class BookingsController extends Controller
         }        
 
         $booking->services;
+
+        //Firing an Event to Generate Notifications
+        event(new NewBookingEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -491,11 +496,15 @@ class BookingsController extends Controller
         $received_leads = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
+        $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
+        $completed_leads,
+        'received_leads' =>
+            $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ];
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Workshop Ledger',
-                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ]
+                    'body' => ['leads'=> $leads]
                 ],Response::HTTP_OK);
     }
 
@@ -524,12 +533,20 @@ class BookingsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function leadsHistory(Request $request){
-        $workshop = Auth::guard('workshop')->user();
-        $total_earning = $workshop->billings->sum('amount');
+    public function leadsHistory(Request $request){                
+        $req = $request->header('Content-Type');
+        if($req == 'application/json'){            
+            $workshop = JWTAuth::authenticate();            
+        }else{                    
+            $workshop = Auth::guard('workshop')->user();
+        }        
+        if($workshop->billings != null){            
+            $total_earning = $workshop->billings->sum('amount');
+        }else{
+            $total_earning = null;
+        }
         $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
-       
-        // check request Type
+               
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($bookings) == 0){
@@ -544,7 +561,7 @@ class BookingsController extends Controller
                             'http-status' => Response::HTTP_OK,
                             'status' => true,
                             'message' => 'Workshop History',
-                            'body' => ['bookings' => $bookings]
+                            'body' => ['bookings' => $bookings, 'total_earning' => $total_earning]
                         ],Response::HTTP_OK);
             }
         }
@@ -712,6 +729,108 @@ class BookingsController extends Controller
         else{
             return View::make('workshop_profile.completed_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'completed_leads'=>$completed_leads]);
         }   
+        
+    }
+
+    public function bookingListings(Request $request){
+
+      $bookings          = Booking::all();
+      $bookings_pending  = Booking::PendingBookings()->orderBy('created_at')->get();
+      $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->get();
+      $bookings_complete = Booking::CompletedBookings()->orderBy('created_at')->get();
+      $bookings_rejected = Booking::RejectedBookings()->orderBy('created_at')->get();
+      
+        switch ($request->list_type) {
+
+        case "pending":
+            return View::make('bookings.pending')->with('bookings', $bookings_pending);
+            break;
+        case "completed":
+            return View::make('bookings.complete')->with('bookings', $bookings_complete);
+            break;
+        case "cancelled":
+        return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
+            break;
+        default:
+        
+        return View::make('bookings.active')->with('bookings', $bookings_active);
+
+        }
+    }   
+
+     /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/pending",
+     *   summary="Pending Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function pendingLeads(Request $request){
+        $workshop = JWTAuth::authenticate();
+        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();
+                
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Pending Bookings',
+                    'body' => ['pending_bookings' => $pending_leads]
+                ],Response::HTTP_OK);
+
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/bookings/",
+     *   summary="Customer Bookings",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *    
+     * Getting Workshop Ledger.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function customerBookings(Request $request){
+        $customer = JWTAuth::authenticate();
+        $bookings = Booking::where('customer_id', $customer->id)->with('services')->get();        
+                
+        return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Bookings',
+                    'body' => ['bookings' => $bookings]
+                ],Response::HTTP_OK);                        
         
     }
 }

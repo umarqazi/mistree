@@ -12,8 +12,8 @@
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="title">Authorized Workshops</h4>
-                                <p class="category">List of all authorized workshops.</p>
+                                <h4 class="title">Unauthorized Workshops</h4>
+                                <p class="category">List of all Unauthorized workshops.</p>
                             </div>
                         </div>
                         <div class="clear20"></div>

@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\CategoryScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +34,17 @@ class Service extends Model
      */
     protected $casts = ['is_doorstep' => 'boolean'];
 
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new CategoryScope);
+    }
 
     public function workshops()
     {
@@ -49,14 +61,24 @@ class Service extends Model
         return $this->hasMany('App\Service', 'service_parent');
     }
 
-    public function parent($id)
+    public function children()
     {
-        return $this->find($id);
+        return $this->services()->with('children');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\Service', 'service_parent');
     }
 
     public function category()
     {
         return $this->belongsTo('App\Category');
+    }
+
+    public function scopeParentLevel($query)
+    {
+        return $query->where('service_parent',0);
     }
 
 }

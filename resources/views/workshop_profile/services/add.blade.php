@@ -32,7 +32,7 @@
                                       <div class="col-md-12">
                                         <div class="form-group">
                                           <label class="control-label">Select Service <span class="manadatory">*</span></label>
-                                          <select class="form-control select-search border-input" name="service_id">
+                                          <select class="form-control chosen-select  border-input" name="service_id">
                                             <option value="" disabled selected>Select Service</option>
                                             @foreach ($services as $service)
                                             <option value="{{$service->id}}">{{ $service->name }}</option>
@@ -57,10 +57,29 @@
                                         @endif
                                       </div>
                                       <div class="col-md-6">
-                                        <label class="control-label">Enter Time <span class="manadatory">*</span></label>
-                                          <input type="text" class="form-control border-input" name="service_time">
-                                          
-                                      </div>                                        
+                                          <label class="control-label">Enter Time</label>
+                                          <select name ="service_time" class="form-control chosen-select border-input">
+                                              <option value="1.0">1.0 hr</option>
+                                              <option value="1.5">1.5 hr</option>
+                                              <option value="2.0">2.0 hr</option>
+                                              <option value="2.5">2.5 hr</option>
+                                              <option value="3.0">3.0 hr</option>
+                                              <option value="3.5">3.5 hr</option>
+                                              <option value="4.0">4.0 hr</option>
+                                              <option value="4.5">4.5 hr</option>
+                                              <option value="5.0">5.0 hr</option>
+                                              <option value="5.5">5.5 hr</option>
+                                              <option value="6.0">6.0 hr</option>
+                                              <option value="6.5">6.5 hr</option>
+                                              <option value="7.0">7.0 hr</option>
+                                              <option value="7.5">7.5 hr</option>
+                                              <option value="8.0">8.0 hr</option>
+                                              <option value="8.5">8.5 hr</option>
+                                              <option value="9.0">9.0 hr</option>
+                                              <option value="9.5">9.5 hr</option>
+                                              <option value="10">10 hr</option>
+                                          </select>
+                                      </div>                                
                                     </div>
                                   </div>
                                 </div> 

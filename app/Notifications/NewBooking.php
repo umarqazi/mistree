@@ -13,7 +13,7 @@ class NewBooking extends Notification
     use Queueable;
 
     protected $booking;
-    
+
     /**
      * Create a new notification instance.
      *

@@ -34,7 +34,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
     Route::post('/logout', 'WorkshopAuth\LoginController@logout')->name('logout');
 
     Route::get('/register', 'WorkshopAuth\RegisterController@showRegistrationForm')->name('register');
-    Route::post('/register', 'WorkshopsController@store');
+    Route::post('/register', 'WorkshopAuth\RegisterController@register');
 
     Route::post('/password/email', 'WorkshopAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
     Route::post('/password/reset', 'WorkshopAuth\ResetPasswordController@reset')->name('password.email');
@@ -57,7 +57,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
-        Route::patch('profile/updateProfileService/', 'WorkshopsController@updateProfileService');
+        Route::patch('profileServiceUpdate', 'WorkshopsController@updateProfileService');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
@@ -106,6 +106,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
+        Route::get('services/{service}/child-services', 'ServicesController@getChildServices');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('customer-queries', 'CustomerQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('cars', 'CarsController');
@@ -135,6 +136,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');
+
+        Route::get('/booking', 'BookingsController@bookingListings');
+        Route::post('/booking/', 'BookingsController@bookingListings');
         
         
         Route::get('/authorized-workshops', 'WorkshopsController@authorized');

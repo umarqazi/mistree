@@ -38,6 +38,7 @@ class BookingObserver
 		$token = $booking->workshop->fcm_token;
 
 		$downstreamResponse = FCM::sendTo($token, $option, $notification);
+
     }
 
 }
