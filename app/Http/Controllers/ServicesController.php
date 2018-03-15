@@ -137,14 +137,9 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
-        // get the service
-        $service = Service::find($id);
-
-        // show the view and pass the service to it
-        return View::make('services.show')
-            ->with('service', $service);
+        return view::make('services.child_services')->with('services',$service->children);
     }
 
     /**
@@ -297,10 +292,5 @@ class ServicesController extends Controller
             'message' => 'all services',
             'body' => [ 'services' => $services ]
         ],Response::HTTP_OK);        
-    }
-
-    public function getChildServices(Service $service)
-    {
-        return view::make('services.child_services')->with('services',$service->children);
     }
 }

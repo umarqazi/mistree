@@ -80,7 +80,7 @@
                                                 </form>
                                                 @if(!$value->children->isEmpty())
                                                     <a href="{{ URL::to('admin/services/'.$value->id
-                                                    .'/child-services') }}" class="btn btn-header">View Child
+                                                    ) }}" class="btn btn-header">View Child
                                                         Services</a>
                                                 @endif
                                             </td>

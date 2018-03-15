@@ -598,7 +598,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function acceptedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
@@ -652,7 +656,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rejectedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $total_earning = $workshop->billings->sum('amount');
         $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
         if( $request->header('Content-Type') == 'application/json')
@@ -705,7 +713,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function completedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
