@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Customer;
 use App\Workshop;
+use App\Booking;
 
 
 class AdminsController extends Controller
@@ -22,7 +23,10 @@ class AdminsController extends Controller
 
         $workshops = Workshop::all();
         $WorkshopCount = count($workshops);
-        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount ]);
+
+        $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->count();
+
+        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'BookingsCount' => $bookings_active ]);
     }
 
     public function index()

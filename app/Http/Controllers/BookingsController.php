@@ -723,7 +723,33 @@ class BookingsController extends Controller
         
     }
 
-    /**
+    public function bookingListings(Request $request){
+
+      $bookings          = Booking::all();
+      $bookings_pending  = Booking::PendingBookings()->orderBy('created_at')->get();
+      $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->get();
+      $bookings_complete = Booking::CompletedBookings()->orderBy('created_at')->get();
+      $bookings_rejected = Booking::RejectedBookings()->orderBy('created_at')->get();
+      
+        switch ($request->list_type) {
+
+        case "pending":
+            return View::make('bookings.pending')->with('bookings', $bookings_pending);
+            break;
+        case "completed":
+            return View::make('bookings.complete')->with('bookings', $bookings_complete);
+            break;
+        case "cancelled":
+        return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
+            break;
+        default:
+        
+        return View::make('bookings.active')->with('bookings', $bookings_active);
+
+        }
+    }   
+
+     /**
      * @SWG\Get(
      *   path="/api/workshop/leads/pending",
      *   summary="Pending Leads",
@@ -798,6 +824,4 @@ class BookingsController extends Controller
                 ],Response::HTTP_OK);                        
         
     }
-
-
 }
