@@ -227,6 +227,13 @@ class CustomersController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="fcm_token",
+     *     in="formData",
+     *     description="Customer Firebase Token",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
@@ -235,12 +242,13 @@ class CustomersController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name'      => 'required',
-            'email'     => 'required|email|unique:customers',
-            'password'  => 'required|confirmed|min:6',
-            'con_number'=> 'required',
+            'name'          => 'required',
+            'email'         => 'required|email|unique:customers',
+            'password'      => 'required|confirmed|min:6',
+            'con_number'    => 'required',
+            'fcm_token'     => 'required',
         ];
-        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
+        $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number','fcm_token');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -256,7 +264,17 @@ class CustomersController extends Controller
         $con_number = $request->con_number;
         $email = $request->email;
         $password = $request->password;
-        $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1, 'con_number' => $con_number]);
+        $fcm_token = $request->fcm_token;
+
+        $customer = Customer::create([
+            'name'          => $name,
+            'email'         => $email,
+            'password'      => Hash::make($password),
+            'status'        => 1,
+            'con_number'    => $con_number,
+            'fcm_token'     => $request->fcm_token
+        ]);
+
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
         $subject = "Please verify your email address.";
@@ -301,6 +319,13 @@ class CustomersController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="fcm_token",
+     *     in="formData",
+     *     description="Customer Firebase Token",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
@@ -339,6 +364,10 @@ class CustomersController extends Controller
             }
         // all good so return the token
         $customer = Auth::user();
+
+        /* Update Customer FCM Token */
+        $customer->fcm_token = $request->fcm_token;
+        $customer->update();
 
         return response()->json([
             'http-status' => Response::HTTP_OK,
