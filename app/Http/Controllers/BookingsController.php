@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Notifications\JobClosed;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -376,6 +378,11 @@ class BookingsController extends Controller
 
             $transaction->save();
 
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+            if ($new_balance < 500)
+            {
+                event(new MinimumBalanceEvent($workshop));
+            }
 
         }else{
             $billing->lead_charges           = 0;
@@ -383,11 +390,9 @@ class BookingsController extends Controller
             $billing->save();
         }
 
-//          Fire An Event To Generate A Notification if $new_balance is less than 500
-        if ($new_balance < 500)
-        {
-            event(new MinimumBalanceEvent($workshop));
-        }
+//          Fire An Event To Generate A Notification To User About Job Closing
+            event(new JobClosedEvent($booking));
+
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
