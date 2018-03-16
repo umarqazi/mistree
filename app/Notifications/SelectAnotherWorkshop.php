@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -44,7 +45,6 @@ class SelectAnotherWorkshop extends Notification
     {
         return [
             'created_at'        => Carbon::now(),
-            'notification_url'  => '/leads',
             'msg'           => 'Please select another workshop, "'.$this->booking->workshop->name.'" has not accepted your booking request.'
         ];
     }

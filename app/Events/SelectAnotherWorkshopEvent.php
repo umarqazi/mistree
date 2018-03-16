@@ -22,7 +22,7 @@ class SelectAnotherWorkshopEvent
      *
      * @return void
      */
-    public function __construct(Booking $booking)
+    public function __construct($booking)
     {
         $this->booking = $booking;
     }
