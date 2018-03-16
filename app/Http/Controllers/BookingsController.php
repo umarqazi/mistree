@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\JobAcceptedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
 use JWTAuth;
@@ -193,7 +194,11 @@ class BookingsController extends Controller
     public function acceptBooking($booking_id){
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+        $booking = $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+
+//          Fire An Event To Generate A Notification On Accept Booking
+        event(new JobAcceptedEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
