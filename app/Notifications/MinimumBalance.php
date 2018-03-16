@@ -8,20 +8,18 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewBooking extends Notification
+class MinimumBalance extends Notification
 {
     use Queueable;
-
-    protected $booking;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($booking)
+    public function __construct()
     {
-        $this->booking = $booking;
+
     }
 
     /**
@@ -45,8 +43,8 @@ class NewBooking extends Notification
     {
         return [
             'created_at'        => Carbon::now(),
-            'notification_url'  => '/leads',
-            'msg'           => 'You have a new lead name form "'.$this->booking->customer->name.'".'
+            'notification_url'  => '/ledger',
+            'msg'               => 'Your Balance has been reached to Limit.Please Recharge.'
         ];
     }
 

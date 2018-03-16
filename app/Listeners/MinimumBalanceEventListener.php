@@ -2,13 +2,13 @@
 
 namespace App\Listeners;
 
-use App\Events\NewBookingEvent;
-use App\Notifications\NewBooking;
+use App\Events\MinimumBalanceEvent;
+use App\Notifications\MinimumBalance;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Notification;
 
-class NewBookingEventListener
+class MinimumBalanceEventListener
 {
     /**
      * Create the event listener.
@@ -17,18 +17,17 @@ class NewBookingEventListener
      */
     public function __construct()
     {
-
+        //
     }
 
     /**
      * Handle the event.
      *
-     * @param  NewBookingEvent  $event
+     * @param  MinimumBalanceEvent  $event
      * @return void
      */
-    public function handle(NewBookingEvent $event)
+    public function handle(MinimumBalanceEvent $event)
     {
-        $booking = $event->booking;
-        Notification::send($booking->workshop, new NewBooking($booking));
+        Notification::send($event->workshop, new MinimumBalance());
     }
 }

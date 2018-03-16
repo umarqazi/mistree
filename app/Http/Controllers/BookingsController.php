@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
 use JWTAuth;
 use DB, Config, Mail, View;
@@ -363,7 +364,6 @@ class BookingsController extends Controller
             $workshop = Workshop::find($workshop_id);
             $balance = $workshop->balance->balance;        
             $new_balance = $balance - $lead_charges;
-            
             $workshop->balance->update(['balance'=>$new_balance]);
 
             $transaction = new WorkshopLedger;
@@ -381,6 +381,12 @@ class BookingsController extends Controller
             $billing->lead_charges           = 0;
             $billing->is_free                = true;           
             $billing->save();
+        }
+
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+        if ($new_balance < 500)
+        {
+            event(new MinimumBalanceEvent($workshop));
         }
 
         return response()->json([
