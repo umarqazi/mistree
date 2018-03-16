@@ -52,6 +52,12 @@
                         <p>Bookings</p>
                     </a>
                 </li>
+                <li @if(Request::is('admin/notifications') || Request::is('admin/notifications/')) class="active" @endif >
+                    <a href="{{url('admin/notifications/')}}">
+                        <i class="ti-comment-alt"></i>
+                        <p>Notifications</p>
+                    </a>
+                </li>
                 <li  @if(Request::is('admin/customer-queries') || Request::is('admin/customer-queries/*') || Request::is('admin/workshop-queries/*') || Request::is('admin/workshop-queries') )   class="active" @endif >
                     <a href="" class="query_links">
                         <i class="ti-help-alt"></i>

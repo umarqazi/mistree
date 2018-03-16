@@ -294,7 +294,8 @@ class CarsController extends Controller
      *     in="formData",
      *     description="Car Type",
      *     required=false,
-     *     type="string"
+     *     type="integer",
+     *     enum={1,2,3,4},
      *   ),
      *   @SWG\Parameter(
      *     name="make",
@@ -317,12 +318,16 @@ class CarsController extends Controller
      */
     public function assignCar(Request $request)
     {
+        $types  = Category::all();
+        $types  = implode(',', $types->pluck('id')->toArray());
+
         $customer   = JWTAuth::authenticate();
         $rules = array(
             'car_id'        => 'required_without:model,make',
             'vehicle_no'    => 'required|unique:car_customer,vehicle_no,NULL,id,removed_at,NULL',
             'millage'       => 'required|numeric',
             'year'          => 'required|numeric',
+            'type'          => 'required_without:car_id|in:'.$types,
             'model'         => 'required_without:car_id',
             'make'          => 'required_without:car_id',
         );
@@ -341,10 +346,11 @@ class CarsController extends Controller
         if(is_null($car))
         {
             $car    = new Car();
-            $car->type          = $request->type;
             $car->make          = $request->make;
             $car->model         = $request->model;
             $car->is_published  = FALSE;
+            $car->category()->associate(Category::find($request->type));
+
             $car->save();
         }
 
