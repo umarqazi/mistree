@@ -48,14 +48,15 @@ class NewBookingEventListener
          $notificationBuilder = new PayloadNotificationBuilder('New Booking');
          $notificationBuilder->setBody('You have a new lead name form "'.$booking->customer->name.'".')->setSound('default');
 
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['booking_id' => $booking->id]);
+         $dataBuilder = new PayloadDataBuilder();
+         $dataBuilder->addData(['booking_id' => $booking->id]);
 
          $option = $optionBuilder->build();
          $notification = $notificationBuilder->build();
+         $data = $dataBuilder->build();
 
          $token = $booking->workshop->fcm_token;
 
-         $downstreamResponse = FCM::sendTo($token, $option, $notification);
+         $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
     }
 }
