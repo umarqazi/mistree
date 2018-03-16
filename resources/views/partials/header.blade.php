@@ -59,6 +59,10 @@
                                                 <div class="notification_image">
                                                     @if(snake_case(class_basename($notification->type )) == 'new_workshop')
                                                         <img src="{{URL::to('/img/workshop-icon.png')}}">
+
+                                                    @elseif(snake_case(class_basename($notification->type )) == 'minimum_balance')
+                                                        <img src="{{URL::to('/img/warning.png')}}">
+
                                                     @else
                                                         <img src="{{URL::to('/img/Dummy-image.jpg')}}">
                                                     @endif
