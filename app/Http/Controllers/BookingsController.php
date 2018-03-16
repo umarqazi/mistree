@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Jobs\LeadExpiryEventHit;
+use App\Jobs\SelectAnotherWorkshopEventHit;
+use Carbon\Carbon;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -153,6 +156,10 @@ class BookingsController extends Controller
 
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
+        $job1 = (new SelectAnotherWorkshopEventHit($booking))->delay(Carbon::now()->addMinutes(30));
+        $job2 = (new LeadExpiryEventHit($booking))->delay(Carbon::now()->addMinutes(25));
+        dispatch($job1);
+        dispatch($job2);
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
