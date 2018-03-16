@@ -29,6 +29,6 @@ class NewBookingEventListener
     public function handle(NewBookingEvent $event)
     {
         $booking = $event->booking;
-        Notification::send($booking->workshop(), new NewBooking($booking));
+        Notification::send($booking->workshop, new NewBooking($booking));
     }
 }
