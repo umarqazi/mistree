@@ -84,7 +84,7 @@
                                      <input class="btn btn-header btn-export" type="submit" value="Deactivate">
                                      </form>
                                     @if(!$value->children->isEmpty())
-                                        <a href="{{ URL::to('admin/services/'.$value->id.'/child-services') }}"
+                                        <a href="{{ URL::to('admin/services/'.$value->id) }}"
                                            class="btn btn-header">View Child Services</a>
                                     @endif
                                 </td>

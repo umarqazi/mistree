@@ -68,7 +68,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('leads/accepted','BookingsController@acceptedLeads');
         Route::get('leads/rejected','BookingsController@rejectedLeads');
         Route::get('leads/completed','BookingsController@completedLeads');
-        Route::get('/notification', 'NotificationController@index');
+        Route::get('/notifications', 'NotificationsController@index');
 
     });
 
@@ -106,7 +106,6 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::resource('customers', 'CustomersController');
         Route::resource('workshops', 'WorkshopsController');
         Route::resource('services', 'ServicesController');
-        Route::get('services/{service}/child-services', 'ServicesController@getChildServices');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('customer-queries', 'CustomerQueriesController', ['except' => [ 'create', 'edit','store']]);
         Route::resource('cars', 'CarsController');
@@ -150,7 +149,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
         Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
-        Route::get('/notification', 'NotificationsController@index');
+        Route::get('/notifications', 'NotificationsController@index');
                 
     });
 

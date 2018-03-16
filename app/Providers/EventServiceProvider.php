@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\SelectAnotherWorkshopEvent' => [
             'App\Listeners\SelectAnotherWorkshopEventListener'
         ],
+        'App\Events\MinimumBalanceEvent' => [
+            'App\Listeners\MinimumBalanceEventListener'
+        ],
     ];
 
     /**

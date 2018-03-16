@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
 use JWTAuth;
 use DB, Config, Mail, View;
@@ -363,7 +364,6 @@ class BookingsController extends Controller
             $workshop = Workshop::find($workshop_id);
             $balance = $workshop->balance->balance;        
             $new_balance = $balance - $lead_charges;
-            
             $workshop->balance->update(['balance'=>$new_balance]);
 
             $transaction = new WorkshopLedger;
@@ -381,6 +381,12 @@ class BookingsController extends Controller
             $billing->lead_charges           = 0;
             $billing->is_free                = true;           
             $billing->save();
+        }
+
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+        if ($new_balance < 500)
+        {
+            event(new MinimumBalanceEvent($workshop));
         }
 
         return response()->json([
@@ -598,7 +604,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function acceptedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
@@ -652,7 +662,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rejectedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $total_earning = $workshop->billings->sum('amount');
         $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
         if( $request->header('Content-Type') == 'application/json')
@@ -705,7 +719,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function completedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
