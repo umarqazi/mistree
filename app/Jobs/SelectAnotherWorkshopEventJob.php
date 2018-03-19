@@ -34,6 +34,9 @@ class SelectAnotherWorkshopEventJob implements ShouldQueue
     public function handle()
     {
         if($this->booking->is_accepted != true){
+            $booking = Booking::find($this->booking->id);
+            $booking->job_status = "expired";
+            $booking->save();
             event(new SelectAnotherWorkshopEvent($this->booking));
         }
     }
