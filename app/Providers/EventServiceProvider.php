@@ -28,6 +28,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\LeadExpiryEvent' => [
             'App\Listeners\LeadExpiryEventListener'
         ],
+        'App\Events\JobAcceptedEvent' => [
+            'App\Listeners\JobAcceptedEventListener'
+        ],
+        'App\Events\JobClosedEvent' => [
+            'App\Listeners\JobClosedEventListener'
+        ],
     ];
 
     /**
