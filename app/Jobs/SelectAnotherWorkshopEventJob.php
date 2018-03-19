@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Booking;
 use App\Events\SelectAnotherWorkshopEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -20,7 +21,7 @@ class SelectAnotherWorkshopEventJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($booking)
+    public function __construct(Booking $booking)
     {
         $this->booking = $booking;
     }
