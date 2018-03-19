@@ -22,6 +22,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\MinimumBalanceEvent' => [
             'App\Listeners\MinimumBalanceEventListener'
         ],
+        'App\Events\JobClosedEvent' => [
+            'App\Listeners\JobClosedEventListener'
+        ],
     ];
 
     /**

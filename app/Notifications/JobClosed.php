@@ -7,14 +7,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class NewBooking extends Notification
+class JobClosed extends Notification
 {
     use Queueable;
 
-    protected $booking;
-
+    public $booking;
     /**
      * Create a new notification instance.
      *
@@ -46,8 +44,7 @@ class NewBooking extends Notification
     {
         return [
             'created_at'        => Carbon::now(),
-            'notification_url'  => '/leads',
-            'msg'           => 'You have a new lead name form "'.$this->booking->customer->name.'".'
+            'msg'               => 'Your Booking has been Marked as Completed by "'.$this->booking->workshop->name.'".'
         ];
     }
 
