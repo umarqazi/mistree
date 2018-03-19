@@ -59,7 +59,7 @@ function myCustomValidation (obj)
     else 
     {
         $(obj).siblings('p').addClass('green');
-        $(obj).siblings('p').text("Input OK");
+        $(obj).siblings('p').text("Valid Input");
     } 
 }
 
