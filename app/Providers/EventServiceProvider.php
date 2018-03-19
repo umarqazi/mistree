@@ -24,6 +24,8 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\JobAcceptedEvent' => [
             'App\Listeners\JobAcceptedEventListener'
+        'App\Events\JobClosedEvent' => [
+            'App\Listeners\JobClosedEventListener'
         ],
     ];
 
