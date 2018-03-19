@@ -30,7 +30,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" name="name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                            <input type="text" class="form-control border-input" name="name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                             <p class="validity-message"></p>
                                             @if ($errors->has('name'))
                                                 <span class="help-block">
@@ -41,7 +41,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Owner Name <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" name="owner_name" value="{{ old('owner_name') }}"required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                            <input type="text" class="form-control border-input" name="owner_name" value="{{ old('owner_name') }}" required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('owner_name'))
                                                 <span class="help-block">
@@ -52,11 +52,12 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Type  <span class="manadatory">*</span></label>
-                                            <select name="type" class="form-control border-input" required>
+                                            <select name="type" class="form-control border-input" required  oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                                 <option value="">Please Select</option>
                                                 <option value="Authorized" @if(old('type') == "Authorized"){{ "selected" }}@endif>Authorized</option>
                                                 <option value="Unauthorized" @if(old('type') == "Unuthorized"){{ "selected" }}@endif>UnAuthorized</option>
                                             </select>
+                                            <p class="validity-message"></p>
                                             @if ($errors->has('type'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('type') }}</strong>
@@ -66,7 +67,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Enter Email <span class="manadatory">*</span></label>
-                                            <input type="email" class="form-control border-input" required="required" name="email" value="{{ old('email') }}">
+                                            <input type="email" class="form-control border-input" required="required" name="email" value="{{ old('email') }}" oninvalid="this.setCustomValidity('Enter valid email address.')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                             <p class="validity-message"></p>
                                             @if ($errors->has('email'))
                                                 <span class="help-block">
@@ -100,7 +101,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" pattern=".{13,}" title="13 Digits required" name="cnic" value="{{ old('cnic') }}">
+                                            <input type="text" class="form-control border-input" pattern=".{13,}" title="13 Digits required" name="cnic" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('cnic'))
                                                 <span class="help-block">
@@ -110,7 +111,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" name="mobile" pattern=".{11,}"   required title="Number should be of 11 digits" value="{{ old('mobile') }}">
+                                            <input type="text" class="form-control border-input" name="mobile" pattern="^\d{11}$"   required title="11 Digit number required" name="mobile" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('mobile'))
                                                 <span class="help-block">
@@ -121,7 +122,8 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Landline Number</label>
-                                            <input type="text" class="form-control border-input" name="landline" value="{{ old('landline') }}"  pattern=".{11,}" title="Number should be of 11 digits">
+                                            <input type="text" class="form-control border-input" name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                            <p class="validity-message"></p>
                                             @if ($errors->has('landline'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('landline') }}</strong>
@@ -146,6 +148,7 @@
                                                 <option value="8" @if(old('team_slot') == "8"){{ "selected" }}@endif>8</option>
                                                 <option value="9" @if(old('team_slot') == "9"){{ "selected" }}@endif>9</option>
                                             </select>
+                                            <p class="validity-message"></p>
                                         </div>
 
                                         <div class="form-group">
@@ -162,6 +165,7 @@
                                         <div class="form-group">
                                             <label class="control-label">Closing <span class="manadatory">*</span></label>
                                             <input type="time" class="form-control border-input" name="close_time" value="{{ old('close_time') }}" required>
+                                            <p class="validity-message"></p>
                                             @if ($errors->has('close_time'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('close_time') }}</strong>
@@ -230,7 +234,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Building <span class="manadatory"></span></label>
-                                            <input type="text" class="form-control border-input" name="building" value="{{ old('building') }}">
+                                            <input type="text" class="form-control border-input" name="building" pattern="[a-zA-Z0-9 ]+" value="{{ old('building') }}" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
+                                            <p class="validity-message"></p>
                                             @if ($errors->has('building'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('building') }}</strong>
@@ -241,6 +246,7 @@
                                         <div class="form-group">
                                             <label class="control-label">Street <span class="manadatory"></span></label>
                                             <input type="text" class="form-control border-input" name="street" value="{{ old('street') }}">
+                                            <p class="validity-message"></p>
                                             @if ($errors->has('street'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('street') }}</strong>
@@ -276,7 +282,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">City <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" required name="city" value="{{ old('city') }}">
+                                            <input type="text" class="form-control border-input" required name="city" value="{{ old('city') }}"  pattern="/^[\pL\s\-]+$/u" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                             <p class="validity-message"></p>
                                             @if ($errors->has('city'))
                                                 <span class="help-block">
@@ -322,6 +328,7 @@
                                                                     <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
                                                                 @endforeach
                                                             </select>
+                                                            <p class="validity-message"></p>
                                                             @if ($errors->has('services'))
                                                                 <span class="help-block">
                                                                     <strong class="manadatory">{{ $errors->first('services') }}</strong>
@@ -363,6 +370,7 @@
                                                                             <option @if(old('service-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
                                                                             <option @if(old('service-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
                                                                         </select>
+                                                                   <p class="validity-message"></p>
                                                                     </div>
                                                                 </div>
                                                             </div>
