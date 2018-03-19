@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class LeadExpiryEventHit implements ShouldQueue
+class LeadExpiryEventJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,6 +32,8 @@ class LeadExpiryEventHit implements ShouldQueue
      */
     public function handle()
     {
-        event(new LeadExpiryEvent($this->booking));
+        if($this->booking->is_accepted != true){
+            event(new LeadExpiryEvent($this->booking));
+        }
     }
 }

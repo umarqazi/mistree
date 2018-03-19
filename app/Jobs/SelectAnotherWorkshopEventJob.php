@@ -9,7 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class SelectAnotherWorkshopEventHit implements ShouldQueue
+class SelectAnotherWorkshopEventJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -32,6 +32,8 @@ class SelectAnotherWorkshopEventHit implements ShouldQueue
      */
     public function handle()
     {
-        event(new SelectAnotherWorkshopEvent($this->booking));
+        if($this->booking->is_accepted != true){
+            event(new SelectAnotherWorkshopEvent($this->booking));
+        }
     }
 }
