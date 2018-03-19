@@ -77,15 +77,15 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
-                                     <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
-                                     <input name="_method" type="hidden" value="DELETE">
-                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                     <input class="btn btn-header btn-export" type="submit" value="Deactivate">
-                                     </form>
+                                    <form id="deactivate_service_form" method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    </form>
+                                    <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit"></a>
+                                    <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="deactivate_service_form"><i class="ti-power-off"></i></button>
                                     @if(!$value->children->isEmpty())
                                         <a href="{{ URL::to('admin/services/'.$value->id) }}"
-                                           class="btn btn-header">View Child Services</a>
+                                           class="mistri-icons ti-eye" data-toggle="tooltip" data-placement="top" title="View Child Services"></a>
                                     @endif
                                 </td>
                             </tr>

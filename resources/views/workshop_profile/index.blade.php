@@ -160,8 +160,8 @@
 				                        	<td>{{ $spec->pivot->service_rate }}</td>
 				                        	<td>{{ $spec->pivot->service_time }}</td>	
 				                        	<td>						                        	
-				                        		<a href="{{url('profile/edit-profile-service/'.$spec->pivot->id)}}" class="btn btn-header">Edit</a>
-                        						<a href="{{ url('profile/delete-profile-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
+				                        		<a href="{{url('profile/edit-profile-service/'.$spec->pivot->id)}}" class="mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit"></a>
+                        						<a href="{{ url('profile/delete-profile-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="mistri-icons ti-close" data-toggle="tooltip" data-placement="top" title="Delete"></a>
                         					</td>	                        	
 				                        </tr>
 				                        @endforeach

@@ -74,18 +74,18 @@
                                         @else
                                             Approved
                                         @endif
-                                    <td>
-                                        @if(! $value->is_approved )
-                                            <a href="{{ url( 'admin/approve-workshop/'.$value->id ) }}" class="btn btn-header btn-export">Approve</a>
-                                        @endif
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'. $value->id)}}">View Details</a>
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a>
-                                        
-                                        <form method="POST" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input class="btn btn-header btn-export" type="submit" value="Block">
+                                    <td class="text-center">
+                                        <form method="POST" id="ws_block_form" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
+                                        @if(! $value->is_approved )
+                                            <a href="{{ url( 'admin/approve-workshop/'.$value->id ) }}" class="mistri-icons ti-check">Approve</a>
+                                        @endif
+                                        <a class= "mistri-icons ti-eye" data-toggle="tooltip" data-placement="top" title="View" href="{{url('admin/workshops/'. $value->id)}}"></a>
+                                        <a class= "mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit" href="{{url('admin/workshops/'.$value->id.'/edit')}}"></a>
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="ws_block_form"><i class="ti-hand-stop"></i></button>
+
                                         </td>
                                     </td>
                                 </tr>
