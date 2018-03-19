@@ -38,7 +38,8 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::orderBy('created_at', 'desc')->get();      
+
+        $services = Service::parentLevel()->orderBy('created_at', 'desc')->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
@@ -136,14 +137,9 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
-        // get the service
-        $service = Service::find($id);
-
-        // show the view and pass the service to it
-        return View::make('services.show')
-            ->with('service', $service);
+        return view::make('services.child_services')->with('services',$service->children);
     }
 
     /**

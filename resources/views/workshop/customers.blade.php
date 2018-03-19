@@ -32,7 +32,7 @@
                                 </tr>
                             </thead>
                             <tbody>   
-                            @foreach($bookings as $booking)                          
+                            @foreach($bookings as $key => $booking)                          
                             <tr role="row" class="odd">
                                     <td class="text-center">{{$key + 1}}</td>
                                     <td class="text-center">{{$booking->customer->name}}</td>

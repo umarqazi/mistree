@@ -37,7 +37,7 @@
                                     <tr role="row" class="odd">
                                         <td class="text-center">{{ $value->make }}</td>
                                         <td class="text-center">{{ $value->model }}</td>
-                                        <td class="text-center">{{ $value->type }}</td>
+                                        <td class="text-center">@if(!is_null($value->category)){{ $value->category->name }}@endif</td>
                                         <td class="text-center">
                                         <form method="POST" action="{{ URL::to('admin/car/restore/'. $value->id) }}" accept-charset="UTF-8">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}"> 

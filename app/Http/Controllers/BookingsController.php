@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\JobAcceptedEvent;
+use App\Events\JobClosedEvent;
+use App\Events\MinimumBalanceEvent;
+use App\Events\NewBookingEvent;
+use App\Notifications\JobClosed;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -75,7 +80,7 @@ class BookingsController extends Controller
      *     in="formData",
      *     description="Vehicle Number",
      *     required=true,
-     *     type="string"     
+     *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="is_doorstep",
@@ -148,6 +153,10 @@ class BookingsController extends Controller
         }        
 
         $booking->services;
+
+        //Firing an Event to Generate Notifications
+        event(new NewBookingEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -187,7 +196,11 @@ class BookingsController extends Controller
     public function acceptBooking($booking_id){
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+        $booking = $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+
+//          Fire An Event To Generate A Notification On Accept Booking
+        event(new JobAcceptedEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -358,7 +371,6 @@ class BookingsController extends Controller
             $workshop = Workshop::find($workshop_id);
             $balance = $workshop->balance->balance;        
             $new_balance = $balance - $lead_charges;
-            
             $workshop->balance->update(['balance'=>$new_balance]);
 
             $transaction = new WorkshopLedger;
@@ -371,12 +383,21 @@ class BookingsController extends Controller
 
             $transaction->save();
 
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+            if ($new_balance < 500)
+            {
+                event(new MinimumBalanceEvent($workshop));
+            }
 
         }else{
             $billing->lead_charges           = 0;
             $billing->is_free                = true;           
             $billing->save();
         }
+
+//          Fire An Event To Generate A Notification To User About Job Closing
+            event(new JobClosedEvent($booking));
+
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -491,11 +512,15 @@ class BookingsController extends Controller
         $received_leads = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
+        $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
+        $completed_leads,
+        'received_leads' =>
+            $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ];
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Workshop Ledger',
-                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ]
+                    'body' => ['leads'=> $leads]
                 ],Response::HTTP_OK);
     }
 
@@ -589,7 +614,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function acceptedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
@@ -643,7 +672,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rejectedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $total_earning = $workshop->billings->sum('amount');
         $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
         if( $request->header('Content-Type') == 'application/json')
@@ -696,7 +729,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function completedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
@@ -776,15 +813,15 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();        
+        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();
                 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Pending Bookings',
                     'body' => ['pending_bookings' => $pending_leads]
-                ],Response::HTTP_OK);                        
-        
+                ],Response::HTTP_OK);
+
     }
 
     /**
@@ -819,7 +856,7 @@ class BookingsController extends Controller
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Pending Bookings',
+                    'message' => 'Bookings',
                     'body' => ['bookings' => $bookings]
                 ],Response::HTTP_OK);                        
         

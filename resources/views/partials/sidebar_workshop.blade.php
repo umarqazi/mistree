@@ -39,6 +39,12 @@
                         <p>Customers</p>
                     </a>
                 </li>
+                <li @if(Request::is('notifications') || Request::is('notifications/')) class="active" @endif >
+                    <a href="{{url('/notifications/')}}">
+                        <i class="ti-comment-alt"></i>
+                        <p>Notifications</p>
+                    </a>
+                </li>
                 <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
                     <a href="{{url('/workshop-queries/create/')}}">
                         <i class="ti-help-alt"></i>
