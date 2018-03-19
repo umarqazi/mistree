@@ -21,8 +21,6 @@
                           </div>
                       </div>
                       <div class="clear20"></div>
-                      
-                      
 
                       <!--###############################################--> 
                       <div class="cn-section-1">                  
@@ -288,5 +286,6 @@
     </div>
 
 </div>
+<script type="text/javascript" src="{{ url('js/workshop-profile.js') }}"></script>
 @include('partials.footer')
 @endsection
