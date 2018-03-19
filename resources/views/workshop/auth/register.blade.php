@@ -417,7 +417,6 @@
     <script type="text/javascript" src="{{ url('js/workshop-profile.js') }}"></script>
 @endsection
 
-
   <!-- Modal -->
   <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog">
