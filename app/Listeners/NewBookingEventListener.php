@@ -42,17 +42,21 @@ class NewBookingEventListener
         $notification_booking = new NewBooking($booking);
         Notification::send($booking->workshop, $notification_booking);
 
-        // $optionBuilder = new OptionsBuilder();
-        // $optionBuilder->setTimeToLive(60*20);
+         $optionBuilder = new OptionsBuilder();
+         $optionBuilder->setTimeToLive(60*20);
 
-        // $notificationBuilder = new PayloadNotificationBuilder('New Booking');
-        // $notificationBuilder->setBody('You have a new lead name form "'.$booking->customer->name.'".')->setSound('default');
+         $notificationBuilder = new PayloadNotificationBuilder('New Booking');
+         $notificationBuilder->setBody('You have a new lead name form "'.$booking->customer->name.'".')->setSound('default');
 
-        // $option = $optionBuilder->build();
-        // $notification = $notificationBuilder->build();
+         $dataBuilder = new PayloadDataBuilder();
+         $dataBuilder->addData(['booking_id' => $booking->id]);
 
-        // $token = $booking->workshop->fcm_token;
+         $option = $optionBuilder->build();
+         $notification = $notificationBuilder->build();
+         $data = $dataBuilder->build();
 
-        // $downstreamResponse = FCM::sendTo($token, $option, $notification);
+         $token = $booking->workshop->fcm_token;
+
+         $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
     }
 }
