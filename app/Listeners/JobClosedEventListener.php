@@ -48,7 +48,7 @@ class JobClosedEventListener
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $token = $booking->workshop->fcm_token;
+        $token = $booking->customer->fcm_token;
 
         $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
     }
