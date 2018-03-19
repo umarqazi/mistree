@@ -159,8 +159,8 @@ class BookingsController extends Controller
 
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
-        $job1 = (new SelectAnotherWorkshopEventJob($booking))->delay(Carbon::now()->addMinutes(30));
-        $job2 = (new LeadExpiryEventJob($booking))->delay(Carbon::now()->addMinutes(25));
+        $job1 = (new SelectAnotherWorkshopEventJob($booking))->delay(Carbon::now()->addSeconds(30));
+        $job2 = (new LeadExpiryEventJob($booking))->delay(Carbon::now()->addSeconds(25));
         dispatch($job1);
         dispatch($job2);
 
