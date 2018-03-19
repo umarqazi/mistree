@@ -22,7 +22,6 @@
                             </div>
                             <div class="clear20"></div>
 
-
                             <!--###############################################-->
                             <div class="cn-section-1">
                                 <div class="content">
@@ -31,7 +30,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="name" value="{{ old('name') }}">
+                                                <input type="text" class="form-control border-input" name="name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('name') }}</strong>
@@ -41,7 +41,8 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Owner Name <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="owner_name" value="{{ old('owner_name') }}">
+                                                <input type="text" class="form-control border-input" name="owner_name" value="{{ old('owner_name') }}" required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('owner_name'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('owner_name') }}</strong>
@@ -51,11 +52,12 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Type  <span class="manadatory">*</span></label>
-                                                <select name="type" class="form-control border-input">
+                                                <select name="type" class="form-control border-input" required>
                                                     <option value="">Please Select</option>
                                                     <option value="Authorized" @if(old('type') == "Authorized"){{ "selected" }}@endif>Authorized</option>
                                                     <option value="Unauthorized" @if(old('type') == "Unuthorized"){{ "selected" }}@endif>UnAuthorized</option>
                                                 </select>
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('type'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('type') }}</strong>
@@ -65,7 +67,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Enter Email <span class="manadatory">*</span></label>
-                                                <input type="email" class="form-control border-input" name="email" value="{{ old('email') }}">
+                                                <input type="email" class="form-control border-input" required="required" name="email" value="{{ old('email') }}">
                                                 @if ($errors->has('email'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('email') }}</strong>
@@ -75,7 +77,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Enter Password <span class="manadatory">*</span></label>
-                                                <input type="password" id="password" class="form-control border-input" name="password">
+                                                <input type="password" id="password" required minlength="8" class="form-control border-input" title="Password should be minimum 8 characters long" name="password" >
                                                 @if ($errors->has('password'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('password') }}</strong>
@@ -85,7 +87,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Confirm Password <span class="manadatory">*</span></label>
-                                                <input type="password" id="confirm_password" class="form-control border-input" name="password_confirmation">
+                                                <input type="password" id="confirm_password" minlength="8"  class="form-control border-input" name="password_confirmation" required>
                                                 @if ($errors->has('password_confirmation'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('password_confirmation') }}</strong>
@@ -96,7 +98,8 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="cnic" value="{{ old('cnic') }}">
+                                                <input type="text" class="form-control border-input" pattern=".{13,}" title="13 Digits required" name="cnic" value="{{ old('cnic') }}" required >
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('cnic'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('cnic') }}</strong>
@@ -105,7 +108,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="mobile" value="{{ old('mobile') }}">
+                                                <input type="number" class="form-control border-input" pattern=".{11,}"   required title="Number should be of 11 digits" name="mobile" value="{{ old('mobile') }}" required  >
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('mobile'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
@@ -115,7 +119,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Landline Number</label>
-                                                <input type="text" class="form-control border-input" name="landline" value="{{ old('landline') }}">
+                                                <input type="text" class="form-control border-input" pattern=".{11,}" title="Number should be of 11 digits"  name="landline" value="{{ old('landline') }}">
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('landline') }}</strong>
@@ -144,7 +148,8 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
-                                                <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}">
+                                                <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}" required>
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('open_time'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('open_time') }}</strong>
@@ -154,7 +159,8 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Closing <span class="manadatory">*</span></label>
-                                                <input type="time" class="form-control border-input" name="close_time" value="{{ old('close_time') }}">
+                                                <input type="time" class="form-control border-input" name="close_time" required value="{{ old('close_time') }}">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('close_time'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('close_time') }}</strong>
@@ -214,7 +220,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Shop No. <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="shop" value="{{ old('shop') }}">
+                                                <input type="text" class="form-control border-input" required name="shop" value="{{ old('shop') }}">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('shop') }}</strong>
@@ -223,7 +230,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Building <span class="manadatory"></span></label>
-                                                <input type="text" class="form-control border-input" name="building" value="{{ old('building') }}">
+                                                <input type="text" class="form-control border-input" name="building"  pattern="[a-zA-Z0-9 ]+" value="{{ old('building') }}">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('building'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('building') }}</strong>
@@ -247,7 +255,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Block <span class="manadatory"></span></label>
-                                                <input type="text" class="form-control border-input" name="block" value="{{ old('block') }}">
+                                                <input type="text" class="form-control border-input" required name="block" value="{{ old('block') }}">
                                                 @if ($errors->has('block'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('block') }}</strong>
@@ -257,7 +265,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Town <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="town" value="{{ old('town') }}" >
+                                                <input type="text" class="form-control border-input" required name="town" required  pattern="/^[\pL\s\-]+$/u" value="{{ old('town') }}" >
                                                 @if ($errors->has('town'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('town') }}</strong>
@@ -267,7 +275,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">City <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="city" value="{{ old('city') }}">
+                                                <input type="text" class="form-control border-input" name="city" required  pattern="/^[\pL\s\-]+$/u" value="{{ old('city') }}">
                                                 @if ($errors->has('city'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('city') }}</strong>
@@ -307,7 +315,7 @@
                                                         <div class="col-md-12">
                                                             <div class="form-group">
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
-                                                                <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
+                                                                <select id="services" class="form-control border-input chosen-select" required name="services[]" required multiple>
                                                                     @foreach ($services as $service)
                                                                         <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
                                                                     @endforeach
