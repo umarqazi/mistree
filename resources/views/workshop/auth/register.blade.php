@@ -111,7 +111,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" name="mobile" pattern="^\d{11}$"   required title="11 Digit number required" name="mobile" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                            <input type="text" class="form-control border-input" name="mobile" pattern="^\d{11}$"  title="11 Digit number required" name="mobile" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('mobile'))
                                                 <span class="help-block">
@@ -153,7 +153,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Opening <span class="manadatory">*</span></label>
-                                            <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}" required>
+                                            <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}" required oninvalid="this.setCustomValidity('Required Format: (example) 12:00 PM')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('open_time'))
                                                 <span class="help-block">
@@ -164,7 +164,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Closing <span class="manadatory">*</span></label>
-                                            <input type="time" class="form-control border-input" name="close_time" value="{{ old('close_time') }}" required>
+                                            <input type="time" class="form-control border-input" name="close_time" value="{{ old('close_time') }}" required oninvalid="this.setCustomValidity('Required Format: (example) 12:00 PM')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('close_time'))
                                                 <span class="help-block">
@@ -259,7 +259,7 @@
                                     <div class="col-md-6">
 
                                         <div class="form-group">
-                                            <label class="control-label">Block <span class="manadatory"></span></label>
+                                            <label class="control-label">Block</label>
                                             <input type="text" class="form-control border-input" required name="block" value="{{ old('block') }}">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('block'))

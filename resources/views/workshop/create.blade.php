@@ -150,7 +150,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
-                                                <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}" required>
+                                                <input type="time" class="form-control border-input" name="open_time" value="{{ old('open_time') }}" required oninvalid="this.setCustomValidity('Required Format: (example) 12:00 PM')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('open_time'))
                                                     <span class="help-block">
@@ -161,7 +161,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Closing <span class="manadatory">*</span></label>
-                                                <input type="time" class="form-control border-input" name="close_time" required value="{{ old('close_time') }}">
+                                                <input type="time" class="form-control border-input" name="close_time" required value="{{ old('close_time') }}" oninvalid="this.setCustomValidity('Required Format: (example) 12:00 PM')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('close_time'))
                                                     <span class="help-block">
@@ -231,7 +231,7 @@
                                                 @endif
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label">Building <span class="manadatory"></span></label>
+                                                <label class="control-label">Building</label>
                                                 <input type="text" class="form-control border-input" name="building"  pattern="[a-zA-Z0-9 ]+" value="{{ old('building') }}" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('building'))
@@ -242,7 +242,7 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label">Street <span class="manadatory"></span></label>
+                                                <label class="control-label">Street </label>
                                                 <input type="text" class="form-control border-input" name="street" value="{{ old('street') }}">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('street'))
@@ -251,8 +251,8 @@
                                                     </span>
                                                 @endif
                                             </div>
-
                                         </div>
+                                        
                                         <div class="col-md-6">
 
                                             <div class="form-group">
