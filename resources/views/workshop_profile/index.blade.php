@@ -1,7 +1,6 @@
 @extends('layouts.master')
 @section('title', 'Workshop Details')
 @section('content')
-
 	@include('partials.header')
 
 	<div class="content">
@@ -22,6 +21,9 @@
 											<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
 											<div class="phone">Mobile : {{$workshop->mobile}}</div>
 											<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
+                      @if(!is_null($workshop->jazzcash_id))	                         
+										    <div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
+										  @endif
 											<div class="phone"><a href="{{url('profile/'.$workshop->id.'/edit')}}" class=" btn btn-header btn-export">Edit Workshop</a></div>
 
 										</div>

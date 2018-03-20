@@ -5,7 +5,6 @@
 	@include('partials.header')
 
 	<div class="content">
-
 		<div>
 			<div class="row">
 				<div class="col-md-12">
@@ -13,7 +12,6 @@
 						<div class="header">
 							<div class="row">
 								<div class="col-md-12">
-
 									<div class="avtar-block">
 										<img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
 										<div class="name-info">
@@ -22,6 +20,9 @@
 											<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
 											<div class="phone">Mobile : {{$workshop->mobile}}</div>
 											<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
+                      @if(!is_null($workshop->jazzcash_id))	                         
+										    <div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
+										  @endif
 										</div>
 
 										<div class="pull-right">
