@@ -134,11 +134,11 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $customer_id;
         $booking->workshop_id            = $request->workshop_id;
-		$booking->car_id                 = $request->car_id;
-        $booking->job_date	             = $request->job_date;
+	$booking->car_id                 = $request->car_id;
+        $booking->job_date	         = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->is_accepted 			 = false;
-        $booking->job_status 			 = 'open';
+        $booking->is_accepted 		 = false;
+        $booking->job_status 		 = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
         $booking->customer_address_id    = $request->customer_address_id;
         $booking->is_doorstep            = $request->is_doorstep;
@@ -566,7 +566,7 @@ class BookingsController extends Controller
         }else{
             $total_earning = null;
         }
-        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services', 'workshop']);
                
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -624,7 +624,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
+        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services', 'customer')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -727,7 +727,7 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *    
-     * Getting Workshop Ledger.
+     * Getting Completed Leads for Workshop.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -810,7 +810,7 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *    
-     * Getting Workshop Ledger.
+     * Getting Pending Leads for Workshop.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -818,8 +818,8 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();
-                
+        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services','customer')->get();
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -848,7 +848,7 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *    
-     * Getting Workshop Ledger.
+     * Getting All Customer Bookings.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -856,7 +856,7 @@ class BookingsController extends Controller
      */
     public function customerBookings(Request $request){
         $customer = JWTAuth::authenticate();
-        $bookings = Booking::where('customer_id', $customer->id)->with('services')->get();        
+        $bookings = Booking::where('customer_id', $customer->id)->with('services','workshop')->get();
                 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -865,5 +865,89 @@ class BookingsController extends Controller
                     'body' => ['bookings' => $bookings]
                 ],Response::HTTP_OK);                        
         
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/bookings/{booking}",
+     *   summary="Customer Booking",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Getting Booking for Customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustomerBooking(Booking $booking){
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Bookings',
+            'body' => ['booking' => $booking->load('services','workshop','billing')]
+        ],Response::HTTP_OK);
+
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/{lead}",
+     *   summary="Customer Booking",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Getting Booking for Customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getWorkshopLead(Booking $lead){
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Lead Details',
+            'body' => ['lead' => $lead->load('services','customer','billing')]
+        ],Response::HTTP_OK);
+
     }
 }

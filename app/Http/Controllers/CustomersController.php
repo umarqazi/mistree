@@ -907,7 +907,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Details Added!',
-                'body' => null
+                'body' => ['address' => $address]
             ],Response::HTTP_OK);
         }
     }
@@ -1135,7 +1135,8 @@ class CustomersController extends Controller
      */
     public function getVehicleHistory(){
         $vehicle_no = Input::get('vehicle_no');
-        $bookings = Booking::where('vehicle_no', $vehicle_no)->where('job_status','completed')->with('billing')->with('services')->get();
+        $bookings = Booking::where('vehicle_no', $vehicle_no)->where('job_status','completed')->with('billing')
+            ->with('services', 'workshop')->get();
         if(count($bookings) == 0){
             return response()->json([
                     'http-status' => Response::HTTP_OK,

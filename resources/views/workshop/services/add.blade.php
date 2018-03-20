@@ -31,13 +31,31 @@
                                   <div class="child-box-wrap">
                                     <div class="row">
                                       <div class="col-md-12">
+
+                                          <div class="form-group">
+                                              <label class="control-label">Select Category<span
+                                                          class="manadatory">*</span></label>
+                                              <select class="form-control chosen-select  border-input"
+                                                      name="category_id" onchange="getServices({{$workshop->id}})"
+                                                      id="category_id">
+                                                  <option value="" disabled selected>Select Category</option>
+                                                  @foreach ($categories as $category)
+                                                      <option value="{{$category->id}}">{{ $category->name }}</option>
+                                                  @endforeach
+                                              </select>
+                                              @if ($errors->has('category_id'))
+                                                  <span class="help-block">
+                                                  <strong class="manadatory">{{ $errors->first('category_id')
+                                                  }}</strong>
+                                              </span>
+                                              @endif
+                                          </div>
+
                                         <div class="form-group">
                                           <label class="control-label">Select Service <span class="manadatory">*</span></label>
-                                          <select class="form-control chosen-select  border-input" name="service_id">
+                                          <select class="form-control border-input" name="service_id"
+                                                  id="service_ids" disabled>
                                             <option value="" disabled selected>Select Service</option>
-                                            @foreach ($services as $service)
-                                            <option value="{{$service->id}}">{{ $service->name }}@if($service->is_doorstep){{ " at doorstep" }}@endif</option>
-                                            @endforeach
                                           </select>
                                           @if ($errors->has('service_id'))
                                               <span class="help-block">
@@ -45,6 +63,7 @@
                                               </span>
                                           @endif
                                         </div>
+
                                       </div>
                                     </div>
                                     <div class="row">
@@ -109,10 +128,23 @@
 </div>
 
 <script>
-  function addmoreServices(event){
-    event.preventDefault();
-    $(".services-row").append('<div class="col-sm-4"><div class="child-box-wrap"><div class="row"><div class="col-md-12"><div class="form-group"><label class="control-label">Select Service</label><select class="form-control border-input" name="service_id[]"><option value="" selected disabled selected>Select Service</option>@foreach ($services as $service)<option value="{{$service->id}}">{{ $service->name }}</option>@endforeach</select></div></div></div><div class="row"><div class="col-md-6"><label class="control-label">Service Rate</label><input type="text" class="form-control border-input" name="service_rate[]"></div><div class="col-md-6"><label class="control-label">Enter Time</label><input type="text" class="form-control border-input" name="service_time[]"></div></div></div></div>');
-  }
+    function getServices(workshop) {
+        var id = $("#category_id").val();
+        $.ajax({
+            type : 'post',
+            url : '{{ url('admin/get-category-services') }}',
+            data : {workshop : workshop, category : id},
+            dataType: "json",
+            success : function (response){
+                $.each(response, function(i, service) {
+                    $('#service_ids').children().remove();
+                    $('#service_ids').removeAttr('disabled');
+                    $('#service_ids').append('<option value="' + service.id +'">' + service.name + '</option>');
+                });
+            }
+        })
+    }
+
 </script>
 
 @include('partials.footer')

@@ -8,35 +8,125 @@ $(document).ready(function () {
 
     //on select/deselect create/destroy service-rates and service-times element blocks
 
-    $('#services').on("change", function (e, params) {
+    $('#hatchback').on("change", function (e, params) {
         if(params.selected != undefined)
         {
-            $('#services-container').append(
-                '<div class="row ' + $('#services option[value="' + params.selected + '"]').text().toLowerCase().replace(' ', '-') + '">' +
-                    '<div class="col-md-12">' + '<h5>' + $('#services option[value="' + params.selected + '"]').text() + '</h5>' +
+            $('.category-hatchback').append(
+                '<div class="col-md-12 hatchback-service-'+$('#hatchback option[value="' + params.selected + '"]').val() + '">' +
+                    '<div class="heading-service"><h5>' + $('#hatchback option[value="' + params.selected + '"]').text() + '</h5></div>' +
                         '<div class="row">' +
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
-                                    '<input type="text" class="form-control border-input" name="service-rates[' + params.selected +']">' +
+                                    '<input type="text" class="form-control border-input"' +
+                ' name="hatchback-rates[' + params.selected +']">' +
                                 '</div>' +
                             '</div>' +
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
-                                    '<select name ="service-times[' + params.selected +']" class="form-control chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
+                                    '<select name ="hatchback-times[' + params.selected +']" class="form-control' +
+                ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
-                    '</div>' +
                 '</div>'
             );
         }
         else if(params.deselected != undefined)
         {
-            $('div.' + $('#services option[value="' + params.deselected + '"]').text().toLowerCase().replace(' ', '-')).remove();
+            $('div.hatchback-service-' + $('#hatchback option[value="' + params.deselected + '"]').val()).remove();
         }
     });
+
+    $('#sedan').on("change", function (e, params) {
+        if (params.selected != undefined) {
+            $('.category-sedan').append(
+                '<div class="col-md-12 sedan-service-' + $('#sedan option[value="' + params.selected + '"]').val() + '">' +
+                    '<div class="heading-service"><h5>' + $('#sedan option[value="' + params.selected + '"]').text() + '</h5></div>' +
+                        '<div class="row">' +
+                            '<div class="col-md-6">' +
+                                '<div class="form-group">' +
+                                    '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
+                                    '<input type="text" class="form-control border-input"' +
+                ' name="sedan-rates[' + params.selected + ']">' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="col-md-6">' +
+                                '<div class="form-group">' +
+                                    '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
+                                    '<select name ="sedan-times[' + params.selected + ']" class="form-control' +
+                ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                '</div>'
+            );
+        }
+        else if (params.deselected != undefined) {
+            $('div.sedan-service-' + $('#sedan option[value="' + params.deselected + '"]').val()).remove();
+        }
+    });
+
+    $('#luxury').on("change", function (e, params) {
+        if(params.selected != undefined)
+        {
+            $('.category-luxury').append(
+                '<div class="col-md-12 luxury-service-' + $('#luxury option[value="' + params.selected + '"]').val() + '">' +
+                    '<div class="heading-service"><h5>' + $('#luxury option[value="' + params.selected + '"]').text() + '</h5></div>' +
+                        '<div class="row">' +
+                            '<div class="col-md-6">' +
+                                '<div class="form-group">' +
+                                    '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
+                                    '<input type="text" class="form-control border-input"' + ' name="luxury-rates[' + params.selected +']">' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="col-md-6">' +
+                                '<div class="form-group">' +
+                                    '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
+                                    '<select name ="luxury-times[' + params.selected +']" class="form-control' + ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                '</div>'
+            );
+        }
+        else if(params.deselected != undefined)
+        {
+            $('div.luxury-service-' + $('#luxury option[value="' + params.deselected + '"]').val()).remove();
+        }
+    });
+
+    $('#suv').on("change", function (e, params) {
+        if(params.selected != undefined)
+        {
+            $('.category-suv').append(
+                '<div class="col-md-12 suv-service-' + $('#suv option[value="' + params.selected + '"]').val() + '">' +
+                    '<div class="heading-service"><h5>' + $('#suv option[value="' + params.selected + '"]').text() + '</h5></div>' +
+                        '<div class="row">' +
+                            '<div class="col-md-6">' +
+                                '<div class="form-group">' +
+                                    '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
+                                    '<input type="text" class="form-control border-input"' + ' name="suv-rates[' + params.selected +']">' +
+                                '</div>' +
+                            '</div>' +
+                            '<div class="col-md-6">' +
+                                '<div class="form-group">' +
+                                    '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
+                                    '<select name ="suv-times[' + params.selected +']" class="form-control' + ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                '</div>'
+            );
+        }
+        else if(params.deselected != undefined)
+        {
+            $('div.suv-service-' + $('#suv option[value="' + params.deselected + '"]').val()).remove();
+        }
+    });
+
+
 
     //old input re-populate Service Name and Class names
 

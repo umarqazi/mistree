@@ -81,4 +81,22 @@ class Service extends Model
         return $query->where('service_parent',0);
     }
 
+    public function scopeHatchback($query){
+        $id = Category::select('id')->where('name', 'Hatchback')->first();
+        return $query->where('category_id',$id['id']);
+    }
+
+    public function scopeSedan($query){
+        $id = Category::select('id')->where('name', 'Sedan/Saloon')->first();
+        return $query->where('category_id',$id['id']);
+    }
+    public function scopeLuxury($query){
+        $id = Category::select('id')->where('name', 'Luxury Car')->first();
+        return $query->where('category_id',$id['id']);
+    }
+
+    public function scopeSuv($query){
+        $id = Category::select('id')->where('name', 'SUV/4X4')->first();
+        return $query->where('category_id',$id['id']);
+    }
 }
