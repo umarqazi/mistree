@@ -8,18 +8,20 @@ use Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class MinimumBalance extends Notification
+class SelectAnotherWorkshop extends Notification
 {
     use Queueable;
+
+    protected $booking;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($booking)
     {
-
+        $this->booking = $booking;
     }
 
     /**
@@ -34,17 +36,16 @@ class MinimumBalance extends Notification
     }
 
     /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
+    * Get the array representation of the notification.
+    *
+    * @param  mixed  $notifiable
+    * @return array
+    */
     public function toDatabase($notifiable)
     {
         return [
             'created_at'        => Carbon::now(),
-            'notification_url'  => '/ledger',
-            'msg'               => 'Your Balance has been reached to Limit.Please Recharge.'
+            'msg'           => 'Please select another workshop, "'.$this->booking->workshop->name.'" has not accepted your booking request.'
         ];
     }
 

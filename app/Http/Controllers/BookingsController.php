@@ -6,6 +6,9 @@ use App\Events\JobAcceptedEvent;
 use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Jobs\LeadExpiryEventJob;
+use App\Jobs\SelectAnotherWorkshopEventJob;
+use Carbon\Carbon;
 use App\Notifications\JobClosed;
 use JWTAuth;
 use DB, Config, Mail, View;
@@ -156,6 +159,10 @@ class BookingsController extends Controller
 
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
+        $job1 = (new SelectAnotherWorkshopEventJob($booking))->delay(Carbon::now()->addSeconds(30));
+        $job2 = (new LeadExpiryEventJob($booking))->delay(Carbon::now()->addSeconds(25));
+        dispatch($job1);
+        dispatch($job2);
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,

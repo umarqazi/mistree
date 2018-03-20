@@ -2,8 +2,8 @@
 
 namespace App\Listeners;
 
-use App\Events\JobClosedEvent;
-use App\Notifications\JobClosed;
+use App\Events\SelectAnotherWorkshopEvent;
+use App\Notifications\SelectAnotherWorkshop;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use LaravelFCM\Facades\FCM;
@@ -12,7 +12,7 @@ use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use Notification;
 
-class JobClosedEventListener
+class SelectAnotherWorkshopEventListener
 {
     /**
      * Create the event listener.
@@ -27,19 +27,20 @@ class JobClosedEventListener
     /**
      * Handle the event.
      *
-     * @param  JobClosedEvent  $event
+     * @param  SelectAnotherWorkshopEvent  $event
      * @return void
      */
-    public function handle(JobClosedEvent $event)
+    public function handle(SelectAnotherWorkshopEvent $event)
     {
         $booking = $event->booking;
-        Notification::send($booking->customer, new JobClosed($booking));
+        $notification_booking = new SelectAnotherWorkshop($booking);
+        Notification::send($booking->customer, $notification_booking);
 
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60*20);
 
-        $notificationBuilder = new PayloadNotificationBuilder('Booking Completed');
-        $notificationBuilder->setBody('Your Booking has been Marked as Completed by "'.$booking->workshop->name.'".')->setSound('default');
+        $notificationBuilder = new PayloadNotificationBuilder('Select Another Workshop');
+        $notificationBuilder->setBody('Please select another workshop, "'.$booking->workshop->name.'" has not accepted your request.')->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData(['booking_id' => $booking->id]);

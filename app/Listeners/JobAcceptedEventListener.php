@@ -6,6 +6,10 @@ use App\Events\JobAcceptedEvent;
 use App\Notifications\JobAccepted;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use LaravelFCM\Facades\FCM;
+use LaravelFCM\Message\OptionsBuilder;
+use LaravelFCM\Message\PayloadDataBuilder;
+use LaravelFCM\Message\PayloadNotificationBuilder;
 use Notification;
 
 class JobAcceptedEventListener
@@ -30,5 +34,20 @@ class JobAcceptedEventListener
     {
         $booking = $event->booking;
         Notification::send($booking->customer, new JobAccepted($booking));
+
+        $optionBuilder = new OptionsBuilder();
+        $optionBuilder->setTimeToLive(60*20);
+
+        $notificationBuilder = new PayloadNotificationBuilder('Booking Accepted');
+        $notificationBuilder->setBody('Your Booking has been Accepted by "'.$booking->workshop->name.'".')->setSound('default');
+
+        $dataBuilder = new PayloadDataBuilder();
+        $dataBuilder->addData(['booking_id' => $booking->id]);
+        $option = $optionBuilder->build();
+        $notification = $notificationBuilder->build();
+        $data = $dataBuilder->build();
+        $token = $booking->customer->fcm_token;
+
+        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
     }
 }

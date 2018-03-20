@@ -2,17 +2,22 @@
 
 namespace App\Listeners;
 
-use App\Events\JobClosedEvent;
-use App\Notifications\JobClosed;
+use App\Events\LeadExpiryEvent;
+use App\Notifications\LeadExpiry;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use LaravelFCM\Facades\FCM;
+use Notification;
+use App\Workshop;
+use App\Booking;
+use App\Admin;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
-use Notification;
+use FCM;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\Notifiable;
 
-class JobClosedEventListener
+class LeadExpiryEventListener
 {
     /**
      * Create the event listener.
@@ -27,19 +32,20 @@ class JobClosedEventListener
     /**
      * Handle the event.
      *
-     * @param  JobClosedEvent  $event
+     * @param  LeadExpiryEvent  $event
      * @return void
      */
-    public function handle(JobClosedEvent $event)
+    public function handle(LeadExpiryEvent $event)
     {
         $booking = $event->booking;
-        Notification::send($booking->customer, new JobClosed($booking));
+        $notification_booking = new LeadExpiry($booking);
+        Notification::send($booking->workshop, $notification_booking);
 
         $optionBuilder = new OptionsBuilder();
         $optionBuilder->setTimeToLive(60*20);
 
-        $notificationBuilder = new PayloadNotificationBuilder('Booking Completed');
-        $notificationBuilder->setBody('Your Booking has been Marked as Completed by "'.$booking->workshop->name.'".')->setSound('default');
+        $notificationBuilder = new PayloadNotificationBuilder('Lead Will Expire');
+        $notificationBuilder->setBody('You have a new lead from "'.$booking->customer->name.'".')->setSound('default');
 
         $dataBuilder = new PayloadDataBuilder();
         $dataBuilder->addData(['booking_id' => $booking->id]);
@@ -48,7 +54,7 @@ class JobClosedEventListener
         $notification = $notificationBuilder->build();
         $data = $dataBuilder->build();
 
-        $token = $booking->customer->fcm_token;
+        $token = $booking->workshop->fcm_token;
 
         $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
     }

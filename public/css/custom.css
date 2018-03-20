@@ -416,4 +416,10 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
     background: none !important;
     border: none !important;
     display: inline-block;
+
+.red{
+    color: red !important;
+}
+.green{
+    color: green !important;
 }
