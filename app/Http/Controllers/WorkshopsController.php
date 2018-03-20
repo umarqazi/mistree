@@ -776,6 +776,9 @@ class WorkshopsController extends Controller
      */
     public function logout() {
         try {
+            $workshop = JWTAuth::authenticate();
+            $workshop->fcm_token = null;
+            $workshop->save();
             JWTAuth::invalidate(JWTAuth::getToken());
 
             return response()->json([
