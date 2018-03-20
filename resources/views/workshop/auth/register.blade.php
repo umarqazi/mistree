@@ -101,7 +101,7 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                                        <input type="text" data-inputmask="'mask': '99999-9999999-9'" class="form-control border-input" pattern="^\d{13}$" title="13 Digits required" name="cnic" placeholder="XXXXX-XXXXXXX-X" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                        <input type="text" data-inputmask="'mask': '99999-9999999-9'" class="form-control border-input" title="15 Digits required" name="cnic" placeholder="XXXXX-XXXXXXX-X" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('cnic'))
                                                             <span class="help-block">
@@ -111,7 +111,7 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                                        <input type="text" data-inputmask="'mask': '0399-9999999'" class="form-control border-input" name="mobile" pattern="^\d{11}$"  title="11 Digit number required" name="mobile" placeholder="0399-9999999" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                        <input type="text" data-inputmask="'mask': '0399-9999999'" class="form-control border-input" name="mobile" title="12 Digit number required" name="mobile" placeholder="0399-9999999" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('mobile'))
                                                             <span class="help-block">
@@ -282,7 +282,7 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">City <span class="manadatory">*</span></label>
-                                                        <input type="text" class="form-control border-input" required name="city" value="{{ old('city') }}"  pattern="^[a-zA-Z\s\-\']+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
+                                                        <input type="text" class="form-control border-input" required name="city" value="{{ old('city') }}" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('city'))
                                                             <span class="help-block">
