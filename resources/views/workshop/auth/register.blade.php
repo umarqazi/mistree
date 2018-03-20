@@ -122,7 +122,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Landline Number</label>
-                                            <input type="text" class="form-control border-input" name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                            <input type="text" class="form-control border-input" name="landline" pattern="(^$|\d{10,11})" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('landline'))
                                                 <span class="help-block">
