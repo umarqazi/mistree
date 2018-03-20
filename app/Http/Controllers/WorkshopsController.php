@@ -1986,7 +1986,7 @@ class WorkshopsController extends Controller
         $transaction = new WorkshopLedger;
         $transaction->amount                        = $request->amount;
         $transaction->workshop_id                   = $request->workshop_id;
-        $transaction->transaction_type              = 'Top-Up';
+        $transaction->transaction_type              = 'Adjusted Top-Up';
         $transaction->unadjusted_balance            = $balance;
         $transaction->adjusted_balance              = $new_balance;
 
@@ -2525,6 +2525,104 @@ class WorkshopsController extends Controller
     public function workshop_gallery(){
         $workshop = Auth::guard('workshop')->user();
         return view::make('workshop_profile.gallery')->with('images', $workshop->images)->with('workshop', $workshop);
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/topup",
+     *   summary="Update Workshop Topup",
+     *   operationId="post_jazz_cash_topup",
+     *   produces={"application/json"},
+     *   tags={"Topup"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="customerId",
+     *     in="formData",
+     *     description="Customer ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="amount",
+     *     in="formData",
+     *     description="Topup Amount",
+     *     required=true,
+     *     type="number"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=404, description="not found"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Updating Workshop Topup.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function jazzCashTopup(Request $request)
+    {
+        $rules = [
+            'customerId'    => 'required|integer',
+            'amount'        => 'required|numeric',
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()) {
+            return response()->json([
+                'http-status'   => Response::HTTP_NOT_ACCEPTABLE,
+                'status'        => "NOT_ACCEPTABLE",
+                'errors'        => $validator->messages()
+            ],Response::HTTP_NOT_ACCEPTABLE);
+        }
+
+        $workshop = Workshop::where('jazzcash_id',$request->customerId)->first();
+        if(is_null($workshop))
+        {
+            return response()->json([
+                'http-status'   => Response::HTTP_NOT_FOUND,
+                'status'        => "NOT_FOUND",
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+
+        if(is_null($workshop->balance))
+        {
+            $balance     = 0;
+            $new_balance = $request->amount;
+            $workshop->balance()->create([
+                'balance'   => $new_balance
+            ]);
+        }
+        else
+        {
+            $balance     = $workshop->balance->balance;
+            $new_balance = $request->amount + $balance;
+            $workshop->balance->update(['balance' => $new_balance]);
+        }
+
+        $transaction = new WorkshopLedger;
+        $transaction->amount                        = $request->amount;
+        $transaction->workshop_id                   = $workshop->id;
+        $transaction->transaction_type              = 'Top-Up';
+        $transaction->unadjusted_balance            = $balance;
+        $transaction->adjusted_balance              = $new_balance;
+
+        $transaction->save();
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => "OK",
+            'response'      => "The Workshop balance has been topped up with amount Rs.".$request->amount
+        ], Response::HTTP_OK);
     }
 }
 

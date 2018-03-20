@@ -23,6 +23,9 @@
 					                	<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
 					                	<div class="phone">Mobile : {{$workshop->mobile}}</div>
 					                	<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
+										@if(!is_null($workshop->jazzcash_id))	                         
+										<div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
+										@endif
 					                </div>
 					                <div class="dropdown pull-right">
 					                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -69,7 +72,7 @@
 				                        	<td>{{ $transaction->unadjusted_balance }}</td>
 				                        	<td>{{ $transaction->adjusted_balance }}</td>
 				                        	<td>{{ $transaction->created_at->format('d-m-Y')}}</td>
-				                        	<td>{{ $transaction->created_at->format('H:i:s')}}</td>						                        	
+				                        	<td>{{ $transaction->created_at->format('g:i A')}}</td>
 				                        </tr>						
 				                        @endforeach
 				                        <tr> 
