@@ -664,7 +664,6 @@ class WorkshopsController extends Controller
      *     name="fcm_token",
      *     in="formData",
      *     description="Workshop Firebase Token",
-     *     required=true,
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
@@ -723,9 +722,10 @@ class WorkshopsController extends Controller
         $workshop = Auth::user();
 
         /* Update Customer FCM Token */
-        $workshop->fcm_token = $request->fcm_token;
-        $workshop->update();
-
+        if($request->has('fcm_token')){
+            $workshop->fcm_token = $request->fcm_token;
+            $workshop->update();
+        }
         $request->offsetUnset('password');
 
         if( ( ! $workshop->is_approved ) ){
