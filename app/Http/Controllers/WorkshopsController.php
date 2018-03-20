@@ -96,7 +96,7 @@ class WorkshopsController extends Controller
             'password_confirmation'          => 'required',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'landline'                       => 'digits_between:10,11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -337,7 +337,7 @@ class WorkshopsController extends Controller
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'landline'                       => 'digits_between:10,11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -722,6 +722,13 @@ class WorkshopsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="fcm_token",
+     *     in="formData",
+     *     description="Workshop Firebase Token",
+     *     required=true,
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -776,6 +783,10 @@ class WorkshopsController extends Controller
             ],Response::HTTP_OK);
         }
         $workshop = Auth::user();
+
+        /* Update Customer FCM Token */
+        $workshop->fcm_token = $request->fcm_token;
+        $workshop->update();
 
         $request->offsetUnset('password');
 

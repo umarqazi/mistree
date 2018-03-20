@@ -181,6 +181,8 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         // Swagger
         L5Swagger\L5SwaggerServiceProvider::class,
+        //Laravel-FCM Firebase
+        LaravelFCM\FCMServiceProvider::class,
 
     ],
 
@@ -231,7 +233,9 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
-        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'FCM'      => LaravelFCM\Facades\FCM::class,
+        'FCMGroup' => LaravelFCM\Facades\FCMGroup::class
 
     ],
 

@@ -2,7 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\JobAcceptedEvent;
+use App\Events\JobClosedEvent;
+use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Jobs\LeadExpiryEventJob;
+use App\Jobs\SelectAnotherWorkshopEventJob;
+use Carbon\Carbon;
+use App\Notifications\JobClosed;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -152,6 +159,8 @@ class BookingsController extends Controller
 
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
+        SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(30));
+        LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(25));
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -192,7 +201,11 @@ class BookingsController extends Controller
     public function acceptBooking($booking_id){
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+        $booking = $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+
+//          Fire An Event To Generate A Notification On Accept Booking
+        event(new JobAcceptedEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -363,7 +376,6 @@ class BookingsController extends Controller
             $workshop = Workshop::find($workshop_id);
             $balance = $workshop->balance->balance;        
             $new_balance = $balance - $lead_charges;
-            
             $workshop->balance->update(['balance'=>$new_balance]);
 
             $transaction = new WorkshopLedger;
@@ -376,12 +388,21 @@ class BookingsController extends Controller
 
             $transaction->save();
 
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+            if ($new_balance < 500)
+            {
+                event(new MinimumBalanceEvent($workshop));
+            }
 
         }else{
             $billing->lead_charges           = 0;
             $billing->is_free                = true;           
             $billing->save();
         }
+
+//          Fire An Event To Generate A Notification To User About Job Closing
+            event(new JobClosedEvent($booking));
+
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,

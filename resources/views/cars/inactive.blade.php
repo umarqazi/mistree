@@ -37,11 +37,11 @@
                                     <tr role="row" class="odd">
                                         <td class="text-center">{{ $value->make }}</td>
                                         <td class="text-center">{{ $value->model }}</td>
-                                        <td class="text-center">{{ $value->type }}</td>
+                                        <td class="text-center">@if(!is_null($value->category)){{ $value->category->name }}@endif</td>
                                         <td class="text-center">
                                         <form method="POST" action="{{ URL::to('admin/car/restore/'. $value->id) }}" accept-charset="UTF-8">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
-                                            <button type="submit" class="btn btn-header btn-export">Reactivate</button>
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Reactivate" value="submit" type="submit"><i class="ti-plug"></i></button>
                                         </form>
                                         </td>
                                     </tr>

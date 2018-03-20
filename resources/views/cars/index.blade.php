@@ -53,12 +53,13 @@
                                     <td class="text-center">{{ $value->model }}</td>
                                     <td class="text-center">@if(!is_null($value->category)){{ $value->category->name }}@endif</td>
                                     <td class="text-center">
-                                        <a href="{{url('admin/cars/'. $value->id.'/edit')}}" class="btn btn-header btn-export">Edit</a>
-                                        <form method="POST" action="cars/{{ $value->id }}" accept-charset="UTF-8">
+
+                                        <form method="POST" id="cars_deactivate_form" action="cars/{{ $value->id }}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}"> 
-                                            <button type="submit" class="btn btn-header btn-export">Deactivate</button>
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
+                                        <a href="{{url('admin/cars/'. $value->id.'/edit')}}" data-toggle="tooltip" data-placement="top" title="Edit" class="mistri-icons ti-pencil-alt"></a>
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="cars_deactivate_form"><i class="ti-power-off"></i></button>
                                     </td>
                                 </tr>
                                  @endforeach
