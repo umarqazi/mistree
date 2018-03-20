@@ -101,7 +101,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" pattern=".{13,}" title="13 Digits required" name="cnic" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                            <input type="text" class="form-control border-input" pattern="^\d{13}$" title="13 Digits required" name="cnic" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                             <p class="validity-message"></p>
                                             @if ($errors->has('cnic'))
                                                 <span class="help-block">
@@ -234,7 +234,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label class="control-label">Building <span class="manadatory"></span></label>
-                                            <input type="text" class="form-control border-input" name="building" pattern="[a-zA-Z0-9 ]+" value="{{ old('building') }}" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
+                                            <input type="text" class="form-control border-input" name="building" pattern="^[a-zA-Z0-9\s]+$" value="{{ old('building') }}" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
                                             <p class="validity-message"></p>
                                             @if ($errors->has('building'))
                                                 <span class="help-block">
@@ -282,7 +282,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">City <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" required name="city" value="{{ old('city') }}"  pattern="/^[\pL\s\-]+$/u" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
+                                            <input type="text" class="form-control border-input" required name="city" value="{{ old('city') }}"  pattern="^[a-zA-Z\s\-\']+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                             <p class="validity-message"></p>
                                             @if ($errors->has('city'))
                                                 <span class="help-block">
