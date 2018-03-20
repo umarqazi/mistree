@@ -2,9 +2,10 @@
 
 namespace App\Notifications;
 
+use App\Booking;
 use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
-use Notification;
+use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
@@ -20,7 +21,7 @@ class NewBooking extends Notification
      *
      * @return void
      */
-    public function __construct($booking)
+    public function __construct(Booking $booking)
     {
         $this->booking = $booking;
     }
@@ -47,7 +48,7 @@ class NewBooking extends Notification
         return [
             'created_at'        => Carbon::now(),
             'notification_url'  => '/leads',
-            'msg'           => 'You have a new lead name form "'.$this->booking->customer->name.'".'
+            'msg'           => 'You have a new lead from "'.$this->booking->customer->name.'".'
         ];
     }
 

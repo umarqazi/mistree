@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Booking;
 use App\Events\SelectAnotherWorkshopEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -20,7 +21,7 @@ class SelectAnotherWorkshopEventJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct($booking)
+    public function __construct(Booking $booking)
     {
         $this->booking = $booking;
     }
@@ -33,6 +34,9 @@ class SelectAnotherWorkshopEventJob implements ShouldQueue
     public function handle()
     {
         if($this->booking->is_accepted != true){
+            $booking = Booking::find($this->booking->id);
+            $booking->job_status = "expired";
+            $booking->save();
             event(new SelectAnotherWorkshopEvent($this->booking));
         }
     }
