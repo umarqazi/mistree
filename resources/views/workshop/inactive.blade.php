@@ -62,7 +62,7 @@
                                         @endif</a> 
                                     </td>                                   
                                     <td>
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/unblock') }}" class="btn btn-header btn-export">Unblock</a>
+                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/unblock') }}" data-toggle="tooltip" data-placement="top" title="Unblock" class=" mistri-icons ti-hand-stop"></a>
                                     </td>
                                 </tr>
                                  @endforeach

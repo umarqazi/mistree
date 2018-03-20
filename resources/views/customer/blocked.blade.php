@@ -47,10 +47,10 @@
                                     <td>{{ $value->con_number }}</td>                                    
                                     <td>{{ $value->loyalty_points }}</td>  
                                     <td>
-                                        <form method="POST" action="{{ url('admin/customers/'.$value->id.'/unblock') }}" accept-charset="UTF-8">    
+                                        <form method="POST" id="customer_unblock_form" action="{{ url('admin/customers/'.$value->id.'/unblock') }}" accept-charset="UTF-8">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input class="btn btn-header btn-export" type="submit" value="Unblock">
-                                        </form>                                                          
+                                        </form>
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Unblock" value="submit" type="submit" form="customer_unblock_form"><i class="ti-hand-stop"></i></button>
                                     </td>
                                 </tr>
                              @endforeach                                                                
