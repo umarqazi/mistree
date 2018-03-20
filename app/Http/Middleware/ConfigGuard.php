@@ -4,7 +4,6 @@ namespace App\Http\Middleware;
 
 use Config;
 use Closure;
-//use Tymon\JWTAuth\Middleware\GetUserFromToken;
 
 class ConfigGuard
 {
@@ -23,8 +22,10 @@ class ConfigGuard
         elseif($model  == "Customer"){
             Config::set('auth.providers.users.model', \App\Customer::class);
         }
+        elseif($model   == "admin"){
+            Config::set('auth.providers.users.model', \App\Admin::class);
+        }
 
         return $next($request);
-        //return parent::handle($request, $next);
     }
 }
