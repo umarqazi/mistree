@@ -41,21 +41,24 @@ class LeadExpiryEventListener
         $notification_booking = new LeadExpiry($booking);
         Notification::send($booking->workshop, $notification_booking);
 
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60*20);
+        if($booking->workshop->fcm_token){
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60*20);
 
-        $notificationBuilder = new PayloadNotificationBuilder('Lead Will Expire');
-        $notificationBuilder->setBody('You have a new lead from "'.$booking->customer->name.'".')->setSound('default');
+            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Lead Will Expire');
+            $notificationBuilder->setBody('Lead from "'.$booking->customer->name.'" will expire in 5 minutes.')->setSound('default');
 
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['booking_id' => $booking->id]);
+            $dataBuilder = new PayloadDataBuilder();
+            $dataBuilder->addData(['booking_id' => $booking->id]);
 
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
 
-        $token = $booking->workshop->fcm_token;
+            $token = $booking->workshop->fcm_token;
 
-        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+            $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+        }
+
     }
 }

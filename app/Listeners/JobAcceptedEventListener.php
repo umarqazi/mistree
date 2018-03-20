@@ -35,19 +35,21 @@ class JobAcceptedEventListener
         $booking = $event->booking;
         Notification::send($booking->customer, new JobAccepted($booking));
 
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60*20);
+        if($booking->customer->fcm_token){
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60*20);
 
-        $notificationBuilder = new PayloadNotificationBuilder('Booking Accepted');
-        $notificationBuilder->setBody('Your Booking has been Accepted by "'.$booking->workshop->name.'".')->setSound('default');
+            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Booking Accepted');
+            $notificationBuilder->setBody('Your booking request has been accepted by "'.$booking->workshop->name.'".')->setSound('default');
 
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['booking_id' => $booking->id]);
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
-        $token = $booking->customer->fcm_token;
+            $dataBuilder = new PayloadDataBuilder();
+            $dataBuilder->addData(['booking_id' => $booking->id]);
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
+            $token = $booking->customer->fcm_token;
 
-        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+            $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+        }
     }
 }

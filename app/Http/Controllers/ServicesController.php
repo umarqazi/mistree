@@ -104,15 +104,22 @@ class ServicesController extends Controller
             // store
             $service = new Service;
 
-            if ($request->hasFile('image')) 
+            $services_full_path = public_path().'/uploads/services/';
+            $services_path = 'uploads/services';
+
+            if ($request->hasFile('image'))
             {
-                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = config('app.s3_bucket_url').$s3_path;
-                $service->image          = $img_path;
+                if(!Storage::disk('public')->has($services_path)){
+                    mkdir($services_full_path, 0775, true);
+                }
+                $service_picture =  Storage::disk('public')->putFile($services_path , new File($request->image), 'public');
+
+                $service_picture = url('/').'/'.$service_picture;
+                $service->image  = $service_picture;
             }
             else
             {
-              $service->image        =  url('img/thumbnail.png');
+                $service->image        =  url('img/thumbnail.png');
             }
 
             $service->name           = trim(Input::get('name'));
@@ -192,15 +199,22 @@ class ServicesController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         } else {
-            if ($request->hasFile('image'))
-            {
-                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = config('app.s3_bucket_url').$s3_path;
-                $service->image          = $img_path;
+            if ($request->hasFile('image')){
+                $services_full_path = public_path().'/uploads/services/';
+                $services_path = 'uploads/services';
+
+                if(!Storage::disk('public')->has($services_path)){
+                    mkdir($services_full_path, 0775, true);
+                }
+
+                $service_picture =  Storage::disk('public')->putFile($services_path , new File($request->image), 'public');
+
+                $service_picture = url('/').'/'.$service_picture;
+                $service->image  = $service_picture;
             }
             else
             {
-              $service->image        = $service->image;
+                $service->image        = $service->image;
             }
             $service->name           = trim(Input::get('name'));
             $service->service_parent = Input::get('service-parent');
