@@ -21,6 +21,9 @@
                                         <div class="phone">Mobile : {{$workshop->mobile}}</div>
                                         <div>Current Balance : {{$workshop->balance->balance}}</div>
                                         <div>Total Earnings : PKR {{$total_earning}}</div>
+                                        @if(!is_null($workshop->jazzcash_id))	                         
+										<div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
+										@endif
                                     </div>
                                     <div class="dropdown pull-right">
                                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

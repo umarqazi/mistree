@@ -18,11 +18,14 @@
 	                            	<img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
 	                            	<div class="name-info">
 	                            		<h4 class="title">Workshop Name : {{$workshop->name}}</h4>
-	                                	<h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
-	                                	<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
-	                                	<div class="phone">Mobile : {{$workshop->mobile}}</div>
-	                                	<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
-	                                	<div class="phone"><a href="{{url('profile/'.$workshop->id.'/edit')}}" class=" btn btn-header btn-export">Edit Workshop</a></div>
+	                                	<h5> Owner Name : {{$workshop->owner_name}}</h5>
+	                                	<div>{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
+	                                	<div>Mobile : {{$workshop->mobile}}</div>
+	                                	<div>Current Balance : {{$workshop->balance->balance}}</div>
+										@if(!is_null($workshop->jazzcash_id))	                         
+										<div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
+										@endif
+										<div ><a href="{{url('profile/'.$workshop->id.'/edit')}}" class=" btn btn-header btn-export">Edit Workshop</a></div>
 	                                	
 	                                </div>
 	                                <div class="dropdown pull-right">
