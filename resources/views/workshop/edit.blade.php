@@ -66,7 +66,7 @@
 
                               <div class="form-group">
                                 <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                <input type="text" class="form-control border-input" name="cnic" pattern=".{13,}" title="13 Digits required" value="{{$workshop->cnic}}">
+                                <input type="text" class="form-control border-input" name="cnic" pattern="^\d{13}$" title="13 Digits required" value="{{$workshop->cnic}}">
                                 <p class="validity-message"></p>
                                 @if ($errors->has('cnic'))
                                     <span class="help-block">
@@ -125,7 +125,7 @@
                               </div>
                               <div class="form-group">
                                 <label class="control-label">Landline Number <span class="manadatory"></span></label>
-                                <input type="text" class="form-control border-input" name="landline" value="{{$workshop->landline}}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                <input type="text" class="form-control border-input" name="landline" pattern="(^$|\d{10,11})" value="{{$workshop->landline}}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                 @if ($errors->has('landline'))
                                     <span class="help-block">
                                         <strong class="manadatory">{{ $errors->first('landline') }}</strong>
