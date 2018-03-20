@@ -290,6 +290,7 @@ form .form-group {margin-bottom: 0px;}
     background: #fff;
     margin: 0;
     float: left;
+    margin-bottom: 5px;
 }
 
 .profile-listing li img{
@@ -422,4 +423,10 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
 }
 .green{
     color: green !important;
+}
+
+.close2{
+    position: relative;
+    top: -10px;
+    margin: 0px;
 }

@@ -158,7 +158,7 @@ class WorkshopQueriesController extends Controller
                     $mail->to(Config::get('app.mail_username'));
                     $mail->subject($subject);
                 });
-            Session::flash('success_message', 'Successfully Added the Request!');
+            Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
         }
     }
