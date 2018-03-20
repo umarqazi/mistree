@@ -125,6 +125,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         
         Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
         Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
+        Route::post('/get-category-services','WorkshopsController@getCategoryServices');
         Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
         Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
         Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');

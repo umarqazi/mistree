@@ -67,7 +67,6 @@ class WorkshopQueriesController extends Controller
      *   path="/api/workshop/workshop-queries",
      *   summary="Add Workshop Query",
      *   operationId="add_workshop_query",
-     *   produces={"application/json"},
      *   tags={"Queries"},
      *   consumes={"application/json"},
      *   produces={"application/json"},
@@ -98,8 +97,8 @@ class WorkshopQueriesController extends Controller
      *
      */
     public function store(Request $request)
-    {   
-        if( $request->header('Content-Type') == 'application/x-www-form-urlencoded'){
+    {
+        if( $request->header('Content-Type') == 'application/json'){
             $workshop = JWTAuth::Authenticate();
             $rules = array(
                 'subject'      => 'required',
@@ -108,26 +107,26 @@ class WorkshopQueriesController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                    return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => 'Incomplete Details!',
-                        'body' => $request->all()
-                    ],Response::HTTP_OK);
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Incomplete Details!',
+                    'body' => $request->all()
+                ],Response::HTTP_OK);
             }
             $workshop->queries()->create([
                 'subject'       => $request->subject,
                 'message'       => $request->message,
                 'status'        => 'Open',
                 'is_resolved'   => false
-            ]);      
+            ]);
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
-            function($mail) use ($subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to(config('app.mail_username'));
-                $mail->subject($subject);
-            });
+                function($mail) use ($subject){
+                    $mail->from(config('app.mail_username'), config('app.name'));
+                    $mail->to(config('app.mail_username'));
+                    $mail->subject($subject);
+                });
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -151,14 +150,14 @@ class WorkshopQueriesController extends Controller
                 'message'       => $request->message,
                 'status'        => 'Open',
                 'is_resolved'   => false
-            ]);      
+            ]);
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
-            function($mail) use ($subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to(config('app.mail_username'));
-                $mail->subject($subject);
-            });
+                function($mail) use ($subject){
+                    $mail->from(config('app.mail_username'), config('app.name'));
+                    $mail->to(config('app.mail_username'));
+                    $mail->subject($subject);
+                });
             Session::flash('success_message', 'Successfully Added the Request!');
             return Redirect::to('workshop-queries/create');
         }

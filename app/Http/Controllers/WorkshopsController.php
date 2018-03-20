@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Customer;
 use JWTAuth;
+use SoapClient;
 use Session;
 use Hash, DB, Config, Mail, View;
 use Illuminate\Support\Facades\Redirect;
@@ -11,6 +12,7 @@ use App\Workshop;
 use App\WorkshopImages;
 use App\Service;
 use App\Booking;
+use App\Category;
 use App\Car;
 use App\WorkshopAddress;
 use App\WorkshopLedger;
@@ -71,8 +73,11 @@ class WorkshopsController extends Controller
      */
     public function create()
     {
-        $services = Service::all();        
-        return View::make('workshop.create', ['services' => $services]);
+        $hatchback = Service::hatchback()->get();
+        $sedan = Service::sedan()->get();
+        $luxury = Service::luxury()->get();
+        $suv = Service::suv()->get();
+        return View::make('workshop.create', ['hatchback' => $hatchback, 'sedan' => $sedan, 'luxury' => $luxury, 'suv' => $suv]);
     }
 
     /**
@@ -107,12 +112,25 @@ class WorkshopsController extends Controller
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
 
-            'services.*'                     => 'required|integer:unique',
-            'service-rates.*'                => 'required',
-            'service-times.*'                => 'required',
+            'hatchback.*'                    => 'required|integer:unique',
+            'hatchback-rates.*'              => 'required',
+            'hatchback-times.*'              => 'required',
+
+            'sedan.*'                        => 'required|integer:unique',
+            'sedan-rates.*'                  => 'required',
+            'sedan-times.*'                  => 'required',
+
+            'luxury.*'                       => 'required|integer:unique',
+            'luxury-rates.*'                 => 'required',
+            'luxury-times.*'                 => 'required',
+
+            'suv.*'                          => 'required|integer:unique',
+            'suv-rates.*'                    => 'required',
+            'suv-times.*'                    => 'required',
         ];
 
-        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city', 'services');
+        $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic',
+            'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city', 'hatchback', 'hatchback-rates','hatchback-times', 'sedan-rates', 'sedan', 'sedan-times', 'luxury', 'luxury-rates', 'luxury-times', 'suv', 'suv-rates', 'suv-times');
         $validator = Validator::make($input, $rules);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -130,6 +148,12 @@ class WorkshopsController extends Controller
             $is_approved = false;
         }
 
+        if(env('APP_ENV') == "production"){
+            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $jazz_cash = $client->GetWorkShopId()->GetWorkShopIdResult;
+        }else{
+            $jazz_cash = null;
+        }
         //Insert Workshop data from request
         $workshop = Workshop::create([
             'name'          => $request->name,
@@ -143,6 +167,7 @@ class WorkshopsController extends Controller
             'open_time'     => $request->open_time,
             'close_time'    => $request->close_time,
             'is_approved'   => $is_approved,
+            'jazzcash_id'   => $jazz_cash
         ]);
 
         //Insert Address data from request
@@ -157,10 +182,38 @@ class WorkshopsController extends Controller
             'coordinates'   => NULL
         ]);
 
-        //Insert Services data from request        
-        foreach($request->services as $service)
-        {
-            $workshop->services()->attach($service, ['service_rate' => Input::get('service-rates')[$service] , 'service_time' => Input::get('service-times')[$service] ]);
+        if($request->hatchback){
+            //Insert Services data from request
+            foreach($request->hatchback as $hatchback)
+            {
+                $workshop->services()->attach($hatchback, ['service_rate' => Input::get('hatchback-rates')[$hatchback] , 'service_time' => Input::get('hatchback-times')[$hatchback] ]);
+            }
+        }
+
+        if($request->sedan){
+            //Insert Services data from request
+            foreach($request->sedan as $sedan)
+            {
+                $workshop->services()->attach($sedan, ['service_rate' => Input::get('sedan-rates')[$sedan]
+                    , 'service_time' => Input::get('sedan-times')[$sedan] ]);
+            }
+        }
+
+        if($request->luxury){
+            //Insert Services data from request
+            foreach($request->luxury as $luxury)
+            {
+                $workshop->services()->attach($luxury, ['service_rate' => Input::get('luxury-rates')[$luxury]
+                    , 'service_time' => Input::get('luxury-times')[$luxury] ]);
+            }
+        }
+
+        if($request->suv){
+            //Insert Services data from request
+            foreach($request->suv as $suv)
+            {
+                $workshop->services()->attach($suv, ['service_rate' => Input::get('suv-rates')[$suv] , 'service_time' => Input::get('suv-times')[$suv] ]);
+            }
         }
 
         $balance = new WorkshopBalance([ 'balance' => 0 ]);
@@ -546,7 +599,7 @@ class WorkshopsController extends Controller
      *
      */
     public function register(Request $request)
-    {        
+    {
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
@@ -571,9 +624,17 @@ class WorkshopsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => $validator->messages()->first(),
-                    'body' => $request->all()
+                    'body' => null
                 ],Response::HTTP_OK);
-        }      
+        }
+
+        if(env('APP_ENV') == "production"){
+            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $jazz_cash = $client->GetWorkShopId()->GetWorkShopIdResult;
+        }else{
+            $jazz_cash = null;
+        }
+
         //Insert Workshop data from request 
         $workshop = Workshop::create([
                                 'name' => $request->name, 
@@ -587,12 +648,13 @@ class WorkshopsController extends Controller
                                 'slots' => $request->team_slots,                                 
                                 'open_time' => $request->open_time, 
                                 'close_time' => $request->close_time, 
-                                'is_approved' => 0
+                                'is_approved' => 0,
+                                'jazzcash_id' => $jazz_cash
                             ]);
 
         //By Default Inserting Workshop Balance 2000
         $workshop_balance = new WorkshopBalance;        
-        $workshop_balance->balance              = 2000;
+        $workshop_balance->balance              = 0;
         $workshop_balance->workshop_id          = $workshop->id;
         $workshop_balance->save();
 
@@ -1246,11 +1308,29 @@ class WorkshopsController extends Controller
      * @return \Illuminate\Http\JsonResponse
      */
     public function addWorkshopService(Workshop $workshop){
-        $services   = $workshop->services()->pluck('service_id')->toArray();
-        $services = Service::whereNotIn('id',$services)->get();
-        return View::make('workshop.services.add')->with('workshop', $workshop)->with('services',$services);            
+        $categories = Category::all();
+//        $services   = $workshop->services()->pluck('service_id')->toArray();
+//        $services = Service::whereNotIn('id',$services)->get();
+        return View::make('workshop.services.add')->with('workshop', $workshop)->with('categories', $categories);
+
     }
-    
+
+    /**
+     *  Add Workshop Service
+     *
+     * @param $workshop
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getCategoryServices(){
+        $category = $_POST['category'];
+        $workshop = $_POST['workshop'];
+        $workshop = Workshop::find($workshop)->load('services');
+        $services = $workshop->services()->pluck('service_id')->toArray();
+        $filtered_services = json_encode(Service::where('category_id', $category)->whereNotIn('id', $services)->get
+        ());
+        echo $filtered_services;
+    }
+
     /**
      *  Store Workshop Service
      *
@@ -2220,8 +2300,8 @@ class WorkshopsController extends Controller
 
         if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
             $path = $workshops_path.$workshop->id.'/logo';
-            Storage::MakeDirectory($path, 0775, true);
-        }            
+            Storage::MakeDirectory($path, 0775, true, true);
+        }
         
         $full_path = $workshops_path.$workshop->id.'/logo/'.md5(microtime()).".jpg";        
         $url = $this->upload_image($file_data,$workshop->id,$full_path);

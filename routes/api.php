@@ -42,6 +42,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('create-booking','BookingsController@createBooking');
 		Route::get('bookings', 'BookingsController@customerBookings');
+        Route::get('bookings/{booking}', 'BookingsController@getCustomerBooking');
 		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
 		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');
 		Route::patch('leave-rating/{billing_id}', 'CustomersController@insertRatings');
@@ -91,6 +92,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('ledger','WorkshopsController@getLedger');
 		Route::get('leads-info','BookingsController@getLeadsInfo');
 		Route::get('history','BookingsController@leadsHistory');
+        Route::get('leads/lead-info/{lead}', 'BookingsController@getWorkshopLead');
 		Route::get('leads/accepted','BookingsController@acceptedLeads');
 		Route::get('leads/rejected','BookingsController@rejectedLeads');
 		Route::get('leads/completed','BookingsController@completedLeads');

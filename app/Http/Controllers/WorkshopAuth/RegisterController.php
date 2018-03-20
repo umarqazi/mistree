@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WorkshopAuth;
 
 use App\Events\NewWorkshopEvent;
 use App\Workshop;
+use SoapClient;
 use App\WorkshopAddress;
 use App\WorkshopBalance;
 use App\WorkshopImages;
@@ -99,7 +100,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
+        if(env('APP_ENV') == "production"){
+            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $jazz_cash = (int)$client->GetWorkShopId()->GetWorkShopIdResult;
+        }else{
+            $jazz_cash = null;
+        }
         $workshop = Workshop::create([
             'name'          => $data['name'],
             'owner_name'    => $data['owner_name'],
@@ -112,6 +118,8 @@ class RegisterController extends Controller
             'open_time'     => $data['open_time'],
             'close_time'    => $data['close_time'],
             'is_approved'   => false,
+            'jazzcash_id'   => $jazz_cash
+
         ]);
 
         //Insert Address data from request
@@ -182,7 +190,7 @@ class RegisterController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.emails.verify', ['name' => $data['name'], 'verification_code' => $verification_code],
             function($mail) use ($data, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
+                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
                 $mail->to($data['email'], $data['name']);
                 $mail->subject($subject);
             });

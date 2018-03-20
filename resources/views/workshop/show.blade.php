@@ -146,6 +146,7 @@
 											<thead>
 												<tr>
 													<th>Service Name</th>
+													<th>Service Category</th>
 													<th>Service Rate</th>
 													<th>Service Time</th>
 													<th>Actions</th>								
@@ -159,9 +160,10 @@
 						                    	@foreach($specialty as $spec)
 						                        <tr> 
 						                        	<td>{{ $spec->name }}@if($spec->is_doorstep){{ " at doorstep" }}@endif</td>
-						                        	<td>{{ $spec->pivot->service_rate }}</td>
-						                        	<td>{{ $spec->pivot->service_time }}</td>	
-						                        	<td>						                        	
+													<td>{{ $spec->category->name}}</td>
+													<td>{{ $spec->pivot->service_rate }}</td>
+						                        	<td>{{ $spec->pivot->service_time }}</td>
+						                        	<td>
 						                        		<a href="{{url('admin/edit-workshop-service/'.$spec->pivot->id)}}" class="btn btn-header">Edit</a>
                                 						<a href="{{ url('admin/delete-workshop-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="btn btn-header ">Delete</a>
                                 					</td>	                        	
