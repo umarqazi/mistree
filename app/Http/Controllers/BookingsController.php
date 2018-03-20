@@ -127,11 +127,11 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $customer_id;
         $booking->workshop_id            = $request->workshop_id;
-		$booking->car_id                 = $request->car_id;
-        $booking->job_date	             = $request->job_date;
+	$booking->car_id                 = $request->car_id;
+        $booking->job_date	         = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->is_accepted 			 = false;
-        $booking->job_status 			 = 'open';
+        $booking->is_accepted 		 = false;
+        $booking->job_status 		 = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
         $booking->customer_address_id    = $request->customer_address_id;
         $booking->is_doorstep            = $request->is_doorstep;
@@ -545,7 +545,7 @@ class BookingsController extends Controller
         }else{
             $total_earning = null;
         }
-        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services', 'workshops']);
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services', 'workshop']);
                
         if( $request->header('Content-Type') == 'application/json')
         {
