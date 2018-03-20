@@ -62,19 +62,23 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <a class= "btn btn-header" href="{{url('admin/customer-queries/'. $value->id)}}">View</a>
-                                        @if(!$value->is_resolved)
-                                        <form method="POST" action="{{url('admin/resolve-customer-query/'. $value->id)}}" accept-charset="UTF-8">
+                                        <form method="POST" id="resolve_customer_query" action="{{url('admin/resolve-customer-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input class="btn btn-header btn-export" type="submit" value="Resolve">
                                         </form>
-                                        @endif
-                                        <form method="POST" action="{{url('admin/customer-queries/'. $value->id)}}" accept-charset="UTF-8">
+
+                                        <form method="POST" id="customer_query" action="{{url('admin/customer-queries/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input class="btn btn-header btn-export" type="submit" value="Delete">
                                         </form>
+
+                                        <a class= "mistri-icons ti-eye" href="{{url('admin/customer-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
+                                        @if(!$value->is_resolved)
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Customer Query" value="submit" type="submit" form="resolve_customer_query"><i class="ti-check-box"></i></button>
+                                        @endif
+
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Delete Customer Query" value="submit" type="submit" form="customer_query"><i class="ti-close"></i></button>
                                     </td>
                                 </tr>
                                 @endforeach

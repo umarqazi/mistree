@@ -135,4 +135,21 @@ $(document).ready(function () {
         parent_col_div.parent('.row').addClass($('#services option[value="' + $(this).attr('name').substr(14,1) + '"]').text().toLowerCase().replace(' ','-'));
         parent_col_div.children('h5').text($('#services option[value="' + $(this).attr('name').substr(14,1) + '"]').text());
     });
+
+    
 });
+
+function myCustomValidation (obj)
+{
+   if (!obj.checkValidity()) 
+   {
+     $(obj).siblings('p').addClass('red');  
+     $(obj).siblings('p').text(obj.validationMessage);
+    } 
+    else 
+    {
+        $(obj).siblings('p').addClass('green');
+        $(obj).siblings('p').text("Valid Input");
+    } 
+}
+

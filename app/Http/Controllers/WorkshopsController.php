@@ -96,7 +96,7 @@ class WorkshopsController extends Controller
             'password_confirmation'          => 'required',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'landline'                       => 'digits_between:10,11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -337,7 +337,7 @@ class WorkshopsController extends Controller
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|digits:13',
             'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'landline'                       => 'digits_between:10,11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -722,6 +722,12 @@ class WorkshopsController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="fcm_token",
+     *     in="formData",
+     *     description="Workshop Firebase Token",
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=406, description="not acceptable"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -777,6 +783,11 @@ class WorkshopsController extends Controller
         }
         $workshop = Auth::user();
 
+        /* Update Customer FCM Token */
+        if($request->has('fcm_token')){
+            $workshop->fcm_token = $request->fcm_token;
+            $workshop->update();
+        }
         $request->offsetUnset('password');
 
         if( ( ! $workshop->is_approved ) ){
@@ -827,6 +838,9 @@ class WorkshopsController extends Controller
      */
     public function logout() {
         try {
+            $workshop = JWTAuth::authenticate();
+            $workshop->fcm_token = null;
+            $workshop->save();
             JWTAuth::invalidate(JWTAuth::getToken());
 
             return response()->json([

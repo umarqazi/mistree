@@ -8,7 +8,9 @@ use SoapClient;
 use App\WorkshopAddress;
 use App\WorkshopBalance;
 use App\WorkshopImages;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -53,6 +55,18 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('workshop.guest');
+    }
+
+    /*Overwritten the Existing Register Function in RegistersUsers*/
+
+    public function register(Request $request)
+    {
+        $this->validator($request->all())->validate();
+
+        event(new Registered($user = $this->create($request->all())));
+
+        return $this->registered($request, $user)
+            ?: redirect($this->redirectPath());
     }
 
     /**
@@ -218,6 +232,7 @@ class RegisterController extends Controller
             $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
+
         else
         {
             $cnic_image         =  url('img/thumbnail.png');

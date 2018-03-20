@@ -52,12 +52,12 @@
                                     <td class="text-center">{{ $value->con_number }}</td>                                    
                                     <td class="text-center">{{ $value->loyalty_points }}</td>  
                                     <td class="text-center">
-                                        <a class= "btn btn-header" href="{{url('admin/customers/'. $value->id)}}">View</a>
-                                        <form method="POST" action="customers/{{ $value->id }}" accept-charset="UTF-8">
+                                        <form method="POST" id="customer_block_form" action="customers/{{ $value->id }}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input class="btn btn-header btn-export" type="submit" value="Block">
-                                        </form>                                                          
+                                        </form>
+                                        <a class= "mistri-icons ti-eye" href="{{url('admin/customers/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="customer_block_form"><i class="ti-hand-stop"></i></button>
                                     </td>
                                 </tr>
                              @endforeach                                                                

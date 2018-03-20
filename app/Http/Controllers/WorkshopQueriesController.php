@@ -123,8 +123,8 @@ class WorkshopQueriesController extends Controller
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
                 function($mail) use ($subject){
-                    $mail->from(config('app.mail_username'), config('app.name'));
-                    $mail->to(config('app.mail_username'));
+                    $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
+                    $mail->to(Config::get('app.mail_username'));
                     $mail->subject($subject);
                 });
             return response()->json([
@@ -154,8 +154,8 @@ class WorkshopQueriesController extends Controller
             $subject = "Workshop Query - ".$request->subject;
             Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
                 function($mail) use ($subject){
-                    $mail->from(config('app.mail_username'), config('app.name'));
-                    $mail->to(config('app.mail_username'));
+                    $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
+                    $mail->to(Config::get('app.mail_username'));
                     $mail->subject($subject);
                 });
             Session::flash('success_message', 'Successfully Added the Request!');

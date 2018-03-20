@@ -24,7 +24,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Service Name <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" name="name" value="{{ $service->name }}" required="required">
+                                            <input type="text" class="form-control border-input" name="name" value="{{ $service->name }}" required="required" pattern="[a-zA-Z0-9 ]+">
                                             @if ($errors->has('name'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('name') }}</strong>
@@ -43,7 +43,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Loyalty Points <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty-points">
+                                            <input type="text" class="form-control border-input" value="{{ $service->loyalty_points }}" name="loyalty-points" required>
                                             <input type="hidden"  value="PUT" name="_method">
                                             @if ($errors->has('loyalty-points'))
                                                 <span class="help-block">
@@ -54,7 +54,7 @@
 
                                         <div class="form-group">
                                             <label class="control-label">Lead Charges <span class="manadatory">*</span></label>
-                                            <input type="text" class="form-control border-input" value="{{ $service->lead_charges }}" name="lead-charges">
+                                            <input type="text" class="form-control border-input" value="{{ $service->lead_charges }}" name="lead-charges" required>
                                             @if ($errors->has('lead-charges'))
                                                 <span class="help-block">
                                                     <strong class="manadatory">{{ $errors->first('lead-charges') }}</strong>
