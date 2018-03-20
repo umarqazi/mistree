@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Create New Workshop')
 @section('content')
-@include('partials.header')
+    @include('partials.header')
 
     <div class="content">
         <div class="container-fluid">
@@ -98,7 +98,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                                <input type="number" class="form-control border-input" pattern=".{13,}" title="13 Digits required" name="cnic" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
+                                                <input type="text" data-inputmask="'mask': '99999-9999999-9'" class="form-control border-input" pattern=".{13,}" title="13 Digits required" name="cnic" placeholder="XXXXX-XXXXXXX-X" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('cnic'))
                                                     <span class="help-block">
@@ -108,7 +108,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                                <input type="number" class="form-control border-input" pattern="^\d{11}$"   required title="11 Digit number required" name="mobile" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
+                                                <input type="text" data-inputmask="'mask': '0399-99999999'" class="form-control border-input" pattern="^\d{11}$"   required title="11 Digit number required" name="mobile" placeholder="0399-99999999" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('mobile'))
                                                     <span class="help-block">
@@ -252,7 +252,7 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        
+
                                         <div class="col-md-6">
 
                                             <div class="form-group">
@@ -270,7 +270,7 @@
                                                 <label class="control-label">Town <span class="manadatory">*</span></label>
                                                 <input type="text" class="form-control border-input" required name="town" required  pattern="/^[\pL\s\-]+$/u" value="{{ old('town') }}" >
                                                 @if ($errors->has('town'))
-                                                <p class="validity-message"></p>
+                                                    <p class="validity-message"></p>
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('town') }}</strong>
                                                     </span>
@@ -585,7 +585,7 @@
                                                                                 <option @if(old('suv-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
                                                                                 <option @if(old('suv-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
                                                                                 <option @if(old('suv-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
-                                                                        </select>
+                                                                            </select>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -620,5 +620,9 @@
     </div>
 
     <script type="text/javascript" src="{{ url('js/workshop-profile.js') }}"></script>
+    <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
+    <script>
+        $(":input").inputmask();
+    </script>
     @include('partials.footer')
 @endsection
