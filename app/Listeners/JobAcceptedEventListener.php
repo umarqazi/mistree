@@ -39,8 +39,8 @@ class JobAcceptedEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Booking Accepted');
-            $notificationBuilder->setBody('Your Booking has been Accepted by "'.$booking->workshop->name.'".')->setSound('default');
+            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Booking Accepted');
+            $notificationBuilder->setBody('Your booking request has been accepted by "'.$booking->workshop->name.'".')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
             $dataBuilder->addData(['booking_id' => $booking->id]);

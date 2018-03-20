@@ -267,7 +267,6 @@ class CustomersController extends Controller
                 'name'          => $name,
                 'email'         => $email,
                 'password'      => Hash::make($password),
-                'status'        => 1,
                 'con_number'    => $con_number,
                 'fcm_token'     => $request->fcm_token
             ]);
@@ -276,7 +275,6 @@ class CustomersController extends Controller
                 'name'          => $name,
                 'email'         => $email,
                 'password'      => Hash::make($password),
-                'status'        => 1,
                 'con_number'    => $con_number
             ]);
         }
@@ -413,6 +411,9 @@ class CustomersController extends Controller
      */
     public function logout(Request $request) {
         try {
+            $customer = JWTAuth::authenticate();
+            $customer->fcm_token = null;
+            $customer->save();
             JWTAuth::invalidate(JWTAuth::getToken());
 
             return response()->json([
