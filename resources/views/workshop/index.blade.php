@@ -46,11 +46,12 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 130px;">Workshop Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 142px;">Owner Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 207px;">Area</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Balance</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Leads</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"     aria-label="JazzCash: activate to sort column ascending" style="width: 100px;">ID</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 130px;">Workshop Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Owner Name.: activate to sort column ascending" style="width: 142px;">Owner Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Area: activate to sort column ascending" style="width: 207px;">Area</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Balance: activate to sort column ascending" style="width: 156px;">Balance</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Lead: activate to sort column ascending" style="width: 94px;">Leads</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Status</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Actions</th>
                                 </tr>
@@ -58,6 +59,7 @@
                             <tbody>
                                 @foreach($workshops as $key => $value)    
                                 <tr role="row" class="odd">
+                                    <td>{{ $value->jazzcash_id }}</td>
                                     <td>{{ $value->name }}</td>
                                     <td>{{ $value->owner_name }}</td>
                                     @if($value->address)
@@ -98,7 +100,6 @@
 
         </div>
     </div>
-
     </div>
 @include('partials.footer')
 @endsection

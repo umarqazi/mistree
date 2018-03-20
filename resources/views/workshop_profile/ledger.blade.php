@@ -21,9 +21,11 @@
 	                                	<h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
 	                                	<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
 	                                	<div class="phone">Mobile : {{$workshop->mobile}}</div>
-	                                	<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
-	                                	<div class="phone">Total Earnings : {{$total_earning}}</div>	                         
-	                                	
+	                                	<div>Current Balance : {{$workshop->balance->balance}}</div>
+	                                	<div>Total Earnings : {{$total_earning}}</div>
+										@if(!is_null($workshop->jazzcash_id))	                         
+										<div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
+										@endif
 	                                </div>	                                
 	                            </div>
 								
