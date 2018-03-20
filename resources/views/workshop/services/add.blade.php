@@ -130,6 +130,7 @@
 <script>
     function getServices(workshop) {
         var id = $("#category_id").val();
+        $('#service_ids').children().remove();
         $.ajax({
             type : 'post',
             url : '{{ url('admin/get-category-services') }}',
@@ -137,7 +138,6 @@
             dataType: "json",
             success : function (response){
                 $.each(response, function(i, service) {
-                    $('#service_ids').children().remove();
                     $('#service_ids').removeAttr('disabled');
                     $('#service_ids').append('<option value="' + service.id +'">' + service.name + '</option>');
                 });

@@ -929,4 +929,42 @@ class BookingsController extends Controller
         ],Response::HTTP_OK);
 
     }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/start-job/{lead}",
+     *   summary="Booking Status Update",
+     *   operationId="Patch",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="lead",
+     *     in="path",
+     *     description="Booking Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function startLead(Booking $lead){
+        $lead->update(['job_status' => 'in-progress']);
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Lead In Progress',
+            'body' => ['lead' => $lead->load('services','customer','billing')]
+        ],Response::HTTP_OK);
+
+    }
 }

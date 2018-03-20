@@ -21,6 +21,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Input;
+use Config;
 
 class RegisterController extends Controller
 {
@@ -86,9 +87,21 @@ class RegisterController extends Controller
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
 
-            'services.*'                     => 'required|integer:unique',
-            'service-rates.*'                => 'required',
-            'service-times.*'                => 'required',
+            'hatchback.*'                    => 'required|integer:unique',
+            'hatchback-rates.*'              => 'required',
+            'hatchback-times.*'              => 'required',
+
+            'sedan.*'                        => 'required|integer:unique',
+            'sedan-rates.*'                  => 'required',
+            'sedan-times.*'                  => 'required',
+
+            'luxury.*'                       => 'required|integer:unique',
+            'luxury-rates.*'                 => 'required',
+            'luxury-times.*'                 => 'required',
+
+            'suv.*'                          => 'required|integer:unique',
+            'suv-rates.*'                    => 'required',
+            'suv-times.*'                    => 'required',
         ]);
     }
 
@@ -134,20 +147,55 @@ class RegisterController extends Controller
             'coordinates'   => NULL
         ]);
 
-        //Insert Services data from request
-        foreach($data['services'] as $service)
-        {
-            $workshop->services()->attach($service, ['service_rate' => Input::get('service-rates')[$service] , 'service_time' => Input::get('service-times')[$service] ]);
+        if(!empty($data['hatchback'])){
+            //Insert Hatchback Services data from request
+            foreach($data['hatchback'] as $hatchback)
+            {
+                $workshop->services()->attach($hatchback, ['service_rate' => Input::get('hatchback-rates')[$hatchback] , 'service_time' => Input::get('hatchback-times')[$hatchback] ]);
+            }
+        }
+
+        if(!empty($data['sedan'])){
+            //Insert Sedan Services data from request
+            foreach($data['sedan'] as $sedan)
+            {
+                $workshop->services()->attach($sedan, ['service_rate' => Input::get('sedan-rates')[$sedan]
+                    , 'service_time' => Input::get('sedan-times')[$sedan] ]);
+            }
+        }
+
+        if(!empty($data['luxury'])){
+            //Insert Luxury Services data from request
+            foreach($data['luxury'] as $luxury)
+            {
+                $workshop->services()->attach($luxury, ['service_rate' => Input::get('luxury-rates')[$luxury]
+                    , 'service_time' => Input::get('luxury-times')[$luxury] ]);
+            }
+        }
+
+        if(!empty($data['suv'])){
+            //Insert Suv Services data from request
+            foreach($data['suv'] as $suv)
+            {
+                $workshop->services()->attach($suv, ['service_rate' => Input::get('suv-rates')[$suv] , 'service_time' => Input::get('suv-times')[$suv] ]);
+            }
         }
 
         $balance = new WorkshopBalance([ 'balance' => 0 ]);
         $workshop->balance()->save($balance);
 
+        $workshops_path = public_path().'/uploads/workshops/';
+        $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
         if (!empty($data['profile_pic']))
         {
-            $profile_pic =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/logo', new File($data['profile_pic']), 'public');
+            if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
+                $path = $workshops_path.$workshop->id.'/logo';
+                mkdir($path, 0775, true);
+            }
+            $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($data['profile_pic']), 'public');
 
-            $profile_pic = config('app.s3_bucket_url').$profile_pic;
+            $profile_pic = url('/').'/'.$profile_pic;
             $workshop->profile_pic   = $profile_pic;
             $workshop->save();
         }
@@ -160,8 +208,13 @@ class RegisterController extends Controller
 
         if (!empty($data['cnic_image']))
         {
-            $cnic_image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/cnic', new File($data['cnic_image']), 'public');
-            $cnic_image =  config('app.s3_bucket_url').$cnic_image;
+            if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
+                $path = $workshops_path.$workshop->id.'/cnic';
+                mkdir($path, 0775, true);
+            }
+
+            $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($data['cnic_image']), 'public');
+            $cnic_image =  url('/').'/'.$cnic_image;
             $workshop->cnic_image   = $cnic_image;
             $workshop->save();
         }
@@ -174,12 +227,15 @@ class RegisterController extends Controller
 
         if (!empty($data['images']))
         {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                mkdir($path, 0775, true);
+            }
             foreach($data['images'] as $file)
             {
                 $images = new WorkshopImages;
-                $image =  Storage::disk('s3')->putFile('workshops/'. $workshop->id .'/images', new File($file), 'public');
-                $image =  config('app.s3_bucket_url').$image;
-                $images->url = $image;
+                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');
+                $images->url = url('/').'/'.$image;
                 $images->workshop()->associate($workshop);
                 $images->save();
             }
@@ -208,8 +264,11 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $services = Service::all(); 
-        return View::make('workshop.auth.register', ['services' => $services]);
+        $hatchback = Service::hatchback()->get();
+        $sedan = Service::sedan()->get();
+        $luxury = Service::luxury()->get();
+        $suv = Service::suv()->get();
+        return View::make('workshop.auth.register', ['hatchback' => $hatchback, 'sedan' => $sedan, 'luxury' => $luxury, 'suv' => $suv]);
     }
 
     /**
@@ -219,7 +278,6 @@ class RegisterController extends Controller
      */
     protected function guard()
     {
-        // Config::set('auth.providers.users.model', \App\Workshop::class);
         return Auth::guard('workshop');
     }
 }
