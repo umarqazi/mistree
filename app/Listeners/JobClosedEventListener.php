@@ -34,22 +34,23 @@ class JobClosedEventListener
     {
         $booking = $event->booking;
         Notification::send($booking->customer, new JobClosed($booking));
+        if($booking->customer->fcm_token){
+            $optionBuilder = new OptionsBuilder();
+            $optionBuilder->setTimeToLive(60*20);
 
-        $optionBuilder = new OptionsBuilder();
-        $optionBuilder->setTimeToLive(60*20);
+            $notificationBuilder = new PayloadNotificationBuilder('Booking Completed');
+            $notificationBuilder->setBody('Your Booking has been Marked as Completed by "'.$booking->workshop->name.'".')->setSound('default');
 
-        $notificationBuilder = new PayloadNotificationBuilder('Booking Completed');
-        $notificationBuilder->setBody('Your Booking has been Marked as Completed by "'.$booking->workshop->name.'".')->setSound('default');
+            $dataBuilder = new PayloadDataBuilder();
+            $dataBuilder->addData(['booking_id' => $booking->id]);
 
-        $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['booking_id' => $booking->id]);
+            $option = $optionBuilder->build();
+            $notification = $notificationBuilder->build();
+            $data = $dataBuilder->build();
 
-        $option = $optionBuilder->build();
-        $notification = $notificationBuilder->build();
-        $data = $dataBuilder->build();
+            $token = $booking->customer->fcm_token;
 
-        $token = $booking->customer->fcm_token;
-
-        $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+            $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
+        }
     }
 }
