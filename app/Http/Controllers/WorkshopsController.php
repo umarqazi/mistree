@@ -226,7 +226,7 @@ class WorkshopsController extends Controller
         {
             if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
                 $path = $workshops_path.$workshop->id.'/logo';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }            
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
            
@@ -245,7 +245,7 @@ class WorkshopsController extends Controller
         {
             if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
                 $path = $workshops_path.$workshop->id.'/cnic';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }                        
 
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
@@ -264,7 +264,7 @@ class WorkshopsController extends Controller
         {   
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }                        
             foreach($request->file('images') as $file)
             {
@@ -281,7 +281,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.emails.verify', ['name' => $request->name, 'verification_code' => $verification_code],
             function($mail) use ($request, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
+                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
                 $mail->to($request->email, $request->name);
                 $mail->subject($subject);
             });
@@ -304,7 +304,7 @@ class WorkshopsController extends Controller
     public function show($id)
     {        
         // get the workshop
-        $workshop = Workshop::find($id);        
+        $workshop = Workshop::find($id);
         // show the view and pass the workshop to it
         return View::make('workshop.show', ['workshop' => $workshop]);
     }
@@ -371,7 +371,7 @@ class WorkshopsController extends Controller
         {
             if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
                 $path = $workshops_path.$workshop->id.'/logo';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }            
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
            
@@ -387,7 +387,7 @@ class WorkshopsController extends Controller
         {   
             if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
                 $path = $workshops_path.$workshop->id.'/cnic';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }                        
 
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
@@ -432,7 +432,7 @@ class WorkshopsController extends Controller
             }
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }            
             foreach($request->file('images') as $file)
             {
@@ -674,7 +674,7 @@ class WorkshopsController extends Controller
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         Mail::send('workshop.emails.verify', ['name' => $name, 'verification_code' => $verification_code],
             function($mail) use ($email, $name, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
+                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
@@ -1084,7 +1084,7 @@ class WorkshopsController extends Controller
         $subject = "Conragulations! Your workshop has been approved by Admin.";
            Mail::send('workshop.emails.confirmationEmail', ['name' => $workshop->name],
             function($mail) use ($workshop, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
+                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
                 $mail->to($workshop->email, $workshop->name);
                 $mail->subject($subject);
             });        
@@ -1323,8 +1323,6 @@ class WorkshopsController extends Controller
      */
     public function addWorkshopService(Workshop $workshop){
         $categories = Category::all();
-//        $services   = $workshop->services()->pluck('service_id')->toArray();
-//        $services = Service::whereNotIn('id',$services)->get();
         return View::make('workshop.services.add')->with('workshop', $workshop)->with('categories', $categories);
 
     }
@@ -1810,7 +1808,7 @@ class WorkshopsController extends Controller
         {            
             if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
                 $path = $workshops_path.$workshop->id.'/logo';
-                Storage::MakeDirectory($path, 0775, true);                
+                mkdir($path, 0775, true);
             }            
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
            
@@ -1826,7 +1824,7 @@ class WorkshopsController extends Controller
         {   
             if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
                 $path = $workshops_path.$workshop->id.'/cnic';
-                Storage::MakeDirectory($path, 0775, true);                
+                mkdir($path, 0775, true);
             }                        
 
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
@@ -1871,8 +1869,8 @@ class WorkshopsController extends Controller
             }
 
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
-                $path = $workshops_path.$workshop->id.'/images';                
-                Storage::MakeDirectory($path, 0775, true);
+                $path = $workshops_path.$workshop->id.'/images';
+                mkdir($path, 0775, true);
             }
 
             foreach($request->file('images') as $file)
@@ -2243,8 +2241,8 @@ class WorkshopsController extends Controller
         $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
 
         if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
-            $path = $workshops_path.$workshop->id.'/images';            
-            Storage::MakeDirectory($path, 0775, true);
+            $path = $workshops_path.$workshop->id.'/images';
+            mkdir($path, 0775, true);
         }            
         
         $full_path = $workshops_path.$workshop->id.'/images/'.md5(microtime()).".jpg";            
@@ -2311,15 +2309,14 @@ class WorkshopsController extends Controller
 
         $workshops_path = public_path().'/uploads/workshops/';
         $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
-
         if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
             $path = $workshops_path.$workshop->id.'/logo';
-            Storage::MakeDirectory($path, 0775, true, true);
+            mkdir($path, 0775, true);
         }
         
-        $full_path = $workshops_path.$workshop->id.'/logo/'.md5(microtime()).".jpg";        
+        $full_path = $workshops_path.$workshop->id.'/logo/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$workshop->id,$full_path);
-        $url = url('/').'/'.$specified_workshop_path.'/logo/'.basename($url);                
+        $url = url('/').'/'.$specified_workshop_path.'/logo/'.basename($url);
         $profile_image = $workshop->update(['profile_pic' => $url]);
 
         return response()->json([
@@ -2372,7 +2369,7 @@ class WorkshopsController extends Controller
 
         if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
             $path = $workshops_path.$workshop->id.'/cnic';
-            Storage::MakeDirectory($path, 0775, true);
+            mkdir($path, 0775, true);
         }            
         
         $full_path = $workshops_path.$workshop->id.'/cnic/'.md5(microtime()).".jpg";        

@@ -86,7 +86,8 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('update-cnic-image','WorkshopsController@updateCnicImage');
 		Route::get('services','WorkshopsController@workshopServices');		
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
-		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
+		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');
+		Route::get('start-job/{lead}', 'BookingsController@startLead');
 		Route::post('complete-job','BookingsController@completeLead');
     
 		Route::get('ledger','WorkshopsController@getLedger');

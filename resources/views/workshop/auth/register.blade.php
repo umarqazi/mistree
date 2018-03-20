@@ -319,56 +319,276 @@
                                             <div id="services-container" class="child-box-wrap">
                                                 <br>
 
-                                                <div class="row">
+                                                <div class="row category-hatchback">
                                                     <div class="col-md-12">
+                                                        <div class="heading-category">
+                                                            <h3>Hatchback Services</h3>
+                                                        </div>
                                                         <div class="form-group">
                                                             <label class="control-label">Select Services <span class="manadatory">*</span></label>
-                                                            <select id="services" class="form-control border-input chosen-select" name="services[]" multiple>
-                                                                @foreach ($services as $service)
-                                                                    <option value="{{$service->id}}" @if(!empty(old('services')) && in_array($service->id,old('services'))){{"selected"}}@endif>{{ $service->name }}</option>
+                                                            <select id="hatchback" class="form-control
+                                                                border-input chosen-select" name="hatchback[]" multiple>
+                                                                @foreach ($hatchback as $row)
+                                                                    <option value="{{$row->id}}" @if(!empty(old
+                                                                        ('hatchback')) && in_array($row->id,old
+                                                                        ('hatchback'))){{"selected"}}@endif>{{ $row->name }}@if($row->is_doorstep){{ " at doorstep" }}@endif</option>
                                                                 @endforeach
                                                             </select>
-                                                            <p class="validity-message"></p>
-                                                            @if ($errors->has('services'))
+                                                            @if ($errors->has('hatchback'))
                                                                 <span class="help-block">
-                                                                    <strong class="manadatory">{{ $errors->first('services') }}</strong>
-                                                                </span>
+                                                                        <strong class="manadatory">{{ $errors->first
+                                                                        ('hatchback') }}</strong>
+                                                                    </span>
                                                             @endif
                                                         </div>
                                                     </div>
                                                 </div>
-                                                @if(!empty(old('service-rates')))
-                                                    @foreach(old('service-rates') as $key => $value)
+
+                                                @if(!empty(old('hatchback-rates')))
+                                                    @foreach(old('hatchback-rates') as $key => $value)
                                                         <div class="row">
                                                             <div class="col-md-12">
                                                                 <h5></h5>
                                                                 <div class="row">
                                                                     <div class="col-md-6">
                                                                         <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                                        <input type="text" class="form-control border-input" name="service-rates[{{ $key }}]" value="{{ old('service-rates.'.$key) }}">
+                                                                        <input type="text" class="form-control
+                                                                            border-input" name="hatchback-rates[{{ $key
+                                                                            }}]" value="{{ old('hatchback-rates.'.$key)
+                                                                            }}">
                                                                     </div>
                                                                     <div class="col-md-6">
                                                                         <label class="control-label">Service Time <span class="manadatory">*</span></label>
-                                                                        <select name ="service-times[{{ $key }}]" class="form-control chosen-select border-input">
-                                                                            <option @if(old('service-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
-                                                                            <option @if(old('service-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
+                                                                        <select name ="hatchback-times[{{ $key }}]"
+                                                                                class="form-control chosen-select border-input">
+                                                                            <option @if(old('hatchback-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
+                                                                            <option @if(old('hatchback-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+
+                                                <div class="row category-sedan">
+                                                    <div class="col-md-12">
+                                                        <div class="heading-category">
+                                                            <h3>Sedan/Saloon Services</h3>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                            <select id="sedan" class="form-control
+                                                                border-input chosen-select" name="sedan[]" multiple>
+                                                                @foreach ($sedan as $row)
+                                                                    <option value="{{$row->id}}" @if(!empty(old
+                                                                        ('sedan')) && in_array($row->id,old
+                                                                        ('sedan'))){{"selected"}}@endif>{{
+                                                                        $row->name }}@if($row->is_doorstep){{ " at
+                                                                        doorstep" }}@endif</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @if ($errors->has('sedan'))
+                                                                <span class="help-block">
+                                                                        <strong class="manadatory">{{ $errors->first
+                                                                        ('sedan') }}</strong>
+                                                                    </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @if(!empty(old('sedan-rates')))
+                                                    @foreach(old('sedan-rates') as $key => $value)
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5></h5>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="control-label">Service Rate <span class="manadatory">*</span></label>
+                                                                        <input type="text" class="form-control
+                                                                            border-input" name="sedan-rates[{{ $key
+                                                                            }}]" value="{{ old('sedan-rates.'.$key)
+                                                                            }}">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="control-label">Service Time <span class="manadatory">*</span></label>
+                                                                        <select name ="sedan-times[{{ $key }}]"
+                                                                                class="form-control chosen-select border-input">
+                                                                            <option @if(old('sedan-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
+                                                                            <option @if(old('sedan-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+
+                                                <div class="row category-luxury">
+                                                    <div class="col-md-12">
+                                                        <div class="heading-category">
+                                                            <h3>Luxury Services</h3>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                            <select id="luxury" class="form-control
+                                                                border-input chosen-select" name="luxury[]" multiple>
+                                                                @foreach ($luxury as $row)
+                                                                    <option value="{{$row->id}}" @if(!empty(old
+                                                                        ('luxury')) && in_array($row->id,old
+                                                                        ('luxury'))){{"selected"}}@endif>{{
+                                                                        $row->name
+                                                                         }}@if($row->is_doorstep){{ " at doorstep"
+                                                                         }}@endif</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @if ($errors->has('luxury'))
+                                                                <span class="help-block">
+                                                                        <strong class="manadatory">{{ $errors->first
+                                                                        ('luxury') }}</strong>
+                                                                    </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                @if(!empty(old('luxury-rates')))
+                                                    @foreach(old('luxury-rates') as $key => $value)
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5></h5>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="control-label">Service Rate <span class="manadatory">*</span></label>
+                                                                        <input type="text" class="form-control
+                                                                            border-input" name="luxury-rates[{{ $key
+                                                                            }}]" value="{{ old('luxury-rates.'.$key)
+                                                                            }}">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="control-label">Service Time <span class="manadatory">*</span></label>
+                                                                        <select name ="luxury-times[{{ $key }}]"
+                                                                                class="form-control chosen-select border-input">
+                                                                            <option @if(old('luxury-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
+                                                                            <option @if(old('luxury-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    @endforeach
+                                                @endif
+
+                                                <div class="row category-suv">
+                                                    <div class="col-md-12">
+                                                        <div class="heading-category">
+                                                            <h3>SUV/4 &#215 4 Services</h3>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                            <select id="suv" class="form-control
+                                                                border-input chosen-select" name="suv[]" multiple>
+                                                                @foreach ($suv as $row)
+                                                                    <option value="{{$row->id}}" @if(!empty(old
+                                                                        ('suv')) && in_array($row->id,old
+                                                                        ('suv'))){{"selected"}}@endif>{{ $row->name
+                                                                         }}@if($row->is_doorstep){{ " at doorstep"
+                                                                         }}@endif</option>
+                                                                @endforeach
+                                                            </select>
+                                                            @if ($errors->has('suv'))
+                                                                <span class="help-block">
+                                                                        <strong class="manadatory">{{ $errors->first
+                                                                        ('suv') }}</strong>
+                                                                    </span>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                @if(!empty(old('suv-rates')))
+                                                    @foreach(old('suv-rates') as $key => $value)
+                                                        <div class="row">
+                                                            <div class="col-md-12">
+                                                                <h5></h5>
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <label class="control-label">Service Rate <span class="manadatory">*</span></label>
+                                                                        <input type="text" class="form-control border-input" name="suv-rates[{{ $key }}]" value="{{ old('suv-rates.'.$key) }}">
+                                                                    </div>
+                                                                    <div class="col-md-6">
+                                                                        <label class="control-label">Service Time <span class="manadatory">*</span></label>
+                                                                        <select name ="suv-times[{{ $key }}]" class="form-control chosen-select border-input">
+                                                                            <option @if(old('suv-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "2.5"){{"selected"}}@endif value="2.5">2.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "3.0"){{"selected"}}@endif value="3.0">3.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "3.5"){{"selected"}}@endif value="3.5">3.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "4.0"){{"selected"}}@endif value="4.0">4.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "4.5"){{"selected"}}@endif value="4.5">4.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "5.0"){{"selected"}}@endif value="5.0">5.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "5.5"){{"selected"}}@endif value="5.5">5.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "6.0"){{"selected"}}@endif value="6.0">6.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "6.5"){{"selected"}}@endif value="6.5">6.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "7.0"){{"selected"}}@endif value="7.0">7.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "7.5"){{"selected"}}@endif value="7.5">7.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "8.0"){{"selected"}}@endif value="8.0">8.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "8.5"){{"selected"}}@endif value="8.5">8.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "9.0"){{"selected"}}@endif value="9.0">9.0 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
+                                                                            <option @if(old('suv-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
                                                                         </select>
                                                                    <p class="validity-message"></p>
                                                                     </div>
