@@ -40,7 +40,7 @@ class SelectAnotherWorkshopEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mistri - Select Another Workshop');
+            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Select Another Workshop');
             $notificationBuilder->setBody('Please select another workshop, "'.$booking->workshop->name.'" has not accepted your booking request.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
