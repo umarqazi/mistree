@@ -1900,8 +1900,8 @@ class WorkshopsController extends Controller
 
     public function addProfileService($workshop){
         $workshop = Workshop::find($workshop);
-        $services = Service::all();
-        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('services',$services);
+        $categories = Category::all();
+        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('categories',$categories);
     }
 
     public function storeProfileService(Request $request){
