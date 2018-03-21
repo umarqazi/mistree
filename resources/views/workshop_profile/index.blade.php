@@ -71,9 +71,9 @@
 										</tr>
 										<tr>
 											<td>Opening Time</td>
-											<td>{{ $workshop->open_time}}</td>
+											<td>{{date('g:i A'), strtotime($workshop->open_time)}}</td>
 											<td>Closing Time</td>
-											<td>{{ $workshop->close_time}}</td>
+											<td>{{date('g:i A'), strtotime($workshop->close_time)}}</td>
 										</tr>
 
 										</tbody>
@@ -153,7 +153,13 @@
 										@if(count($workshop->services))
 											@foreach($workshop->services as $spec)
 												<tr>
-													<td>{{ $spec->name }}</td>
+													<td>
+														@if($spec->is_doorstep == true)
+															{{ $spec->name.' at doorstep'}}
+														@else
+															{{ $spec->name }}
+														@endif
+													</td>
 													<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
 													<td>{{ $spec->pivot->service_rate }}</td>
 													<td>{{ $spec->pivot->service_time.' hr' }} </td>
