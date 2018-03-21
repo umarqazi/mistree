@@ -361,11 +361,20 @@ class ServicesController extends Controller
         }
         $car = Car::find($request->car_id);
         $services = Service::where('category_id', $car->category_id)->where('is_doorstep', $request->is_doorstep)->get();
-        return response()->json([
-            'http-status' => Response::HTTP_OK,
-            'status' => true,
-            'message' => 'all services',
-            'body' => [ 'services' => $services ]
-        ],Response::HTTP_OK);
+        if(count($services) > 0){
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Services',
+                'body' => [ 'services' => $services ]
+            ],Response::HTTP_OK);
+        }else{
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'No services',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
     }
 }

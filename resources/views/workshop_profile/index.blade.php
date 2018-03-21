@@ -14,19 +14,7 @@
 								<div class="col-md-12">
 
 									<div class="avtar-block">
-										<img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
-										<div class="name-info">
-											<h4 class="title">Workshop Name : {{$workshop->name}}</h4>
-											<h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
-											<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
-											<div class="phone">Mobile : {{$workshop->mobile}}</div>
-											<div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
-                      @if(!is_null($workshop->jazzcash_id))	                         
-										    <div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
-										  @endif
-											<div class="phone"><a href="{{url('profile/'.$workshop->id.'/edit')}}" class=" btn btn-header btn-export">Edit Workshop</a></div>
-
-										</div>
+										@include('partials.workshop_profile_info')
 										<div class="dropdown pull-right">
 											<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												+ More Options
@@ -106,33 +94,42 @@
 											<th></th>
 										</tr>
 										</thead>
-										@php $address = $workshop->address @endphp
 										<tbody>
-										<tr>
-											<td>Shop No</td>
-											<td>{{ $address->shop }}</td>
-											<td>Street No</td>
-											<td>{{ $address->street}}</td>
-										</tr>
-										<tr>
-											<td>Building</td>
-											<td>{{$address->building}}</td>
+										@if(!is_null($workshop->address))
+											@php $address = $workshop->address @endphp
+											<tr>
+												<td>Shop No</td>
+												<td>{{ $address->shop }}</td>
+												<td>Street No</td>
+												<td>{{ $address->street}}</td>
+											</tr>
+											<tr>
+												<td>Building</td>
+												<td>{{$address->building}}</td>
 
-											<td>Block</td>
-											<td>{{ $address->block}}</td>
-										</tr>
-										<tr>
-											<td>Town</td>
-											<td>{{$address->town}}</td>
-											<td>City</td>
-											<td>{{ $address->city}}</td>
-										</tr>
-										<tr>
-											<td>Geo Cord</td>
-											<td>{{ $address->geo_cord}}</td>
-											<td></td>
-											<td></td>
-										</tr>
+												<td>Block</td>
+												<td>{{ $address->block}}</td>
+											</tr>
+											<tr>
+												<td>Town</td>
+												<td>{{$address->town}}</td>
+												<td>City</td>
+												<td>{{ $address->city}}</td>
+											</tr>
+											<tr>
+												<td>Geo Cord</td>
+												<td>{{ $address->geo_cord}}</td>
+												<td></td>
+												<td></td>
+											</tr>
+										@else
+											<tr>
+												<td>No Address Details Found</td>
+												<td></td>
+												<td></td>
+												<td></td>
+											</tr>
+										@endif
 										</tbody>
 									</table>
 								</div>
@@ -152,12 +149,9 @@
 											<th>Actions</th>
 										</tr>
 										</thead>
-										@php
-											$specialty = $workshop->services
-										@endphp
 										<tbody>
-										@if($specialty)
-											@foreach($specialty as $spec)
+										@if(count($workshop->services))
+											@foreach($workshop->services as $spec)
 												<tr>
 													<td>{{ $spec->name }}</td>
 													<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
@@ -169,6 +163,14 @@
 													</td>
 												</tr>
 											@endforeach
+										@else
+											<tr>
+												<td>No Services Found</td>
+												<td></td>
+												<td></td>
+												<td></td>
+												<td></td>
+											</tr>
 										@endif
 										</tbody>
 									</table>

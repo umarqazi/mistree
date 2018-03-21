@@ -2,6 +2,7 @@
 
 namespace App\Listeners;
 
+use App\Booking;
 use App\Events\JobAcceptedEvent;
 use App\Notifications\JobAccepted;
 use Illuminate\Queue\InteractsWithQueue;
