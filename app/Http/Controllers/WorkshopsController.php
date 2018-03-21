@@ -412,14 +412,19 @@ class WorkshopsController extends Controller
         $workshop->save();
 
         // Update Workshop Address
-        $address = WorkshopAddress::find($workshop->address->id);
+        if(is_null($workshop->address)){
+            $address = new WorkshopAddress;
+            $address->workshop_id      = $workshop->id;
+        }else{
+            $address = WorkshopAddress::find($workshop->address->id);
+        }
         $address->shop              = Input::get('shop');
         $address->building          = Input::get('building');
         $address->street            = Input::get('street');
         $address->block             = Input::get('block');
         $address->town              = Input::get('town');
         $address->city              = Input::get('city');
-        $address->update();
+        $address->save();
 
         if($request->hasFile('images'))
         {
@@ -1850,14 +1855,19 @@ class WorkshopsController extends Controller
         $workshop->save();
 
         // Update Workshop Address
-        $address = WorkshopAddress::find($workshop->address->id);
+        if(is_null($workshop->address)){
+            $address                        = new WorkshopAddress;
+            $address->workshop_id           = $workshop->id;
+        }else{
+            $address = WorkshopAddress::find($workshop->address->id);
+        }
         $address->shop              = Input::get('shop');
         $address->building          = Input::get('building');
         $address->street            = Input::get('street');
         $address->block             = Input::get('block');
         $address->town              = Input::get('town');
         $address->city              = Input::get('city');
-        $address->update();
+        $address->save();
 
         if($request->hasFile('images'))
         {
@@ -2168,11 +2178,11 @@ class WorkshopsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'body' => null
             ],Response::HTTP_OK);
         }
 
-        if (!count($address)) {
+        if (is_null($address)) {
             $address = new WorkshopAddress;
         }
 

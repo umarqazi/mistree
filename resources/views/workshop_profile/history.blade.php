@@ -20,18 +20,7 @@
                         <div class="col-md-12">
 
                             <div class="avtar-block">
-                                <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
-                                <div class="name-info">
-                                    <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
-                                    <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
-                                    <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
-                                    <div class="phone">Mobile : {{$workshop->mobile}}</div>
-                                    <div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
-                                    <div class="total">Total Earnings: PKR {{$total_earning}}</div>
-                                    @if(!is_null($workshop->jazzcash_id))	                         
-                                    <div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
-                                    @endif
-                                </div>
+                                @include('partials.workshop_profile_info')
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    + More Options
