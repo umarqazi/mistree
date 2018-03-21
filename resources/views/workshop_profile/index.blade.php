@@ -146,6 +146,7 @@
 										<thead>
 										<tr>
 											<th>Service Name</th>
+											<th>Service Category</th>
 											<th>Service Rate</th>
 											<th>Service Time</th>
 											<th>Actions</th>
@@ -159,6 +160,7 @@
 											@foreach($specialty as $spec)
 												<tr>
 													<td>{{ $spec->name }}</td>
+													<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
 													<td>{{ $spec->pivot->service_rate }}</td>
 													<td>{{ $spec->pivot->service_time }}</td>
 													<td class="text-center">
