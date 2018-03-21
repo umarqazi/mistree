@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Car;
 use App\Category;
 use App\Service;
 use DB, View;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -306,5 +307,65 @@ class ServicesController extends Controller
             'message' => 'all services',
             'body' => [ 'services' => $services ]
         ],Response::HTTP_OK);        
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/service-against-car-id",
+     *   summary="All Services Against Car Id ",
+     *   operationId="serviceAgainstCarId",
+     *   consumes={"application/json"},
+     *   produces={"application/json"},
+     *   tags={"Services"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="car_id",
+     *     in="formData",
+     *     description="Car Id",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="is_doorstep",
+     *     in="formData",
+     *     description="is_doorstep",
+     *     required=true,
+     *     type="boolean"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function serviceAgainstCarId(Request $request){
+        $rules = array(
+            'car_id'         => 'required|numeric',
+            'is_doorstep'    => 'required',
+        );
+
+        $inputs = $request->only('car_id', 'is_doorstep');
+        $validator = Validator::make($inputs, $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ], Response::HTTP_OK);
+        }
+        $car = Car::find($request->car_id);
+        $services = Service::where('category_id', $car->category_id)->where('is_doorstep', $request->is_doorstep)->get();
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'all services',
+            'body' => [ 'services' => $services ]
+        ],Response::HTTP_OK);
     }
 }

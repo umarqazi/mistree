@@ -62,7 +62,8 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 	Route::get('services', 'ServicesController@filteredServices');
-	Route::get('sign-up/services', 'ServicesController@index');	
+	Route::get('sign-up/services', 'ServicesController@index');
+    Route::post('service-against-car-id', 'ServicesController@serviceAgainstCarId');
 });
 Route::group(['prefix'=>'workshop'], function() {
 	Route::post('register', 'WorkshopsController@register');
