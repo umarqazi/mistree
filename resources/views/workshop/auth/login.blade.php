@@ -46,7 +46,7 @@
                                                           </span>
                                                       @endif
                                               </div>
-                                                <a href="{{ url('/admin/password/reset') }}" class="forgot pull-right">Forgot password ? </a>
+                                                <a href="{{ url('/password/reset') }}" class="forgot pull-right">Forgot password ? </a>
                                             </div>
                                         </div>
                                         <div class="form-group">
