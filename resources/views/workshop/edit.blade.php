@@ -214,7 +214,8 @@
                                             @php $address = $workshop->address;  @endphp
                                             <div class="form-group">
                                                 <label class="control-label">Shop No <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" required name="shop" value="{{$address->shop}}">
+                                                <input type="text" class="form-control border-input" required
+                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif">
                                                 @if ($errors->has('shop'))
                                                     <span class="help-block">
                                             <strong class="manadatory">{{ $errors->first('shop') }}</strong>
@@ -223,8 +224,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Building</label>
-                                                <input type="text" class="form-control border-input" name="building" pattern="[a-zA-Z0-9 ]+" value="{{$address->building}}">
-                                                <p class="validity-message"></p>
+                                                <input type="text" class="form-control border-input" name="building"
+                                                       pattern="[a-zA-Z0-9 ]+" value="@if(!empty($address->building))
+                                                {{$address->building}}@endif">
                                                 @if ($errors->has('building'))
                                                     <span class="help-block">
                                             <strong class="manadatory">{{ $errors->first('building') }}</strong>
@@ -233,7 +235,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Street </label>
-                                                <input type="text" class="form-control border-input" name="street" value="{{$address->street}}">
+                                                <input type="text" class="form-control border-input" name="street" value="@if(!empty($address->street)){{$address->street}}@endif">
                                                 @if ($errors->has('street'))
                                                     <span class="help-block">
                                             <strong class="manadatory">{{ $errors->first('street') }}</strong>
@@ -244,7 +246,8 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Block <span class="manadatory"></span></label>
-                                                <input type="text" required class="form-control border-input" name="block" value="{{$address->block}}">
+                                                <input type="text" required class="form-control border-input"
+                                                       name="block" value="@if(!empty($address->block)){{$address->block}}@endif">
                                                 @if ($errors->has('block'))
                                                     <span class="help-block">
                                             <strong class="manadatory">{{ $errors->first('block') }}</strong>
@@ -253,7 +256,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Town <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" required name="town" value="{{$address->town}}">
+                                                <input type="text" class="form-control border-input" required
+                                                       name="town" value="@if(!empty($address->town)){{$address->town}}@endif">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('town'))
                                                     <span class="help-block">
@@ -263,7 +267,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">City <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="city" required value="{{$address->city}}" pattern="/^[\pL\s\-]+$/u" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" name="city" required value="@if(!empty($address->city)){{$address->city}}@endif"
+                                                       pattern="/^[\pL\s\-]+$/u" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('city'))
                                                     <span class="help-block">
