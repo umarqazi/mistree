@@ -57,11 +57,13 @@
                                                     <option value="Authorized" @if($workshop->type == "Authorized") {{"selected"}} @endif >Authorized</option>
                                                     <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >Unauthorized</option>
                                                 </select>
+                                                <p class="validity-message"></p>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="control-label">Enter Email <span class="manadatory">*</span></label>
                                                 <input type="email" class="form-control border-input" name="email" value="{{$workshop->email}}" readonly>
+                                                <p class="validity-message"></p>
                                             </div>
 
                                             <div class="form-group">
@@ -92,11 +94,13 @@
                                                     <option value="8" @if($workshop->slots == "8"){{ "selected" }}@endif>8</option>
                                                     <option value="9" @if($workshop->slots == "9"){{ "selected" }}@endif>9</option>
                                                 </select>
+                                                <p class="validity-message"></p>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="control-label">Opening <span class="manadatory">*</span></label>
                                                 <input type="time" class="form-control border-input" name="open_time" value="{{$workshop->open_time}}" required oninvalid="this.setCustomValidity('Required Format: (example) 12:00 PM')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('open_time'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('open_time') }}</strong>
@@ -107,6 +111,7 @@
                                             <div class="form-group">
                                                 <label class="control-label">Closing <span class="manadatory">*</span></label>
                                                 <input type="time" class="form-control border-input" name="close_time" value="{{$workshop->close_time}}" required oninvalid="this.setCustomValidity('Required Format: (example) 12:00 PM')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('close_time'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('close_time') }}</strong>
@@ -117,6 +122,7 @@
                                             <div class="form-group">
                                                 <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
                                                 <input type="text" data-inputmask="'mask': '0399-9999999'" class="form-control border-input" name="mobile" value="{{$workshop->mobile}}" placeholder="0399-9999999" pattern="^\d{11}$" title="11 Digit number required" name="mobile" value="{{ old('mobile') }}" oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('mobile'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('mobile') }}</strong>
@@ -126,6 +132,7 @@
                                             <div class="form-group">
                                                 <label class="control-label">Landline Number <span class="manadatory"></span></label>
                                                 <input type="text" class="form-control border-input" name="landline" pattern="(^$|\d{10,11})" value="{{$workshop->landline}}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
                                                         <strong class="manadatory">{{ $errors->first('landline') }}</strong>
@@ -217,6 +224,7 @@
                                             <div class="form-group">
                                                 <label class="control-label">Building</label>
                                                 <input type="text" class="form-control border-input" name="building" pattern="[a-zA-Z0-9 ]+" value="{{$address->building}}">
+                                                <p class="validity-message"></p>
                                                 @if ($errors->has('building'))
                                                     <span class="help-block">
                                             <strong class="manadatory">{{ $errors->first('building') }}</strong>
