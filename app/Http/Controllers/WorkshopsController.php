@@ -100,7 +100,7 @@ class WorkshopsController extends Controller
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
-            'team_slots'                     => 'integer',
+            'team_slots'                     => 'required|integer',
             'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
             'images.*'                       => 'image|mimes:jpg,png,jpeg',

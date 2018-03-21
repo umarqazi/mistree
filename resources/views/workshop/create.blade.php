@@ -1,8 +1,8 @@
 @extends('layouts.master')
 @section('title', 'Create New Workshop')
 @section('content')
+   
     @include('partials.header')
-
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -27,7 +27,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
+                                                <input type="text" class="form-control border-input" name="name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">
@@ -119,7 +119,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Landline Number</label>
-                                                <input type="number" class="form-control border-input" pattern="(^$|\d{10,11})" title="10 or 11 Digit number required"  name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" min="10" max="11" pattern="(^$|\d{10,11})" title="10 or 11 Digit number required"  name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
@@ -132,8 +132,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Team Slot</label>
-                                                <p class="validity-message"></p>
-                                                <select name="team_slot" class="form-control border-input">
+                                                <select name="team_slot" class="form-control border-input" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);" >
                                                     <option value="">Please Select</option>
                                                     <option value="0" @if(old('team_slot') == "0"){{ "selected" }}@endif>0</option>
                                                     <option value="1" @if(old('team_slot') == "1"){{ "selected" }}@endif>1</option>
@@ -146,6 +145,7 @@
                                                     <option value="8" @if(old('team_slot') == "8"){{ "selected" }}@endif>8</option>
                                                     <option value="9" @if(old('team_slot') == "9"){{ "selected" }}@endif>9</option>
                                                 </select>
+                                                <p class="validity-message"></p>
                                             </div>
 
                                             <div class="form-group">

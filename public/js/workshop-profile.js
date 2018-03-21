@@ -141,15 +141,15 @@ $(document).ready(function () {
 
 function myCustomValidation (obj)
 {
-   /*if (!obj.checkValidity())
+   if (!obj.checkValidity())
    {
-     $(obj).siblings('p').addClass('red');  
+    //  $(obj).siblings('p').addClass('red');  
      $(obj).siblings('p').text(obj.validationMessage);
     } 
     else 
     {
-        $(obj).siblings('p').addClass('green');
+        // $(obj).siblings('p').addClass('green');
         $(obj).siblings('p').text("Valid Input");
-    } */
+    } 
 }
 
