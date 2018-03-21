@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\MailJob;
 use App\WorkshopQuery;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JWTAuth, Session, Config, View, Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -121,12 +123,14 @@ class WorkshopQueriesController extends Controller
                 'is_resolved'   => false
             ]);
             $subject = "Workshop Query - ".$request->subject;
-            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
-                function($mail) use ($subject){
-                    $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                    $mail->to(Config::get('app.mail_username'));
-                    $mail->subject($subject);
-                });
+            $dataMail = [
+                'subject' => $subject,
+                'view' => 'workshop.emails.query',
+                'user' => 'workshop',
+                'userObject' => $workshop,
+                'msg' => $request->message,
+            ];
+            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -152,12 +156,14 @@ class WorkshopQueriesController extends Controller
                 'is_resolved'   => false
             ]);
             $subject = "Workshop Query - ".$request->subject;
-            Mail::send('workshop.emails.query', ['workshop' => $workshop, 'subject' => $request->subject, 'msg' => $request->message],
-                function($mail) use ($subject){
-                    $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                    $mail->to(Config::get('app.mail_username'));
-                    $mail->subject($subject);
-                });
+            $dataMail = [
+                'subject' => $subject,
+                'view' => 'workshop.emails.query',
+                'user' => 'workshop',
+                'userObject' => $workshop,
+                'msg' => $request->message,
+            ];
+            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
             Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
         }
