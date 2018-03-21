@@ -2151,9 +2151,9 @@ class WorkshopsController extends Controller
 
         $rules = [
             'shop'                           => 'required|numeric',
-            'building'                       => 'regex:/^[\pL\s\-]+$/u',
-            'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'required|string',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'string|nullable',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
         ];
