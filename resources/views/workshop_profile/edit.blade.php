@@ -227,7 +227,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Building</label>
-                                                <input type="text" class="form-control border-input" name="building" pattern="[a-zA-Z0-9 ]+" value="@if(!empty($address->building)){{$address->building}}@endif">
+                                                <input type="text" class="form-control border-input" name="building" pattern="[a-zA-Z0-9 ]+" value="@if(!empty($address->building)){{$address->building}}@endif"
+                                                       oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('building'))
                                                     <span class="help-block">
