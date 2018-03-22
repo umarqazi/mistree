@@ -78,7 +78,7 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">Enter Password <span class="manadatory">*</span></label>
-                                                        <input type="password" id="password" required min="6" max="16"  class="form-control border-input" name="password" oninvalid="this.setCustomValidity('8 characters minimum ')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                        <input type="password" id="password" required min="6" max="16"  class="form-control border-input" name="password" oninvalid="this.setCustomValidity('6 characters minimum ')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('password'))
                                                             <span class="help-block">

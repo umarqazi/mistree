@@ -81,7 +81,7 @@ class RegisterController extends Controller
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:8',
+            'password'                       => 'required|confirmed|min:6',
             'password_confirmation'          => 'required',
             'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
             'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
