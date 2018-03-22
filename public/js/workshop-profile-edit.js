@@ -7,8 +7,6 @@ $(document).ready(function () {
       var email         = $("[name='email']")[0].checkValidity();
       var owner_name    = $("[name='owner_name']")[0].checkValidity();
       var type          = $("[name='type']")[0].checkValidity();
-    //  var password      = $("[name='password']")[0].checkValidity(); 
-    //  var confirm_pass  = $("[name='password_confirmation']")[0].checkValidity();
       var cnic          = $("[name='cnic']")[0].checkValidity();
       var mobile        = $("[name='mobile']")[0].checkValidity(); 
       var landline      = $("[name='landline']")[0].checkValidity();
