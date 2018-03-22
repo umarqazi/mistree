@@ -22,4 +22,19 @@ class WorkshopLedger extends Model
    {
        return $this->belongsTo('App\Workshop');
    }
+
+    public function transactions()
+    {
+        return $this->hasMany('App\WorkshopLedger', 'transaction_parent');
+    }
+
+    public function children()
+    {
+        return $this->transactions()->with('children');
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo('App\WorkshopLedger', 'transaction_parent');
+    }
 }
