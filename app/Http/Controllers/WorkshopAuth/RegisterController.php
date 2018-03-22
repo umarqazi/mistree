@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\WorkshopAuth;
 
 use App\Events\NewWorkshopEvent;
+use App\Jobs\MailJobRegister;
 use App\Workshop;
+use Carbon\Carbon;
 use SoapClient;
 use App\WorkshopAddress;
 use App\WorkshopBalance;
@@ -259,12 +261,15 @@ class RegisterController extends Controller
         $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.emails.verify', ['name' => $data['name'], 'verification_code' => $verification_code],
-            function($mail) use ($data, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($data['email'], $data['name']);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.verify',
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'verification' => true,
+            'verification_code' => $verification_code,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
 
         //Firing an Event to Generate Notifications
         event(new NewWorkshopEvent($workshop));

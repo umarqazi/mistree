@@ -7,6 +7,7 @@ use App\Jobs\MailJobRegister;
 use JWTAuth;
 use SoapClient;
 use Session;
+use Carbon\Carbon;
 use Hash, DB, Config, Mail, View;
 use Illuminate\Support\Facades\Redirect;
 use App\Workshop;
