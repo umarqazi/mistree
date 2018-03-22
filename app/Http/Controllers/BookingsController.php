@@ -7,6 +7,7 @@ use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
 use App\Jobs\LeadExpiryEventJob;
+use App\Jobs\NotificationsBeforeJob;
 use App\Jobs\SelectAnotherWorkshopEventJob;
 use Carbon\Carbon;
 use App\Notifications\JobClosed;
@@ -159,8 +160,14 @@ class BookingsController extends Controller
 
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
+        $bookingDT = date('Y-m-d H:i:s', strtotime("$booking->job_date $booking->job_time"));
         SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(30));
         LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(25));
+        $customer = "customer";
+        $workshop = "workshop";
+        NotificationsBeforeJob::dispatch($booking, $customer)->delay(Carbon::parse($bookingDT)->subMinutes(30));
+        NotificationsBeforeJob::dispatch($booking, $customer)->delay(Carbon::parse($bookingDT)->subMinutes(15));
+        NotificationsBeforeJob::dispatch($booking, $workshop)->delay(Carbon::parse($bookingDT)->subMinutes(10));
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,

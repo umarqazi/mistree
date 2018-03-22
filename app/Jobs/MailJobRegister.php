@@ -2,7 +2,8 @@
 
 namespace App\Jobs;
 
-use Mail, Config;
+use Illuminate\Support\Facades\Mail;
+use Config;
 use Illuminate\Mail\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -13,6 +14,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class MailJobRegister implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
     public $dataMail;
     /**
      * Create a new job instance.
