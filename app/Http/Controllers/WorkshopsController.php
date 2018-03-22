@@ -1421,7 +1421,14 @@ class WorkshopsController extends Controller
     {
         $workshop = Auth::guard('workshop')->user();
         $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
-        return View::make('workshop.customers', ['bookings' => $bookings]);
+
+        $customer_ids  = [];
+        foreach($bookings as $booking){
+            array_push($customer_ids, $booking->customer->id);
+        }
+        $customer = array_unique($customer_ids);
+        $customers = Customer::whereIN('id', $customer)->get()->load('cars');
+        return View::make('workshop.customers', ['customers' => $customers]);
     }
 
     /**
