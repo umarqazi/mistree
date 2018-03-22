@@ -42,13 +42,15 @@ $(document).ready(function () {
 
       if(shop && building && owner_name && street && block && town && city == false)
       {
+        event.preventDefault();
         $('.cn-section-1').hide();
-        $('.cn-section-2').hide();
-        $('.cn-section-3').show();
-        $(".cn-section-1 :input").focus();
+        $('.cn-section-2').show();
+        $('.cn-section-3').hide();
+        $(".cn-section-2 :input").focus();
       }
       else
       {
+        event.preventDefault();
         $('.cn-section-1').hide();
         $('.cn-section-2').hide();
         $('.cn-section-3').show();

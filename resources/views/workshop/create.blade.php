@@ -97,7 +97,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                                <input type="text" data-inputmask="'mask': '99999-9999999-9'" pattern="^3\d{4}-\d{7}-\d{1}$"  class="form-control border-input" title="13 Digits required" name="cnic" placeholder="XXXXX-XXXXXXX-X" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <input type="text" data-inputmask="'mask': '99999-9999999-9'" pattern="^\d{5}-\d{7}-\d{1}$"  class="form-control border-input" title="13 Digits required" name="cnic" placeholder="XXXXX-XXXXXXX-X" value="{{ old('cnic') }}" required oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('cnic'))
                                                     <span class="help-block">
@@ -118,7 +118,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Landline Number</label>
-                                                <input type="text" class="form-control border-input" min="10" max="11" pattern="^0[2-9]{2,3}-\d{6,7}$" title="10 or 11 Digit number required"  name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" min="10" max="11" pattern="(^$|\d{10,11})" title="10 or 11 Digit number required"  name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
@@ -350,7 +350,7 @@
                                                                             <input type="text" class="form-control
                                                                             border-input" name="hatchback-rates[{{ $key
                                                                             }}]" value="{{ old('hatchback-rates.'.$key)
-                                                                            }}">
+                                                                            }}" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
@@ -421,7 +421,7 @@
                                                                             <input type="text" class="form-control
                                                                             border-input" name="sedan-rates[{{ $key
                                                                             }}]" value="{{ old('sedan-rates.'.$key)
-                                                                            }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            }}" Required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
@@ -493,7 +493,7 @@
                                                                             <input type="text" class="form-control
                                                                             border-input" name="luxury-rates[{{ $key
                                                                             }}]" value="{{ old('luxury-rates.'.$key)
-                                                                            }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            }}" Required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
