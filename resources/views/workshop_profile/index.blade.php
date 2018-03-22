@@ -71,9 +71,9 @@
 										</tr>
 										<tr>
 											<td>Opening Time</td>
-											<td>{{ $workshop->open_time}}</td>
+											<td>{{ \Carbon\Carbon::parse($workshop->open_time)->format('g:i A') }}</td>
 											<td>Closing Time</td>
-											<td>{{ $workshop->close_time}}</td>
+											<td>{{ \Carbon\Carbon::parse($workshop->close_time)->format('g:i A') }}</td>
 										</tr>
 
 										</tbody>
@@ -153,10 +153,16 @@
 										@if(count($workshop->services))
 											@foreach($workshop->services as $spec)
 												<tr>
-													<td>{{ $spec->name }}</td>
+													<td>
+														@if($spec->is_doorstep == true)
+															{{ $spec->name.' at doorstep'}}
+														@else
+															{{ $spec->name }}
+														@endif
+													</td>
 													<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
 													<td>{{ $spec->pivot->service_rate }}</td>
-													<td>{{ $spec->pivot->service_time }}</td>
+													<td>{{ $spec->pivot->service_time.' hr' }} </td>
 													<td class="text-center">
 														<a href="{{url('profile/edit-profile-service/'.$spec->pivot->id)}}" class="mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit"></a>
 														<a href="{{ url('profile/delete-profile-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="mistri-icons ti-close" data-toggle="tooltip" data-placement="top" title="Delete"></a>

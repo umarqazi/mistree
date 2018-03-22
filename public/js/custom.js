@@ -321,21 +321,6 @@ $('.cn-section-3').hide();
 
 $(document).ready(function(){
 
-
-    $(".btn-next-1").click(function(event){
-        event.preventDefault();
-        $('.cn-section-1').hide();
-        $('.cn-section-2').show();
-        $('.cn-section-3').hide();
-    });
-
-    $(".btn-next-2").click(function(event){
-        event.preventDefault();
-        $('.cn-section-1').hide();
-        $('.cn-section-2').hide();
-        $('.cn-section-3').show();
-    });
-
     $(".btn-back-1").click(function(event){
         event.preventDefault();
         $('.cn-section-1').show();
@@ -349,8 +334,6 @@ $(document).ready(function(){
         $('.cn-section-2').show();
         $('.cn-section-3').hide();
     });
-
-
 
 
     $('.file1').hide();

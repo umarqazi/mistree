@@ -95,9 +95,9 @@ class WorkshopsController extends Controller
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
-            'cnic'                           => 'required',
-            'mobile'                         => 'required',
-            'landline'                       => 'digits_between:10,11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -339,9 +339,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required',
-            'mobile'                         => 'required',
-            'landline'                       => 'digits_between:10,11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -617,9 +617,9 @@ class WorkshopsController extends Controller
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
             'team_slots'                     => 'integer',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits_between:0,11',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized'
@@ -1253,9 +1253,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -1788,9 +1788,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -1909,8 +1909,8 @@ class WorkshopsController extends Controller
 
     public function addProfileService($workshop){
         $workshop = Workshop::find($workshop);
-        $services = Service::all();
-        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('services',$services);
+        $categories = Category::all();
+        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('categories',$categories);
     }
 
     public function storeProfileService(Request $request){
@@ -2474,6 +2474,31 @@ class WorkshopsController extends Controller
     public function workshopLedger(Workshop $workshop){
         $workshop->load('transactions','balance');
         return view::make('workshop.ledger')->with('workshop',$workshop);
+    }
+
+    public function ledgerAdjustment(Request $request){
+        $ledger = WorkshopLedger::find($request->ledger);
+        $workshop = Workshop::find($ledger->workshop_id);
+        if(!is_null($workshop->balance)){
+            $balance = $workshop->balance->balance;
+        }else{
+            $balance = 0;
+        }
+        if($request->transaction_type == "Debit"){
+            $new_balance = $balance + $request->amount;
+        }else{
+            $new_balance = $balance - $request->amount;
+        }
+        $workshop->balance->update(['balance'=>$new_balance]);
+
+        $transaction = new WorkshopLedger;
+        $transaction->workshop_id                   = $workshop->id;
+        $transaction->amount                        = $request->amount;
+        $transaction->transaction_type              = $request->transaction_type;
+        $transaction->unadjusted_balance            = $balance;
+        $transaction->adjusted_balance              = $new_balance;
+
+        $transaction->save();
     }
 
     /**
