@@ -44,9 +44,9 @@ class LeadExpiry extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'created_at'    => Carbon::now(),
-            'url'           => '/leads',
-            'msg'           => 'Your lead from "'.$this->booking->customer->name.'" will expire in next 5 minutes.'
+            'created_at'        => Carbon::now(),
+            'notification_url'  => '/leads',
+            'msg'               => 'Your lead from "'.$this->booking->customer->name.'" will expire in next 5 minutes.'
         ];
     }
 

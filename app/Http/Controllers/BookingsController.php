@@ -134,7 +134,7 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $customer_id;
         $booking->workshop_id            = $request->workshop_id;
-	$booking->car_id                 = $request->car_id;
+	    $booking->car_id                 = $request->car_id;
         $booking->job_date	         = $request->job_date;
         $booking->job_time               = $request->job_time;
         $booking->is_accepted 		 = false;
@@ -632,7 +632,7 @@ class BookingsController extends Controller
             if(count($accepted_leads) == 0){
                 return response()->json([
                             'http-status' => Response::HTTP_OK,
-                            'status' => true,
+                            'status' => false,
                             'message' => 'No Accepted Leads Found',
                             'body' => null
                         ],Response::HTTP_OK);            
@@ -830,7 +830,7 @@ class BookingsController extends Controller
         }else{
             return response()->json([
                 'http-status' => Response::HTTP_OK,
-                'status' => true,
+                'status' => false,
                 'message' => 'No Pending Bookings',
                 'body' => ['pending_bookings' => $pending_leads]
             ],Response::HTTP_OK);

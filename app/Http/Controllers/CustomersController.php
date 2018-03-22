@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CustomerAddress;
+use App\Jobs\MailJobRegister;
+use Carbon\Carbon;
 use JWTAuth;
 use Session;
 use Illuminate\Support\Facades\Redirect;
@@ -283,12 +285,15 @@ class CustomersController extends Controller
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
         $subject = "Please verify your email address.";
-        Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'customer.verify',
+            'name' => $request->name,
+            'email' => $request->email,
+            'verification' => true,
+            'verification_code' => $verification_code,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,

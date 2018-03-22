@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Jobs\MailJobRegister;
 use JWTAuth;
 use SoapClient;
 use Session;
@@ -279,12 +280,15 @@ class WorkshopsController extends Controller
         $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code         
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.emails.verify', ['name' => $request->name, 'verification_code' => $verification_code],
-            function($mail) use ($request, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($request->email, $request->name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.verify',
+            'name' => $request->name,
+            'email' => $request->email,
+            'verification' => true,
+            'verification_code' => $verification_code,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -678,12 +682,15 @@ class WorkshopsController extends Controller
         $verification_code = str_random(30); //Generate verification code
 
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.emails.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.verify',
+            'name' => $request->name,
+            'email' => $request->email,
+            'verification' => true,
+            'verification_code' => $verification_code,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
 
         $credentials = [
             'email' => $request->email,
@@ -1088,12 +1095,14 @@ class WorkshopsController extends Controller
         $workshop->is_approved       = true;
         $workshop->save();
         $subject = "Conragulations! Your workshop has been approved by Admin.";
-        Mail::send('workshop.emails.confirmationEmail', ['name' => $workshop->name],
-            function($mail) use ($workshop, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($workshop->email, $workshop->name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.confirmationEmail',
+            'name' => $workshop->name,
+            'email' => $workshop->email,
+            'verification' => false,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
         return Redirect::to('admin/workshops');
     }
 
