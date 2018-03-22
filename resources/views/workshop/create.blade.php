@@ -108,7 +108,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Mobile Number <span class="manadatory">*</span></label>
-                                                <input type="text" data-inputmask="'mask': '0399-99999999'" class="form-control border-input" required title="11 Digit number required" name="mobile" placeholder="0399-99999999" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
+                                                <input type="text" data-inputmask="'mask': '0399-9999999'" class="form-control border-input" required title="11 Digit number required" name="mobile" placeholder="0399-9999999" value="{{ old('mobile') }}" required oninvalid="this.setCustomValidity('11 Digits requried')" oninput="setCustomValidity('')" onfocusout="myCustomValidation(this);"  >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('mobile'))
                                                     <span class="help-block">

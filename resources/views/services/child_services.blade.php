@@ -72,13 +72,14 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
-                                                <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
+                                                <form method="POST" id="child_service_deactivate" action="/admin/services/{{ $value->id }}" accept-charset="UTF-8">
                                                     <input name="_method" type="hidden" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input class="btn btn-header btn-export" type="submit" value="Deactivate">
                                                 </form>
-                                                @if(!$value->children->isEmpty())
+
+                                                <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="mistri-icons ti-pencil-alt"></a>
+                                                <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="child_service_deactivate"><i class="ti-power-off"></i></button>
+                                            @if(!$value->children->isEmpty())
                                                     <a href="{{ URL::to('admin/services/'.$value->id
                                                     ) }}" class="btn btn-header">View Child
                                                         Services</a>
@@ -98,5 +99,6 @@
             </div>
 
         </div>
+    </div>
     @include('partials.footer')
 @endsection

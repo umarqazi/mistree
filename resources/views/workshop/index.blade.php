@@ -73,7 +73,8 @@
                                                     Not Approved
                                                 @else
                                                     Approved
-                                            @endif
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 <form method="POST" id="ws_block_form" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
                                                     <input name="_method" type="hidden" value="DELETE">
@@ -86,7 +87,6 @@
                                                 <a class= "mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit" href="{{url('admin/workshops/'.$value->id.'/edit')}}"></a>
                                                 <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="ws_block_form"><i class="ti-hand-stop"></i></button>
 
-                                            </td>
                                             </td>
                                         </tr>
                                     @endforeach
