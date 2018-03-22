@@ -134,7 +134,7 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $customer_id;
         $booking->workshop_id            = $request->workshop_id;
-	$booking->car_id                 = $request->car_id;
+	    $booking->car_id                 = $request->car_id;
         $booking->job_date	         = $request->job_date;
         $booking->job_time               = $request->job_time;
         $booking->is_accepted 		 = false;
@@ -201,8 +201,8 @@ class BookingsController extends Controller
     public function acceptBooking($booking_id){
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $booking = $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
-
+        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+        $booking = $workshop->bookings()->where('id', $booking_id)->first();
 //          Fire An Event To Generate A Notification On Accept Booking
         event(new JobAcceptedEvent($booking));
 
@@ -632,7 +632,7 @@ class BookingsController extends Controller
             if(count($accepted_leads) == 0){
                 return response()->json([
                             'http-status' => Response::HTTP_OK,
-                            'status' => true,
+                            'status' => false,
                             'message' => 'No Accepted Leads Found',
                             'body' => null
                         ],Response::HTTP_OK);            
@@ -820,12 +820,21 @@ class BookingsController extends Controller
         $workshop = JWTAuth::authenticate();
         $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services','customer')->get();
 
-        return response()->json([
+        if(count($pending_leads) > 0){
+            return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Pending Bookings',
                     'body' => ['pending_bookings' => $pending_leads]
                 ],Response::HTTP_OK);
+        }else{
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'No Pending Bookings',
+                'body' => ['pending_bookings' => $pending_leads]
+            ],Response::HTTP_OK);
+        }
 
     }
 

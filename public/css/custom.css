@@ -189,7 +189,7 @@ form .form-group {margin-bottom: 0px;}
 
 .nid-wrap {
     background-color: #eee;
-    border-color: 1px solid #ccc;
+    border: 1px solid #ccc;
     margin-bottom: 10px;
     max-width: 400px;
     height: 200px;
@@ -413,7 +413,7 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
     vertical-align: middle;
     padding: 3px;
 }
-.block_button{
+.block_button {
     background: none !important;
     border: none !important;
     display: inline-block;
@@ -429,4 +429,24 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
     position: relative;
     top: -10px;
     margin: 0px;
+}
+
+form#bookings-dropdown .submit_button{
+    color: #666666;
+    font-size: 13px;
+    border-bottom: #f1efef solid 1px;
+    display: block;
+    margin: 0px;
+    padding: 6px 0px;
+    background: none;
+    border: none;
+    width: 100%;
+    text-align: left;
+}
+
+form#bookings-dropdown .submit_button:hover{
+    background: #666666;
+    color:white;
+    border-radius:5px;
+    text-align: center;
 }

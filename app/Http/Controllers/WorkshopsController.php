@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Jobs\MailJobRegister;
 use JWTAuth;
 use SoapClient;
 use Session;
@@ -94,9 +95,9 @@ class WorkshopsController extends Controller
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
-            'cnic'                           => 'required',
-            'mobile'                         => 'required',
-            'landline'                       => 'digits_between:10,11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -279,12 +280,15 @@ class WorkshopsController extends Controller
         $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code         
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.emails.verify', ['name' => $request->name, 'verification_code' => $verification_code],
-            function($mail) use ($request, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($request->email, $request->name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.verify',
+            'name' => $request->name,
+            'email' => $request->email,
+            'verification' => true,
+            'verification_code' => $verification_code,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -335,9 +339,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required',
-            'mobile'                         => 'required',
-            'landline'                       => 'digits_between:10,11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -412,14 +416,19 @@ class WorkshopsController extends Controller
         $workshop->save();
 
         // Update Workshop Address
-        $address = WorkshopAddress::find($workshop->address->id);
+        if(is_null($workshop->address)){
+            $address = new WorkshopAddress;
+            $address->workshop_id      = $workshop->id;
+        }else{
+            $address = WorkshopAddress::find($workshop->address->id);
+        }
         $address->shop              = Input::get('shop');
         $address->building          = Input::get('building');
         $address->street            = Input::get('street');
         $address->block             = Input::get('block');
         $address->town              = Input::get('town');
         $address->city              = Input::get('city');
-        $address->update();
+        $address->save();
 
         if($request->hasFile('images'))
         {
@@ -608,9 +617,9 @@ class WorkshopsController extends Controller
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
             'team_slots'                     => 'integer',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits_between:0,11',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized'
@@ -673,12 +682,15 @@ class WorkshopsController extends Controller
         $verification_code = str_random(30); //Generate verification code
 
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.emails.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.verify',
+            'name' => $request->name,
+            'email' => $request->email,
+            'verification' => true,
+            'verification_code' => $verification_code,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
 
         $credentials = [
             'email' => $request->email,
@@ -1083,12 +1095,14 @@ class WorkshopsController extends Controller
         $workshop->is_approved       = true;
         $workshop->save();
         $subject = "Conragulations! Your workshop has been approved by Admin.";
-        Mail::send('workshop.emails.confirmationEmail', ['name' => $workshop->name],
-            function($mail) use ($workshop, $subject){
-                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to($workshop->email, $workshop->name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.confirmationEmail',
+            'name' => $workshop->name,
+            'email' => $workshop->email,
+            'verification' => false,
+        ];
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
         return Redirect::to('admin/workshops');
     }
 
@@ -1239,9 +1253,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -1774,9 +1788,9 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
+            'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
+            'landline'                       => 'regex:^(\d{3,4}-\d{6,7}|\d{3}-\d{7})$|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -1850,14 +1864,19 @@ class WorkshopsController extends Controller
         $workshop->save();
 
         // Update Workshop Address
-        $address = WorkshopAddress::find($workshop->address->id);
+        if(is_null($workshop->address)){
+            $address                        = new WorkshopAddress;
+            $address->workshop_id           = $workshop->id;
+        }else{
+            $address = WorkshopAddress::find($workshop->address->id);
+        }
         $address->shop              = Input::get('shop');
         $address->building          = Input::get('building');
         $address->street            = Input::get('street');
         $address->block             = Input::get('block');
         $address->town              = Input::get('town');
         $address->city              = Input::get('city');
-        $address->update();
+        $address->save();
 
         if($request->hasFile('images'))
         {
@@ -1890,8 +1909,8 @@ class WorkshopsController extends Controller
 
     public function addProfileService($workshop){
         $workshop = Workshop::find($workshop);
-        $services = Service::all();
-        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('services',$services);
+        $categories = Category::all();
+        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('categories',$categories);
     }
 
     public function storeProfileService(Request $request){
@@ -2151,9 +2170,9 @@ class WorkshopsController extends Controller
 
         $rules = [
             'shop'                           => 'required|numeric',
-            'building'                       => 'regex:/^[\pL\s\-]+$/u',
-            'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'required|string',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'string|nullable',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
         ];
@@ -2168,11 +2187,11 @@ class WorkshopsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'body' => null
             ],Response::HTTP_OK);
         }
 
-        if (!count($address)) {
+        if (is_null($address)) {
             $address = new WorkshopAddress;
         }
 

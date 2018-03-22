@@ -22,21 +22,24 @@
                                         + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <form method="POST" action="{{ url( 'admin/booking/') }}" accept-charset="UTF-8">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="list_type" value="active">
-                                                <input class="btn btn-header btn-export" type="submit" value="Active Bookings">
-                                            </form> <br>
-                                            <form method="POST" action="{{ url( 'admin/booking/') }}" accept-charset="UTF-8">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="list_type" value="pending">
-                                                <input class="btn btn-header btn-export" type="submit" value="Pending Bookings">
-                                            </form> <br>
-                                            <form method="POST" action="{{ url( 'admin/booking/') }}" accept-charset="UTF-8">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="list_type" value="cancelled">
-                                                <input class="btn btn-header btn-export" type="submit" value="Cancelled Bookings">
-                                            </form>
+                                                <form method="POST" id="bookings-dropdown" action="{{ url(
+                                                'admin/booking/') }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="list_type" value="active">
+                                                    <input class="submit_button" type="submit" value="Active Bookings">
+                                                </form>
+                                                <form method="POST" id="bookings-dropdown" action="{{ url(
+                                                'admin/booking/') }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="list_type" value="pending">
+                                                    <input class="submit_button" type="submit" value="Pending Bookings">
+                                                </form>
+                                                <form method="POST" id="bookings-dropdown" action="{{ url(
+                                                'admin/booking/') }}">
+                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                                    <input type="hidden" name="list_type" value="cancelled">
+                                                    <input class="submit_button" type="submit" value="Cancelled Bookings">
+                                                </form>
                                             </div>
                                         </div>
                                 </div>

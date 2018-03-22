@@ -15,18 +15,7 @@
 					        <div class="col-md-12">
 
 					            <div class="avtar-block">
-					            	<img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
-					            	<div class="name-info">
-					            		<h4 class="title">Workshop Name : {{$workshop->name}}</h4>
-					                	<h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
-					                	<div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
-					                	<div class="phone">Mobile : {{$workshop->mobile}}</div>
-					                	<div>Current Balance : {{$workshop->balance->balance}}</div>
-										@if(!is_null($workshop->jazzcash_id))	                         
-										<div>Jazz Cash ID : {{$workshop->jazzcash_id}}</div>
-										@endif
-									</div>
-					                
+									@include('partials.workshop_profile_info')
 				                    <div class="pull-right">
 				                    	<a href="{{url('admin/workshops/'.$workshop->id.'/')}}" class="btn btn-header export">Back</a>				
 				                    </div>
@@ -41,24 +30,29 @@
 						<div class="col-md-12">							
 							<div class="gallery">
 								<h3>Gallery</h3>
-								<ul class="profile-listing">									
-									@if($workshop->images)
+								@if(!count($workshop->images))
+									<h3>No Images Found</h3>
+								@else
+									<ul class="profile-listing">
 										@foreach($workshop->images as $img)
 											<li>
-												<img src="{{$img->url}}" alt="workshop_images" width="200px" height="150px"> 
+												<img src="{{$img->url}}" alt="workshop_images" width="200px" height="150px">
 											</li>
 										@endforeach
-									@endif
-									<div class="clear"></div>
-									<li>
-										<div class="image-heading">
-											<h3>CNIC Image</h3>
-										</div>
-										<div class="cnic-image">
-											<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image"> 
-										</div>
-									</li>									
-								</ul>
+									</ul>
+								@endif
+								<div class="clear20"></div>
+
+								<div class="image-heading">
+									<h3>CNIC Image</h3>
+								</div>
+								@if(!empty($workshop->cnic_image))
+								<div class="cnic-image">
+									<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image" width="200px">
+								</div>
+								@else
+									<h3>No CNIC Image Found</h3>
+								@endif
 							</div>
 						</div>
 					</div>

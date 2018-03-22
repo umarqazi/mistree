@@ -73,7 +73,8 @@
                                                     Not Approved
                                                 @else
                                                     Approved
-                                            @endif
+                                                @endif
+                                            </td>
                                             <td class="text-center">
                                                 <form method="POST" id="ws_block_form" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
                                                     <input name="_method" type="hidden" value="DELETE">
@@ -87,7 +88,6 @@
                                                 <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="ws_block_form"><i class="ti-hand-stop"></i></button>
 
                                             </td>
-                                            </td>
                                         </tr>
                                     @endforeach
                                     </tbody>
@@ -95,62 +95,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="clear20"></div>
-                    <div class="content table-responsive table-full-width">
-                        <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">
-                            <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
-                                <thead>
-                                <tr role="row">
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"     aria-label="JazzCash: activate to sort column ascending" style="width: 100px;">ID</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 130px;">Workshop Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Owner Name.: activate to sort column ascending" style="width: 142px;">Owner Name</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Area: activate to sort column ascending" style="width: 207px;">Area</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Balance: activate to sort column ascending" style="width: 156px;">Balance</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Lead: activate to sort column ascending" style="width: 94px;">Leads</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Status</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @foreach($workshops as $key => $value)
-                                    <tr role="row" class="odd">
-                                        <td>{{ $value->jazzcash_id }}</td>
-                                        <td>{{ $value->name }}</td>
-                                        <td>{{ $value->owner_name }}</td>
-                                        @if($value->address)
-                                            <td>{{ $value->address->town }}</td>
-                                        @else
-                                            <td></td>
-                                        @endif
-                                        <td>{{ $value->balance['balance'] }}</td>
-                                        @php $leads = $value->bookings->count(); @endphp
-                                        <td>{{ $leads }}</td>
-                                        <td>
-                                            @if( ! $value->is_approved )
-                                                Not Approved
-                                            @else
-                                                Approved
-                                        @endif
-                                        </td>
-                                        <td class="text-center">
-                                            <form method="POST" id="ws_block_form" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
-                                                <input name="_method" type="hidden" value="DELETE">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            </form>
-                                            @if(! $value->is_approved )
-                                                <a href="{{ url( 'admin/approve-workshop/'.$value->id ) }}" class="mistri-icons ti-check">Approve</a>
-                                            @endif
-                                            <a class= "mistri-icons ti-eye" data-toggle="tooltip" data-placement="top" title="View" href="{{url('admin/workshops/'. $value->id)}}"></a>
-                                            <a class= "mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit" href="{{url('admin/workshops/'.$value->id.'/edit')}}"></a>
-                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="ws_block_form"><i class="ti-hand-stop"></i></button>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
                 </div>
             </div>
         </div>

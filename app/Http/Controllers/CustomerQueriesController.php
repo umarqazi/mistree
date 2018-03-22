@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CustomerQuery;
+use App\Jobs\MailJob;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use JWTAuth, Session, View, Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -89,12 +91,14 @@ class CustomerQueriesController extends Controller
                 'is_resolved'   => false
             ]);
             $subject = "Customer Query - ".$request->subject;
-            Mail::send('customer.emails.query', ['customer_name' => $customer->name, 'customer_email' => $customer->email, 'customer_phone' => $customer->con_number,'subject' => $request->subject, 'msg' => $request->message ],
-            function($mail) use ($subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to(config('app.mail_username'));
-                $mail->subject($subject);
-            });
+            $dataMail = [
+                'subject' => $subject,
+                'view' => 'customer.emails.query',
+                'user' => 'customer',
+                'userObject' => $customer,
+                'msg' => $request->message,
+                ];
+            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
