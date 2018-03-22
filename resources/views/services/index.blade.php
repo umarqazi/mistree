@@ -4,14 +4,14 @@
 
 @include('partials.header')
 
-    
-<div class="content">           
+
+<div class="content">
     <div class="container-fluid">
     @if (session('status'))
     <div class="row">
          <p>{{ session('message') }}</p>
     </div>
-    @endif 
+    @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">                         
+                            <div class="col-sm-6 col-sm-offset-6 balance-info">
                                 <div class="clear10"></div>
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,7 +43,7 @@
                                         <a href="{{url('admin/service/inactive')}}" class="dropdown-buttons">Inactive Services</a>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="clear20"></div>
                     </div>
@@ -64,7 +64,7 @@
                         <tbody>
                         @foreach($services as $key => $value)
                             <tr role="row" class="odd">
-                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
+                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="50px" height="50px"></td>
                                 <td class="text-center">{{$value->name}}</td>
                                 {{--<td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>--}}
                                 <td class="text-center">@if($value->category){{$value->category->name}}@endif</td>
@@ -76,7 +76,7 @@
                                         <i class="ti-check"></i>
                                     @endif
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <form id="deactivate_service_form" method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">

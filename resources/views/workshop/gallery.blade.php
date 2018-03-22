@@ -48,7 +48,7 @@
 								</div>
 								@if(!empty($workshop->cnic_image))
 								<div class="cnic-image">
-									<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image">
+									<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image" width="200px">
 								</div>
 								@else
 									<h3>No CNIC Image Found</h3>
