@@ -847,7 +847,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Details Added!',
-                'body' => ['address' => $address]
+                'body' => ['customer' => $customer->load(['cars', 'addresses'])],
             ],Response::HTTP_OK);
         }
     }
