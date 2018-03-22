@@ -360,7 +360,7 @@ class CarsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Car Added!',
-            'body'          => null
+            'body'          => ['customer' => $customer->load('cars')]
         ],Response::HTTP_OK);
     }
 
