@@ -34,21 +34,23 @@ $(document).ready(function () {
         }); 
 
     $(".btn-next-2").click(function(event){  
+      event.preventDefault();
+
       var shop          = $("[name='shop']")[0].checkValidity();
-      var building      = $("[name='building']")[0].checkValidity();
-      var owner_name    = $("[name='owner_name']")[0].checkValidity();
-      var street        = $("[name='street']")[0].checkValidity();
+      var building      = $("[name='building']")[0].checkValidity();  
       var block         = $("[name='block']")[0].checkValidity();
       var town          = $("[name='town']")[0].checkValidity();
+      var street        = $("[name='street']")[0].checkValidity();
       var city          = $("[name='city']")[0].checkValidity();
 
-      if(shop && building && owner_name && street && block && town && city == false)
+      if((shop && building && block && street && town && city) == false)
       {
         event.preventDefault();
         $('.cn-section-1').hide();
-        $('.cn-section-2').hide();
-        $('.cn-section-3').show();
-        $(".cn-section-1 :input").focus();
+        $('.cn-section-2').show();
+        $('.cn-section-3').hide();
+        $(".cn-section-2 :input").focus();
+        console.log("validity failed");
       }
       else
       {
@@ -59,5 +61,7 @@ $(document).ready(function () {
       }
 
     });
+
+    
 
     });

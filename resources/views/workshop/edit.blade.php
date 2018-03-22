@@ -68,7 +68,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                                <input type="text" data-inputmask="'mask': '99999-9999999-9'" placeholder="XXXXX-XXXXXXX-X" class="form-control border-input" name="cnic" pattern="^3\d{4}-\d{7}-\d{1}$" title="13 Digits required" value="{{$workshop->cnic}}" oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="text" data-inputmask="'mask': '99999-9999999-9'" placeholder="XXXXX-XXXXXXX-X" class="form-control border-input" name="cnic" pattern="^\d{5}-\d{7}-\d{1}$" title="13 Digits required" value="{{$workshop->cnic}}" oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('cnic'))
                                                     <span class="help-block">
@@ -130,7 +130,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Landline Number <span class="manadatory"></span></label>
-                                                <input type="text" class="form-control border-input" name="landline" min="10" max="11" pattern="^0[2-9]{2,3}-\d{6,7}$" value="{{$workshop->landline}}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" name="landline" pattern="(^$|\d{10,11})" value="{{$workshop->landline}}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
