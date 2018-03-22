@@ -47,10 +47,10 @@
                                     <td>{{$value->name}}</td>
                                     <td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>
                                     <td>
-                                        <form method="POST" action="{{ URL::to('admin/services/restore/'. $value->id) }}" accept-charset="UTF-8">
+                                        <form id="reactivate_service" method="POST" action="{{ URL::to('admin/services/restore/'. $value->id) }}" accept-charset="UTF-8">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input class="btn btn-header btn-export" type="submit" value="Reactivate">
                                         </form>
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Reactivate" value="submit" type="submit" form="reactivate_service"><i class="ti-plug"></i></button>
                                     </td>
                                 </tr>
                             @endforeach

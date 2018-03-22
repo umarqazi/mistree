@@ -1900,8 +1900,8 @@ class WorkshopsController extends Controller
 
     public function addProfileService($workshop){
         $workshop = Workshop::find($workshop);
-        $services = Service::all();
-        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('services',$services);
+        $categories = Category::all();
+        return View::make('workshop_profile.services.add')->with('workshop', $workshop)->with('categories',$categories);
     }
 
     public function storeProfileService(Request $request){
@@ -2161,9 +2161,9 @@ class WorkshopsController extends Controller
 
         $rules = [
             'shop'                           => 'required|numeric',
-            'building'                       => 'regex:/^[\pL\s\-]+$/u',
-            'block'                          => 'regex:/^[\pL\s\-]+$/u',
-            'street'                         => 'required|string',
+            'building'                       => 'string|nullable',
+            'block'                          => 'string|nullable',
+            'street'                         => 'string|nullable',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
         ];

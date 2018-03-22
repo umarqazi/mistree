@@ -64,7 +64,7 @@
                         <tbody>
                         @foreach($services as $key => $value)
                             <tr role="row" class="odd">
-                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
+                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="50px" height="50px"></td>
                                 <td class="text-center">{{$value->name}}</td>
                                 {{--<td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>--}}
                                 <td class="text-center">@if($value->category){{$value->category->name}}@endif</td>
