@@ -48,14 +48,12 @@ $(document).ready(function () {
         $('.cn-section-2').hide();
         $('.cn-section-3').show();
         $(".cn-section-1 :input").focus();
-        console.log('click 2 false');
       }
       else
       {
         $('.cn-section-1').hide();
         $('.cn-section-2').hide();
         $('.cn-section-3').show();
-        console.log('click 2 TRue');
       }
 
     });
