@@ -13,7 +13,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 class MailJobRegister implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
+    public $dataMail;
     /**
      * Create a new job instance.
      *

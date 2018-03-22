@@ -150,6 +150,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
+        Route::post('adjustment', 'WorkshopsController@ledgerAdjustment');
         Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
         Route::get('/notifications', 'NotificationsController@index');
                 

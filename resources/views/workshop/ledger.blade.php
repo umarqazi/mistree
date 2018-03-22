@@ -5,7 +5,7 @@
 @include('partials.header')
 
 <div class="content">
-    
+
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -30,13 +30,13 @@
 					                    </div>
 					                </div>
 					            </div>
-								
+
 					        </div>
-					    </div>                                                
+					    </div>
 					</div>
 
 			        <div class="row">
-			            <div class="col-md-12"> 
+			            <div class="col-md-12">
 		            		@if(!count($workshop->transactions))
 		            			<div>
 		            				<h3>No transactions found</h3>
@@ -52,6 +52,7 @@
 												<th>Adjusted Balance</th>
 												<th>Date</th>
 												<th>Time</th>
+												<th>Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -63,10 +64,13 @@
 												<td>{{ $transaction->adjusted_balance }}</td>
 												<td>{{ $transaction->created_at->format('d-m-Y')}}</td>
 												<td>{{ $transaction->created_at->format('g:i A')}}</td>
+												<td><a class="btn btn-header" onclick="adjustment({{$transaction->id}})
+															">Adjust</a></td>
 											</tr>
 											@endforeach
 											@if(!is_null($workshop->balance))
 											<tr>
+												<td></td>
 												<td></td>
 												<td></td>
 												<td></td>
@@ -78,7 +82,7 @@
 										</tbody>
 									</table>
 								</div>
-			                @endif					                
+			                @endif
 			            </div>
 			        </div>
 				</div>
@@ -88,9 +92,50 @@
 </div>
 
 
-
-
-  
 @include('partials.footer')
 @endsection
+<!-- Modal -->
+<div id="ledger_adjustment" class="modal fade" role="dialog">
+	<div class="modal-dialog">
 
+		<!-- Modal content-->
+		<form action="{{url('admin/adjustment')}}" method="post" id="adjustments">
+			{!! csrf_field() !!}
+			<input type="hidden" name="ledger">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Adjustment</h4>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label class="control-label">Transaction Type <span class="manadatory">*</span></label>
+						<select name="transaction_type" class="form-control border-input" required >
+							<option value="" disabled selected>Please Select</option>
+							<option value="Debit">Debit</option>
+							<option value="Credit">Credit</option>
+						</select>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label">Amount<span class="manadatory">*</span></label>
+						<input type="text" class="form-control border-input" required="required" name="amount">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<input type="submit" class="btn btn-header">
+					<button type="button" class="btn btn-header" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+
+
+<script>
+	function adjustment(id){
+	    $('form#adjustments input[name="ledger"]').val(id);
+        $('#ledger_adjustment').modal('show');
+	}
+</script>
