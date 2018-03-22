@@ -34,11 +34,11 @@ class MailJob implements ShouldQueue
     public function handle()
     {
         $dataMail = $this->dataMail;
-        $subject = $dataMail->subject;
-        Mail::send($dataMail->view, [$dataMail->user => $dataMail->userObject, 'subject' => $subject, 'msg' => $dataMail->msg ],
+        $subject = $dataMail['subject'];
+        Mail::send($dataMail['view'], [$dataMail['user'] => $dataMail['userObject'], 'subject' => $subject, 'msg' => $dataMail['msg'] ],
             function($mail) use ($subject){
                 $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
-                $mail->to(config(Config::get('app.mail_username')));
+                $mail->to(Config::get('app.mail_username'));
                 $mail->subject($subject);
             });
     }

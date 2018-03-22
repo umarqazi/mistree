@@ -80,7 +80,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:6',

@@ -91,7 +91,7 @@ class WorkshopsController extends Controller
     public function store(Request $request)
     {
         $rules = [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:6|max:16',
@@ -338,7 +338,7 @@ class WorkshopsController extends Controller
     public function update(Request $request, $id)
     {
         $rules = [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
             'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
@@ -612,7 +612,7 @@ class WorkshopsController extends Controller
     public function register(Request $request)
     {
         $rules = [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
             'password'                       => 'required|confirmed|min:8',
@@ -1252,7 +1252,7 @@ class WorkshopsController extends Controller
     public function profileUpdate(Request $request)
     {
         $rules = [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
             'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
@@ -1787,7 +1787,7 @@ class WorkshopsController extends Controller
     public function update_profile(Request $request, $id)
     {
         $rules = [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'cnic'                           => 'required|regex:^\d{5}-\d{7}-\d{1}$',
             'mobile'                         => 'required|regex:^0?3\d{2}-\d{7}$',
