@@ -2476,6 +2476,31 @@ class WorkshopsController extends Controller
         return view::make('workshop.ledger')->with('workshop',$workshop);
     }
 
+    public function ledgerAdjustment(Request $request){
+        $ledger = WorkshopLedger::find($request->ledger);
+        $workshop = Workshop::find($ledger->workshop_id);
+        if(!is_null($workshop->balance)){
+            $balance = $workshop->balance->balance;
+        }else{
+            $balance = 0;
+        }
+        if($request->transaction_type == "Debit"){
+            $new_balance = $balance + $request->amount;
+        }else{
+            $new_balance = $balance - $request->amount;
+        }
+        $workshop->balance->update(['balance'=>$new_balance]);
+
+        $transaction = new WorkshopLedger;
+        $transaction->workshop_id                   = $workshop->id;
+        $transaction->amount                        = $request->amount;
+        $transaction->transaction_type              = $request->transaction_type;
+        $transaction->unadjusted_balance            = $balance;
+        $transaction->adjusted_balance              = $new_balance;
+
+        $transaction->save();
+    }
+
     /**
      * @SWG\Get(
      *   path="/api/workshop/get-customers",

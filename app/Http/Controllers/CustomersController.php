@@ -254,8 +254,8 @@ class CustomersController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
-                    'body' => $request->all()
+                    'message' => $validator->messages()->first(),
+                    'body' => null
                 ],Response::HTTP_OK);
         }
         $name = $request->name;
@@ -298,7 +298,7 @@ class CustomersController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => null
+            'body' => $customer
         ],Response::HTTP_OK);
     }
 
