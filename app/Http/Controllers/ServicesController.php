@@ -47,7 +47,7 @@ class ServicesController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'all services',
-                'body' => [ 'services' => $services ]
+                'body' => [ 'services' => $services->load('services') ]
             ],Response::HTTP_OK);
         }
         else{
