@@ -98,7 +98,7 @@ class CustomerQueriesController extends Controller
                 'userObject' => $customer,
                 'msg' => $request->message,
                 ];
-            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
+            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,

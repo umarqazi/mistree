@@ -269,7 +269,7 @@ class RegisterController extends Controller
             'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
 
         //Firing an Event to Generate Notifications
         event(new NewWorkshopEvent($workshop));

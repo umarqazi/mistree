@@ -289,7 +289,7 @@ class WorkshopsController extends Controller
             'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -691,7 +691,7 @@ class WorkshopsController extends Controller
             'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
 
         $credentials = [
             'email' => $request->email,
@@ -1103,7 +1103,7 @@ class WorkshopsController extends Controller
             'email' => $workshop->email,
             'verification' => false,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
+        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
         return Redirect::to('admin/workshops');
     }
 
