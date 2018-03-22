@@ -4,7 +4,21 @@
         <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
         <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
         @if(!is_null($workshop->address))
-            <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
+            @php $address = $workshop->address @endphp
+            <div class="address">
+                @if($address->building)
+                    {{$address->building.', ' }}
+                @endif
+                @if($address->block)
+                    {{$address->block.', '}}
+                @endif
+                @if($address->town)
+                    {{$address->town.', '}}
+                @endif
+                @if($address->city)
+                    {{$address->city}}
+                @endif
+            </div>
         @endif
         <div class="phone">Mobile : {{$workshop->mobile}}</div>
         @if(!is_null($workshop->balance))

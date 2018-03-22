@@ -1244,8 +1244,8 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
+            'cnic'                           => 'required|digits:15',
+            'mobile'                         => 'required|digits:12',
             'landline'                       => 'digits:11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
@@ -1779,8 +1779,8 @@ class WorkshopsController extends Controller
         $rules = [
             'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
+            'cnic'                           => 'required|digits:15',
+            'mobile'                         => 'required|digits:12',
             'landline'                       => 'digits:11|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
