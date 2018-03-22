@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use Illuminate\Support\Facades\Mail;
-use Config;
+use Mail, Config;
+use Illuminate\Mail\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,8 +35,8 @@ class MailJob implements ShouldQueue
         $subject = $dataMail->subject;
         Mail::send($dataMail->view, [$dataMail->user => $dataMail->userObject, 'subject' => $subject, 'msg' => $dataMail->msg ],
             function($mail) use ($subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to(config('app.mail_username'));
+                $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
+                $mail->to(config(Config::get('app.mail_username'));
                 $mail->subject($subject);
             });
     }

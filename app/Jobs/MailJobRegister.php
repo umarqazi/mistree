@@ -2,12 +2,13 @@
 
 namespace App\Jobs;
 
+use Mail, Config;
+use Illuminate\Mail\Message;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Illuminate\Support\Facades\Mail;
 
 class MailJobRegister implements ShouldQueue
 {
@@ -35,7 +36,7 @@ class MailJobRegister implements ShouldQueue
         if($dataMail->verification){
             Mail::send($dataMail->view, ['name' => $dataMail->name, 'verification_code' => $dataMail->verification_code ],
                 function($mail) use ($subject, $dataMail){
-                    $mail->from(config('app.mail_username'), config('app.name'));
+                    $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
                     $mail->to($dataMail->email, $dataMail->name);
                     $mail->subject($subject);
                 });
@@ -43,7 +44,7 @@ class MailJobRegister implements ShouldQueue
         else{
             Mail::send($dataMail->view, ['name' => $dataMail->name ],
                 function($mail) use ($subject, $dataMail){
-                    $mail->from(config('app.mail_username'), config('app.name'));
+                    $mail->from(Config::get('app.mail_username'), Config::get('app.name'));
                     $mail->to($dataMail->email, $dataMail->name);
                     $mail->subject($subject);
                 });
