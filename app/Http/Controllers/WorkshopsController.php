@@ -2005,7 +2005,7 @@ class WorkshopsController extends Controller
         $transaction = new WorkshopLedger;
         $transaction->amount                        = $request->amount;
         $transaction->workshop_id                   = $request->workshop_id;
-        $transaction->transaction_type              = 'Adjusted Top-Up';
+        $transaction->transaction_type              = 'Admin Top-Up';
         $transaction->unadjusted_balance            = $balance;
         $transaction->adjusted_balance              = $new_balance;
 
@@ -2472,7 +2472,9 @@ class WorkshopsController extends Controller
     }
 
     public function workshopLedger(Workshop $workshop){
-        $workshop->load('transactions','balance');
+        $workshop->load(['transactions' => function($query){
+            return $query->parentLevel()->get();
+        },'balance']);
         return view::make('workshop.ledger')->with('workshop',$workshop);
     }
 
@@ -2500,7 +2502,7 @@ class WorkshopsController extends Controller
         $transaction->transaction_parent            = $request->ledger;
         $transaction->save();
 
-        redirect('workshop/'.$workshop->id.'/ledger');
+        return Redirect::back();
     }
 
     /**

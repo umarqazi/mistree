@@ -67,6 +67,20 @@
 												<td><a class="btn btn-header" onclick="adjustment({{$transaction->id}})
 															">Adjust</a></td>
 											</tr>
+												@if(!empty($transaction->adjustments))
+													@foreach($transaction->adjustments as $adjustments)
+														<tr class="danger">
+															<td class="text-right">{{ $adjustments->transaction_type
+															}}</td>
+															<td>{{ $adjustments->amount }}</td>
+															<td>{{ $adjustments->unadjusted_balance }}</td>
+															<td>{{ $adjustments->adjusted_balance }}</td>
+															<td>{{ $adjustments->created_at->format('d-m-Y')}}</td>
+															<td>{{ $adjustments->created_at->format('g:i A')}}</td>
+															<td></td>
+														</tr>
+													@endforeach
+												@endif
 											@endforeach
 											@if(!is_null($workshop->balance))
 											<tr>
