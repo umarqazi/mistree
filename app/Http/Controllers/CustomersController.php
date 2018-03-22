@@ -59,16 +59,6 @@ class CustomersController extends Controller
     }
 
     /**
-     * Show the form for creating a new customer.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
-    }
-
-    /**
      * Store a newly created customer in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -117,16 +107,6 @@ class CustomersController extends Controller
         return View::make('customer.show', ['customer' => $customer]);
     }
 
-    /**
-     * Show the form for editing the specified customer.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-                
-    }
 
     /**
      * Update the specified customer in storage.
@@ -238,6 +218,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function register(Request $request)
     {
         $rules = [
@@ -340,6 +321,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function login(Request $request)
     {
         $credentials = [
@@ -414,6 +396,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function logout(Request $request) {
         try {
             $customer = JWTAuth::authenticate();
@@ -463,6 +446,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function recover(Request $request)
     {
         $rules  = [
@@ -535,62 +519,6 @@ class CustomersController extends Controller
         }
 
         return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
-    }
-
-    /**
-     * API Register store data of new customer.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function regStoreData(Request $request)
-    {
-         // read more on validation at http://laravel.com/docs/validation
-        $rules = array(
-            'cust_id'               => 'required',
-            'address_type'          => 'required',
-            'address_house_no'      => 'required',
-            'address_street_no'     => 'required',
-            'address_block'         => 'required',
-            'address_area'          => 'required',
-            'address_town'          => 'required',
-            'address_city'          => 'required'
-
-        );
-        $validator = Validator::make($request->all(), $rules);
-
-        // process the login
-        if ($validator->fails()) {
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => 'Invalid Details!',
-                'body' => $request->all()
-            ],Response::HTTP_OK);
-        } else {
-            //customer
-            $customer = Customer::findOrFail($request->cust_id);
-            //address
-            $address = new Address;
-            $address->cust_id       =  $request->cust_id;
-            $address->ws_id         =  '';
-            $address->admin_id      =  '';
-            $address->type          =  $request->address_type;
-            $address->house_no      =  $request->address_house_no;
-            $address->street_no     =  $request->address_street_no;
-            $address->block         =  $request->address_block;
-            $address->area          =  $request->address_area;
-            $address->town          =  $request->address_town;
-            $address->city          =  $request->address_city;
-            $address->status        = 1;
-            $address->save();     
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Details Added!',
-                'body' => null
-            ],Response::HTTP_OK);
-        }
     }
 
     /**
@@ -704,7 +632,6 @@ class CustomersController extends Controller
      * )
      *
      */
-
     public function passwordReset(Request $request)
     {
         $rules = [
@@ -880,7 +807,6 @@ class CustomersController extends Controller
      * )
      *
      */
-
     public function addCustomerAddress(Request $request)
     {
         // read more on validation at http://laravel.com/docs/validation
