@@ -1303,28 +1303,31 @@ class CustomersController extends Controller
     */ 
     public function updateProfileImage(Request $request) { 
         $customer       = JWTAuth::authenticate(); 
-        $file_data      = $request->profile_pic; 
-        $url            = $this->upload_image($file_data,$customer->id); 
-        $profile_image  = $customer->update(['profile_pic_url' => $url]); 
-        return response()->json([ 
-            'http-status'   => Response::HTTP_OK, 
-            'status'        => true, 
-            'message'       => 'success', 
-            'body'          => [ 'url' => $url ] 
-        ],Response::HTTP_OK); 
+        $file_data      = $request->profile_pic;
+
+        $customers_path = public_path().'/uploads/customers/';
+        $specified_customer_path = 'uploads/customers/'.$customer->id;
+        if(!Storage::disk('public')->has($specified_customer_path.'/logo')){
+            $path = $customers_path.$customer->id.'/logo';
+            mkdir($path, 0775, true);
+        }
+        $full_path = $customers_path.$customer->id.'/logo/'.md5(microtime()).".jpg";
+        $url = $this->upload_image($file_data,$customer->id,$full_path);
+        $url = url('/').'/'.$specified_customer_path.'/logo/'.basename($url);
+        $profile_image = $customer->update(['profile_pic' => $url]);
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'success',
+            'body' => ['profile_picture' => $url]
+        ],Response::HTTP_OK);
     }
 
-    public function upload_image($file_data , $customers_id){ 
-        $full_path      = storage_path()."/app/customer/temp/".md5(microtime()).".jpg"; 
-        $path           = "/customer/temp"; 
-        if(!is_dir($path)) { 
-            Storage::makeDirectory($path);
-        } 
-        $file           = fopen($full_path, "wb"); 
+    public function upload_image($file_data , $customer_id, $full_path){
+        $file   = fopen($full_path, "wb");
         fwrite($file, base64_decode($file_data));
-        fclose($file); 
-        $s3_path        = Storage::disk('s3')->putFile('customers/'. $customers_id . '/images', new File($full_path), 'public');
-        $customer_image = config('app.s3_bucket_url').$s3_path; Storage::delete($path.'/'.basename($full_path)); 
-        return $customer_image; 
+        fclose($file);
+        return $full_path;
     }
 }

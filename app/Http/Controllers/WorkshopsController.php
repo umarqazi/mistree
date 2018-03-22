@@ -2497,8 +2497,10 @@ class WorkshopsController extends Controller
         $transaction->transaction_type              = $request->transaction_type;
         $transaction->unadjusted_balance            = $balance;
         $transaction->adjusted_balance              = $new_balance;
-
+        $transaction->transaction_parent            = $request->ledger;
         $transaction->save();
+
+        redirect('workshop/'.$workshop->id.'/ledger');
     }
 
     /**

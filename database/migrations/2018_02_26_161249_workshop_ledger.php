@@ -19,6 +19,8 @@ class WorkshopLedger extends Migration
             $table->foreign('booking_id')->references('id')->on('bookings');
             $table->integer('workshop_id')->unsigned();
             $table->foreign('workshop_id')->references('id')->on('workshops');
+            $table->integer('transaction_parent')->nullable()->unsigned();
+            $table->foreign('transaction_parent')->references('id')->on('workshop_ledgers');
             $table->string('transaction_type');
             $table->decimal('amount', 11, 2);            
             $table->decimal('adjusted_balance', 11, 2);
@@ -44,7 +46,8 @@ class WorkshopLedger extends Migration
     {
         Schema::table('workshop_ledgers', function(Blueprint $table){
             $table->dropForeign('workshop_ledgers_booking_id_foreign');
-            $table->dropForeign('workshop_ledgers_workshop_id_foreign');            
+            $table->dropForeign('workshop_ledgers_workshop_id_foreign');
+            $table->dropForeign('workshop_ledgers_transaction_parent_foreign');
         });
         Schema::dropIfExists('workshop_ledgers');
 
