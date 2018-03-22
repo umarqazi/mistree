@@ -4,7 +4,11 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+//use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Psy\Exception\FatalErrorException;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
@@ -49,7 +53,19 @@ class Handler extends ExceptionHandler
             if ($request->expectsJson()) {
                 return response()->json(['error' => 'Not Found'], 404);
             }
-            return response()->view('errors/404', [], 404);
+            return response()->view('errors/404', ['NotFound' => true], 404);
+        }
+        elseif ($exception instanceof  MethodNotAllowedHttpException){
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Not Found'], 404);
+            }
+            return response()->view('errors/404', ['MethodNotAllowed' => true], 404);
+        }
+        elseif ($exception instanceof  ModelNotFoundException){
+            if ($request->expectsJson()) {
+                return response()->json(['error' => 'Not Found'], 404);
+            }
+            return response()->view('errors/404', ['ModelNotFound' => true], 404);
         }
         return parent::render($request, $exception);
     }
