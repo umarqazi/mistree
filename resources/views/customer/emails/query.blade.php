@@ -13,9 +13,9 @@
     <br>
     <br>
     <p>From:</p><br>
-    <p>{{$customer_name}}</p><br>
-    <p>{{$customer_email}},</p><br>
-    <p>{{$customer_phone}}.</p>
+    <p>{{$customer->name}}</p><br>
+    <p>{{$customer->email}},</p><br>
+    <p>{{$customer->con_number}}.</p>
 </div>
 
 </body>

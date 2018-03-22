@@ -59,16 +59,6 @@ class CustomersController extends Controller
     }
 
     /**
-     * Show the form for creating a new customer.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
-    }
-
-    /**
      * Store a newly created customer in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -117,16 +107,6 @@ class CustomersController extends Controller
         return View::make('customer.show', ['customer' => $customer]);
     }
 
-    /**
-     * Show the form for editing the specified customer.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-                
-    }
 
     /**
      * Update the specified customer in storage.
@@ -238,6 +218,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function register(Request $request)
     {
         $rules = [
@@ -254,8 +235,8 @@ class CustomersController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
-                    'body' => $request->all()
+                    'message' => $validator->messages()->first(),
+                    'body' => null
                 ],Response::HTTP_OK);
         }
         $name = $request->name;
@@ -298,7 +279,7 @@ class CustomersController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => null
+            'body' => $customer
         ],Response::HTTP_OK);
     }
 
@@ -340,6 +321,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function login(Request $request)
     {
         $credentials = [
@@ -414,6 +396,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function logout(Request $request) {
         try {
             $customer = JWTAuth::authenticate();
@@ -463,6 +446,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function recover(Request $request)
     {
         $rules  = [
@@ -535,62 +519,6 @@ class CustomersController extends Controller
         }
 
         return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
-    }
-
-    /**
-     * API Register store data of new customer.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function regStoreData(Request $request)
-    {
-         // read more on validation at http://laravel.com/docs/validation
-        $rules = array(
-            'cust_id'               => 'required',
-            'address_type'          => 'required',
-            'address_house_no'      => 'required',
-            'address_street_no'     => 'required',
-            'address_block'         => 'required',
-            'address_area'          => 'required',
-            'address_town'          => 'required',
-            'address_city'          => 'required'
-
-        );
-        $validator = Validator::make($request->all(), $rules);
-
-        // process the login
-        if ($validator->fails()) {
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => 'Invalid Details!',
-                'body' => $request->all()
-            ],Response::HTTP_OK);
-        } else {
-            //customer
-            $customer = Customer::findOrFail($request->cust_id);
-            //address
-            $address = new Address;
-            $address->cust_id       =  $request->cust_id;
-            $address->ws_id         =  '';
-            $address->admin_id      =  '';
-            $address->type          =  $request->address_type;
-            $address->house_no      =  $request->address_house_no;
-            $address->street_no     =  $request->address_street_no;
-            $address->block         =  $request->address_block;
-            $address->area          =  $request->address_area;
-            $address->town          =  $request->address_town;
-            $address->city          =  $request->address_city;
-            $address->status        = 1;
-            $address->save();     
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Details Added!',
-                'body' => null
-            ],Response::HTTP_OK);
-        }
     }
 
     /**
@@ -704,7 +632,6 @@ class CustomersController extends Controller
      * )
      *
      */
-
     public function passwordReset(Request $request)
     {
         $rules = [
@@ -880,7 +807,6 @@ class CustomersController extends Controller
      * )
      *
      */
-
     public function addCustomerAddress(Request $request)
     {
         // read more on validation at http://laravel.com/docs/validation
@@ -921,7 +847,7 @@ class CustomersController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Details Added!',
-                'body' => ['address' => $address]
+                'body' => ['customer' => $customer->load(['cars', 'addresses'])],
             ],Response::HTTP_OK);
         }
     }
@@ -1303,28 +1229,31 @@ class CustomersController extends Controller
     */ 
     public function updateProfileImage(Request $request) { 
         $customer       = JWTAuth::authenticate(); 
-        $file_data      = $request->profile_pic; 
-        $url            = $this->upload_image($file_data,$customer->id); 
-        $profile_image  = $customer->update(['profile_pic_url' => $url]); 
-        return response()->json([ 
-            'http-status'   => Response::HTTP_OK, 
-            'status'        => true, 
-            'message'       => 'success', 
-            'body'          => [ 'url' => $url ] 
-        ],Response::HTTP_OK); 
+        $file_data      = $request->profile_pic;
+
+        $customers_path = public_path().'/uploads/customers/';
+        $specified_customer_path = 'uploads/customers/'.$customer->id;
+        if(!Storage::disk('public')->has($specified_customer_path.'/logo')){
+            $path = $customers_path.$customer->id.'/logo';
+            mkdir($path, 0775, true);
+        }
+        $full_path = $customers_path.$customer->id.'/logo/'.md5(microtime()).".jpg";
+        $url = $this->upload_image($file_data,$customer->id,$full_path);
+        $url = url('/').'/'.$specified_customer_path.'/logo/'.basename($url);
+        $profile_image = $customer->update(['profile_pic' => $url]);
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'success',
+            'body' => ['profile_picture' => $url]
+        ],Response::HTTP_OK);
     }
 
-    public function upload_image($file_data , $customers_id){ 
-        $full_path      = storage_path()."/app/customer/temp/".md5(microtime()).".jpg"; 
-        $path           = "/customer/temp"; 
-        if(!is_dir($path)) { 
-            Storage::makeDirectory($path);
-        } 
-        $file           = fopen($full_path, "wb"); 
+    public function upload_image($file_data , $customer_id, $full_path){
+        $file   = fopen($full_path, "wb");
         fwrite($file, base64_decode($file_data));
-        fclose($file); 
-        $s3_path        = Storage::disk('s3')->putFile('customers/'. $customers_id . '/images', new File($full_path), 'public');
-        $customer_image = config('app.s3_bucket_url').$s3_path; Storage::delete($path.'/'.basename($full_path)); 
-        return $customer_image; 
+        fclose($file);
+        return $full_path;
     }
 }
