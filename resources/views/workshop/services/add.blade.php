@@ -139,7 +139,11 @@
             success : function (response){
                 $.each(response, function(i, service) {
                     $('#service_ids').removeAttr('disabled');
-                    $('#service_ids').append('<option value="' + service.id +'">' + service.name + '</option>');
+                    if(service.doorstep == true){
+                        $('#service_ids').append('<option value="' + service.id +'">' + service.name + ' at doorstep</option>');
+                    }else{
+                        $('#service_ids').append('<option value="' + service.id +'">' + service.name + '</option>');
+                    }
                 });
             }
         })
