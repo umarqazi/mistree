@@ -6,6 +6,9 @@
         @if(!is_null($workshop->address))
             @php $address = $workshop->address @endphp
             <div class="address">
+                @if($address->shop)
+                    {{$address->shop.', ' }}
+                @endif
                 @if($address->building)
                     {{$address->building.', ' }}
                 @endif
