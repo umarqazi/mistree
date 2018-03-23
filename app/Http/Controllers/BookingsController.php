@@ -141,7 +141,7 @@ class BookingsController extends Controller
         $booking->is_accepted 		     = true;
         $booking->job_status 		     = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
-        $booking->customer_address_id    = $request->customer_address_id;
+        $booking->customer_address_id    = 1;
         $booking->is_doorstep            = $request->is_doorstep;
 
         $booking->save();
