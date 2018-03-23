@@ -44,16 +44,18 @@ class NotificationsBeforeBooking extends Notification
      */
     public function toDatabase($notifiable)
     {
+        $booking_job_time = Carbon::parse($booking->job_time);
+        $booking_time_diff = strval($booking_job_time->diffInMinutes());
         if($this->user == "customer"){
             return [
                 'created_at'        => Carbon::now(),
-                'msg'               =>  'You have '.($this->booking->job_time)->diff(Carbon::now())->format('%I').' Minutes in your booking to start.'
+                'msg'               =>  'You have '.$booking_time_diff.' Minutes in your booking to start.'
             ];
         }else{
             return [
                 'created_at'        => Carbon::now(),
                 'notification_url'  => '/leads',
-                'msg'               =>  'You have '.($this->booking->job_time)->diff(Carbon::now())->format('%I').' Minutes in your lead to start.'
+                'msg'               =>  'You have '.$booking_time_diff.' Minutes in your lead to start.'
             ];
         }
     }
