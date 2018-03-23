@@ -3,7 +3,7 @@
 namespace App\Jobs;
 
 use App\Booking;
-use App\Events\NotifictionsBeforeBookingEvent;
+use App\Events\NotificationsBeforeBookingEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,6 +15,7 @@ class NotificationsBeforeJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $booking, $user;
+
     /**
      * Create a new job instance.
      *
@@ -23,7 +24,7 @@ class NotificationsBeforeJob implements ShouldQueue
     public function __construct(Booking $booking, $user)
     {
         $this->booking = $booking;
-        $this->user    = $user;
+        $this->user = $user;
     }
 
     /**
@@ -33,8 +34,8 @@ class NotificationsBeforeJob implements ShouldQueue
      */
     public function handle()
     {
-        if($this->booking->is_accepted == true){
-            event(new NotifictionsBeforeBookingEvent($this->booking, $this->user));
+        if( $this->booking->is_accepted == true){
+            event(new NotificationsBeforeBookingEvent($this->booking, $this->user));
         }
     }
 }

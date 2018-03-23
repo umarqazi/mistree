@@ -11,7 +11,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NotifictionsBeforeBookingEvent
+class NotificationsBeforeBookingEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
