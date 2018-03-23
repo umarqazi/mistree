@@ -20,7 +20,15 @@
                 <div class="clip"><div class="shadow"><span class="digit firstDigit"></span></div></div>
                 <div class="msg">OH!<span class="triangle"></span></div>
             </div>
-            <h2 class="h1">Sorry! The Page Couldn't be Found.</h2>
+            @if($NotFound == true)
+                <h2 class="h1">Sorry! The Page Couldn't be Found.</h2>
+            @elseif($MethodNotFound == true)
+                <h2 class="h1">Sorry! The Page Couldn't be Found.</h2>
+            @elseif($ModelNotFound == true)
+                <h2 class="h1">Sorry! Record Couldn't be Found.</h2>
+            @else($ModelNotFound == true)
+                <h2 class="h1">Sorry! Record Couldn't be Found.</h2>
+            @endif
         </div>
     </div>
 </div>
