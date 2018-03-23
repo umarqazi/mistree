@@ -138,30 +138,30 @@ class BookingsController extends Controller
 	    $booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->is_accepted 		     = true;
+        $booking->is_accepted 		     = false;
         $booking->job_status 		     = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
-        $booking->customer_address_id    = 1;
+        $booking->customer_address_id    = $request->customer_address_id;
         $booking->is_doorstep            = $request->is_doorstep;
 
         $booking->save();
 
-        //Insert Services data from request        
-        $services = json_decode($request->services);        
+        //Insert Services data from request
+        $services = json_decode($request->services);
         if(!empty($services)){
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
                 $service_info = $workshop->services()->where('service_id',$service)->first();
                 $booking->services()->attach($service,['name' => $service_info->name, 'lead_charges' => $service_info->lead_charges, 'loyalty_points' => $service_info->loyalty_points, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
             }
-        }        
+        }
 
         $booking->services;
 //        return
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
-//        SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(5));
-//        LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(3));
+        SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(5));
+        LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(3));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(4));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(2));
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(1));
