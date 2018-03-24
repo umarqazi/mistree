@@ -1532,12 +1532,21 @@ class WorkshopsController extends Controller
         foreach ($workshops as $key =>$workshop) {
             $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
-        return response()->json([
-            'http-status' => Response::HTTP_OK,
-            'status' => true,
-            'message' => '',
-            'body' => ['workshops' => $workshops],
-        ],Response::HTTP_OK);
+        if(count($workshops)){
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => '',
+                'body' => ['workshops' => $workshops],
+            ],Response::HTTP_OK);
+        }else{
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'No workshops found.',
+                'body' => null,
+            ],Response::HTTP_OK);
+        }
     }
 
     /**
