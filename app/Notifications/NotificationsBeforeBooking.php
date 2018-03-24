@@ -13,16 +13,15 @@ class NotificationsBeforeBooking extends Notification
 {
     use Queueable;
 
-    protected $booking, $user;
+    protected $booking;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Booking $booking, $user)
+    public function __construct(Booking $booking)
     {
         $this->booking = $booking;
-        $this->user = $user;
     }
 
     /**
@@ -44,20 +43,11 @@ class NotificationsBeforeBooking extends Notification
      */
     public function toDatabase($notifiable)
     {
-        $booking_job_time = Carbon::parse($booking->job_time);
-        $booking_time_diff = strval($booking_job_time->diffInMinutes());
-        if($this->user == "customer"){
-            return [
-                'created_at'        => Carbon::now(),
-                'msg'               =>  'You have '.$booking_time_diff.' Minutes in your booking to start.'
-            ];
-        }else{
-            return [
-                'created_at'        => Carbon::now(),
-                'notification_url'  => '/leads',
-                'msg'               =>  'You have '.$booking_time_diff.' Minutes in your lead to start.'
-            ];
-        }
+        return [
+            'created_at'        => Carbon::now(),
+            'notification_url'  => '/leads',
+            'msg'               =>  'You have '.Carbon::parse($this->booking->job_time)->diffInMinutes().' Minutes in your lead to start.'
+        ];
     }
 
     /**

@@ -162,7 +162,7 @@ class BookingsController extends Controller
         event(new NewBookingEvent($booking));
         SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(5));
         LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(3));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(4));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(3));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(2));
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(1));
 
@@ -822,21 +822,21 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services','customer')->get();
+        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->orderBy('created_at', 'desc')->with('services','customer')->get();
 
         if(count($pending_leads) > 0){
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Pending Bookings',
+                    'message' => 'Pending Leads',
                     'body' => ['pending_bookings' => $pending_leads]
                 ],Response::HTTP_OK);
         }else{
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => 'No Pending Bookings',
-                'body' => ['pending_bookings' => $pending_leads]
+                'message' => 'No Leads Pending',
+                'body' => null
             ],Response::HTTP_OK);
         }
 
