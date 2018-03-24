@@ -1242,7 +1242,8 @@ class CustomersController extends Controller
         $full_path = $customers_path.$customer->id.'/logo/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$customer->id,$full_path);
         $url = url('/').'/'.$specified_customer_path.'/logo/'.basename($url);
-        $profile_image = $customer->update(['profile_pic' => $url]);
+        $customer->profile_pic = $url;
+        $customer->save();
 
         return response()->json([
             'http-status' => Response::HTTP_OK,
