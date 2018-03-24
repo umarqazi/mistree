@@ -35,12 +35,10 @@ class NotificationsBeforeBookingEventListener
     {
         $booking = $event->booking;
         $user = $event->user;
-        $notification_booking = new NotificationsBeforeBooking($booking, $user);
         $booking_job_time = Carbon::parse($booking->job_time);
         $booking_time_diff = strval($booking_job_time->diffInMinutes());
 
         if( $user == "customer"){
-            Notification::send($booking->customer, $notification_booking);
             if($booking->customer->fcm_token ){
                 $optionBuilder = new OptionsBuilder();
                 $optionBuilder->setTimeToLive(60*20);
@@ -59,7 +57,7 @@ class NotificationsBeforeBookingEventListener
                 $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
             }
         }else{
-            Notification::send($booking->workshop, $notification_booking);
+            Notification::send($booking->workshop, new NotificationsBeforeBooking($booking));
             if($booking->workshop->fcm_token ){
                 $optionBuilder = new OptionsBuilder();
                 $optionBuilder->setTimeToLive(60*20);
