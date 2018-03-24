@@ -1229,7 +1229,8 @@ class CustomersController extends Controller
     * @param int $id 
     * @return \Illuminate\Http\Response 
     */ 
-    public function updateProfileImage(Request $request) { 
+    public function updateProfileImage(Request $request)
+    {
         $customer       = JWTAuth::authenticate(); 
         $file_data      = $request->profile_pic;
 
@@ -1242,7 +1243,7 @@ class CustomersController extends Controller
         $full_path = $customers_path.$customer->id.'/logo/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$customer->id,$full_path);
         $url = url('/').'/'.$specified_customer_path.'/logo/'.basename($url);
-        $customer->profile_pic = $url;
+        $customer->profile_pic_url = $url;
         $customer->save();
 
         return response()->json([
