@@ -765,39 +765,40 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="address_type",
+     *     name="type",
      *     in="formData",
      *     description="Customer's Address Type",
      *     required=true,
-     *     type="string"
+     *     type="string",
+     *     enum={"Office","Residence"}
      *   ),@SWG\Parameter(
-     *     name="address_house_no",
+     *     name="house_no",
      *     in="formData",
-     *     description="Customer's address house no",
+     *     description="Customer's Address House no",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_street_no",
+     *     name="street",
      *     in="formData",
-     *     description="Customer's address street no",
+     *     description="Customer's Address Street",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_block",
+     *     name="block",
      *     in="formData",
-     *     description="Customer's address block",
+     *     description="Customer's Address Block",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_town",
+     *     name="town",
      *     in="formData",
-     *     description="Customer's address town",
+     *     description="Customer's Address Town/Society",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_city",
+     *     name="city",
      *     in="formData",
-     *     description="Customer's address city",
+     *     description="Customer's Address City",
      *     required=true,
      *     type="string"
      *   ),
@@ -811,22 +812,22 @@ class CustomersController extends Controller
     {
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'address_type'          => 'required',
-            'address_house_no'      => 'required',
-            'address_street_no'     => 'required',
-            'address_block'         => 'required',
-            'address_town'          => 'required',
-            'address_city'          => 'required'
+            'type'          => 'required|in:Office,Residence',
+            'house_no'      => 'required',
+            'street'        => 'required',
+            'block'         => 'required',
+            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
         );
         $validator = Validator::make($request->all(), $rules);
 
         // process the Address
         if ($validator->fails()) {
             return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'http-status'   => Response::HTTP_OK,
+                'status'        => false,
+                'message'       => $validator->messages()->first(),
+                'body'          => null
             ],Response::HTTP_OK);
         } else {
             //customer
@@ -834,20 +835,20 @@ class CustomersController extends Controller
 
             //address
             $address = new CustomerAddress;
-            $address->customer_id       =  $customer->id;
-            $address->type              =  $request->address_type;
-            $address->house_no          =  $request->address_house_no;
-            $address->street_no         =  $request->address_street_no;
-            $address->block             =  $request->address_block;
-            $address->town              =  $request->address_town;
-            $address->city              =  $request->address_city;
+            $address->customer_id   =  $customer->id;
+            $address->type          =  $request->type;
+            $address->house_no      =  $request->house_no;
+            $address->street_no     =  $request->street;
+            $address->block         =  $request->block;
+            $address->town          =  $request->town;
+            $address->city          =  $request->city;
             $address->save();
 
             return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Details Added!',
-                'body' => ['customer' => $customer->load(['cars', 'addresses'])],
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => 'Details Added!',
+                'body'          => ['customer' => $customer->load(['cars', 'addresses'])],
             ],Response::HTTP_OK);
         }
     }
@@ -884,37 +885,38 @@ class CustomersController extends Controller
      *     in="formData",
      *     description="Customer's Address Type To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string",
+     *     enum={"Office","Residence"}
      *   ),@SWG\Parameter(
      *     name="house_no",
      *     in="formData",
      *     description="Customer's Address House No To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
-     *     name="street_no",
+     *     name="street",
      *     in="formData",
-     *     description="Customer's Address Street No  To Edit",
+     *     description="Customer's Address Street To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
      *     name="block",
      *     in="formData",
      *     description="Customer's Address Block To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
      *     name="town",
      *     in="formData",
      *     description="Customer's Address Town To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
      *     name="city",
      *     in="formData",
      *     description="Customer's Address City To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -926,22 +928,22 @@ class CustomersController extends Controller
     {
         $rules = array(
             'id'            => 'required',
-            'type'          => 'required',
+            'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'street_no'     => 'required',
+            'street'        => 'required',
             'block'         => 'required',
-            'town'          => 'required',
-            'city'          => 'required'
+            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
         );
         $validator = Validator::make($request->all(), $rules);
 
         // process the Address
         if ($validator->fails()) {
             return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'http-status'   => Response::HTTP_OK,
+                'status'        => false,
+                'message'       => $validator->messages()->first(),
+                'body'          => null
             ],Response::HTTP_OK);
         }
 
@@ -950,27 +952,27 @@ class CustomersController extends Controller
 
             if (!$address){
                 return response([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Invalid Address!',
-                    'body' => null
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => false,
+                    'message'       => 'Invalid Address!',
+                    'body'          => null
                 ],Response::HTTP_OK);
             }
             else{
-                $address->type = $request->type;
-                $address->house_no = $request->house_no;
+                $address->type      = $request->type;
+                $address->house_no  = $request->house_no;
                 $address->street_no = $request->street_no;
-                $address->block = $request->block;
-                $address->town = $request->town;
-                $address->city = $request->city;
+                $address->block     = $request->block;
+                $address->town      = $request->town;
+                $address->city      = $request->city;
 
                 $address->update();
 
                 return response([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Address Updated!',
-                    'body' => null
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => true,
+                    'message'       => 'Address Updated!',
+                    'body'          => null
                 ],Response::HTTP_OK);
             }
         }
