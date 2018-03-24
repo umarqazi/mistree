@@ -47,7 +47,7 @@ class Customer extends Authenticatable
 
     public function cars()
     {
-        return $this->belongsToMany('App\Car')->withPivot('millage', 'vehicle_no', 'insurance', 'year', 'removed_at')->withTimestamps();
+        return $this->belongsToMany('App\Car')->withPivot('millage', 'vehicle_no', 'insurance', 'year', 'removed_at')->where('removed_at',NULL)->withTimestamps();
     }
 
     public function addresses()

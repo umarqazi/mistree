@@ -972,7 +972,7 @@ class CustomersController extends Controller
                     'http-status'   => Response::HTTP_OK,
                     'status'        => true,
                     'message'       => 'Address Updated!',
-                    'body'          => null
+                    'body'          => ['customer' => $address->customer->load(['cars', 'addresses'])]
                 ],Response::HTTP_OK);
             }
         }
