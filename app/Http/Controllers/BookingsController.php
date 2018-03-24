@@ -155,17 +155,15 @@ class BookingsController extends Controller
                 $booking->services()->attach($service,['name' => $service_info->name, 'lead_charges' => $service_info->lead_charges, 'loyalty_points' => $service_info->loyalty_points, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
             }
         }
-
-        $booking->services;
-//        return
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
-        SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(5));
-        LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(3));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(3));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(2));
-        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(1));
+        SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(30));
+        LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(25));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(30));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(15));
+        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(10));
 
+//        return
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
