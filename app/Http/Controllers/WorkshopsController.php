@@ -433,26 +433,37 @@ class WorkshopsController extends Controller
 
         if($request->hasFile('images'))
         {
-            if(!is_null($workshop->images)){
+            /*if(!is_null($workshop->images)){
                 $images = $workshop->images;
                 foreach($images as $image){
                     $image = WorkshopImages::find($image->id);
                     $image->delete();
                 }
-            }
+            }*/
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
                 mkdir($path, 0775, true);
             }            
 
-            foreach($request->file('images') as $file)
+            foreach($request->file('images') as $key=>$value)
             {
-                $images = new WorkshopImages;
+                if ($key == 0)
+                {
 
-                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');
-                $images->url            = url('/').'/'.$image;
-                $images->workshop_id    = $workshop->id;
-                $images->save();
+                    $image = new WorkshopImages;
+                    $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+                }
+                else{
+                    $image = WorkshopImages::find($key);
+                    $path = str_replace(url('/').'/','',$image->url);
+                    unlink($path);
+
+                    $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+                }
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
             }
         }
 

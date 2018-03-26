@@ -176,12 +176,14 @@
                                                             <div class="form-group">
                                                                 @if(!empty($images[$i]))
                                                                     <img src="{{ $images[$i]->url }}" width="100px" height="80px">
+                                                                    @php $image= $images[$i]->id @endphp
                                                                 @else
                                                                     <br>
+                                                                    @php $image = 0 @endphp
                                                                 @endif
                                                                 <label class="control-label">Workshop Picture {{ $i + 1 }}:</label>
                                                                 <div class="clear"></div>
-                                                                <input type="file" class="form-control" name="images[]">
+                                                                <input type="file" class="form-control" name="images[{{$image}}]">
                                                             </div>
                                                         </li>
                                                     @endfor
