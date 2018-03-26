@@ -46,6 +46,9 @@
                                 <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                                     <thead>
                                     <tr role="row">
+                                        <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1"
+                                            colspan="1" aria-label="Date: activate to sort column ascending"
+                                            style="width: 130px;">Workshop ID</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 130px;">Workshop Name</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 142px;">Owner Name</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 207px;">Area</th>
@@ -58,6 +61,7 @@
                                     <tbody>
                                     @foreach($workshops as $key => $value)
                                         <tr role="row" class="odd">
+                                            <td>{{ $value->jazzcash_id }}</td>
                                             <td>{{ $value->name }}</td>
                                             <td>{{ $value->owner_name }}</td>
                                             @if($value->address)

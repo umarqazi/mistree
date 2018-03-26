@@ -7,14 +7,14 @@
     
     <form method="POST" action="{{ url('admin/update-balance') }}" enctype="multipart/form-data">
             {!! csrf_field() !!}
-            <div class="header">
-            {{-- @if ($errors->any())
+        <div class="header">
+            @if ($errors->any())
                 <div class="row text-center alert alert-danger">
                 @foreach($errors->all() as $error)
                     <div><span class="manadatory">{{ $error }}</span></div>
-                @endforeach                        
+                @endforeach
                 </div>
-            @endif --}}
+            @endif
             @if (session('message'))
                 <div class="alert alert-success">
                     {{ session('message') }}
@@ -24,8 +24,8 @@
                     <div class="col-md-12">
                       <h4 class="title">Workshop Management - Top Up</h4> 
                     </div>
-                </div>
-          </div>
+              </div>
+        </div>
           <div class="clear20"></div>
                             
                   <div class="row">

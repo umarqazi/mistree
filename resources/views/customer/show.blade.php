@@ -34,7 +34,7 @@
 		                                @endif
 	                                	<div class="phone">Email : {{$customer->email}}</div>
 	                                	<div class="phone">Mobile : {{$customer->con_number}}</div>
-	                                	<div class="phone">Current Loyality Points : 0</div>
+	                                	<div class="phone">Current Loyality Points : {{$customer->loyalty_points}}</div>
 	                                </div>
 	                            </div>
 								
@@ -98,11 +98,12 @@
 										<table class="table table-striped dataTable table-bordered no-footer" role="grid" style="padding: 10px;">          	         
 											<thead>
 												<tr>
-													<th class="text-center">S.No</th>
+													<th class="text-center">Workshop ID</th>
 													<th class="text-center">Workshop</th>
 													<th class="text-center">Job Date Time</th>
 													<th class="text-center">Status</th>
-													<th class="text-center">Doorstep</th>
+													<th class="text-center">Services</th>
+													<th class="text-center">Estimated Rates</th>
 													<th class="text-center">Request at</th>
 												</tr>
 											</thead>
@@ -110,15 +111,16 @@
 						                    	@if(count($customer->bookings) > 0)
 							                    	@foreach($customer->bookings as $key => $booking)
 								                        <tr> 
-								                        	<td class="text-center">{{$key + 1}}</td>
+								                        	<td
+																	class="text-center">{{$booking->workshop
+																	->jazzcash_id}}</td>
 								                        	<td class="text-center">{{$booking->workshop->name}}</td>
 								                        	<td class="text-center">{{$booking->job_time." ".$booking->job_date }}</td>
 								                        	<td class="text-center">{{$booking->job_status }}</td>
-								                        	<td class="text-center">
-								                        		@if($booking->is_doorstep == 1)
-						                                        	<i class="ti-check"></i>
-						                                        @endif
-								                        	</td>
+								                        	<td class="text-center">{{implode(', ',
+								                        	$booking->services->pluck('name')->toArray())}}</td>
+															<td class="text-center">{{$booking->services->pluck
+															('pivot')->pluck('service_rate')->sum()}}</td>
 								                        	<td class="text-center">{{$booking->created_at->format('H:i D M, Y') }}</td>
 								                        </tr>        
 							                        @endforeach

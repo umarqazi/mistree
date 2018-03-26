@@ -618,7 +618,7 @@ class WorkshopsController extends Controller
             'password'                       => 'required|confirmed|min:8',
             'password_confirmation'          => 'required',
             'team_slots'                     => 'integer',
-            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}/u$',
+            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}/u',
             'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
             'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
             'open_time'                      => 'required',
@@ -1384,7 +1384,7 @@ class WorkshopsController extends Controller
         $time = $request->service_time;
 
         $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
-
+        Session::flash('message', 'Service Added Successfully!');
         return Redirect::to('admin/add-workshop-service/'.$workshop->id);
     }
 
