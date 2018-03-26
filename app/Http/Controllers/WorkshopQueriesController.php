@@ -163,7 +163,7 @@ class WorkshopQueriesController extends Controller
                 'userObject' => $workshop,
                 'msg' => $request->message,
             ];
-            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+            MailJob::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5))->onQueue('emails');
             Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
         }
