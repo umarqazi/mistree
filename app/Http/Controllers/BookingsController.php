@@ -396,7 +396,7 @@ class BookingsController extends Controller
             $transaction->save();
 
 //          Fire An Event To Generate A Notification if $new_balance is less than 500
-            if ($new_balance < 500)
+            if ($new_balance < 150)
             {
                 event(new MinimumBalanceEvent($workshop));
             }
