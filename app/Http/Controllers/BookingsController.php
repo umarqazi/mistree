@@ -626,7 +626,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services', 'customer')->get();
+        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services', 'customer')->orderBy('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -685,7 +685,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
+        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->orderBy('created_at', 'desc')->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -741,7 +741,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
+        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->orderBy('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {
