@@ -1486,6 +1486,13 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="booking_time",
+     *     in="formData",
+     *     description="Booking Time",
+     *     required=false,
+     *     type="string"
+     *  ),
+     *   @SWG\Parameter(
      *     name="service_name",
      *     in="formData",
      *     description="Service Name",
@@ -1526,6 +1533,9 @@ class WorkshopsController extends Controller
         }
         if ($request->has('type')) {
             $workshops  = $workshops->where('type', $request->type);
+        }
+        if ($request->has('booking_time')) {
+            $workshops  = $workshops->where('open_time','<=',$request->booking_time) ->where('close_time','>=',$request->booking_time);
         }
         if ($request->has('address_block')) {
             $workshops  = Workshop::get_workshop_by_address($workshops, 'block', $request->address_block);
