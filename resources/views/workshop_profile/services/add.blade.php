@@ -5,6 +5,11 @@
     @include('partials.header')
 
     <div class="content">
+        @if (session('message'))
+            <div class="alert alert-success">
+                {{ session('message') }}
+            </div>
+        @endif
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
@@ -110,6 +115,7 @@
                                 <div class="row text-center">
                                     <div class="col-md-12">
                                         <div class="form-group">
+                                            <a class="btn btn-header" href="{{url('profile')}}">Back</a>
                                             <input type="submit" class="btn btn-header">
                                             <!-- <a href="" class="btn btn-header btn-export">Add Services</a> -->
                                         </div>

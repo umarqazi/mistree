@@ -5,7 +5,11 @@
 	@include('partials.header')
 
 	<div class="content">
-
+		@if (session('message'))
+			<div class="alert alert-success">
+				{{ session('message') }}
+			</div>
+		@endif
 		<div>
 			<div class="row">
 				<div class="col-md-12">

@@ -1338,6 +1338,7 @@ class WorkshopsController extends Controller
         }
         $workshop = Workshop::find($request->workshop_id);
         $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        Session::flash('message', 'Service Updated Successfully!');
         return Redirect::to('admin/workshops/'.$request->workshop_id);
 
     }
@@ -1959,8 +1960,8 @@ class WorkshopsController extends Controller
         $time = $request->service_time;
 
         $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
-
-        return Redirect::to('profile');
+        Session::flash('message','Service Added Successfully');
+        return Redirect::to('profile/add-profile-service/'.$workshop->id);
     }
 
     public function editProfileService($id){
@@ -1984,6 +1985,7 @@ class WorkshopsController extends Controller
         }
         $workshop = Workshop::find($request->workshop_id);
         $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        Session::flash('message','Service Updated Successfully');
         return Redirect::to('profile');
 
     }
