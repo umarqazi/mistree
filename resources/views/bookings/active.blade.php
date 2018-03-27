@@ -55,9 +55,12 @@
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 95px;">Job Date</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"
+                                        aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Status</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"
+                                        aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Estiamted Rates</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
-                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Total: activate to sort column ascending" style="width: 54px;">Total</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Rating: activate to sort column ascending" style="width: 69px;">Rating</th>
                                 </tr>
                             </thead>
@@ -67,9 +70,10 @@
                                         <td>{{$booking->job_date}}</td>
                                         <td>{{$booking->vehicle_no}}</td>
                                         <td>{{$booking->customer->name}}</td>
+                                        <td>{{$booking->job_status}}</td>
                                         <td>{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
+                                        <td>{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
                                         <td>{{$booking->job_time}}</td>
-                                        <td>{{$booking->billing['amount']}}</td>
                                         <td><i class="ti-star"></i> {{$booking->billing['ratings']}}</td>
                                     </tr>
                                 @endforeach
