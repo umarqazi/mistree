@@ -7,16 +7,13 @@
 
 <div>
     <h3>{{$subject}}</h3>
-    <br>
-    <br>
     <p>{{$msg}}</p>
     <br>
-    <br>
-    <p>From:</p><br>
-    <p>{{$workshop->name}}</p><br>
-    <p>{{$workshop->email}},</p><br>
+    <p>From:</p>
+    <p>{{$workshop->name}}</p>
+    <p>{{$workshop->email}},</p>
     @if($workshop->landline)
-        <p>{{$workshop->landline}},</p><br>
+        <p>{{$workshop->landline}},</p>
     @endif
     <p>{{$workshop->mobile}}.</p>
 </div>
