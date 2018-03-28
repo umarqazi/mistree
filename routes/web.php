@@ -164,4 +164,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 /* ========= Other Routes Starts ====================================================== */
 /*Notification Routes*/
         Route::get('/notifications/markasread', 'NotificationsController@markOneAsRead');
+/*Terms And Conditions*/
+        Route::get('/terms', function (){
+            return view('workshop/terms_and_conditions');
+        });
+
 /* ========= Other Routes Ends ====================================================== */
