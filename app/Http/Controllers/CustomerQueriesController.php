@@ -94,8 +94,7 @@ class CustomerQueriesController extends Controller
             $dataMail = [
                 'subject' => 'Customer Query - '.$request->subject,
                 'view' => 'customer.emails.query',
-                'user' => 'customer',
-                'userObject' => $customer,
+                'customer' => $customer,
                 'msg' => $request->message,
                 ];
             Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));

@@ -36,7 +36,7 @@ class WorkshopQueryMail extends Mailable
             ->from(Config::get('app.mail_username'), Config::get('app.name'))
             ->subject($dataMail['subject'])
             ->with([
-                $dataMail['user'] => $dataMail['userObject'],
+                'workshop' => $dataMail['workshop'],
                 'subject' => $dataMail['subject'],
                 'msg' => $dataMail['msg']
             ]);

@@ -36,7 +36,7 @@ class CustomerQueryMail extends Mailable
             ->from(Config::get('app.mail_username'), Config::get('app.name'))
             ->subject($dataMail['subject'])
             ->with([
-                $dataMail['user'] => $dataMail['userObject'],
+                'customer' => $dataMail['customer'],
                 'subject' => $dataMail['subject'],
                 'msg' => $dataMail['msg']
             ]);
