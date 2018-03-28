@@ -130,7 +130,7 @@ class WorkshopQueriesController extends Controller
                 'msg' => $request->message,
             ];
 
-            Mail::to(env(MAIL_USERNAME))->later(Carbon::now()->addMinutes(5), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
@@ -162,7 +162,7 @@ class WorkshopQueriesController extends Controller
                 'userObject' => $workshop,
                 'msg' => $request->message,
             ];
-            Mail::to(env(MAIL_USERNAME))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
             Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
         }
