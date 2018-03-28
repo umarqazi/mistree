@@ -45,11 +45,12 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
                                 <tr role="row">                        
-                                    <th>Job Date</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 107px;">Job Date</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 114px;">Job Status</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Total: activate to sort column ascending" style="width: 54px;">Total</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Rating: activate to sort column ascending" style="width: 69px;">Rating</th>
                                 </tr>
@@ -62,6 +63,7 @@
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
                                     <td>{{$lead->job_time}}</td>
+                                    <td>{{$lead->job_status}}</td>
                                     <td>{{$lead->billing['amount']}}</td>
                                     <td><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
                                 </tr>

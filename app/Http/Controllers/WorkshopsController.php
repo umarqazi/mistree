@@ -107,7 +107,7 @@ class WorkshopsController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
             'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
-            'shop'                           => 'required|numeric',
+            'shop'                           => 'nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'nullable|string',
@@ -351,7 +351,7 @@ class WorkshopsController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
             'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
-            'shop'                           => 'required|numeric',
+            'shop'                           => 'nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'nullable|string',
@@ -1827,7 +1827,7 @@ class WorkshopsController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
             'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
-            'shop'                           => 'required|numeric',
+            'shop'                           => 'nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'nullable|string',
@@ -2054,7 +2054,7 @@ class WorkshopsController extends Controller
         $leads           = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
-        $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
+        $expired_leads   = Booking::where('workshop_id', $workshop->id)->where('job_status','expired')->get();
 
         if(count($leads)){
             $customer_ids  = [];
@@ -2080,13 +2080,13 @@ class WorkshopsController extends Controller
         }else{
             $accepted_leads  = 0;
         }
-        if(count($rejected_leads)){
-            $rejected_leads  = count($rejected_leads);
+        if(count($expired_leads)){
+            $expired_leads  = count($expired_leads);
         }else{
-            $rejected_leads  = 0;
+            $expired_leads  = 0;
         }
 
-        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=> $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,'customer_count'=> $customer_count ]);
+        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=> $accepted_leads,'expired_leads'=> $expired_leads ,'completed_leads'=> $completed_leads,'customer_count'=> $customer_count ]);
 
     }
 
@@ -2197,7 +2197,7 @@ class WorkshopsController extends Controller
         $address    = $workshop->address;
 
         $rules = [
-            'shop'                           => 'required|numeric',
+            'shop'                           => 'nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'string|nullable',

@@ -26,7 +26,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="name" id="wf_name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <input type="text" class="form-control border-input" name="name" id="wf_name" value="{{ old('name') }}" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">
@@ -74,7 +74,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Enter Password <span class="manadatory">*</span></label>
-                                                <input type="password" id="password" required min="6" max="16"  class="form-control border-input" name="password" oninvalid="this.setCustomValidity('6 characters minimum ')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <input type="password" id="password" required minlength="6" maxlength="16"  class="form-control border-input" name="password" oninvalid="this.setCustomValidity('6 characters minimum ')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('password'))
                                                     <span class="help-block">
@@ -130,7 +130,7 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label">Team Slot</label>
+                                                <label class="control-label">Team Slots / Hour</label>
                                                 <select name="team_slot" class="form-control border-input" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                     <option value="0" @if(old('team_slot') == "0"){{ "selected" }}@endif>Please Select</option>
                                                     <option value="1" @if(old('team_slot') == "1"){{ "selected" }}@endif>1</option>
@@ -220,8 +220,8 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label">Shop No. <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" required name="shop" value="{{ old('shop') }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <label class="control-label">Shop No.</label>
+                                                <input type="text" class="form-control border-input" name="shop" value="{{ old('shop') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                     <span class="help-block">
@@ -302,7 +302,6 @@
 
 
 
-
                             <!--###############################################-->
                             <div class="cn-section-3">
 
@@ -321,8 +320,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
-                                                                <select id="hatchback" class="form-control
-                                                                border-input chosen-select" name="hatchback[]" multiple>
+                                                                <select id="hatchback" class="form-control border-input chosen-select" name="hatchback[]" multiple>
                                                                     @foreach ($hatchback as $row)
                                                                         <option value="{{$row->id}}" @if(!empty(old
                                                                         ('hatchback')) && in_array($row->id,old
@@ -347,15 +345,11 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                                            <input type="text" class="form-control
-                                                                            border-input" name="hatchback-rates[{{ $key
-                                                                            }}]" value="{{ old('hatchback-rates.'.$key)
-                                                                            }}" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                                            <input type="number" class="form-control border-input" name="hatchback-rates[{{ $key }}]" value="{{ old('hatchback-rates.'.$key) }}" required max="99999" >
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
-                                                                            <select name ="hatchback-times[{{ $key }}]"
-                                                                                    class="form-control chosen-select border-input" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            <select name ="hatchback-times[{{ $key }}]" class="form-control chosen-select border-input">
                                                                                 <option @if(old('hatchback-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
                                                                                 <option @if(old('hatchback-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
                                                                                 <option @if(old('hatchback-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
@@ -390,8 +384,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
-                                                                <select id="sedan" class="form-control
-                                                                border-input chosen-select" name="sedan[]" multiple>
+                                                                <select id="sedan" class="form-control border-input chosen-select" name="sedan[]" multiple>
                                                                     @foreach ($sedan as $row)
                                                                         <option value="{{$row->id}}" @if(!empty(old
                                                                         ('sedan')) && in_array($row->id,old
@@ -418,15 +411,14 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                                            <input type="text" class="form-control
+                                                                            <input type="number" class="form-control
                                                                             border-input" name="sedan-rates[{{ $key
                                                                             }}]" value="{{ old('sedan-rates.'.$key)
-                                                                            }}" Required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            }}" Required max="99999" >
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
-                                                                            <select name ="sedan-times[{{ $key }}]"
-                                                                                    class="form-control chosen-select border-input" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            <select name ="sedan-times[{{ $key }}]" class="form-control chosen-select border-input">
                                                                                 <option @if(old('sedan-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
                                                                                 <option @if(old('sedan-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
                                                                                 <option @if(old('sedan-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
@@ -461,8 +453,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Select Services <span class="manadatory">*</span></label>
-                                                                <select id="luxury" class="form-control
-                                                                border-input chosen-select" name="luxury[]" multiple>
+                                                                <select id="luxury" class="form-control border-input chosen-select" name="luxury[]" multiple>
                                                                     @foreach ($luxury as $row)
                                                                         <option value="{{$row->id}}" @if(!empty(old
                                                                         ('luxury')) && in_array($row->id,old
@@ -490,14 +481,12 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                                            <input type="text" class="form-control
-                                                                            border-input" name="luxury-rates[{{ $key
-                                                                            }}]" value="{{ old('luxury-rates.'.$key)
-                                                                            }}" Required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            <input type="number" class="form-control  border-input" name="luxury-rates[{{ $key
+                                                                            }}]" value="{{ old('luxury-rates.'.$key) }}" Required max="99999">
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
-                                                                            <select name ="luxury-times[{{ $key }}]" class="form-control chosen-select border-input" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            <select name ="luxury-times[{{ $key }}]" class="form-control chosen-select border-input">
                                                                                 <option @if(old('luxury-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
                                                                                 <option @if(old('luxury-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
                                                                                 <option @if(old('luxury-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
@@ -559,11 +548,12 @@
                                                                     <div class="row">
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                                            <input type="text" class="form-control border-input" name="suv-rates[{{ $key }}]" value="{{ old('suv-rates.'.$key) }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            <input type="number" max="99999" class="form-control border-input" name="suv-rates[{{ $key }}]" value="{{ old('suv-rates.'.$key) }}">
+                                                                            <p class="validity-message"></p>
                                                                         </div>
                                                                         <div class="col-md-6">
                                                                             <label class="control-label">Service Time <span class="manadatory">*</span></label>
-                                                                            <select name ="suv-times[{{ $key }}]" class="form-control chosen-select border-input" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            <select name ="suv-times[{{ $key }}]" class="form-control chosen-select border-input">
                                                                                 <option @if(old('suv-times.'.$key) == "1.0"){{"selected"}}@endif value="1.0">1.0 hr</option>
                                                                                 <option @if(old('suv-times.'.$key) == "1.5"){{"selected"}}@endif value="1.5">1.5 hr</option>
                                                                                 <option @if(old('suv-times.'.$key) == "2.0"){{"selected"}}@endif value="2.0">2.0 hr</option>
@@ -584,6 +574,7 @@
                                                                                 <option @if(old('suv-times.'.$key) == "9.5"){{"selected"}}@endif value="9.5">9.5 hr</option>
                                                                                 <option @if(old('suv-times.'.$key) == "10.0"){{"selected"}}@endif value="10">10 hr</option>
                                                                             </select>
+                                                                            <p class="validity-message"></p>
                                                                         </div>
                                                                     </div>
                                                                 </div>
