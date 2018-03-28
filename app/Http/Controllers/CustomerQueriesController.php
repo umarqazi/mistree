@@ -98,7 +98,7 @@ class CustomerQueriesController extends Controller
                 'userObject' => $customer,
                 'msg' => $request->message,
                 ];
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(env(MAIL_USERNAME))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
