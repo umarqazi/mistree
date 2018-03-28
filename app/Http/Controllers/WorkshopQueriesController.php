@@ -155,9 +155,8 @@ class WorkshopQueriesController extends Controller
                 'status'        => 'Open',
                 'is_resolved'   => false
             ]);
-            $subject = "Workshop Query - ".$request->subject;
             $dataMail = [
-                'subject' => $subject,
+                'subject' => 'Workshop Query - '.$request->subject,
                 'view' => 'workshop.emails.query',
                 'user' => 'workshop',
                 'userObject' => $workshop,
