@@ -2721,7 +2721,7 @@ class WorkshopsController extends Controller
     public function updateWorkshopPassword(Request $request)
     {
         $rules = [
-            'password'  => 'required|confirmed|min:6',
+            'password'  => 'required|confirmed|min:6|max:16',
         ];
 
         $input = $request->only('password', 'password_confirmation');

@@ -29,7 +29,7 @@
                                         <div class="col-md-6 col-lg-offset-3">
                                             <div class="form-group">
                                                 <label class="control-label">New Password</label>
-                                                <input type="password" class="form-control border-input" name="password" required oninvalid="this.setCustomValidity('Invalid Characters')" pattern="[a-zA-Z0-9 ]+" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="password" class="form-control border-input" name="password" required oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('password'))
                                                     <span class="help-block">
@@ -40,7 +40,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Confirm Password</label>
-                                                <input type="password" class="form-control border-input" name="password_confirmation" required oninvalid="this.setCustomValidity('Invalid Characters')" pattern="[a-zA-Z0-9 ]+" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="password" class="form-control border-input" name="password_confirmation" required oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('password_confirmation'))
                                                     <span class="help-block">
