@@ -239,6 +239,5 @@ return [
 
     ],
 
-    'mail_username' => env('MAIL_USERNAME', 'jazib.javed@gems.techverx.com'),
-    's3_bucket_url' => env('S3_BUCKET_URL','https://s3-us-west-2.amazonaws.com/mymystri-staging/'),
+    'mail_username' => env('MAIL_USERNAME'),
 ];
