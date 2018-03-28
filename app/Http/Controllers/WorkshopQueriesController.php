@@ -162,7 +162,7 @@ class WorkshopQueriesController extends Controller
                 'userObject' => $workshop,
                 'msg' => $request->message,
             ];
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), new WorkshopQueryMail($dataMail));
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
             Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
         }
