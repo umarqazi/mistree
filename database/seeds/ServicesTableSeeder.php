@@ -31,7 +31,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -40,7 +40,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -49,7 +49,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -58,7 +67,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -67,25 +76,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceHatchBackService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceHatchBackService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -94,7 +103,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -103,7 +112,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -112,7 +121,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -121,7 +130,34 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -141,7 +177,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -150,7 +186,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -159,7 +195,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -168,7 +213,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -177,25 +222,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceHatchBackService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceHatchBackService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -204,7 +249,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -213,7 +258,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -222,7 +267,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -231,7 +276,34 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -259,11 +331,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairHatchBackService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairHatchBackServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -283,7 +355,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairHatchBackServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -293,7 +365,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairHatchBackServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -303,7 +375,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairHatchBackServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -331,11 +403,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairHatchBackService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairHatchBackServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -355,7 +427,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairHatchBackServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -365,7 +437,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairHatchBackServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -375,7 +447,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairHatchBackServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -386,6 +458,34 @@ class ServicesTableSeeder extends Seeder
             'loyalty_points'    => 0,
             'category_id'       => 1,
             'lead_charges'      => 0,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -400,13 +500,60 @@ class ServicesTableSeeder extends Seeder
             'image'             => url('img/thumbnail.png')
         ]);
 
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
         /*/////Denting Painting Services without Doorstep//////*/
         $dentingPaintingHatchBackServiceWithoutDoorstep = Service::create([
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0, 
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingHatchBackServiceWithoutDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
         
@@ -415,7 +562,26 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingHatchBackServiceWithDoorstep->id,
+            'category_id'       => 1,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -425,7 +591,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -435,7 +601,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 1,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -457,7 +623,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -466,7 +632,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -475,7 +641,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceSedanService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -484,7 +659,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -493,25 +668,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceSedanService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceSedanService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -520,7 +695,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -529,7 +704,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -538,7 +713,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -547,7 +722,34 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -567,7 +769,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -576,7 +778,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -585,7 +787,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceSedanService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -594,7 +805,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -603,25 +814,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceSedanService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceSedanService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -630,7 +841,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -639,7 +850,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -648,7 +859,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -657,11 +868,38 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
 
         /*/////Repair Services without Doorstep//////*/
         $repairSedanServiceWithoutDoorstep = Service::create([
@@ -685,11 +923,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairSedanService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairSedanServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -709,7 +947,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSedanServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -719,7 +957,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSedanServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -729,7 +967,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSedanServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -756,11 +994,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairSedanService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairSedanServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -780,7 +1018,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSedanServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -790,7 +1028,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSedanServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -800,7 +1038,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSedanServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -811,6 +1049,34 @@ class ServicesTableSeeder extends Seeder
             'loyalty_points'    => 0,
             'category_id'       => 2,
             'lead_charges'      => 0,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -825,12 +1091,59 @@ class ServicesTableSeeder extends Seeder
             'image'             => url('img/thumbnail.png')
         ]);
 
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
         /*/////Denting Painting Services without Doorstep//////*/
         $dentingPaintingSedanServiceWithoutDoorstep = Service::create([
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingSedanServiceWithoutDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -840,7 +1153,26 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingSedanServiceWithDoorstep->id,
+            'category_id'       => 2,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -850,7 +1182,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -860,7 +1192,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 2,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -882,7 +1214,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -891,7 +1223,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -900,7 +1232,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceLuxuryService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -909,7 +1250,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -918,25 +1259,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceLuxuryService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceLuxuryService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -945,7 +1286,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -954,7 +1295,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -963,7 +1304,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -972,7 +1313,34 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -992,7 +1360,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1001,7 +1369,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1010,7 +1378,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceLuxuryService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1019,7 +1396,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1028,25 +1405,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceLuxuryService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceLuxuryService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1055,7 +1432,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1064,7 +1441,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1073,7 +1450,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1082,7 +1459,34 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1109,11 +1513,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairLuxuryService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairLuxuryServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1133,7 +1537,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairLuxuryServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1143,7 +1547,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairLuxuryServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1153,7 +1557,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairLuxuryServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1181,11 +1585,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairLuxuryService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairLuxuryServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1205,7 +1609,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairLuxuryServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1215,7 +1619,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairLuxuryServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1225,7 +1629,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairLuxuryServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1236,6 +1640,34 @@ class ServicesTableSeeder extends Seeder
             'loyalty_points'    => 0,
             'category_id'       => 3,
             'lead_charges'      => 0,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingLuxuryServiceWithoutDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1250,12 +1682,59 @@ class ServicesTableSeeder extends Seeder
             'image'             => url('img/thumbnail.png')
         ]);
 
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
         /*/////Denting Painting Services without Doorstep//////*/
         $dentingPaintingLuxuryService = Service::create([
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingLuxuryService->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingLuxuryService->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1265,7 +1744,26 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingLuxuryServiceWithDoorstep->id,
+            'category_id'       => 3,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1275,7 +1773,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1285,7 +1783,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 3,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1307,7 +1805,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1316,7 +1814,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1325,7 +1823,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceSUVService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1334,7 +1841,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1343,25 +1850,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceSUVService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceSUVService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1370,7 +1877,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1379,7 +1886,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1388,7 +1895,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1397,7 +1904,34 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1418,7 +1952,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Oil Change',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1427,7 +1961,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car AC Service',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1436,7 +1970,16 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Battery Replacement Service',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $tyreReplacementMaintenanceSUVService = Service::create([
+            'name'              => 'Tyre Replacement Service',
+            'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1445,7 +1988,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Brake Services',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1454,25 +1997,25 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Throttle Body Cleaning',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $radiatorMaintenanceSUVService = Service::create([
-            'name'              => 'Radiator service',
+            'name'              => 'Radiator Service',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
         $beltReplacementMaintenanceSUVService = Service::create([
-            'name'              => 'Belt replacement',
+            'name'              => 'Belt & Hoses Replacement',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1481,7 +2024,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Computer Scanning',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1490,7 +2033,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Tuning',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1499,7 +2042,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Alignment and Wheel Balancing',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1508,11 +2051,37 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Car Wash and Service',
             'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 30,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
 
+        $carCleaningMaintenanceHatchBackService = Service::create([
+            'name'              => 'Carbon Cleaning',
+            'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $alignmentAndWheelBalancingMaintenanceHatchBackService = Service::create([
+            'name'              => 'Catalytic, Mufflers & Exhaust Cleaning',
+            'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carWashAndServiceMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine General Overhauling',
+            'service_parent'    => $maintenanceSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
 
         /*Repair Services without Doorstep//////*/
         $repairSUVServiceWithoutDoorstep = Service::create([
@@ -1536,11 +2105,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairSUVService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairSUVServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1560,7 +2129,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSUVServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1570,7 +2139,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSUVServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1580,7 +2149,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSUVServiceWithoutDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1607,11 +2176,11 @@ class ServicesTableSeeder extends Seeder
         ]);
 
         $transmissionRepairSUVService = Service::create([
-            'name'              => 'Transmission',
+            'name'              => 'Automatic Transmission Change',
             'service_parent'    => $repairSUVServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1631,7 +2200,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSUVServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1641,7 +2210,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSUVServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1651,7 +2220,7 @@ class ServicesTableSeeder extends Seeder
             'service_parent'    => $repairSUVServiceWithDoorstep->id,
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'      => 0,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1666,6 +2235,34 @@ class ServicesTableSeeder extends Seeder
             'image'             => url('img/thumbnail.png')
         ]);
 
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingSUVServiceWithoutDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
         /*/////Car Detailing Services with Doorstep//////*/
         $carDetailingSUVServiceWithDoorstep = Service::create([
             'name'              => 'Car Detailing',
@@ -1676,12 +2273,59 @@ class ServicesTableSeeder extends Seeder
             'image'             => url('img/thumbnail.png')
         ]);
 
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Engine Bay Detailing',
+            'service_parent'    => $carDetailingSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Full Interior Detailing',
+            'service_parent'    => $carDetailingSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $batteryReplacementMaintenanceHatchBackService = Service::create([
+            'name'              => 'Tyre & Rim Detailing',
+            'service_parent'    => $carDetailingSUVServiceWithDoorstep->id,
+            'category_id'       => 4,
+            'lead_charges'      => 50,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
         /*/////Denting Painting Services without Doorstep//////*/
         $dentingPaintingSUVService = Service::create([
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'    => 0,
+            'lead_charges'    => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services without Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingSUVService->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 0,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingSUVService->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1691,7 +2335,26 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Denting Painting',
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'    => 0,
+            'lead_charges'    => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        /*/////Child Services with Doorstep/////*/
+        $oilChangeMaintenanceHatchBackService = Service::create([
+            'name'              => 'Compound Polish & Scratch Removal',
+            'service_parent'    => $dentingPaintingSUVService->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
+            'is_doorstep'       => 1,
+            'image'             => url('img/thumbnail.png')
+        ]);
+
+        $carAcMaintenanceHatchBackService = Service::create([
+            'name'              => 'Glass & Ceramics Coating',
+            'service_parent'    => $dentingPaintingSUVService->id,
+            'category_id'       => 4,
+            'lead_charges'      => 100,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1701,7 +2364,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'    => 0,
+            'lead_charges'    => 50,
             'is_doorstep'       => 0,
             'image'             => url('img/thumbnail.png')
         ]);
@@ -1711,7 +2374,7 @@ class ServicesTableSeeder extends Seeder
             'name'              => 'Vehicle inspection',
             'loyalty_points'    => 0,
             'category_id'       => 4,
-            'lead_charges'    => 0,
+            'lead_charges'    => 50,
             'is_doorstep'       => 1,
             'image'             => url('img/thumbnail.png')
         ]);
