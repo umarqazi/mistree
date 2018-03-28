@@ -2102,6 +2102,8 @@ class WorkshopsController extends Controller
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
+        $total_revenue         = $workshop->billings()->pluck('amount')->sum();
+        $current_balance = $workshop->balance->balance;
 
         if(count($leads)){
             $customer_ids  = [];
@@ -2133,7 +2135,9 @@ class WorkshopsController extends Controller
             $rejected_leads  = 0;
         }
 
-        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=> $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,'customer_count'=> $customer_count ]);
+        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=>
+            $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,
+            'customer_count'=> $customer_count, 'revenue' => $total_revenue, 'balance' => $current_balance ]);
 
     }
 
@@ -2544,8 +2548,8 @@ class WorkshopsController extends Controller
     public function getLedger(Request $request){
         if($request->header('Content-Type') == 'application/json'){
             $workshop   = JWTAuth::authenticate();
-            $from = $request->input('from_date');
-            $to = $request->input('to_date');
+            $from = $request->from;
+            $to = $request->to;
             $transactions = WorkshopLedger::where('workshop_id', $workshop->id)->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->get();
             return response()->json([
                 'http-status' => Response::HTTP_OK,
