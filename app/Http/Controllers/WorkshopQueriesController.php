@@ -158,8 +158,7 @@ class WorkshopQueriesController extends Controller
             $dataMail = [
                 'subject' => 'Workshop Query - '.$request->subject,
                 'view' => 'workshop.emails.query',
-                'user' => 'workshop',
-                'userObject' => $workshop,
+                'workshop' => $workshop,
                 'msg' => $request->message,
             ];
             Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
