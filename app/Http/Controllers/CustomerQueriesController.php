@@ -97,14 +97,12 @@ class CustomerQueriesController extends Controller
                 'customer' => $customer,
                 'msg' => $request->message,
                 ];
-            $query_msg = Config::get('app.mail_username');
-            Mail::to($query_msg)->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
 
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
-                'message' => $query_msg,
-//                    'Query has been Added.',
+                'message' => 'Query has been Added.',
                 'body' => null
             ],Response::HTTP_OK);
     }
