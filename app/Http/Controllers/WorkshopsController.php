@@ -378,9 +378,13 @@ class WorkshopsController extends Controller
                 $path = $workshops_path.$workshop->id.'/logo';
                 mkdir($path, 0775, true);
             }
+
+//          Unlink Image(Remove Previous Image from Directory)
+                $this->unlinkImage($workshop->profile_pic);
+
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
 
-            $profile_pic = url('/').'/'.$profile_pic;
+            $profile_pic = asset($profile_pic);
         }
         else
         {
@@ -395,8 +399,11 @@ class WorkshopsController extends Controller
                 mkdir($path, 0775, true);
             }
 
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($workshop->cnic_image);
+
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  url('/').'/'.$cnic_image;
+            $cnic_image =  asset($cnic_image);
         }
         else
         {
@@ -433,33 +440,37 @@ class WorkshopsController extends Controller
 
         if($request->hasFile('images'))
         {
-            /*if(!is_null($workshop->images)){
-                $images = $workshop->images;
-                foreach($images as $image){
-                    $image = WorkshopImages::find($image->id);
-                    $image->delete();
-                }
-            }*/
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
                 mkdir($path, 0775, true);
-            }            
+            }
 
             foreach($request->file('images') as $key=>$value)
             {
-                if ($key == 0)
-                {
+                $image = WorkshopImages::find($key);
 
-                    $image = new WorkshopImages;
-                    $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
-                }
-                else{
-                    $image = WorkshopImages::find($key);
-                    $path = str_replace(url('/').'/','',$image->url);
-                    unlink($path);
+//              Unlink Image(Remove Previous Image from Directory)
+                $this->unlinkImage($image->url);
 
-                    $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
-                }
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
+            }
+        }
+
+        if ($request->hasFile('images_new'))
+        {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                mkdir($path, 0775, true);
+            }
+
+            foreach($request->file('images_new') as $value)
+            {
+                $image = new WorkshopImages();
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
 
                 $image->url            = asset($file);
                 $image->workshop_id    = $workshop->id;
@@ -1513,7 +1524,9 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {
-        $workshops      = Workshop::with('address');
+        $workshops      = Workshop::where('is_verified', true)
+            ->where('is_approved', true)
+            ->with('address');
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
@@ -1837,9 +1850,13 @@ class WorkshopsController extends Controller
                 $path = $workshops_path.$workshop->id.'/logo';
                 mkdir($path, 0775, true);
             }
+
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($workshop->profile_pic);
+
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
 
-            $profile_pic = url('/').'/'.$profile_pic;
+            $profile_pic = asset($profile_pic);
         }
         else
         {
@@ -1854,8 +1871,11 @@ class WorkshopsController extends Controller
                 mkdir($path, 0775, true);
             }
 
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($workshop->cnic_image);
+
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  url('/').'/'.$cnic_image;
+            $cnic_image =  asset($cnic_image);
         }
         else
         {
@@ -1892,26 +1912,41 @@ class WorkshopsController extends Controller
 
         if($request->hasFile('images'))
         {
-            if(!is_null($workshop->images)){
-                $images = $workshop->images;
-                foreach($images as $image){
-                    $image = WorkshopImages::find($image->id);
-                    $image->delete();
-                }
-            }
-
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
                 mkdir($path, 0775, true);
             }
 
-            foreach($request->file('images') as $file)
+            foreach($request->file('images') as $key=>$value)
             {
-                $images = new WorkshopImages;
-                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');
-                $images->url            = url('/').'/'.$image;
-                $images->workshop_id    = $workshop->id;
-                $images->save();
+                $image = WorkshopImages::find($key);
+
+//              Unlink Image(Remove Previous Image from Directory)
+                $this->unlinkImage($image->url);
+
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
+            }
+        }
+
+        if ($request->hasFile('images_new'))
+        {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                mkdir($path, 0775, true);
+            }
+
+            foreach($request->file('images_new') as $value)
+            {
+                $image = new WorkshopImages();
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
             }
         }
 
@@ -2292,6 +2327,9 @@ class WorkshopsController extends Controller
             WorkshopImages::where('url', $old_url)
                 ->where('workshop_id',$workshop_id)
                 ->update(['url' => $url]);
+
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($old_url);
         }
 
         return response()->json([
@@ -2341,10 +2379,18 @@ class WorkshopsController extends Controller
 
         $workshops_path = public_path().'/uploads/workshops/';
         $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
         if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
             $path = $workshops_path.$workshop->id.'/logo';
             mkdir($path, 0775, true);
         }
+
+        $profile_path = str_replace(url('/').'/','',$workshop->profile_pic);
+        unlink($profile_path);
+
+//      Unlink Image(Remove Previous Image from Directory)
+        $this->unlinkImage($workshop->profile_pic);
+
         $full_path = $workshops_path.$workshop->id.'/logo/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$workshop->id,$full_path);
         $url = url('/').'/'.$specified_workshop_path.'/logo/'.basename($url);
@@ -2401,7 +2447,10 @@ class WorkshopsController extends Controller
         if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
             $path = $workshops_path.$workshop->id.'/cnic';
             mkdir($path, 0775, true);
-        }            
+        }
+
+//      Unlink Image(Remove Previous Image from Directory)
+        $this->unlinkImage($workshop->cnic_image);
         
         $full_path = $workshops_path.$workshop->id.'/cnic/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$workshop->id,$full_path);
@@ -2683,6 +2732,12 @@ class WorkshopsController extends Controller
             'status'        => "OK",
             'response'      => "The Workshop balance has been topped up with amount Rs.".$request->amount
         ], Response::HTTP_OK);
+    }
+
+    public function unlinkImage($url)
+    {
+        $path = str_replace(url('/').'/','',$url);
+        unlink($path);
     }
 }
 
