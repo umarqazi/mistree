@@ -2761,6 +2761,35 @@ class WorkshopsController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function editWorkshopPassword(Workshop $workshop)
+    {
+        return View::make('workshop.editpassword')->with('workshop', $workshop);
+    }
+
+    public function updateWorkshopPassword(Request $request)
+    {
+        $rules = [
+            'password'  => 'required|confirmed|min:6|max:16',
+        ];
+
+        $input = $request->only('password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return Redirect::back()
+                ->withErrors($validator);
+        }
+
+        // Update workshop Password
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->password = Hash::make($request->password);
+        $workshop->update();
+
+        Session::flash('message', 'Success! Workshop Password Updated');
+        return Redirect::to('admin/workshops');
+    }
+
     public function unlinkImage($url)
     {
         $path = str_replace(url('/').'/','',$url);
