@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
-use App\Jobs\MailJobRegister;
+use App\Mail\WorkshopConfirmationMail;
+use App\Mail\WorkshopRegistrationMail;
 use JWTAuth;
 use SoapClient;
 use Session;
@@ -278,18 +279,16 @@ class WorkshopsController extends Controller
             }
         }
 
-        $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code         
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Please verify your email address.',
             'view' => 'workshop.emails.verify',
             'name' => $request->name,
             'email' => $request->email,
-            'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -690,19 +689,17 @@ class WorkshopsController extends Controller
 
         $name = $request->name;
         $email = $request->email;
-        $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code
 
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Please verify your email address.',
             'view' => 'workshop.emails.verify',
             'name' => $request->name,
             'email' => $request->email,
-            'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
 
         $credentials = [
             'email' => $request->email,
@@ -1106,15 +1103,13 @@ class WorkshopsController extends Controller
         $workshop = Workshop::find($id);
         $workshop->is_approved       = true;
         $workshop->save();
-        $subject = "Conragulations! Your workshop has been approved by Admin.";
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Conragulations! Your workshop has been approved by Admin.',
             'view' => 'workshop.emails.confirmationEmail',
             'name' => $workshop->name,
             'email' => $workshop->email,
-            'verification' => false,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopConfirmationMail($dataMail))->onQueue('emails'));
         return Redirect::to('admin/workshops');
     }
 
