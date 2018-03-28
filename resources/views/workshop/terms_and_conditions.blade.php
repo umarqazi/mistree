@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Login')
+@section('title', 'Terms And Conditions')
 @section('content_login')
     <div class="wrapper login-signup">
 
