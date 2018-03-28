@@ -91,16 +91,16 @@ class CustomerQueriesController extends Controller
                 'status'        => 'Open',
                 'is_resolved'   => false
             ]);
-        $email = "jazib.javed@gems.techverx.com";
-        $subject = "Customer Query - ".$request->subject;
-        Mail::send('customer.emails.query', ['customer' => $customer,'subject' => $request->subject, 'msg' => $request->message ],
-            function($mail) use ($email, $subject) {
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email);
-                $mail->subject($subject);
-            });
+            $email = "jazib.javed@gems.techverx.com";
+            $dataMail = [
+                'subject' => 'Customer Query - '.$request->subject,
+                'view' => 'customer.emails.query',
+                'customer' => $customer,
+                'msg' => $request->message,
+                ];
+            Mail::to($email)->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
 
-                return response()->json([
+            return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'Query has been Added.',
