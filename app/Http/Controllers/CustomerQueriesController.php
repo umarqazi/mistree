@@ -70,7 +70,7 @@ class CustomerQueriesController extends Controller
      */
     public function store(Request $request)
     {
-            $customer = JWTAuth::Authenticate();
+            $customer = JWTAuth::authenticate();
             $rules = array(
                 'subject'      => 'required',
                 'message'      => 'required'
@@ -78,12 +78,12 @@ class CustomerQueriesController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                    return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => 'Incomplete Details!',
-                        'body' => $request->all()
-                    ],Response::HTTP_OK);
+                return response()->json([
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => false,
+                    'message'       => 'Incomplete Details!',
+                    'body'          => null
+                ],Response::HTTP_OK);
             }
             $customer->queries()->create([
                 'subject'       => $request->subject,
@@ -92,18 +92,18 @@ class CustomerQueriesController extends Controller
                 'is_resolved'   => false
             ]);
             $dataMail = [
-                'subject' => 'Customer Query - '.$request->subject,
-                'view' => 'customer.emails.query',
-                'customer' => $customer,
-                'msg' => $request->message,
+                'subject'   => 'Customer Query - '.$request->subject,
+                'view'      => 'customer.emails.query',
+                'customer'  => $customer,
+                'msg'       => $request->message,
                 ];
             Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
 
             return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Query has been Added.',
-                'body' => null
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => 'Query has been Added.',
+                'body'          => null
             ],Response::HTTP_OK);
     }
 
