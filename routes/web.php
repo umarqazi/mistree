@@ -130,6 +130,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
         Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
         Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
+        Route::get('/edit-workshop-password/{workshop}', 'WorkshopsController@editWorkshopPassword');
+        Route::patch('/update-workshop-password/', 'WorkshopsController@updateWorkshopPassword');
 
         Route::post('customers/{id}/unblock/', 'CustomersController@restore');
         Route::get('/blocked-customers', 'CustomersController@blockedCustomers');
@@ -164,4 +166,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 /* ========= Other Routes Starts ====================================================== */
 /*Notification Routes*/
         Route::get('/notifications/markasread', 'NotificationsController@markOneAsRead');
+/*Terms And Conditions*/
+        Route::get('/terms', function (){
+            return view('workshop/terms_and_conditions');
+        });
+
 /* ========= Other Routes Ends ====================================================== */

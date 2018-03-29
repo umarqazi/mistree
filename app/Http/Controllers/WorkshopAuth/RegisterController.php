@@ -4,6 +4,7 @@ namespace App\Http\Controllers\WorkshopAuth;
 
 use App\Events\NewWorkshopEvent;
 use App\Jobs\MailJobRegister;
+use App\Mail\WorkshopRegistrationMail;
 use App\Workshop;
 use Carbon\Carbon;
 use SoapClient;
@@ -266,10 +267,10 @@ class RegisterController extends Controller
             'view' => 'workshop.emails.verify',
             'name' => $data['name'],
             'email' => $data['email'],
-            'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+
 
         //Firing an Event to Generate Notifications
         event(new NewWorkshopEvent($workshop));

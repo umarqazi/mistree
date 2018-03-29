@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
-use App\Jobs\MailJobRegister;
+use App\Mail\WorkshopConfirmationMail;
+use App\Mail\WorkshopRegistrationMail;
 use JWTAuth;
 use SoapClient;
 use Session;
@@ -278,18 +279,16 @@ class WorkshopsController extends Controller
             }
         }
 
-        $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code         
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Please verify your email address.',
             'view' => 'workshop.emails.verify',
             'name' => $request->name,
             'email' => $request->email,
-            'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -378,9 +377,13 @@ class WorkshopsController extends Controller
                 $path = $workshops_path.$workshop->id.'/logo';
                 mkdir($path, 0775, true);
             }
+
+//          Unlink Image(Remove Previous Image from Directory)
+                $this->unlinkImage($workshop->profile_pic);
+
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
 
-            $profile_pic = url('/').'/'.$profile_pic;
+            $profile_pic = asset($profile_pic);
         }
         else
         {
@@ -395,8 +398,11 @@ class WorkshopsController extends Controller
                 mkdir($path, 0775, true);
             }
 
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($workshop->cnic_image);
+
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  url('/').'/'.$cnic_image;
+            $cnic_image =  asset($cnic_image);
         }
         else
         {
@@ -433,33 +439,37 @@ class WorkshopsController extends Controller
 
         if($request->hasFile('images'))
         {
-            /*if(!is_null($workshop->images)){
-                $images = $workshop->images;
-                foreach($images as $image){
-                    $image = WorkshopImages::find($image->id);
-                    $image->delete();
-                }
-            }*/
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
                 mkdir($path, 0775, true);
-            }            
+            }
 
             foreach($request->file('images') as $key=>$value)
             {
-                if ($key == 0)
-                {
+                $image = WorkshopImages::find($key);
 
-                    $image = new WorkshopImages;
-                    $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
-                }
-                else{
-                    $image = WorkshopImages::find($key);
-                    $path = str_replace(url('/').'/','',$image->url);
-                    unlink($path);
+//              Unlink Image(Remove Previous Image from Directory)
+                $this->unlinkImage($image->url);
 
-                    $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
-                }
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
+            }
+        }
+
+        if ($request->hasFile('images_new'))
+        {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                mkdir($path, 0775, true);
+            }
+
+            foreach($request->file('images_new') as $value)
+            {
+                $image = new WorkshopImages();
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
 
                 $image->url            = asset($file);
                 $image->workshop_id    = $workshop->id;
@@ -690,19 +700,17 @@ class WorkshopsController extends Controller
 
         $name = $request->name;
         $email = $request->email;
-        $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code
 
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Please verify your email address.',
             'view' => 'workshop.emails.verify',
             'name' => $request->name,
             'email' => $request->email,
-            'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
 
         $credentials = [
             'email' => $request->email,
@@ -1106,15 +1114,13 @@ class WorkshopsController extends Controller
         $workshop = Workshop::find($id);
         $workshop->is_approved       = true;
         $workshop->save();
-        $subject = "Conragulations! Your workshop has been approved by Admin.";
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Conragulations! Your workshop has been approved by Admin.',
             'view' => 'workshop.emails.confirmationEmail',
             'name' => $workshop->name,
             'email' => $workshop->email,
-            'verification' => false,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(5));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopConfirmationMail($dataMail))->onQueue('emails'));
         return Redirect::to('admin/workshops');
     }
 
@@ -1338,6 +1344,7 @@ class WorkshopsController extends Controller
         }
         $workshop = Workshop::find($request->workshop_id);
         $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        Session::flash('message', 'Service Updated Successfully!');
         return Redirect::to('admin/workshops/'.$request->workshop_id);
 
     }
@@ -1486,6 +1493,13 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="booking_time",
+     *     in="formData",
+     *     description="Booking Time",
+     *     required=false,
+     *     type="string"
+     *  ),
+     *   @SWG\Parameter(
      *     name="service_name",
      *     in="formData",
      *     description="Service Name",
@@ -1520,12 +1534,17 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {
-        $workshops      = Workshop::with('address');
+        $workshops      = Workshop::where('is_verified', true)
+            ->where('is_approved', true)
+            ->with('address');
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
         if ($request->has('type')) {
             $workshops  = $workshops->where('type', $request->type);
+        }
+        if ($request->has('booking_time')) {
+            $workshops  = $workshops->where('open_time','<=',$request->booking_time) ->where('close_time','>=',$request->booking_time);
         }
         if ($request->has('address_block')) {
             $workshops  = Workshop::get_workshop_by_address($workshops, 'block', $request->address_block);
@@ -1853,9 +1872,13 @@ class WorkshopsController extends Controller
                 $path = $workshops_path.$workshop->id.'/logo';
                 mkdir($path, 0775, true);
             }
+
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($workshop->profile_pic);
+
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($request->profile_pic), 'public');
 
-            $profile_pic = url('/').'/'.$profile_pic;
+            $profile_pic = asset($profile_pic);
         }
         else
         {
@@ -1870,8 +1893,11 @@ class WorkshopsController extends Controller
                 mkdir($path, 0775, true);
             }
 
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($workshop->cnic_image);
+
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($request->cnic_image), 'public');
-            $cnic_image =  url('/').'/'.$cnic_image;
+            $cnic_image =  asset($cnic_image);
         }
         else
         {
@@ -1908,26 +1934,41 @@ class WorkshopsController extends Controller
 
         if($request->hasFile('images'))
         {
-            if(!is_null($workshop->images)){
-                $images = $workshop->images;
-                foreach($images as $image){
-                    $image = WorkshopImages::find($image->id);
-                    $image->delete();
-                }
-            }
-
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
                 mkdir($path, 0775, true);
             }
 
-            foreach($request->file('images') as $file)
+            foreach($request->file('images') as $key=>$value)
             {
-                $images = new WorkshopImages;
-                $image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($file), 'public');
-                $images->url            = url('/').'/'.$image;
-                $images->workshop_id    = $workshop->id;
-                $images->save();
+                $image = WorkshopImages::find($key);
+
+//              Unlink Image(Remove Previous Image from Directory)
+                $this->unlinkImage($image->url);
+
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
+            }
+        }
+
+        if ($request->hasFile('images_new'))
+        {
+            if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
+                $path = $workshops_path.$workshop->id.'/images';
+                mkdir($path, 0775, true);
+            }
+
+            foreach($request->file('images_new') as $value)
+            {
+                $image = new WorkshopImages();
+                $file =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/images', new File($value), 'public');
+
+                $image->url            = asset($file);
+                $image->workshop_id    = $workshop->id;
+                $image->save();
             }
         }
 
@@ -1959,8 +2000,8 @@ class WorkshopsController extends Controller
         $time = $request->service_time;
 
         $workshop->services()->attach($service, ['service_rate' => $rate , 'service_time' => $time]);
-
-        return Redirect::to('profile');
+        Session::flash('message','Service Added Successfully');
+        return Redirect::to('profile/add-profile-service/'.$workshop->id);
     }
 
     public function editProfileService($id){
@@ -1984,6 +2025,7 @@ class WorkshopsController extends Controller
         }
         $workshop = Workshop::find($request->workshop_id);
         $workshop->services()->updateExistingPivot($request->service_id, ['service_rate' => $request->service_rate, 'service_time' => $request->service_time ]);
+        Session::flash('message','Service Updated Successfully');
         return Redirect::to('profile');
 
     }
@@ -2054,7 +2096,13 @@ class WorkshopsController extends Controller
         $leads           = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
+
         $expired_leads   = Booking::where('workshop_id', $workshop->id)->where('job_status','expired')->get();
+
+        $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
+        $total_revenue         = $workshop->billings()->pluck('amount')->sum();
+        $current_balance = $workshop->balance->balance;
+
 
         if(count($leads)){
             $customer_ids  = [];
@@ -2086,7 +2134,9 @@ class WorkshopsController extends Controller
             $expired_leads  = 0;
         }
 
-        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=> $accepted_leads,'expired_leads'=> $expired_leads ,'completed_leads'=> $completed_leads,'customer_count'=> $customer_count ]);
+        return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=>
+            $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,
+            'customer_count'=> $customer_count, 'revenue' => $total_revenue, 'balance' => $current_balance ,'expired_leads'=> $expired_leads ]);
 
     }
 
@@ -2308,6 +2358,9 @@ class WorkshopsController extends Controller
             WorkshopImages::where('url', $old_url)
                 ->where('workshop_id',$workshop_id)
                 ->update(['url' => $url]);
+
+//          Unlink Image(Remove Previous Image from Directory)
+            $this->unlinkImage($old_url);
         }
 
         return response()->json([
@@ -2357,10 +2410,18 @@ class WorkshopsController extends Controller
 
         $workshops_path = public_path().'/uploads/workshops/';
         $specified_workshop_path = 'uploads/workshops/'.$workshop->id;
+
         if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
             $path = $workshops_path.$workshop->id.'/logo';
             mkdir($path, 0775, true);
         }
+
+        $profile_path = str_replace(url('/').'/','',$workshop->profile_pic);
+        unlink($profile_path);
+
+//      Unlink Image(Remove Previous Image from Directory)
+        $this->unlinkImage($workshop->profile_pic);
+
         $full_path = $workshops_path.$workshop->id.'/logo/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$workshop->id,$full_path);
         $url = url('/').'/'.$specified_workshop_path.'/logo/'.basename($url);
@@ -2417,7 +2478,10 @@ class WorkshopsController extends Controller
         if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
             $path = $workshops_path.$workshop->id.'/cnic';
             mkdir($path, 0775, true);
-        }            
+        }
+
+//      Unlink Image(Remove Previous Image from Directory)
+        $this->unlinkImage($workshop->cnic_image);
         
         $full_path = $workshops_path.$workshop->id.'/cnic/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$workshop->id,$full_path);
@@ -2483,8 +2547,8 @@ class WorkshopsController extends Controller
     public function getLedger(Request $request){
         if($request->header('Content-Type') == 'application/json'){
             $workshop   = JWTAuth::authenticate();
-            $from = $request->input('from_date');
-            $to = $request->input('to_date');
+            $from = $request->from;
+            $to = $request->to;
             $transactions = WorkshopLedger::where('workshop_id', $workshop->id)->whereBetween('created_at', [$from." 00:00:00", $to." 23:59:59"])->get();
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -2699,6 +2763,41 @@ class WorkshopsController extends Controller
             'status'        => "OK",
             'response'      => "The Workshop balance has been topped up with amount Rs.".$request->amount
         ], Response::HTTP_OK);
+    }
+
+    public function editWorkshopPassword(Workshop $workshop)
+    {
+        return View::make('workshop.editpassword')->with('workshop', $workshop);
+    }
+
+    public function updateWorkshopPassword(Request $request)
+    {
+        $rules = [
+            'password'  => 'required|confirmed|min:6|max:16',
+        ];
+
+        $input = $request->only('password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return Redirect::back()
+                ->withErrors($validator);
+        }
+
+        // Update workshop Password
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->password = Hash::make($request->password);
+        $workshop->update();
+
+        Session::flash('message', 'Success! Workshop Password Updated');
+        return Redirect::to('admin/workshops');
+    }
+
+    public function unlinkImage($url)
+    {
+        $path = str_replace(url('/').'/','',$url);
+        unlink($path);
     }
 }
 

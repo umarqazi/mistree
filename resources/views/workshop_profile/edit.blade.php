@@ -173,18 +173,23 @@
                                                         <input type="file" id="cnic_picture" class="form-control" name="cnic_image">
                                                     </div>
                                                 </li>
+
                                                 @if($images)
                                                     @for($i = 0; $i < 3; $i++)
                                                         <li>
                                                             <div class="form-group">
                                                                 @if(!empty($images[$i]))
                                                                     <img src="{{ $images[$i]->url }}" width="100px" height="80px">
+                                                                    @php $image= $images[$i]->id @endphp
+                                                                    <label class="control-label">Workshop Picture {{ $i + 1 }}:</label>
+                                                                    <div class="clear"></div>
+                                                                    <input type="file" class="form-control" name="images[{{$image}}]">
                                                                 @else
                                                                     <br>
+                                                                    <label class="control-label">Workshop Picture {{ $i + 1 }}:</label>
+                                                                    <div class="clear"></div>
+                                                                    <input type="file" class="form-control" name="images_new[]">
                                                                 @endif
-                                                                <label class="control-label">Workshop Picture {{ $i + 1 }}:</label>
-                                                                <div class="clear"></div>
-                                                                <input type="file" class="form-control" name="images[]">
                                                             </div>
                                                         </li>
                                                     @endfor

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomerAddress;
-use App\Jobs\MailJobRegister;
+use App\Mail\CustomerRegistrationMail;
 use Carbon\Carbon;
 use JWTAuth;
 use Session;
@@ -265,16 +265,14 @@ class CustomersController extends Controller
 
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
-        $subject = "Please verify your email address.";
         $dataMail = [
-            'subject' => $subject,
+            'subject' => 'Please verify your email address.',
             'view' => 'customer.verify',
             'name' => $request->name,
             'email' => $request->email,
-            'verification' => true,
             'verification_code' => $verification_code,
         ];
-        MailJobRegister::dispatch($dataMail)->delay(Carbon::now()->addMinutes(1));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new CustomerRegistrationMail($dataMail))->onQueue('emails'));
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
@@ -338,7 +336,7 @@ class CustomersController extends Controller
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => 'We cant find an account with this credentials.',
+                    'message' => 'We cant find an account with these credentials.',
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
