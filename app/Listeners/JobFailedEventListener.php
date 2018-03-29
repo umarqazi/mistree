@@ -26,10 +26,6 @@ class JobFailedEventListener
      */
     public function handle(JobFailedEvent $event)
     {
-        // $event->connectionName
-        // $event->job
-        // $event->exception
-
 
     }
 }

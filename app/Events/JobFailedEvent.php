@@ -14,14 +14,15 @@ class JobFailedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $booking = null, $exception = null, $user = null;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($booking)
     {
-        //
+        $this->booking = $booking;
     }
 
     /**

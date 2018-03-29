@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Booking;
+use App\Events\JobFailedEvent;
 use App\Events\NotificationsBeforeBookingEvent;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,5 +39,17 @@ class NotificationsBeforeJob implements ShouldQueue
         if( $this->booking->is_accepted == true){
             event(new NotificationsBeforeBookingEvent($this->booking, $this->user));
         }
+    }
+
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function failed(Exception $exception)
+    {
+//      Fire JobFailed Event
+        event(new JobFailedEvent($this->booking));
     }
 }

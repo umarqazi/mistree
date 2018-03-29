@@ -28,12 +28,6 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Service::observe(ServiceObserver::class);
         WorkshopImages::observe(WorkshopImagesObserver::class);
-
-        Queue::failing(function (JobFailedEvent $event) {
-
-//          Fire JobFailed Event
-            event($event);
-        });
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Booking;
+use App\Events\JobFailedEvent;
 use App\Events\LeadExpiryEvent;
 use Exception;
 use Illuminate\Bus\Queueable;
@@ -47,7 +48,8 @@ class LeadExpiryEventJob implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-
+//      Fire JobFailed Event
+        event(new JobFailedEvent($this->booking));
     }
 
 }

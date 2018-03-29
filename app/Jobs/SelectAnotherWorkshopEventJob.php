@@ -3,7 +3,9 @@
 namespace App\Jobs;
 
 use App\Booking;
+use App\Events\JobFailedEvent;
 use App\Events\SelectAnotherWorkshopEvent;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -39,5 +41,17 @@ class SelectAnotherWorkshopEventJob implements ShouldQueue
             $booking->save();
             event(new SelectAnotherWorkshopEvent($this->booking));
         }
+    }
+
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function failed(Exception $exception)
+    {
+//      Fire JobFailed Event
+        event(new JobFailedEvent($this->booking));
     }
 }
