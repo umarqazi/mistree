@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\JobFailedEvent;
 use App\Service;
 use App\WorkshopImages;
 use App\Workshop;
@@ -11,8 +10,6 @@ use App\Observers\ServiceObserver;
 use App\Observers\WorkshopObserver;
 use App\Observers\BookingObserver;
 use App\Observers\WorkshopImagesObserver;
-use Illuminate\Queue\Events\JobFailed;
-use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 
