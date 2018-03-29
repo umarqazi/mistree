@@ -1976,7 +1976,7 @@ class WorkshopsController extends Controller
         $expired_leads   = Booking::where('workshop_id', $workshop->id)->where('job_status','expired')->get();
 
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
-        $total_revenue         = $workshop->billings()->pluck('amount')->sum();
+        $total_revenue   = $workshop->billings()->pluck('amount')->sum();
         $current_balance = $workshop->balance->balance;
 
 
