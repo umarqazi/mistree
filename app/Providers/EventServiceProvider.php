@@ -37,6 +37,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NotificationsBeforeBookingEvent' => [
             'App\Listeners\NotificationsBeforeBookingEventListener'
         ],
+        'App\Events\JobFailedEvent' => [
+            'App\Listeners\JobFailedEventListener'
+        ],
     ];
 
     /**

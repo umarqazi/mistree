@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Booking;
 use App\Events\LeadExpiryEvent;
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -37,4 +38,16 @@ class LeadExpiryEventJob implements ShouldQueue
             event(new LeadExpiryEvent($this->booking));
         }
     }
+
+    /**
+     * The job failed to process.
+     *
+     * @param  Exception  $exception
+     * @return void
+     */
+    public function failed(Exception $exception)
+    {
+
+    }
+
 }
