@@ -450,3 +450,6 @@ form#bookings-dropdown .submit_button:hover{
     border-radius:5px;
     text-align: center;
 }
+.lead-text{
+   margin-top: 14px;
+}

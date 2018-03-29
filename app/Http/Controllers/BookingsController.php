@@ -474,7 +474,7 @@ class BookingsController extends Controller
 
     public function workshopRejectedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'rejected')->where('is_accepted' , false ), 'workshop'=>$workshop]);       
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'rejected')->where('is_accepted' , false ), 'workshop'=>$workshop]);
     }
 
     public function workshopAcceptedLeads(Workshop $workshop){        
@@ -997,6 +997,16 @@ class BookingsController extends Controller
             'message' => 'Lead In Progress',
             'body' => ['lead' => $lead->load('services','customer','billing')]
         ],Response::HTTP_OK);
+
+    }
+
+    public function expiredLeads(){
+
+        $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
+        $expired_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','expired')->where('is_accepted', false)->with('services')->orderBy('created_at', 'desc')->get();
+
+        return View::make('workshop_profile.expired_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'expired_leads' => $expired_leads]);
 
     }
 }

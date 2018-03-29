@@ -39,22 +39,33 @@
                                         <i class="ti-view-list-alt"></i>
                                     </div>
                                 </div>
-                                <div class="col-xs-3 col-xs-offset-1">
+                                <div class="col-xs-2">
+                                    <div class="text-center">
+                                        <h4 class="lead-text">Leads</h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2 col-xs-offset-1">
                                     <div class="numbers">
-                                        <a href="{{url('/leads')}}"><p>Received Leads</p></a>
+                                        <a href="{{url('/leads')}}"><p>Received</p></a>
                                         {{$leads_count}}
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <div class="numbers">
-                                        <a href="{{url('/leads/accepted')}}"><p>Accepted Leads</p></a>
+                                        <a href="{{url('/leads/accepted')}}"><p>Accepted</p></a>
                                         {{$accepted_leads}}
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <div class="numbers">
-                                        <a href="{{url('/leads/completed')}}"><p>Completed Leads</p></a>
+                                        <a href="{{url('/leads/completed')}}"><p>Completed</p></a>
                                         {{$completed_leads}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="numbers">
+                                        <a href="{{url('/leads/expired')}}"><p>Expired</p></a>
+                                        {{$expired_leads}}
                                     </div>
                                 </div>
                             </div>
@@ -91,33 +102,6 @@
                 </div>
             </div>
             <br>
-            <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                    <div class="card">
-                        <div class="content">
-                            <div class="row">
-                                <div class="col-xs-4">
-                                    <div class="icon-big icon-success text-center">
-                                        <i class="ti-view-list-alt"></i>
-                                    </div>
-                                </div>
-                                <div class="col-xs-8">
-                                    <div class="numbers">
-                                        <p>EXPIRED LEADS</p>
-                                        {{$expired_leads}}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="footer">
-                                <hr />
-                                <div class="stats">
-                                    <a href="{{url('/leads/rejected')}}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>  
 
     </div>
