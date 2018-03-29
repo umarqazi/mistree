@@ -91,64 +91,13 @@ class WorkshopsController extends Controller
      */
     public function store(Request $request)
     {
-        $rules = [
-            'name'                           => 'required|string',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:6|max:16',
-            'password_confirmation'          => 'required',
-            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
-            'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
-            'open_time'                      => 'required',
-            'close_time'                     => 'required',
-            'type'                           => 'required|in:Authorized,Unauthorized',
-            'team_slots'                     => 'integer',
-            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
-            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
-            'images.*'                       => 'image|mimes:jpg,png,jpeg',
-
-            'shop'                           => 'required|numeric',
-            'building'                       => 'string|nullable',
-            'block'                          => 'string|nullable',
-            'street'                         => 'nullable|string',
-            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-
-            'hatchback.*'                    => 'required|integer:unique',
-            'hatchback-rates.*'              => 'required',
-            'hatchback-times.*'              => 'required',
-
-            'sedan.*'                        => 'required|integer:unique',
-            'sedan-rates.*'                  => 'required',
-            'sedan-times.*'                  => 'required',
-
-            'luxury.*'                       => 'required|integer:unique',
-            'luxury-rates.*'                 => 'required',
-            'luxury-times.*'                 => 'required',
-
-            'suv.*'                          => 'required|integer:unique',
-            'suv-rates.*'                    => 'required',
-            'suv-times.*'                    => 'required',
-        ];
-
         $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic',
             'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city', 'hatchback', 'hatchback-rates','hatchback-times', 'sedan-rates', 'sedan', 'sedan-times', 'luxury', 'luxury-rates', 'luxury-times', 'suv', 'suv-rates', 'suv-times');
-        $validator = Validator::make($input, $rules);
+        $validator = validate_inputs($request, $input);
         if($validator->fails()) {
-            $request->offsetUnset('password');
             return Redirect::back()
                 ->withErrors($validator)
                 ->withInput(Input::except('password','password_confirmation'));
-        }
-
-        if(Auth::guard('admin')->user())
-        {
-            $is_approved = true;
-        }
-        else
-        {
-            $is_approved = false;
         }
 
         if(env('APP_ENV') == "production"){
@@ -169,7 +118,7 @@ class WorkshopsController extends Controller
             'slots'         => $request->team_slot,
             'open_time'     => $request->open_time,
             'close_time'    => $request->close_time,
-            'is_approved'   => $is_approved,
+            'is_approved'   => true,
             'jazzcash_id'   => $jazz_cash
         ]);
 
@@ -336,30 +285,8 @@ class WorkshopsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $rules = [
-            'name'                           => 'required|string',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
-            'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
-            'open_time'                      => 'required',
-            'close_time'                     => 'required',
-            'type'                           => 'required|in:Authorized,Unauthorized',
-            'team_slots'                     => 'integer',
-            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
-            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
-            'images.*'                       => 'image|mimes:jpg,png,jpeg',
-
-            'shop'                           => 'required|numeric',
-            'building'                       => 'string|nullable',
-            'block'                          => 'string|nullable',
-            'street'                         => 'nullable|string',
-            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-        ];
-
         $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
-        $validator = Validator::make($input, $rules);
+        $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             $request->offsetUnset('password');
             return Redirect::back()
@@ -632,24 +559,8 @@ class WorkshopsController extends Controller
      */
     public function register(Request $request)
     {
-        $rules = [
-            'name'                           => 'required|string',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:8',
-            'password_confirmation'          => 'required',
-            'team_slots'                     => 'integer',
-            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}/u',
-            'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
-            'open_time'                      => 'required',
-            'close_time'                     => 'required',
-            'type'                           => 'required|in:Authorized,Unauthorized'
-        ];
-
         $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'team_slots');
-
-        $validator = Validator::make($input, $rules);
+        $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             $request->offsetUnset('password');
             return response()->json([
@@ -1268,21 +1179,8 @@ class WorkshopsController extends Controller
      */
     public function profileUpdate(Request $request)
     {
-        $rules = [
-            'name'                           => 'required|string',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
-            'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
-            'open_time'                      => 'required',
-            'close_time'                     => 'required',
-            'type'                           => 'required|in:Authorized,Unauthorized',
-            'team_slots'                     => 'integer'
-        ];
-
         $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'team_slots');
-
-        $validator = Validator::make($input, $rules);
+        $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -1832,30 +1730,8 @@ class WorkshopsController extends Controller
 
     public function update_profile(Request $request, $id)
     {
-        $rules = [
-            'name'                           => 'required|string',
-            'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
-            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
-            'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
-            'open_time'                      => 'required',
-            'close_time'                     => 'required',
-            'type'                           => 'required|in:Authorized,Unauthorized',
-            'team_slots'                     => 'integer',
-            'profile_pic'                    => 'image|mimes:jpg,png,jpeg',
-            'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
-            'images.*'                       => 'image|mimes:jpg,png,jpeg',
-
-            'shop'                           => 'required|numeric',
-            'building'                       => 'string|nullable',
-            'block'                          => 'string|nullable',
-            'street'                         => 'nullable|string',
-            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-        ];
-
         $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
-        $validator = Validator::make($input, $rules);
+        $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             $request->offsetUnset('password');
             return Redirect::back()
@@ -2241,20 +2117,8 @@ class WorkshopsController extends Controller
     {
         $workshop   = JWTAuth::authenticate();
         $address    = $workshop->address;
-
-        $rules = [
-            'shop'                           => 'required|numeric',
-            'building'                       => 'string|nullable',
-            'block'                          => 'string|nullable',
-            'street'                         => 'string|nullable',
-            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-        ];
-
         $input = $request->only('shop', 'building', 'block', 'street', 'town', 'city');
-
-        $validator = Validator::make($input , $rules);
-
+        $validator = validate_inputs($request, $input);
         // process the login
         if ($validator->fails()) {
             return response()->json([
