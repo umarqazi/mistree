@@ -2276,9 +2276,6 @@ class WorkshopsController extends Controller
             mkdir($path, 0775, true);
         }
 
-        $profile_path = str_replace(url('/').'/','',$workshop->profile_pic);
-        unlink($profile_path);
-
 //      Unlink Image(Remove Previous Image from Directory)
         $this->unlinkImage($workshop->profile_pic);
 
@@ -2656,8 +2653,11 @@ class WorkshopsController extends Controller
 
     public function unlinkImage($url)
     {
-        $path = str_replace(url('/').'/','',$url);
-        unlink($path);
+        if (strpos($url,'uploads/workshops'))
+        {
+            $path = str_replace(url('/').'/','',$url);
+            unlink($path);
+        }
     }
 }
 
