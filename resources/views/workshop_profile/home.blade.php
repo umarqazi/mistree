@@ -39,22 +39,33 @@
                                         <i class="ti-view-list-alt"></i>
                                     </div>
                                 </div>
-                                <div class="col-xs-3 col-xs-offset-1">
+                                <div class="col-xs-2">
+                                    <div class="text-center">
+                                        <h4 class="lead-text">Leads</h4>
+                                    </div>
+                                </div>
+                                <div class="col-xs-2 col-xs-offset-1">
                                     <div class="numbers">
-                                        <a href="{{url('/leads')}}"><p>Received Leads</p></a>
+                                        <a href="{{url('/leads')}}"><p>Received</p></a>
                                         {{$leads_count}}
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <div class="numbers">
-                                        <a href="{{url('/leads/accepted')}}"><p>Accepted Leads</p></a>
+                                        <a href="{{url('/leads/accepted')}}"><p>Accepted</p></a>
                                         {{$accepted_leads}}
                                     </div>
                                 </div>
-                                <div class="col-xs-3">
+                                <div class="col-xs-2">
                                     <div class="numbers">
-                                        <a href="{{url('/leads/completed')}}"><p>Completed Leads</p></a>
+                                        <a href="{{url('/leads/completed')}}"><p>Completed</p></a>
                                         {{$completed_leads}}
+                                    </div>
+                                </div>
+                                <div class="col-xs-2">
+                                    <div class="numbers">
+                                        <a href="{{url('/leads/expired')}}"><p>Expired</p></a>
+                                        {{$expired_leads}}
                                     </div>
                                 </div>
                             </div>
@@ -90,6 +101,7 @@
                     </div>
                 </div>
             </div>
+            <br>
         </div>  
 
     </div>

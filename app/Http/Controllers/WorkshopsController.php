@@ -1972,9 +1972,13 @@ class WorkshopsController extends Controller
         $leads           = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
         $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->get();
         $accepted_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',1)->get();
+
+        $expired_leads   = Booking::where('workshop_id', $workshop->id)->where('job_status','expired')->get();
+
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
-        $total_revenue         = $workshop->billings()->pluck('amount')->sum();
+        $total_revenue   = $workshop->billings()->pluck('amount')->sum();
         $current_balance = $workshop->balance->balance;
+
 
         if(count($leads)){
             $customer_ids  = [];
@@ -2000,15 +2004,15 @@ class WorkshopsController extends Controller
         }else{
             $accepted_leads  = 0;
         }
-        if(count($rejected_leads)){
-            $rejected_leads  = count($rejected_leads);
+        if(count($expired_leads)){
+            $expired_leads  = count($expired_leads);
         }else{
-            $rejected_leads  = 0;
+            $expired_leads  = 0;
         }
 
         return view('workshop_profile.home')->with(['leads_count' => $leads_count,'accepted_leads'=>
             $accepted_leads,'rejected_leads'=> $rejected_leads ,'completed_leads'=> $completed_leads,
-            'customer_count'=> $customer_count, 'revenue' => $total_revenue, 'balance' => $current_balance ]);
+            'customer_count'=> $customer_count, 'revenue' => $total_revenue, 'balance' => $current_balance ,'expired_leads'=> $expired_leads ]);
 
     }
 
@@ -2117,6 +2121,7 @@ class WorkshopsController extends Controller
     {
         $workshop   = JWTAuth::authenticate();
         $address    = $workshop->address;
+
         $input = $request->only('shop', 'building', 'block', 'street', 'town', 'city');
         $validator = validate_inputs($request, $input);
         // process the login

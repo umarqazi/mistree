@@ -31,7 +31,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" value="{{$workshop->name}}" name="name" required pattern="^[a-zA-Z\s\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" value="{{$workshop->name}}" name="name" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">
@@ -81,7 +81,7 @@
 
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label">Team Slot</label>
+                                                <label class="control-label">Team Slots / Hour</label>
                                                 <select name="team_slot" class="form-control border-input" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                     <option value="0" @if($workshop->slots == "0"){{ "selected" }}@endif>Please Select</option>
                                                     <option value="1" @if($workshop->slots == "1"){{ "selected" }}@endif>1</option>
@@ -220,8 +220,8 @@
                                         <div class="col-md-6">
                                             @php $address = $workshop->address;  @endphp
                                             <div class="form-group">
-                                                <label class="control-label">Shop No <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" required
+                                                <label class="control-label">Shop No </label>
+                                                <input type="text" class="form-control border-input" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);"
                                                        name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
@@ -255,7 +255,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Block <span class="manadatory"></span></label>
-                                                <input type="text" required class="form-control border-input" name="block" value="@if(!empty($address->block)){{$address->block}}@endif">
+                                                <input type="text" class="form-control border-input" name="block" value="@if(!empty($address->block)){{$address->block}}@endif">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('block'))
                                                     <span class="help-block">
@@ -266,7 +266,7 @@
                                             <div class="form-group">
                                                 <label class="control-label">Town <span class="manadatory">*</span></label>
                                                 <input type="text" class="form-control border-input" required
-                                                       name="town" value="@if(!empty($address->town)){{$address->town}}@endif">
+                                                       name="town" value="@if(!empty($address->town)){{$address->town}}@endif" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('town'))
                                                     <span class="help-block">

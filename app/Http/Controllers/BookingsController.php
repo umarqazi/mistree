@@ -474,17 +474,17 @@ class BookingsController extends Controller
 
     public function workshopRejectedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'rejected')->where('is_accepted' , false ), 'workshop'=>$workshop]);       
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->RejectedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
     }
 
-    public function workshopAcceptedLeads(Workshop $workshop){        
+    public function workshopAcceptedLeads(Workshop $workshop){
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('is_accepted',true), 'workshop'=>$workshop]);       
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->AcceptedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
     }
 
     public function workshopCompletedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'completed')->where('is_accepted' , true ), 'workshop'=>$workshop]);       
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->CompletedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
     }    
 
     // Leads
@@ -512,11 +512,11 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getLeadsInfo(){
-        $workshop   = JWTAuth::authenticate();        
-        $accepted_leads = $workshop->bookings()->where('is_accepted', true)->get()->count();
-        $completed_leads = $workshop->bookings()->where('is_accepted', true)->where('job_status', 'completed')->get()->count();
-        $rejected_leads = $workshop->bookings()->where('is_accepted', false)->where('job_status', 'rejected')->get()->count();
-        $received_leads = $workshop->bookings()->count();
+        $workshop        = JWTAuth::authenticate();
+        $accepted_leads  = $workshop->bookings()->AcceptedBookings()->get()->count();
+        $completed_leads = $workshop->bookings()->CompletedBookings()->get()->count();
+        $rejected_leads  = $workshop->bookings()->RejectedBookings()->get()->count();
+        $received_leads  = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
         $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
@@ -626,7 +626,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services', 'customer')->orderBy('created_at', 'desc')->get();
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer')->orderBy('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -685,7 +685,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->orderBy('created_at', 'desc')->get();
+        $rejected_leads = $workshop->bookings()->RejectedBookings()->with('services')->orderBy('created_at', 'desc')->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -741,7 +741,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->orderBy('created_at', 'desc')->get();
+        $completed_leads = $workshop->bookings()->CompletedBookings()->with('services')->orderBy('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -820,7 +820,7 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->orderBy('created_at', 'desc')->with('services','customer')->get();
+        $pending_leads = $workshop->bookings()->PendingBookings()->orderBy('created_at', 'desc')->with('services','customer')->get();
 
         if(count($pending_leads) > 0){
             return response()->json([
@@ -997,6 +997,15 @@ class BookingsController extends Controller
             'message' => 'Lead In Progress',
             'body' => ['lead' => $lead->load('services','customer','billing')]
         ],Response::HTTP_OK);
+
+    }
+
+    public function expiredLeads(){
+        $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
+        $expired_leads = $workshop->bookings()->ExpiredBookings()->with('services')->orderBy('created_at', 'desc')->get();
+
+        return View::make('workshop_profile.expired_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'expired_leads' => $expired_leads]);
 
     }
 }

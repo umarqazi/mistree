@@ -32,7 +32,7 @@
                                             <form method="POST" action="{{ url( 'admin/booking/') }}" id="bookings-dropdown">
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 <input type="hidden" name="list_type" value="cancelled">
-                                                <input class="submit_button" type="submit" value="Cancelled Bookings">
+                                                <input class="submit_button" type="submit" value="Rejected Bookings">
                                             </form>
                                             <form method="POST" action="{{ url( 'admin/booking/') }}" id = "bookings-dropdown">
                                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">

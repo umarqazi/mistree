@@ -30,7 +30,7 @@
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                                        <input type="text" class="form-control border-input" name="name" id="wf_name" value="{{ old('name') }}" required pattern="^[a-zA-Z\s\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                        <input type="text" class="form-control border-input" name="name" id="wf_name" value="{{ old('name') }}" required  oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('name'))
                                                             <span class="help-block">
@@ -78,7 +78,7 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">Enter Password <span class="manadatory">*</span></label>
-                                                        <input type="password" id="password" required min="6" max="16"  class="form-control border-input" name="password" oninvalid="this.setCustomValidity('6 characters minimum ')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                        <input type="password" id="password" required minlength="6" maxlength="16"  class="form-control border-input" name="password" oninvalid="this.setCustomValidity('6 characters minimum ')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('password'))
                                                             <span class="help-block">
@@ -134,7 +134,7 @@
 
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="control-label">Team Slot</label>
+                                                        <label class="control-label">Team Slots / Hour</label>
                                                         <select name="team_slot" class="form-control border-input" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                             <option value="0" @if(old('team_slot') == "0"){{ "selected" }}@endif>Please Select</option>
                                                             <option value="1" @if(old('team_slot') == "1"){{ "selected" }}@endif>1</option>
@@ -224,8 +224,8 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="control-label">Shop No. <span class="manadatory">*</span></label>
-                                                        <input type="text" class="form-control border-input" required name="shop" value="{{ old('shop') }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                        <label class="control-label">Shop No.</label>
+                                                        <input type="text" class="form-control border-input" name="shop" value="{{ old('shop') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('shop'))
                                                             <span class="help-block">
@@ -331,7 +331,7 @@
                                                                             @foreach ($hatchback as $row)
                                                                                 <option value="{{$row->id}}" @if(!empty(old
                                                                         ('hatchback')) && in_array($row->id,old
-                                                                        ('hatchback'))){{"selected"}}@endif>{{ $row->name }}@if($row->is_doorstep){{ " at doorstep" }}@endif</option>
+                                                                        ('hatchback'))){{"selected"}}@endif>{{ $row->name }}@if($row->is_doorstep){{ "at doorstep" }}@endif</option>
                                                                             @endforeach
                                                                         </select>
                                                                         @if ($errors->has('hatchback'))
@@ -355,7 +355,7 @@
                                                                                     <input type="text" class="form-control
                                                                             border-input" name="hatchback-rates[{{ $key
                                                                             }}]" value="{{ old('hatchback-rates.'.$key)
-                                                                            }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            }}" required max="99999">
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <label class="control-label">Service Time <span class="manadatory">*</span></label>
@@ -426,7 +426,7 @@
                                                                                     <input type="text" class="form-control
                                                                             border-input" name="sedan-rates[{{ $key
                                                                             }}]" value="{{ old('sedan-rates.'.$key)
-                                                                            }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            }}" required max="99999">
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <label class="control-label">Service Time <span class="manadatory">*</span></label>
@@ -498,7 +498,7 @@
                                                                                     <input type="text" class="form-control
                                                                             border-input" name="luxury-rates[{{ $key
                                                                             }}]" value="{{ old('luxury-rates.'.$key)
-                                                                            }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                            }}" required max="99999" >
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <label class="control-label">Service Time <span class="manadatory">*</span></label>
@@ -565,7 +565,7 @@
                                                                             <div class="row">
                                                                                 <div class="col-md-6">
                                                                                     <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                                                    <input type="text" class="form-control border-input" name="suv-rates[{{ $key }}]" value="{{ old('suv-rates.'.$key) }}" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                                                    <input type="text" class="form-control border-input" name="suv-rates[{{ $key }}]" value="{{ old('suv-rates.'.$key) }}" required max="99999">
                                                                                 </div>
                                                                                 <div class="col-md-6">
                                                                                     <label class="control-label">Service Time <span class="manadatory">*</span></label>

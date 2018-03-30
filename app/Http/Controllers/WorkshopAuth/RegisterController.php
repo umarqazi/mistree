@@ -97,7 +97,7 @@ class RegisterController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
             'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
-            'shop'                           => 'required|numeric',
+            'shop'                           => 'nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'nullable|string',

@@ -24,7 +24,7 @@ if (! function_exists('validate_inputs')) {
             'cnic_image'                     => 'sometimes|image|mimes:jpg,png,jpeg',
             'images.*'                       => 'sometimes|image|mimes:jpg,png,jpeg',
 
-            'shop'                           => 'sometimes|required|numeric',
+            'shop'                           => 'sometimes|nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'sometimes|string|nullable',
             'block'                          => 'sometimes|string|nullable',
             'street'                         => 'sometimes|nullable|string',

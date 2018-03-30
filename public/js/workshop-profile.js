@@ -18,8 +18,8 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
-                                    '<input type="text" class="form-control border-input"' +
-                ' name="hatchback-rates[' + params.selected +']" required oninvalid="this.setCustomValidity("Required")" oninput="setCustomValidity("")" onfocusout="workshopCustomValidation(this);">' +
+                                    '<input type="number" class="form-control border-input"' +
+                ' name="hatchback-rates[' + params.selected +']" required max="99999">' +
                                 '</div>' +
                             '</div>' +
                             '<div class="col-md-6">' +
@@ -48,8 +48,8 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
-                                    '<input type="text" class="form-control border-input"' +
-                ' name="sedan-rates[' + params.selected + ']" required oninvalid="this.setCustomValidity("Required")" oninput="setCustomValidity("")" onfocusout="workshopCustomValidation(this);">' +
+                                    '<input type="number" class="form-control border-input"' +
+                ' name="sedan-rates[' + params.selected + ']" required max="99999" >' +
                                 '</div>' +
                             '</div>' +
                             '<div class="col-md-6">' +
@@ -74,11 +74,11 @@ $(document).ready(function () {
             $('.category-luxury').append(
                 '<div class="col-md-12 luxury-service-' + $('#luxury option[value="' + params.selected + '"]').val() + '">' +
                     '<div class="heading-service"><h5>' + $('#luxury option[value="' + params.selected + '"]').text() + '</h5></div>' +
-                        '<div class="row" required oninvalid="this.setCustomValidity("Required")" oninput="setCustomValidity("")" onfocusout="workshopCustomValidation(this);">' +
+                        '<div class="row" required>' +
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
-                                    '<input type="text" class="form-control border-input"' + ' name="luxury-rates[' + params.selected +']">' +
+                                    '<input type="number" class="form-control border-input" required max="99999" ' + ' name="luxury-rates[' + params.selected +']">'  +
                                 '</div>' +
                             '</div>' +
                             '<div class="col-md-6">' +
@@ -107,7 +107,7 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Rate <span class="manadatory">*</span></label>' +
-                                    '<input type="text" class="form-control border-input"' + ' name="suv-rates[' + params.selected +']" required oninvalid="this.setCustomValidity("Required")" oninput="setCustomValidity("")" onfocusout="workshopCustomValidation(this);" >' +
+                                    '<input type="number" class="form-control border-input"' + ' name="suv-rates[' + params.selected +']" required max="99999" >' +
                                 '</div>' +
                             '</div>' +
                             '<div class="col-md-6">' +

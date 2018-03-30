@@ -73,7 +73,7 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <label class="control-label">Service Rate <span class="manadatory">*</span></label>
-                                                    <input type="text" class="form-control border-input" name="service_rate" >
+                                                    <input type="number" class="form-control border-input" name="service_rate" Required max="99999" >
                                                     @if ($errors->has('service_rate'))
                                                         <span class="help-block">
                                                 <strong class="manadatory">{{ $errors->first('service_rate') }}</strong>
