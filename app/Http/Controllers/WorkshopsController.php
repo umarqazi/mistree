@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Events\NewWorkshopEvent;
 use App\Mail\WorkshopConfirmationMail;
 use App\Mail\WorkshopRegistrationMail;
 use JWTAuth;
@@ -622,6 +623,9 @@ class WorkshopsController extends Controller
             'verification_code' => $verification_code,
         ];
         Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+
+        //Firing an Event to Generate Notifications
+        event(new NewWorkshopEvent($workshop));
 
         $credentials = [
             'email' => $request->email,
