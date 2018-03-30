@@ -2586,7 +2586,7 @@ class WorkshopsController extends Controller
             return response()->json([
                 'http-status'   => Response::HTTP_NOT_ACCEPTABLE,
                 'status'        => "NOT_ACCEPTABLE",
-                'errors'        => $validator->messages()
+                'errors'        => $validator->messages()->first()
             ],Response::HTTP_NOT_ACCEPTABLE);
         }
 
