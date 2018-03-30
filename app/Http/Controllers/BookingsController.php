@@ -2,7 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\JobAcceptedEvent;
+use App\Events\JobClosedEvent;
+use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Jobs\LeadExpiryEventJob;
+use App\Jobs\NotificationsBeforeJob;
+use App\Jobs\SelectAnotherWorkshopEventJob;
+use Carbon\Carbon;
+use App\Notifications\JobClosed;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -127,32 +135,35 @@ class BookingsController extends Controller
 
         $booking->customer_id            = $customer_id;
         $booking->workshop_id            = $request->workshop_id;
-		$booking->car_id                 = $request->car_id;
+	    $booking->car_id                 = $request->car_id;
         $booking->job_date	             = $request->job_date;
         $booking->job_time               = $request->job_time;
-        $booking->is_accepted 			 = false;
-        $booking->job_status 			 = 'open';
+        $booking->is_accepted 		     = false;
+        $booking->job_status 		     = 'open';
         $booking->vehicle_no             = $request->vehicle_no;
         $booking->customer_address_id    = $request->customer_address_id;
         $booking->is_doorstep            = $request->is_doorstep;
 
         $booking->save();
 
-        //Insert Services data from request        
-        $services = json_decode($request->services);        
+        //Insert Services data from request
+        $services = json_decode($request->services);
         if(!empty($services)){
             foreach($services as $service){
                 $workshop = Workshop::find($request->workshop_id);
                 $service_info = $workshop->services()->where('service_id',$service)->first();
                 $booking->services()->attach($service,['name' => $service_info->name, 'lead_charges' => $service_info->lead_charges, 'loyalty_points' => $service_info->loyalty_points, 'service_rate' => $service_info->pivot->service_rate, 'service_time' => $service_info->pivot->service_time]);
             }
-        }        
-
-        $booking->services;
-
+        }
         //Firing an Event to Generate Notifications
         event(new NewBookingEvent($booking));
+        SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(30));
+        LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(25));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(30));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(15));
+        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(10));
 
+//        return
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -193,6 +204,10 @@ class BookingsController extends Controller
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
         $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
+        $booking = $workshop->bookings()->where('id', $booking_id)->first();
+//          Fire An Event To Generate A Notification On Accept Booking
+        event(new JobAcceptedEvent($booking));
+
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -363,7 +378,6 @@ class BookingsController extends Controller
             $workshop = Workshop::find($workshop_id);
             $balance = $workshop->balance->balance;        
             $new_balance = $balance - $lead_charges;
-            
             $workshop->balance->update(['balance'=>$new_balance]);
 
             $transaction = new WorkshopLedger;
@@ -376,12 +390,21 @@ class BookingsController extends Controller
 
             $transaction->save();
 
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+            if ($new_balance < 150)
+            {
+                event(new MinimumBalanceEvent($workshop));
+            }
 
         }else{
             $billing->lead_charges           = 0;
             $billing->is_free                = true;           
             $billing->save();
         }
+
+//          Fire An Event To Generate A Notification To User About Job Closing
+            event(new JobClosedEvent($booking));
+
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -451,17 +474,17 @@ class BookingsController extends Controller
 
     public function workshopRejectedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'rejected')->where('is_accepted' , false ), 'workshop'=>$workshop]);       
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->RejectedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
     }
 
-    public function workshopAcceptedLeads(Workshop $workshop){        
+    public function workshopAcceptedLeads(Workshop $workshop){
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('is_accepted',true), 'workshop'=>$workshop]);       
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->AcceptedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
     }
 
     public function workshopCompletedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings->where('job_status' , 'completed')->where('is_accepted' , true ), 'workshop'=>$workshop]);       
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->CompletedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
     }    
 
     // Leads
@@ -489,18 +512,22 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getLeadsInfo(){
-        $workshop   = JWTAuth::authenticate();        
-        $accepted_leads = $workshop->bookings()->where('is_accepted', true)->get()->count();
-        $completed_leads = $workshop->bookings()->where('is_accepted', true)->where('job_status', 'completed')->get()->count();
-        $rejected_leads = $workshop->bookings()->where('is_accepted', false)->where('job_status', 'rejected')->get()->count();
-        $received_leads = $workshop->bookings()->count();
+        $workshop        = JWTAuth::authenticate();
+        $accepted_leads  = $workshop->bookings()->AcceptedBookings()->get()->count();
+        $completed_leads = $workshop->bookings()->CompletedBookings()->get()->count();
+        $rejected_leads  = $workshop->bookings()->RejectedBookings()->get()->count();
+        $received_leads  = $workshop->bookings()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
+        $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
+        $completed_leads,
+        'received_leads' =>
+            $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ];
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Workshop Ledger',
-                    'body' => ['accepted_leads' => $accepted_leads, 'completed_leads' => $completed_leads, 'received_leads' => $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ]
+                    'body' => ['leads'=> $leads]
                 ],Response::HTTP_OK);
     }
 
@@ -541,7 +568,7 @@ class BookingsController extends Controller
         }else{
             $total_earning = null;
         }
-        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services']);
+        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['billing', 'services', 'workshop']);
                
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -594,8 +621,12 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function acceptedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
-        $accepted_leads = Booking::where('workshop_id', $workshop->id)->where('is_accepted', true)->with('services')->get();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer')->orderBy('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -603,7 +634,7 @@ class BookingsController extends Controller
             if(count($accepted_leads) == 0){
                 return response()->json([
                             'http-status' => Response::HTTP_OK,
-                            'status' => true,
+                            'status' => false,
                             'message' => 'No Accepted Leads Found',
                             'body' => null
                         ],Response::HTTP_OK);            
@@ -648,9 +679,13 @@ class BookingsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function rejectedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','rejected')->where('is_accepted', false)->with('services')->get();
+        $rejected_leads = $workshop->bookings()->RejectedBookings()->with('services')->orderBy('created_at', 'desc')->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -694,15 +729,19 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *    
-     * Getting Workshop Ledger.
+     * Getting Completed Leads for Workshop.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function completedLeads(Request $request){
-        $workshop = Auth::guard('workshop')->user();
-        $completed_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','completed')->where('is_accepted', true)->with('services')->get();
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
+        $completed_leads = $workshop->bookings()->CompletedBookings()->with('services')->orderBy('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -728,7 +767,33 @@ class BookingsController extends Controller
         
     }
 
-    /**
+    public function bookingListings(Request $request){
+
+      $bookings          = Booking::all();
+      $bookings_pending  = Booking::PendingBookings()->orderBy('created_at')->get();
+      $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->get();
+      $bookings_complete = Booking::CompletedBookings()->orderBy('created_at')->get();
+      $bookings_rejected = Booking::RejectedBookings()->orderBy('created_at')->get();
+      
+        switch ($request->list_type) {
+
+        case "pending":
+            return View::make('bookings.pending')->with('bookings', $bookings_pending);
+            break;
+        case "completed":
+            return View::make('bookings.complete')->with('bookings', $bookings_complete);
+            break;
+        case "cancelled":
+        return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
+            break;
+        default:
+        
+        return View::make('bookings.active')->with('bookings', $bookings_active);
+
+        }
+    }   
+
+     /**
      * @SWG\Get(
      *   path="/api/workshop/leads/pending",
      *   summary="Pending Leads",
@@ -747,7 +812,7 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *    
-     * Getting Workshop Ledger.
+     * Getting Pending Leads for Workshop.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -755,15 +820,24 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = Booking::where('workshop_id', $workshop->id)->where('job_status','open')->where('is_accepted', false)->with('services')->get();        
-                
-        return response()->json([
+        $pending_leads = $workshop->bookings()->PendingBookings()->orderBy('created_at', 'desc')->with('services','customer')->get();
+
+        if(count($pending_leads) > 0){
+            return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Pending Bookings',
+                    'message' => 'Pending Leads',
                     'body' => ['pending_bookings' => $pending_leads]
-                ],Response::HTTP_OK);                        
-        
+                ],Response::HTTP_OK);
+        }else{
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'No Leads Pending',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+
     }
 
     /**
@@ -785,7 +859,7 @@ class BookingsController extends Controller
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *    
-     * Getting Workshop Ledger.
+     * Getting All Customer Bookings.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
@@ -793,16 +867,145 @@ class BookingsController extends Controller
      */
     public function customerBookings(Request $request){
         $customer = JWTAuth::authenticate();
-        $bookings = Booking::where('customer_id', $customer->id)->with('services')->get();        
+        $bookings = Booking::where('customer_id', $customer->id)->with('services','workshop')->get();
                 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Pending Bookings',
+                    'message' => 'Bookings',
                     'body' => ['bookings' => $bookings]
                 ],Response::HTTP_OK);                        
         
     }
 
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/bookings/{booking}",
+     *   summary="Customer Booking",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Getting Booking for Customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getCustomerBooking(Booking $booking){
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Bookings',
+            'body' => ['booking' => $booking->load('services','workshop','billing')]
+        ],Response::HTTP_OK);
 
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/{lead}",
+     *   summary="Customer Booking",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="booking_id",
+     *     in="path",
+     *     description="Booking Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Getting Booking for Customer.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getWorkshopLead(Booking $lead){
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Lead Details',
+            'body' => ['lead' => $lead->load('services','customer','billing')]
+        ],Response::HTTP_OK);
+
+    }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/start-job/{lead}",
+     *   summary="Booking Status Update",
+     *   operationId="Patch",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="lead",
+     *     in="path",
+     *     description="Booking Id",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function startLead(Booking $lead){
+        $lead->update(['job_status' => 'in-progress']);
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Lead In Progress',
+            'body' => ['lead' => $lead->load('services','customer','billing')]
+        ],Response::HTTP_OK);
+
+    }
+
+    public function expiredLeads(){
+        $workshop = Auth::guard('workshop')->user();
+        $total_earning = $workshop->billings->sum('amount');
+        $expired_leads = $workshop->bookings()->ExpiredBookings()->with('services')->orderBy('created_at', 'desc')->get();
+
+        return View::make('workshop_profile.expired_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'expired_leads' => $expired_leads]);
+
+    }
 }

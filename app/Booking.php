@@ -55,5 +55,37 @@ class Booking extends Model
         return Carbon::createFromFormat('Y-m-d', $date)->format('d-m-Y'); 
     }
 
+//  Booking Listing Queries
+
+//  Local Scope functions
+    public function scopePendingBookings($query)
+    {
+        return $query->where('job_status', '=', 'open')->where('is_accepted', false);
+    }
+
+    public function scopeActiveBookings($query)
+    {
+        return $query->where('job_status', '=', 'open')->where('is_accepted', true);
+    }
+
+    public function scopeCompletedBookings($query)
+    {
+        return $query->where('job_status', '=', 'completed')->where('is_accepted', true);
+    }
+
+    public function scopeRejectedBookings($query)
+    {
+        return $query->where('job_status', '=', 'rejected')->where('is_accepted' , false );
+    }
+
+    public function scopeAcceptedBookings($query)
+    {
+        return $query->where('is_accepted' , true);
+    }
+
+    public function scopeExpiredBookings($query)
+    {
+        return $query->where('job_status', '=', 'expired')->where('is_accepted', false);
+    }
 
 }

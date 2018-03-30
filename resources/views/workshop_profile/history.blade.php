@@ -20,15 +20,7 @@
                         <div class="col-md-12">
 
                             <div class="avtar-block">
-                                <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
-                                <div class="name-info">
-                                    <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
-                                    <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
-                                    <div class="address">{{$workshop->address->building.', '.$workshop->address->block.', '.$workshop->address->town.', '.$workshop->address->city}}</div>
-                                    <div class="phone">Mobile : {{$workshop->mobile}}</div>
-                                    <div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
-                                    <div class="total">Total Earnings: PKR {{$total_earning}}</div>
-                                </div>
+                                @include('partials.workshop_profile_info')
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                    + More Options
@@ -53,11 +45,12 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
                                 <tr role="row">                        
-                                    <th>Job Date</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 107px;">Job Date</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
+                                    <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 114px;">Job Status</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Total: activate to sort column ascending" style="width: 54px;">Total</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Rating: activate to sort column ascending" style="width: 69px;">Rating</th>
                                 </tr>
@@ -70,6 +63,7 @@
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
                                     <td>{{$lead->job_time}}</td>
+                                    <td>{{$lead->job_status}}</td>
                                     <td>{{$lead->billing['amount']}}</td>
                                     <td><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
                                 </tr>

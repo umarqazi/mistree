@@ -4,14 +4,14 @@
 
 @include('partials.header')
 
-    
-<div class="content">           
+
+<div class="content">
     <div class="container-fluid">
     @if (session('status'))
     <div class="row">
          <p>{{ session('message') }}</p>
     </div>
-    @endif 
+    @endif
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -32,7 +32,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">                         
+                            <div class="col-sm-6 col-sm-offset-6 balance-info">
                                 <div class="clear10"></div>
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -43,7 +43,7 @@
                                         <a href="{{url('admin/service/inactive')}}" class="dropdown-buttons">Inactive Services</a>
                                     </div>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div class="clear20"></div>
                     </div>
@@ -54,30 +54,39 @@
                             <thead>
                                 <th class="text-center sorting" style="width: 358px;" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Image</th>
                                 <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Description: activate to sort column ascending" style="width: 325px;">Name</th>
-                                <th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent Service</th>
+                                {{--<th class="text-center sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 278px;">Parent Service</th>--}}
                                 <th class="text-center sorting">Category</th>
+                                <th class="text-center sorting">Loyalty Points</th>
+                                <th class="text-center sorting">Lead Charges</th>
                                 <th class="text-center sorting" tabindex="0" rowspan="1" colspan="1">Doorstep</th>
-                                <th style="width: 286px">Action</th></tr>
+                                <th style="width: 286px" class="text-center">Action</th></tr>
                             </thead>
                         <tbody>
                         @foreach($services as $key => $value)
                             <tr role="row" class="odd">
-                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="100px" height="100px"></td>
+                                <td><img src="{{$value->image}}" alt="No_Image_Found" width="50px" height="50px"></td>
                                 <td class="text-center">{{$value->name}}</td>
-                                <td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>
+                                {{--<td class="text-center">@if(!is_null($value->parent)){{$value->parent->name}}@endif</td>--}}
                                 <td class="text-center">@if($value->category){{$value->category->name}}@endif</td>
+                                <td class="text-center">{{$value->loyalty_points}}</td>
+                                <td class="text-center">{{$value->lead_charges}}</td>
+
                                 <td class="text-center">
                                     @if($value->is_doorstep)
                                         <i class="ti-check"></i>
                                     @endif
                                 </td>
-                                <td>
-                                    <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="btn btn-header btn-export">Edit</a>
-                                     <form method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
-                                     <input name="_method" type="hidden" value="DELETE">
-                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                     <input class="btn btn-header btn-export" type="submit" value="Deactivate">
-                                     </form>
+                                <td class="text-center">
+                                    <form id="deactivate_service_form" method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
+                                        <input name="_method" type="hidden" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                    </form>
+                                    <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit"></a>
+                                    <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="deactivate_service_form"><i class="ti-power-off"></i></button>
+                                    @if(!$value->children->isEmpty())
+                                        <a href="{{ URL::to('admin/services/'.$value->id) }}"
+                                           class="mistri-icons ti-eye" data-toggle="tooltip" data-placement="top" title="View Child Services"></a>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

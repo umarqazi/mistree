@@ -49,7 +49,7 @@
                                                 <div class="row">
                                                     <div class="col-md-6">
                                                         <label class="control-label">Service Rate</label>
-                                                        <input type="text" class="form-control border-input" name="service_rate" value="{{$workshop_service->service_rate}}">
+                                                        <input type="number" class="form-control border-input" name="service_rate" value="{{$workshop_service->service_rate}}" Required max="99999">
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="control-label">Enter Time</label>

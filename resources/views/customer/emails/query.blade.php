@@ -7,15 +7,12 @@
 
 <div>
     <h3>{{$subject}}</h3>
-    <br>
-    <br>
     <p>{{$msg}}</p>
     <br>
-    <br>
-    <p>From:</p><br>
-    <p>{{$customer_name}}</p><br>
-    <p>{{$customer_email}},</p><br>
-    <p>{{$customer_phone}}.</p>
+    <p>From:</p>
+    <p>{{$customer->name}}</p>
+    <p>{{$customer->email}},</p>
+    <p>{{$customer->con_number}}.</p>
 </div>
 
 </body>

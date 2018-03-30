@@ -11,12 +11,6 @@
             </div>
             <div class="collapse navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="ti-panel"></i>
-                            <p>Stats</p>
-                        </a>
-                    </li>
                     <li class="dropdown notification_dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <i class="ti-bell"></i>
@@ -33,7 +27,7 @@
                                     @if( count(Auth::guard('admin')->user()->unreadNotifications) )
                                         @foreach(Auth::guard('admin')->user()->unreadNotifications as $key => $notification)
                                             <li>
-                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" >
+                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" href="{{$notification->data['notification_url']}}">
                                                 <div class="notification_image">
                                                     @if(snake_case(class_basename($notification->type )) == 'new_workshop')
                                                         <img src="{{URL::to('/img/workshop-icon.png')}}">
@@ -52,16 +46,23 @@
                                             </a>
                                           </li>
                                         @endforeach
-                                        <li><a href="#">Other Notifications</a></li>
+                                        <li><a href="{{url('admin/notifications/')}}">Other Notifications</a></li>
+                                    @else
+                                        <li class="text-center">No New Notifications</li>
+                                        <li><a href="{{url('admin/notifications/')}}">Show All Notifications</a></li>
                                     @endif
                                 @elseif(Auth::guard('workshop')->check())
                                     @if( count(Auth::guard('workshop')->user()->unreadNotifications) )
                                         @foreach(Auth::guard('workshop')->user()->unreadNotifications as $key => $notification)
                                             <li>
-                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" >
+                                              <a class="notification_links clearfix" notif-id="{{$notification->id}}" href="{{$notification->data['notification_url']}}">
                                                 <div class="notification_image">
                                                     @if(snake_case(class_basename($notification->type )) == 'new_workshop')
                                                         <img src="{{URL::to('/img/workshop-icon.png')}}">
+
+                                                    @elseif(snake_case(class_basename($notification->type )) == 'minimum_balance')
+                                                        <img src="{{URL::to('/img/warning.png')}}">
+
                                                     @else
                                                         <img src="{{URL::to('/img/Dummy-image.jpg')}}">
                                                     @endif
@@ -77,16 +78,13 @@
                                             </a>
                                           </li>
                                         @endforeach
-                                        <li><a href="#">Other Notifications</a></li>
+                                        <li><a href="{{url('notifications/')}}">Other Notifications</a></li>
+                                    @else
+                                        <li class="text-center">No New Notifications</li>
+                                        <li><a href="{{url('admin/notifications/')}}">Show All Notifications</a></li>
                                     @endif
                                 @endif
                             </ul>
-                    </li>
-                    <li>
-                        <a href="#">
-                            <i class="ti-settings"></i>
-                            <p>Settings</p>
-                        </a>
                     </li>
                 </ul>
 

@@ -13,9 +13,11 @@ use Illuminate\Http\Request;
 |
 */
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+Route::group(['middleware'	=> 'conf_guard:admin'], function(){
+	Route::group(['middleware' => 'auth.basic.once'], function(){
+		Route::post('topup', 'WorkshopsController@jazzCashTopup');
+	});
+});
 
 Route::group(['middleware' => 'conf_guard:Customer'], function(){
 	Route::group(['middleware' => ['jwt.auth']], function(){
@@ -42,6 +44,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('search-service', 'ServicesController@searchService');
 		Route::post('create-booking','BookingsController@createBooking');
 		Route::get('bookings', 'BookingsController@customerBookings');
+        Route::get('bookings/{booking}', 'BookingsController@getCustomerBooking');
 		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
 		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');
 		Route::patch('leave-rating/{billing_id}', 'CustomersController@insertRatings');
@@ -59,7 +62,8 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 });
 Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 	Route::get('services', 'ServicesController@filteredServices');
-	Route::get('sign-up/services', 'ServicesController@index');	
+	Route::get('sign-up/services', 'ServicesController@index');
+    Route::post('service-against-car-id', 'ServicesController@serviceAgainstCarId');
 });
 Route::group(['prefix'=>'workshop'], function() {
 	Route::post('register', 'WorkshopsController@register');
@@ -85,12 +89,14 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::patch('update-cnic-image','WorkshopsController@updateCnicImage');
 		Route::get('services','WorkshopsController@workshopServices');		
 		Route::patch('accept-booking/{booking_id}','BookingsController@acceptBooking');
-		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');		
+		Route::patch('reject-booking/{booking_id}','BookingsController@rejectBooking');
+		Route::get('start-job/{lead}', 'BookingsController@startLead');
 		Route::post('complete-job','BookingsController@completeLead');
     
 		Route::get('ledger','WorkshopsController@getLedger');
 		Route::get('leads-info','BookingsController@getLeadsInfo');
 		Route::get('history','BookingsController@leadsHistory');
+        Route::get('leads/lead-info/{lead}', 'BookingsController@getWorkshopLead');
 		Route::get('leads/accepted','BookingsController@acceptedLeads');
 		Route::get('leads/rejected','BookingsController@rejectedLeads');
 		Route::get('leads/completed','BookingsController@completedLeads');

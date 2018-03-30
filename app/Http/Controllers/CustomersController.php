@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\CustomerAddress;
+use App\Mail\CustomerRegistrationMail;
+use Carbon\Carbon;
 use JWTAuth;
 use Session;
 use Illuminate\Support\Facades\Redirect;
@@ -19,8 +21,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Mail\Message;
 
 class CustomersController extends Controller
@@ -56,16 +56,6 @@ class CustomersController extends Controller
     {
         $customers = Customer::orderBy('created_at', 'desc')->get();
         return View::make('customer.index')->with('customers', $customers);        
-    }
-
-    /**
-     * Show the form for creating a new customer.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-
     }
 
     /**
@@ -117,16 +107,6 @@ class CustomersController extends Controller
         return View::make('customer.show', ['customer' => $customer]);
     }
 
-    /**
-     * Show the form for editing the specified customer.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-                
-    }
 
     /**
      * Update the specified customer in storage.
@@ -227,18 +207,25 @@ class CustomersController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="fcm_token",
+     *     in="formData",
+     *     description="Customer Firebase Token",
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
      */
+
     public function register(Request $request)
     {
         $rules = [
-            'name'      => 'required',
-            'email'     => 'required|email|unique:customers',
-            'password'  => 'required|confirmed|min:6',
-            'con_number'=> 'required',
+            'name'          => 'required',
+            'email'         => 'required|email|unique:customers',
+            'password'      => 'required|confirmed|min:6',
+            'con_number'    => 'required',
         ];
         $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
         $validator = Validator::make($input, $rules);
@@ -248,29 +235,49 @@ class CustomersController extends Controller
             return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => $validator->messages(),
-                    'body' => $request->all()
+                    'message' => $validator->messages()->first(),
+                    'body' => null
                 ],Response::HTTP_OK);
         }
         $name = $request->name;
         $con_number = $request->con_number;
         $email = $request->email;
         $password = $request->password;
-        $customer = Customer::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'status' => 1, 'con_number' => $con_number]);
+        $fcm_token = $request->fcm_token;
+
+        if($request->has('fcm_token')){
+            $customer = Customer::create([
+                'name'          => $name,
+                'email'         => $email,
+                'password'      => Hash::make($password),
+                'con_number'    => $con_number,
+                'fcm_token'     => $request->fcm_token
+            ]);
+        }else{
+            $customer = Customer::create([
+                'name'          => $name,
+                'email'         => $email,
+                'password'      => Hash::make($password),
+                'con_number'    => $con_number
+            ]);
+        }
+
+
         $verification_code = str_random(30); //Generate verification code
         DB::table('customer_verifications')->insert(['cust_id'=>$customer->id,'token'=>$verification_code]);
-        $subject = "Please verify your email address.";
-        Mail::send('customer.verify', ['name' => $name, 'verification_code' => $verification_code],
-            function($mail) use ($email, $name, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($email, $name);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => 'Please verify your email address.',
+            'view' => 'customer.verify',
+            'name' => $request->name,
+            'email' => $request->email,
+            'verification_code' => $verification_code,
+        ];
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new CustomerRegistrationMail($dataMail))->onQueue('emails'));
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Thanks for signing up! Please check your email to complete your registration.',
-            'body' => null
+            'body' => $customer
         ],Response::HTTP_OK);
     }
 
@@ -301,11 +308,18 @@ class CustomersController extends Controller
      *     required=true,
      *     type="string"
      *   ),
+     *   @SWG\Parameter(
+     *     name="fcm_token",
+     *     in="formData",
+     *     description="Customer Firebase Token",
+     *     type="string"
+     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
      */
+
     public function login(Request $request)
     {
         $credentials = [
@@ -322,7 +336,7 @@ class CustomersController extends Controller
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
-                    'message' => 'We cant find an account with this credentials.',
+                    'message' => 'We cant find an account with these credentials.',
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
@@ -339,6 +353,12 @@ class CustomersController extends Controller
             }
         // all good so return the token
         $customer = Auth::user();
+
+        if($request->has('fcm_token')){
+            /* Update Customer FCM Token */
+            $customer->fcm_token = $request->fcm_token;
+            $customer->update();
+        }
 
         return response()->json([
             'http-status' => Response::HTTP_OK,
@@ -374,8 +394,12 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function logout(Request $request) {
         try {
+            $customer = JWTAuth::authenticate();
+            $customer->fcm_token = null;
+            $customer->save();
             JWTAuth::invalidate(JWTAuth::getToken());
 
             return response()->json([
@@ -420,6 +444,7 @@ class CustomersController extends Controller
      * )
      *
      */
+
     public function recover(Request $request)
     {
         $rules  = [
@@ -492,62 +517,6 @@ class CustomersController extends Controller
         }
 
         return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
-    }
-
-    /**
-     * API Register store data of new customer.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function regStoreData(Request $request)
-    {
-         // read more on validation at http://laravel.com/docs/validation
-        $rules = array(
-            'cust_id'               => 'required',
-            'address_type'          => 'required',
-            'address_house_no'      => 'required',
-            'address_street_no'     => 'required',
-            'address_block'         => 'required',
-            'address_area'          => 'required',
-            'address_town'          => 'required',
-            'address_city'          => 'required'
-
-        );
-        $validator = Validator::make($request->all(), $rules);
-
-        // process the login
-        if ($validator->fails()) {
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => 'Invalid Details!',
-                'body' => $request->all()
-            ],Response::HTTP_OK);
-        } else {
-            //customer
-            $customer = Customer::findOrFail($request->cust_id);
-            //address
-            $address = new Address;
-            $address->cust_id       =  $request->cust_id;
-            $address->ws_id         =  '';
-            $address->admin_id      =  '';
-            $address->type          =  $request->address_type;
-            $address->house_no      =  $request->address_house_no;
-            $address->street_no     =  $request->address_street_no;
-            $address->block         =  $request->address_block;
-            $address->area          =  $request->address_area;
-            $address->town          =  $request->address_town;
-            $address->city          =  $request->address_city;
-            $address->status        = 1;
-            $address->save();     
-            return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Details Added!',
-                'body' => null
-            ],Response::HTTP_OK);
-        }
     }
 
     /**
@@ -661,7 +630,6 @@ class CustomersController extends Controller
      * )
      *
      */
-
     public function passwordReset(Request $request)
     {
         $rules = [
@@ -795,39 +763,40 @@ class CustomersController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="address_type",
+     *     name="type",
      *     in="formData",
      *     description="Customer's Address Type",
      *     required=true,
-     *     type="string"
+     *     type="string",
+     *     enum={"Office","Residence"}
      *   ),@SWG\Parameter(
-     *     name="address_house_no",
+     *     name="house_no",
      *     in="formData",
-     *     description="Customer's address house no",
+     *     description="Customer's Address House no",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_street_no",
+     *     name="street",
      *     in="formData",
-     *     description="Customer's address street no",
+     *     description="Customer's Address Street",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_block",
+     *     name="block",
      *     in="formData",
-     *     description="Customer's address block",
+     *     description="Customer's Address Block",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_town",
+     *     name="town",
      *     in="formData",
-     *     description="Customer's address town",
+     *     description="Customer's Address Town/Society",
      *     required=true,
      *     type="string"
      *   ),@SWG\Parameter(
-     *     name="address_city",
+     *     name="city",
      *     in="formData",
-     *     description="Customer's address city",
+     *     description="Customer's Address City",
      *     required=true,
      *     type="string"
      *   ),
@@ -837,27 +806,26 @@ class CustomersController extends Controller
      * )
      *
      */
-
     public function addCustomerAddress(Request $request)
     {
         // read more on validation at http://laravel.com/docs/validation
         $rules = array(
-            'address_type'          => 'required',
-            'address_house_no'      => 'required',
-            'address_street_no'     => 'required',
-            'address_block'         => 'required',
-            'address_town'          => 'required',
-            'address_city'          => 'required'
+            'type'          => 'required|in:Office,Residence',
+            'house_no'      => 'required',
+            'street'        => 'required',
+            'block'         => 'required',
+            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
         );
         $validator = Validator::make($request->all(), $rules);
 
         // process the Address
         if ($validator->fails()) {
             return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'http-status'   => Response::HTTP_OK,
+                'status'        => false,
+                'message'       => $validator->messages()->first(),
+                'body'          => null
             ],Response::HTTP_OK);
         } else {
             //customer
@@ -865,20 +833,20 @@ class CustomersController extends Controller
 
             //address
             $address = new CustomerAddress;
-            $address->customer_id       =  $customer->id;
-            $address->type              =  $request->address_type;
-            $address->house_no          =  $request->address_house_no;
-            $address->street_no         =  $request->address_street_no;
-            $address->block             =  $request->address_block;
-            $address->town              =  $request->address_town;
-            $address->city              =  $request->address_city;
+            $address->customer_id   =  $customer->id;
+            $address->type          =  $request->type;
+            $address->house_no      =  $request->house_no;
+            $address->street_no     =  $request->street;
+            $address->block         =  $request->block;
+            $address->town          =  $request->town;
+            $address->city          =  $request->city;
             $address->save();
 
             return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Details Added!',
-                'body' => null
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => 'Details Added!',
+                'body'          => ['customer' => $customer->load(['cars', 'addresses'])],
             ],Response::HTTP_OK);
         }
     }
@@ -915,37 +883,38 @@ class CustomersController extends Controller
      *     in="formData",
      *     description="Customer's Address Type To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string",
+     *     enum={"Office","Residence"}
      *   ),@SWG\Parameter(
      *     name="house_no",
      *     in="formData",
      *     description="Customer's Address House No To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
-     *     name="street_no",
+     *     name="street",
      *     in="formData",
-     *     description="Customer's Address Street No  To Edit",
+     *     description="Customer's Address Street To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
      *     name="block",
      *     in="formData",
      *     description="Customer's Address Block To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
      *     name="town",
      *     in="formData",
      *     description="Customer's Address Town To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),@SWG\Parameter(
      *     name="city",
      *     in="formData",
      *     description="Customer's Address City To Edit",
      *     required=true,
-     *     type="integer"
+     *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
@@ -957,22 +926,22 @@ class CustomersController extends Controller
     {
         $rules = array(
             'id'            => 'required',
-            'type'          => 'required',
+            'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'street_no'     => 'required',
+            'street'        => 'required',
             'block'         => 'required',
-            'town'          => 'required',
-            'city'          => 'required'
+            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
+            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
         );
         $validator = Validator::make($request->all(), $rules);
 
         // process the Address
         if ($validator->fails()) {
             return response([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'http-status'   => Response::HTTP_OK,
+                'status'        => false,
+                'message'       => $validator->messages()->first(),
+                'body'          => null
             ],Response::HTTP_OK);
         }
 
@@ -981,27 +950,27 @@ class CustomersController extends Controller
 
             if (!$address){
                 return response([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Invalid Address!',
-                    'body' => null
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => false,
+                    'message'       => 'Invalid Address!',
+                    'body'          => null
                 ],Response::HTTP_OK);
             }
             else{
-                $address->type = $request->type;
-                $address->house_no = $request->house_no;
+                $address->type      = $request->type;
+                $address->house_no  = $request->house_no;
                 $address->street_no = $request->street_no;
-                $address->block = $request->block;
-                $address->town = $request->town;
-                $address->city = $request->city;
+                $address->block     = $request->block;
+                $address->town      = $request->town;
+                $address->city      = $request->city;
 
                 $address->update();
 
                 return response([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => 'Address Updated!',
-                    'body' => null
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => true,
+                    'message'       => 'Address Updated!',
+                    'body'          => ['customer' => $address->customer->load(['cars', 'addresses'])]
                 ],Response::HTTP_OK);
             }
         }
@@ -1106,7 +1075,8 @@ class CustomersController extends Controller
      */
     public function getVehicleHistory(){
         $vehicle_no = Input::get('vehicle_no');
-        $bookings = Booking::where('vehicle_no', $vehicle_no)->where('job_status','completed')->with('billing')->with('services')->get();
+        $bookings = Booking::where('vehicle_no', $vehicle_no)->where('job_status','completed')->with('billing')
+            ->with('services', 'workshop')->get();
         if(count($bookings) == 0){
             return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -1257,30 +1227,35 @@ class CustomersController extends Controller
     * @param int $id 
     * @return \Illuminate\Http\Response 
     */ 
-    public function updateProfileImage(Request $request) { 
+    public function updateProfileImage(Request $request)
+    {
         $customer       = JWTAuth::authenticate(); 
-        $file_data      = $request->profile_pic; 
-        $url            = $this->upload_image($file_data,$customer->id); 
-        $profile_image  = $customer->update(['profile_pic_url' => $url]); 
-        return response()->json([ 
-            'http-status'   => Response::HTTP_OK, 
-            'status'        => true, 
-            'message'       => 'success', 
-            'body'          => [ 'url' => $url ] 
-        ],Response::HTTP_OK); 
+        $file_data      = $request->profile_pic;
+
+        $customers_path = public_path().'/uploads/customers/';
+        $specified_customer_path = 'uploads/customers/'.$customer->id;
+        if(!Storage::disk('public')->has($specified_customer_path.'/logo')){
+            $path = $customers_path.$customer->id.'/logo';
+            mkdir($path, 0775, true);
+        }
+        $full_path = $customers_path.$customer->id.'/logo/'.md5(microtime()).".jpg";
+        $url = $this->upload_image($file_data,$customer->id,$full_path);
+        $url = url('/').'/'.$specified_customer_path.'/logo/'.basename($url);
+        $customer->profile_pic_url = $url;
+        $customer->save();
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'success',
+            'body' => ['profile_picture' => $url]
+        ],Response::HTTP_OK);
     }
 
-    public function upload_image($file_data , $customers_id){ 
-        $full_path      = storage_path()."/app/customer/temp/".md5(microtime()).".jpg"; 
-        $path           = "/customer/temp"; 
-        if(!is_dir($path)) { 
-            Storage::makeDirectory($path);
-        } 
-        $file           = fopen($full_path, "wb"); 
+    public function upload_image($file_data , $customer_id, $full_path){
+        $file   = fopen($full_path, "wb");
         fwrite($file, base64_decode($file_data));
-        fclose($file); 
-        $s3_path        = Storage::disk('s3')->putFile('customers/'. $customers_id . '/images', new File($full_path), 'public');
-        $customer_image = config('app.s3_bucket_url').$s3_path; Storage::delete($path.'/'.basename($full_path)); 
-        return $customer_image; 
+        fclose($file);
+        return $full_path;
     }
 }

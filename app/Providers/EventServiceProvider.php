@@ -19,6 +19,24 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NewBookingEvent' => [
             'App\Listeners\NewBookingEventListener'
         ],
+        'App\Events\SelectAnotherWorkshopEvent' => [
+            'App\Listeners\SelectAnotherWorkshopEventListener'
+        ],
+        'App\Events\MinimumBalanceEvent' => [
+            'App\Listeners\MinimumBalanceEventListener'
+        ],
+        'App\Events\LeadExpiryEvent' => [
+            'App\Listeners\LeadExpiryEventListener'
+        ],
+        'App\Events\JobAcceptedEvent' => [
+            'App\Listeners\JobAcceptedEventListener'
+        ],
+        'App\Events\JobClosedEvent' => [
+            'App\Listeners\JobClosedEventListener'
+        ],
+        'App\Events\NotificationsBeforeBookingEvent' => [
+            'App\Listeners\NotificationsBeforeBookingEventListener'
+        ],
     ];
 
     /**

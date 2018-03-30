@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\CategoryScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -33,6 +34,17 @@ class Service extends Model
      */
     protected $casts = ['is_doorstep' => 'boolean'];
 
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new CategoryScope);
+    }
 
     public function workshops()
     {
@@ -64,4 +76,27 @@ class Service extends Model
         return $this->belongsTo('App\Category');
     }
 
+    public function scopeParentLevel($query)
+    {
+        return $query->where('service_parent',0);
+    }
+
+    public function scopeHatchback($query){
+        $id = Category::select('id')->where('name', 'Hatchback')->first();
+        return $query->where('category_id',$id['id']);
+    }
+
+    public function scopeSedan($query){
+        $id = Category::select('id')->where('name', 'Sedan/Saloon')->first();
+        return $query->where('category_id',$id['id']);
+    }
+    public function scopeLuxury($query){
+        $id = Category::select('id')->where('name', 'Luxury Car')->first();
+        return $query->where('category_id',$id['id']);
+    }
+
+    public function scopeSuv($query){
+        $id = Category::select('id')->where('name', 'SUV/4X4')->first();
+        return $query->where('category_id',$id['id']);
+    }
 }

@@ -12,7 +12,7 @@ return [
     | any other location as required by the application or its packages.
     */
 
-    'name' => env('APP_NAME', 'MyMistri'),
+    'name' => env('APP_NAME', 'Mystri.pk'),
 
     /*
     |--------------------------------------------------------------------------
@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Karachi',
 
     /*
     |--------------------------------------------------------------------------
@@ -181,6 +181,8 @@ return [
         Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         // Swagger
         L5Swagger\L5SwaggerServiceProvider::class,
+        //Laravel-FCM Firebase
+        LaravelFCM\FCMServiceProvider::class,
 
     ],
 
@@ -231,10 +233,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class, 
-        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'FCM'      => LaravelFCM\Facades\FCM::class,
+        'FCMGroup' => LaravelFCM\Facades\FCMGroup::class
 
     ],
 
-    'mail_username' => env('MAIL_USERNAME', 'jazib.javed@gems.techverx.com'),
-    's3_bucket_url' => env('S3_BUCKET_URL','https://s3-us-west-2.amazonaws.com/mymystri-staging/'),
+    'mail_username' => env('MAIL_USERNAME'),
 ];

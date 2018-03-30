@@ -48,8 +48,8 @@
                                     <td></td>
                                     @endif                                   
                                     <td>
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id) }}" class="btn btn-header btn-export">Details</a>
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/approve') }}" class="btn btn-header btn-export">Approve</a>
+                                    <a href="{{ URL::to('admin/workshops/' . $value->id) }}" class="ti-eye"></a>
+                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/approve') }}" class="ti-check"></a>
                                     </td>
                                 </tr>
                                  @endforeach

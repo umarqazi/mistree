@@ -70,7 +70,6 @@
                 <div class="title m-b-md">
                     {{ $message }}
                 </div>
-               <p>Click <a href="{{ url('/') }}">Here</a> To Login Your Account </p>
             </div>
         </div>
     </body>

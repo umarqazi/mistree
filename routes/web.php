@@ -56,6 +56,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/ledger', 'WorkshopsController@getLedger');
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
+        Route::post('/get-category-services','WorkshopsController@getCategoryServices');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
         Route::patch('profileServiceUpdate', 'WorkshopsController@updateProfileService');
         Route::get('/profile', 'WorkshopsController@workshop_profile');
@@ -67,8 +68,9 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('leads','BookingsController@leadsHistory');
         Route::get('leads/accepted','BookingsController@acceptedLeads');
         Route::get('leads/rejected','BookingsController@rejectedLeads');
+        Route::get('leads/expired','BookingsController@expiredLeads');
         Route::get('leads/completed','BookingsController@completedLeads');
-        Route::get('/notification', 'NotificationController@index');
+        Route::get('/notifications', 'NotificationsController@index');
 
     });
 
@@ -85,9 +87,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
   Route::post('/login', 'AdminAuth\LoginController@login');
   Route::post('/logout', 'AdminAuth\LoginController@logout')->name('logout');
    
-
-  Route::get('/register', 'AdminAuth\RegisterController@showRegistrationForm')->name('register');
-  Route::post('/register', 'AdminAuth\RegisterController@register');
+  Route::get('/register', function (){
+      return redirect()->route('login');
+  });
 
   Route::post('/password/email', 'AdminAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
   Route::post('/password/reset', 'AdminAuth\ResetPasswordController@reset')->name('password.email');
@@ -125,9 +127,12 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         
         Route::get('/edit-workshop-service/{id}', 'WorkshopsController@editWorkshopService');
         Route::get('/add-workshop-service/{workshop}', 'WorkshopsController@addWorkshopService');
+        Route::post('/get-category-services','WorkshopsController@getCategoryServices');
         Route::post('/store-workshop-service/', 'WorkshopsController@storeWorkshopService');
         Route::get('/delete-workshop-service/{workshop}/{service}', 'WorkshopsController@deleteWorkshopService');
         Route::post('/update-workshop-service/', 'WorkshopsController@updateWorkshopService');
+        Route::get('/edit-workshop-password/{workshop}', 'WorkshopsController@editWorkshopPassword');
+        Route::patch('/update-workshop-password/', 'WorkshopsController@updateWorkshopPassword');
 
         Route::post('customers/{id}/unblock/', 'CustomersController@restore');
         Route::get('/blocked-customers', 'CustomersController@blockedCustomers');
@@ -135,6 +140,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');
+
+        Route::get('/booking', 'BookingsController@bookingListings');
+        Route::post('/booking/', 'BookingsController@bookingListings');
         
         
         Route::get('/authorized-workshops', 'WorkshopsController@authorized');
@@ -145,8 +153,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('workshop/{workshop}/history/accepted-leads', 'BookingsController@workshopAcceptedLeads');                
         Route::get('workshop/{workshop}/history/completed-leads', 'BookingsController@workshopCompletedLeads');                
         Route::get('workshop/{workshop}/ledger', 'WorkshopsController@workshopLedger');
+        Route::post('adjustment', 'WorkshopsController@ledgerAdjustment');
         Route::get('workshop/{workshop}/gallery', 'WorkshopsController@workshopGallery');
-        Route::get('/notification', 'NotificationsController@index');
+        Route::get('/notifications', 'NotificationsController@index');
                 
     });
 
@@ -158,4 +167,9 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 /* ========= Other Routes Starts ====================================================== */
 /*Notification Routes*/
         Route::get('/notifications/markasread', 'NotificationsController@markOneAsRead');
+/*Terms And Conditions*/
+        Route::get('/terms', function (){
+            return view('workshop/terms_and_conditions');
+        });
+
 /* ========= Other Routes Ends ====================================================== */

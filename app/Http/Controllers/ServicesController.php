@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Car;
 use App\Category;
 use App\Service;
 use DB, View;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Input;
@@ -38,14 +39,15 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-        $services = Service::orderBy('created_at', 'desc')->get();      
+
+        $services = Service::parentLevel()->orderBy('created_at', 'desc')->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => 'all services',
-                'body' => [ 'services' => $services ]
+                'body' => [ 'services' => $services->load('services') ]
             ],Response::HTTP_OK);
         }
         else{
@@ -103,15 +105,22 @@ class ServicesController extends Controller
             // store
             $service = new Service;
 
-            if ($request->hasFile('image')) 
+            $services_full_path = public_path().'/uploads/services/';
+            $services_path = 'uploads/services';
+
+            if ($request->hasFile('image'))
             {
-                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = config('app.s3_bucket_url').$s3_path;
-                $service->image          = $img_path;
+                if(!Storage::disk('public')->has($services_path)){
+                    mkdir($services_full_path, 0775, true);
+                }
+                $service_picture =  Storage::disk('public')->putFile($services_path , new File($request->image), 'public');
+
+                $service_picture = url('/').'/'.$service_picture;
+                $service->image  = $service_picture;
             }
             else
             {
-              $service->image        =  url('img/thumbnail.png');
+                $service->image        =  url('img/thumbnail.png');
             }
 
             $service->name           = trim(Input::get('name'));
@@ -136,14 +145,9 @@ class ServicesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Service $service)
     {
-        // get the service
-        $service = Service::find($id);
-
-        // show the view and pass the service to it
-        return View::make('services.show')
-            ->with('service', $service);
+        return view::make('services.child_services')->with('services',$service->children);
     }
 
     /**
@@ -196,15 +200,22 @@ class ServicesController extends Controller
         if ($validator->fails()) {
             return Redirect::back()->withInput()->withErrors($validator);
         } else {
-            if ($request->hasFile('image'))
-            {
-                $s3_path =  Storage::disk('s3')->putFile('services', new File($request->image), 'public');
-                $img_path = config('app.s3_bucket_url').$s3_path;
-                $service->image          = $img_path;
+            if ($request->hasFile('image')){
+                $services_full_path = public_path().'/uploads/services/';
+                $services_path = 'uploads/services';
+
+                if(!Storage::disk('public')->has($services_path)){
+                    mkdir($services_full_path, 0775, true);
+                }
+
+                $service_picture =  Storage::disk('public')->putFile($services_path , new File($request->image), 'public');
+
+                $service_picture = url('/').'/'.$service_picture;
+                $service->image  = $service_picture;
             }
             else
             {
-              $service->image        = $service->image;
+                $service->image        = $service->image;
             }
             $service->name           = trim(Input::get('name'));
             $service->service_parent = Input::get('service-parent');
@@ -296,5 +307,74 @@ class ServicesController extends Controller
             'message' => 'all services',
             'body' => [ 'services' => $services ]
         ],Response::HTTP_OK);        
+    }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/service-against-car-id",
+     *   summary="All Services Against Car Id ",
+     *   operationId="serviceAgainstCarId",
+     *   consumes={"application/json"},
+     *   produces={"application/json"},
+     *   tags={"Services"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Auth Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="car_id",
+     *     in="formData",
+     *     description="Car Id",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="is_doorstep",
+     *     in="formData",
+     *     description="is_doorstep",
+     *     required=true,
+     *     type="boolean"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function serviceAgainstCarId(Request $request){
+        $rules = array(
+            'car_id'         => 'required|numeric',
+            'is_doorstep'    => 'required',
+        );
+
+        $inputs = $request->only('car_id', 'is_doorstep');
+        $validator = Validator::make($inputs, $rules);
+        if ($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
+            ], Response::HTTP_OK);
+        }
+        $car = Car::find($request->car_id);
+        $services = Service::where('category_id', $car->category_id)->where('is_doorstep', $request->is_doorstep)->get();
+        if(count($services) > 0){
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Services',
+                'body' => [ 'services' => $services ]
+            ],Response::HTTP_OK);
+        }else{
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => 'No services',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
     }
 }

@@ -17,6 +17,12 @@ class NotificationsController extends Controller
 
             echo true;
         }
+        elseif (Auth::guard('workshop')->check())
+        {
+            Auth::guard('workshop')->user()->unreadNotifications->where('id',$_GET['id'])->markAsRead();
+
+            echo true;
+        }
     }
 
     public function index()

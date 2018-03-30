@@ -44,7 +44,7 @@
                                 <tr role="row" class="odd">
                                     <td class="text-center sorting_1">{{ $key + 1 }}</td>
                                     <td class="text-center">{{ $value->subject }}</td>
-                                    <td class="text-center">{{ $value->workshop->name }}</td>
+                                    <td class="text-center">@if(!is_null($value->workshop)){{ $value->workshop->name }}@endif</td>
                                     <td class="text-center">{{ $value->created_at }}</td>
                                     <td class="text-center">
                                         @if($value->is_resolved == true)
@@ -52,19 +52,23 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <a class= "btn btn-header" href="{{url('admin/workshop-queries/'. $value->id)}}">View</a>
-                                        @if($value->is_resolved == false)
-                                        <form method="POST" action="{{url('admin/resolve-workshop-query/'. $value->id)}}" accept-charset="UTF-8">
+                                        <form method="POST" id="workshop_resolve_query" action="{{url('admin/resolve-workshop-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input class="btn btn-header btn-export" type="submit" value="Resolve">
                                         </form>
-                                        @endif
-                                        <form method="POST" action="{{url('admin/workshop-queries/'. $value->id)}}" accept-charset="UTF-8">
+
+                                        <form method="POST" id="workshop_delete_query" action="{{url('admin/workshop-queries/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                             <input class="btn btn-header btn-export" type="submit" value="Delete">
                                         </form>
+
+                                        <a class= "ti-eye" href="{{url('admin/workshop-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View">View</a>
+                                        @if($value->is_resolved == false)
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query"><i class="ti-check-box"></i></button>
+                                        @endif
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Delete Workshop Queries" value="submit" type="submit" form="workshop_delete_query"><i class="ti-close"></i></button>
                                     </td>
                                 </tr>
                                 @endforeach

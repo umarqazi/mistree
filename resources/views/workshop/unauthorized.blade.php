@@ -12,8 +12,8 @@
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
-                                <h4 class="title">Authorized Workshops</h4>
-                                <p class="category">List of all authorized workshops.</p>
+                                <h4 class="title">Unauthorized Workshops</h4>
+                                <p class="category">List of all Unauthorized workshops.</p>
                             </div>
                         </div>
                         <div class="clear20"></div>
@@ -67,18 +67,17 @@
                                             Approved
                                         @endif
                                     <td>
-                                        @if(! $value->is_approved )
-                                            <a href="{{ url( 'admin/approve-workshop/'.$value->id ) }}" class="btn btn-header btn-export">Approve</a>
-                                        @endif
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'. $value->id)}}">View Details</a>
-                                        <a class= "btn btn-header" href="{{url('admin/workshops/'.$value->id.'/edit')}}">Edit</a>
-                                        
-                                        <form method="POST" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
-                                        <input name="_method" type="hidden" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input class="btn btn-header btn-export" type="submit" value="Block">
+                                        <form method="POST" id="ws_block_form" action="workshops/{{ $value->id }}" accept-charset="UTF-8">
+                                            <input name="_method" type="hidden" value="DELETE">
+                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
-                                        </td>
+                                    @if(! $value->is_approved )
+                                            <a href="{{ url( 'admin/approve-workshop/'.$value->id ) }}" data-toggle="tooltip" data-placement="top" title="Approve" class="mistri-icons ti-check"></a>
+                                        @endif
+                                            <a class= "mistri-icons ti-eye" href="{{url('admin/workshops/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
+                                            <a class= "mistri-icons ti-pencil-alt" href="{{url('admin/workshops/'.$value->id.'/edit')}}" data-toggle="tooltip" data-placement="top" title="Edit"></a>
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="ws_block_form"><i class="ti-hand-stop"></i></button>
+                                    </td>
                                     </td>
                                 </tr>
                                  @endforeach

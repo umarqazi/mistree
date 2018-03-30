@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\CustomerQuery;
+use App\Mail\CustomerQueryMail;
+use Carbon\Carbon;
+use Config;
 use Illuminate\Http\Request;
 use JWTAuth, Session, View, Mail;
 use Illuminate\Support\Facades\Redirect;
@@ -67,7 +70,7 @@ class CustomerQueriesController extends Controller
      */
     public function store(Request $request)
     {
-            $customer = JWTAuth::Authenticate();
+            $customer = JWTAuth::authenticate();
             $rules = array(
                 'subject'      => 'required',
                 'message'      => 'required'
@@ -75,12 +78,12 @@ class CustomerQueriesController extends Controller
             $validator = Validator::make($request->all(), $rules);
 
             if ($validator->fails()) {
-                    return response()->json([
-                        'http-status' => Response::HTTP_OK,
-                        'status' => false,
-                        'message' => 'Incomplete Details!',
-                        'body' => $request->all()
-                    ],Response::HTTP_OK);
+                return response()->json([
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => false,
+                    'message'       => 'Incomplete Details!',
+                    'body'          => null
+                ],Response::HTTP_OK);
             }
             $customer->queries()->create([
                 'subject'       => $request->subject,
@@ -88,18 +91,19 @@ class CustomerQueriesController extends Controller
                 'status'        => 'Open',
                 'is_resolved'   => false
             ]);
-            $subject = "Customer Query - ".$request->subject;
-            Mail::send('customer.emails.query', ['customer_name' => $customer->name, 'customer_email' => $customer->email, 'customer_phone' => $customer->con_number,'subject' => $request->subject, 'msg' => $request->message ],
-            function($mail) use ($subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to(config('app.mail_username'));
-                $mail->subject($subject);
-            });
+            $dataMail = [
+                'subject'   => 'Customer Query - '.$request->subject,
+                'view'      => 'customer.emails.query',
+                'customer'  => $customer,
+                'msg'       => $request->message,
+                ];
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
+
             return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Query has been Added.',
-                'body' => null
+                'http-status'   => Response::HTTP_OK,
+                'status'        => true,
+                'message'       => 'Query has been Added.',
+                'body'          => null
             ],Response::HTTP_OK);
     }
 

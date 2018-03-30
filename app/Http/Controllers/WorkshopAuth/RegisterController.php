@@ -3,7 +3,11 @@
 namespace App\Http\Controllers\WorkshopAuth;
 
 use App\Events\NewWorkshopEvent;
+use App\Jobs\MailJobRegister;
+use App\Mail\WorkshopRegistrationMail;
 use App\Workshop;
+use Carbon\Carbon;
+use SoapClient;
 use App\WorkshopAddress;
 use App\WorkshopBalance;
 use App\WorkshopImages;
@@ -22,6 +26,7 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Input;
+use Config;
 
 class RegisterController extends Controller
 {
@@ -76,14 +81,14 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'name'                           => 'required|string',
             'owner_name'                     => 'required|regex:/^[\pL\s\-]+$/u',
             'email'                          => 'required|email|unique:workshops',
-            'password'                       => 'required|confirmed|min:8',
+            'password'                       => 'required|confirmed|min:6',
             'password_confirmation'          => 'required',
-            'cnic'                           => 'required|digits:13',
-            'mobile'                         => 'required|digits:11',
-            'landline'                       => 'digits:11|nullable',
+            'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
+            'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
+            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',
@@ -92,16 +97,28 @@ class RegisterController extends Controller
             'cnic_image'                     => 'image|mimes:jpg,png,jpeg',
             'images.*'                       => 'image|mimes:jpg,png,jpeg',
 
-            'shop'                           => 'required|numeric',
+            'shop'                           => 'nullable|regex:/^[a-zA-Z\s\/\-\d]+$/u',
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'nullable|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
 
-            'services.*'                     => 'required|integer:unique',
-            'service-rates.*'                => 'required',
-            'service-times.*'                => 'required',
+            'hatchback.*'                    => 'required|integer:unique',
+            'hatchback-rates.*'              => 'required',
+            'hatchback-times.*'              => 'required',
+
+            'sedan.*'                        => 'required|integer:unique',
+            'sedan-rates.*'                  => 'required',
+            'sedan-times.*'                  => 'required',
+
+            'luxury.*'                       => 'required|integer:unique',
+            'luxury-rates.*'                 => 'required',
+            'luxury-times.*'                 => 'required',
+
+            'suv.*'                          => 'required|integer:unique',
+            'suv-rates.*'                    => 'required',
+            'suv-times.*'                    => 'required',
         ]);
     }
 
@@ -113,7 +130,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-
+        if(env('APP_ENV') == "production"){
+            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $jazz_cash = (int)$client->GetWorkShopId()->GetWorkShopIdResult;
+        }else{
+            $jazz_cash = null;
+        }
         $workshop = Workshop::create([
             'name'          => $data['name'],
             'owner_name'    => $data['owner_name'],
@@ -126,6 +148,8 @@ class RegisterController extends Controller
             'open_time'     => $data['open_time'],
             'close_time'    => $data['close_time'],
             'is_approved'   => false,
+            'jazzcash_id'   => $jazz_cash
+
         ]);
 
         //Insert Address data from request
@@ -140,10 +164,38 @@ class RegisterController extends Controller
             'coordinates'   => NULL
         ]);
 
-        //Insert Services data from request
-        foreach($data['services'] as $service)
-        {
-            $workshop->services()->attach($service, ['service_rate' => Input::get('service-rates')[$service] , 'service_time' => Input::get('service-times')[$service] ]);
+        if(!empty($data['hatchback'])){
+            //Insert Hatchback Services data from request
+            foreach($data['hatchback'] as $hatchback)
+            {
+                $workshop->services()->attach($hatchback, ['service_rate' => Input::get('hatchback-rates')[$hatchback] , 'service_time' => Input::get('hatchback-times')[$hatchback] ]);
+            }
+        }
+
+        if(!empty($data['sedan'])){
+            //Insert Sedan Services data from request
+            foreach($data['sedan'] as $sedan)
+            {
+                $workshop->services()->attach($sedan, ['service_rate' => Input::get('sedan-rates')[$sedan]
+                    , 'service_time' => Input::get('sedan-times')[$sedan] ]);
+            }
+        }
+
+        if(!empty($data['luxury'])){
+            //Insert Luxury Services data from request
+            foreach($data['luxury'] as $luxury)
+            {
+                $workshop->services()->attach($luxury, ['service_rate' => Input::get('luxury-rates')[$luxury]
+                    , 'service_time' => Input::get('luxury-times')[$luxury] ]);
+            }
+        }
+
+        if(!empty($data['suv'])){
+            //Insert Suv Services data from request
+            foreach($data['suv'] as $suv)
+            {
+                $workshop->services()->attach($suv, ['service_rate' => Input::get('suv-rates')[$suv] , 'service_time' => Input::get('suv-times')[$suv] ]);
+            }
         }
 
         $balance = new WorkshopBalance([ 'balance' => 0 ]);
@@ -156,7 +208,7 @@ class RegisterController extends Controller
         {
             if(!Storage::disk('public')->has($specified_workshop_path.'/logo')){
                 $path = $workshops_path.$workshop->id.'/logo';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }
             $profile_pic =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/logo', new File($data['profile_pic']), 'public');
 
@@ -175,7 +227,7 @@ class RegisterController extends Controller
         {
             if(!Storage::disk('public')->has($specified_workshop_path.'/cnic')){
                 $path = $workshops_path.$workshop->id.'/cnic';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }
 
             $cnic_image =  Storage::disk('public')->putFile('/'.$specified_workshop_path.'/cnic', new File($data['cnic_image']), 'public');
@@ -195,7 +247,7 @@ class RegisterController extends Controller
         {
             if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
                 $path = $workshops_path.$workshop->id.'/images';
-                Storage::MakeDirectory($path, 0775, true);
+                mkdir($path, 0775, true);
             }
             foreach($data['images'] as $file)
             {
@@ -210,12 +262,15 @@ class RegisterController extends Controller
         $subject = "Please verify your email address.";
         $verification_code = str_random(30); //Generate verification code
         DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id,'token'=>$verification_code]);
-        Mail::send('workshop.emails.verify', ['name' => $data['name'], 'verification_code' => $verification_code],
-            function($mail) use ($data, $subject){
-                $mail->from(config('app.mail_username'), config('app.name'));
-                $mail->to($data['email'], $data['name']);
-                $mail->subject($subject);
-            });
+        $dataMail = [
+            'subject' => $subject,
+            'view' => 'workshop.emails.verify',
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'verification_code' => $verification_code,
+        ];
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+
 
         //Firing an Event to Generate Notifications
         event(new NewWorkshopEvent($workshop));
@@ -230,8 +285,11 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $services = Service::all(); 
-        return View::make('workshop.auth.register', ['services' => $services]);
+        $hatchback = Service::hatchback()->get();
+        $sedan = Service::sedan()->get();
+        $luxury = Service::luxury()->get();
+        $suv = Service::suv()->get();
+        return View::make('workshop.auth.register', ['hatchback' => $hatchback, 'sedan' => $sedan, 'luxury' => $luxury, 'suv' => $suv]);
     }
 
     /**
@@ -241,7 +299,6 @@ class RegisterController extends Controller
      */
     protected function guard()
     {
-        // Config::set('auth.providers.users.model', \App\Workshop::class);
         return Auth::guard('workshop');
     }
 }
