@@ -48,13 +48,14 @@
                                     <tr role="row">
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1"
                                             colspan="1" aria-label="Date: activate to sort column ascending"
-                                            style="width: 130px;">Workshop ID</th>
+                                            style="width: 100px;">Workshop ID</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 130px;">Workshop Name</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 142px;">Owner Name</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 207px;">Area</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Balance</th>
-                                        <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Leads</th>
+                                        <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 57px;">Leads</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Status</th>
+                                        <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 134px;">Verification</th>
                                         <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="&amp;nbsp;: activate to sort column ascending" style="width: 57px;">Actions</th>
                                     </tr>
                                     </thead>
@@ -77,6 +78,13 @@
                                                     Not Approved
                                                 @else
                                                     Approved
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if( ! $value->is_verified )
+                                                    Not Verified
+                                                @else
+                                                    Verified
                                                 @endif
                                             </td>
                                             <td class="text-center">
