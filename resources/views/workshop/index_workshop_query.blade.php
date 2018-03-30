@@ -44,7 +44,7 @@
                                 <tr role="row" class="odd">
                                     <td class="text-center sorting_1">{{ $key + 1 }}</td>
                                     <td class="text-center">{{ $value->subject }}</td>
-                                    <td class="text-center">{{ $value->workshop->name }}</td>
+                                    <td class="text-center">@if(!is_null($value->workshop)){{ $value->workshop->name }}@endif</td>
                                     <td class="text-center">{{ $value->created_at }}</td>
                                     <td class="text-center">
                                         @if($value->is_resolved == true)
