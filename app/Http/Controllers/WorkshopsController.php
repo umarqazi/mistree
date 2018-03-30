@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Events\NewWorkshopEvent;
 use JWTAuth;
 use Session;
 use Hash, DB, Config, Mail, View;
@@ -616,6 +617,9 @@ class WorkshopsController extends Controller
                 $mail->to($email, $name);
                 $mail->subject($subject);
             });
+
+        //Firing an Event to Generate Notifications
+        event(new NewWorkshopEvent($workshop));
 
         $credentials = [
             'email' => $request->email,
