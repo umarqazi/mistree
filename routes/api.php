@@ -36,6 +36,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::post('logout', 'CustomersController@logout');
 		Route::post('regStoreData', 'CustomersController@regStoreData');
 		Route::post('verify-email', 'CustomersController@verifyEmail');
+		Route::get('resendverification', 'CustomerAuth\RegisterController@resendVerificationEmail');
 
 		Route::get('cars', 'CarsController@getCustomerCar');
 		Route::post('car', 'CarsController@assignCar');
@@ -76,6 +77,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 
 		Route::post('logout', 'WorkshopsController@logout');
 		Route::post('verifyEmail', 'WorkshopsController@verifyEmail');
+		Route::get('resendverification', 'WorkshopAuth\RegisterController@resendVerificationEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
 		Route::get('profile', 'WorkshopsController@getWorkshop');
 		Route::put('profile', 'WorkshopsController@profileUpdate');

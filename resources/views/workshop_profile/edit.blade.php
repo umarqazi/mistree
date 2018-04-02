@@ -17,6 +17,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4 class="title">Workshop Management - Update Workshop</h4>
+                                        <a class="btn pull-right" href="{{url('/edit-profile-password/'.$workshop->id)}}">Change Password</a>
                                     </div>
                                 </div>
                             </div>
