@@ -1072,7 +1072,7 @@ class BookingsController extends Controller
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
                 'message' => $validator->messages()->first(),
-                'body' => $request->all()
+                'body' => null
             ],Response::HTTP_OK);
         }
 
