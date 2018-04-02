@@ -1381,13 +1381,6 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="workshop_id",
-     *     in="formData",
-     *     description="Workshop Id",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
      *     name="name",
      *     in="formData",
      *     description="Workshop Name",
@@ -1412,6 +1405,13 @@ class WorkshopsController extends Controller
      *     name="service_name",
      *     in="formData",
      *     description="Service Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Service Ids",
      *     required=false,
      *     type="string"
      *   ),
@@ -1446,9 +1446,6 @@ class WorkshopsController extends Controller
         $workshops      = Workshop::where('is_verified', true)
             ->where('is_approved', true)
             ->with('address');
-        if ($request->has('workshop_id')) {
-            $workshops  = $workshops->where('id', '=', $request->workshop_id);
-        }
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
@@ -1469,6 +1466,9 @@ class WorkshopsController extends Controller
         }
         if ($request->has('service_name')) {
             $workshops = Workshop::get_workshop_by_service($workshops, $request->service_name);
+        }
+        if ($request->has('service_ids')) {
+            $workshops = Workshop::get_workshop_by_service_ids($workshops, $request->service_ids);
         }
         $workshops          = $workshops->get();
         foreach ($workshops as $key =>$workshop) {
