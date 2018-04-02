@@ -1381,6 +1381,13 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="workshop_id",
+     *     in="formData",
+     *     description="Workshop Id",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
      *     name="name",
      *     in="formData",
      *     description="Workshop Name",
@@ -1439,6 +1446,9 @@ class WorkshopsController extends Controller
         $workshops      = Workshop::where('is_verified', true)
             ->where('is_approved', true)
             ->with('address');
+        if ($request->has('workshop_id')) {
+            $workshops  = $workshops->where('id', '=', $request->workshop_id);
+        }
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
