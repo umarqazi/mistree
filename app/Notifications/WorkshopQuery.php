@@ -2,27 +2,26 @@
 
 namespace App\Notifications;
 
+use Carbon\Carbon;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\BroadcastMessage;
-use Carbon\Carbon;
 
-class NewWorkshop extends Notification
+class WorkshopQuery extends Notification
 {
     use Queueable;
 
-    protected $workshop;
+    protected $query;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($workshop)
+    public function __construct($query)
     {
-        $this->workshop = $workshop;
+        $this->query = $query;
     }
 
     /**
@@ -46,8 +45,8 @@ class NewWorkshop extends Notification
     {
         return [
             'created_at'        => Carbon::now(),
-            'notification_url'  => '/admin/workshops/'.$this->workshop->id,
-            'msg'           => 'A new workshop by name "'.$this->workshop->name.'" has been registered.'
+            'notification_url'  => '/admin/workshop-queries/'.$this->query->id,
+            'msg'           => 'A Workshop: "'.$this->query->workshop->name.'" has created a Query.'
         ];
     }
 

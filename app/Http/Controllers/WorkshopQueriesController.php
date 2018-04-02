@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WorkshopQueryEvent;
 use App\Mail\WorkshopQueryMail;
 use App\WorkshopQuery;
 use Carbon\Carbon;
@@ -116,7 +117,7 @@ class WorkshopQueriesController extends Controller
                     'body'          => null
                 ],Response::HTTP_OK);
             }
-            $workshop->queries()->create([
+            $query = $workshop->queries()->create([
                 'subject'       => $request->subject,
                 'message'       => $request->message,
                 'status'        => 'Open',
@@ -130,6 +131,10 @@ class WorkshopQueriesController extends Controller
             ];
 
             Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
+
+            // Fire An Event To Generate Notification
+            event(new WorkshopQueryEvent($query));
+
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
@@ -148,7 +153,7 @@ class WorkshopQueriesController extends Controller
                 Session::flash('error_message', 'Invalid Details!');
                 return Redirect::to('workshop-queries/create');
             }
-            $workshop->queries()->create([
+            $query = $workshop->queries()->create([
                 'subject'       => $request->subject,
                 'message'       => $request->message,
                 'status'        => 'Open',
@@ -160,6 +165,10 @@ class WorkshopQueriesController extends Controller
                 'workshop'  => $workshop,
                 'msg'       => $request->message,
             ];
+
+            // Fire An Event To Generate Notification
+            event(new WorkshopQueryEvent($query));
+
             Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
             Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
