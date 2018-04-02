@@ -1058,28 +1058,52 @@ class BookingsController extends Controller
      */
     public function customerReceipt(Request $request)
     {
-        $billing = Billing::find($request->billing_id);
-        if (empty($billing))
-        {
+        $rules = [
+            'billing_id'            => 'required|integer',
+            'paid_amount'           => 'required|integer',
+            'review'                => 'required',
+            'ratings'               => 'required',
+        ];
+
+        $input = $request->only('billing_id', 'paid_amount', 'review', 'ratings');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => false,
-                'message' => 'Booking not found',
-                'body' => null
+                'message' => $validator->messages()->first(),
+                'body' => $request->all()
             ],Response::HTTP_OK);
         }
+
         else{
-            $billing->review        = $request->review;
-            $billing->ratings       = $request->ratings;
-            $billing->paid_amount   = $request->paid_amount;
-            $billing->save();
-            $billing->booking->services;
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'Thank You!',
-                'body' => [ 'billing' => $billing ]
-            ],Response::HTTP_OK);
+
+            $billing = Billing::find($request->billing_id);
+
+            if (empty($billing))
+            {
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Booking not found',
+                    'body' => null
+                ],Response::HTTP_OK);
+            }
+            else
+            {
+                $billing->review        = $request->review;
+                $billing->ratings       = $request->ratings;
+                $billing->paid_amount   = $request->paid_amount;
+                $billing->save();
+                $billing->booking->services;
+
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Thank You!',
+                    'body' => [ 'billing' => $billing ]
+                ],Response::HTTP_OK);
+            }
         }
     }
 }
