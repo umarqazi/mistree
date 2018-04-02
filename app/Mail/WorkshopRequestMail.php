@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Config;
 
-class WorkshopQueryMail extends Mailable
+class WorkshopRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 

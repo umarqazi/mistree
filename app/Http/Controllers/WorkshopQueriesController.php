@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\WorkshopQueryMail;
+use App\Mail\WorkshopRequestMail;
 use App\WorkshopQuery;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -126,10 +126,10 @@ class WorkshopQueriesController extends Controller
                 'subject'   => 'Workshop Query - '.$request->subject,
                 'view'      => 'workshop.emails.query',
                 'workshop'  => $workshop,
-                'msg'       => $request->message,
+                'msg'       => $request->message
             ];
 
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
                 'status'        => true,
@@ -158,9 +158,9 @@ class WorkshopQueriesController extends Controller
                 'subject'   => 'Workshop Query - '.$request->subject,
                 'view'      => 'workshop.emails.query',
                 'workshop'  => $workshop,
-                'msg'       => $request->message,
+                'msg'       => $request->message
             ];
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
             Session::flash('success_message', 'Successfully Submitted the Request!');
             return Redirect::to('workshop-queries/create');
         }
