@@ -687,8 +687,8 @@ class CustomersController extends Controller
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
-                'message' => 'success',
-                'body' => [ 'customer' => $customer ],
+                'message' => 'Password changed successfully',
+                'body' => null,
             ],Response::HTTP_OK);
         }
     }
