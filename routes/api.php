@@ -46,6 +46,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::get('bookings', 'BookingsController@customerBookings');
         Route::get('bookings/{booking}', 'BookingsController@getCustomerBooking');
 		Route::post('billing/{billing_id}/amount-paid', 'BookingsController@customerpaidbill');
+		Route::post('billing/receipt', 'BookingsController@customerReceipt');
 		Route::get('vehicle-history', 'CustomersController@getVehicleHistory');
 		Route::patch('leave-rating/{billing_id}', 'CustomersController@insertRatings');
 		Route::get('get-workshop/{workshop_id}','CustomersController@getWorkshopDetails');		

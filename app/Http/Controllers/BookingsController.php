@@ -1008,4 +1008,102 @@ class BookingsController extends Controller
         return View::make('workshop_profile.expired_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'expired_leads' => $expired_leads]);
 
     }
+
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/billing/receipt",
+     *   summary="Bill Paid And Rating by customer",
+     *   operationId="Paid Bill And Rating",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="billing_id",
+     *     in="formData",
+     *     description="Billing ID",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="paid_amount",
+     *     in="formData",
+     *     description="Customer Total Paid Amount",
+     *     required=true,
+     *     type="number"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="review",
+     *     in="formData",
+     *     description="Lead Review",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="ratings",
+     *     in="formData",
+     *     description="Lead Ratings",
+     *     required=true,
+     *     type="integer"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function customerReceipt(Request $request)
+    {
+        $rules = [
+            'billing_id'            => 'required|integer',
+            'paid_amount'           => 'required|integer',
+            'review'                => 'required',
+            'ratings'               => 'required',
+        ];
+
+        $input = $request->only('billing_id', 'paid_amount', 'review', 'ratings');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+
+        else{
+
+            $billing = Billing::find($request->billing_id);
+
+            if (empty($billing))
+            {
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'Booking not found',
+                    'body' => null
+                ],Response::HTTP_OK);
+            }
+            else
+            {
+                $billing->review        = $request->review;
+                $billing->ratings       = $request->ratings;
+                $billing->paid_amount   = $request->paid_amount;
+                $billing->save();
+                $billing->booking->services;
+
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Thank You!',
+                    'body' => [ 'billing' => $billing ]
+                ],Response::HTTP_OK);
+            }
+        }
+    }
 }
