@@ -271,7 +271,7 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
 
 
         //Firing an Event to Generate Notifications
@@ -330,7 +330,7 @@ class RegisterController extends Controller
             'verification_code' => $verification_code,
         ];
 
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
 
         return response()->json([
             'http-status'   => Response::HTTP_OK,
