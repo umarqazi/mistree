@@ -873,7 +873,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Bookings',
-                    'body' => ['bookings' => $bookings]
+                    'body' => ['bookings' => $bookings->load('billing')]
                 ],Response::HTTP_OK);                        
         
     }
