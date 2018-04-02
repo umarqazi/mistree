@@ -32,11 +32,12 @@ class WorkshopQueryMail extends Mailable
     public function build()
     {
         $dataMail = $this->dataMail;
+        $workshop = $dataMail['workshop'];
         return $this->view($dataMail['view'])
-            ->from(Config::get('app.mail_username'), Config::get('app.name'))
+            ->from($workshop->email, $workshop->name)
             ->subject($dataMail['subject'])
             ->with([
-                'workshop' => $dataMail['workshop'],
+                'workshop' => $workshop,
                 'subject' => $dataMail['subject'],
                 'msg' => $dataMail['msg']
             ]);
