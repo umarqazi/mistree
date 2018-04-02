@@ -119,6 +119,27 @@ class Workshop extends Authenticatable
         }
         return $workshops;
     }
+
+    public static function get_workshop_by_service_ids($workshops, $service_ids)
+    {
+        $services = explode(',', $service_ids);
+        $services = array_map('trim', $services);
+        $workshops = $workshops->with(['services' => function($query) use ($services) {
+            foreach($services as $key => $service_id){
+                if($key == 0)
+                    $query->where('services.id', '=', $service_id);
+                else
+                    $query->orwhere('services.id', '=', $service_id);
+            }
+            return $query;
+        }]);
+        foreach ($services as $service_id) {
+            $workshops->whereHas('services', function($query) use ($service_id){
+                $query->where('services.id', '=', $service_id);
+            });
+        }
+        return $workshops;
+    }
     public static function get_workshop_by_address($workshops, $key, $value)
     {
         $workshops = $workshops->whereHas('address', function($query) use ($key, $value) {

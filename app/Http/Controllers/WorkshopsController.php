@@ -1409,6 +1409,13 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Service Ids",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
      *     name="address_block",
      *     in="formData",
      *     description="Workshop Address Block",
@@ -1459,6 +1466,9 @@ class WorkshopsController extends Controller
         }
         if ($request->has('service_name')) {
             $workshops = Workshop::get_workshop_by_service($workshops, $request->service_name);
+        }
+        if ($request->has('service_ids')) {
+            $workshops = Workshop::get_workshop_by_service_ids($workshops, $request->service_ids);
         }
         $workshops          = $workshops->get();
         foreach ($workshops as $key =>$workshop) {

@@ -64,7 +64,8 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
-        Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'create','store']]);
+        Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'create']]);
+        Route::post('workshop-queries', 'WorkshopQueriesController@storeWeb');
 
         
         Route::get('leads','BookingsController@leadsHistory');
