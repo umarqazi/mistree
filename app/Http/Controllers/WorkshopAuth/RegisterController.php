@@ -7,6 +7,7 @@ use App\Jobs\MailJobRegister;
 use App\Mail\WorkshopRegistrationMail;
 use App\Workshop;
 use Carbon\Carbon;
+use Illuminate\Http\Response;
 use SoapClient;
 use App\WorkshopAddress;
 use App\WorkshopBalance;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 use App\Service, View;
 use App\Http\Controllers\Controller;
@@ -269,13 +271,73 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
 
 
         //Firing an Event to Generate Notifications
         event(new NewWorkshopEvent($workshop));
 
         return $workshop;
+    }
+
+    /**
+     * API Resend Verification Email for Workshop, on success return Success Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/resendverification",
+     *   summary="Workshop Resend Verification Code",
+     *   operationId="resend_verification",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function resendVerificationEmail()
+    {
+        $workshop   = JWTAuth::authenticate();
+
+        $verification_code  = str_random(30);
+        $code   = DB::table('workshop_verifications')->where('ws_id', $workshop->id)->first();
+
+        if(!is_null($code))
+        {
+            DB::table('workshop_verifications')->where('ws_id', $workshop->id)->update(['token' => $verification_code]);
+        }
+        else
+        {
+            DB::table('workshop_verifications')->insert(['ws_id'=>$workshop->id, 'token'=>$verification_code]);
+        }
+
+        $dataMail = [
+            'subject'   => 'Please verify your email address.',
+            'view'      => 'workshop.emails.verify',
+            'name'      => $workshop->name,
+            'email'     => $workshop->email,
+            'verification_code' => $verification_code,
+        ];
+
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Please check your email address: '. $workshop->email .' to find the verification code.',
+            'body'          => null
+        ], Response::HTTP_OK);
     }
 
     /**
