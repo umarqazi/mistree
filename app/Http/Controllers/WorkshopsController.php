@@ -2235,7 +2235,7 @@ class WorkshopsController extends Controller
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'Images Uploaded Successfully!',
+            'message' => 'Image Uploaded Successfully!',
             'body' => ['image' => $url]
         ],Response::HTTP_OK);
     }
@@ -2296,7 +2296,7 @@ class WorkshopsController extends Controller
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'success',
+            'message' => 'Profile Image Uploaded',
             'body' => ['profile_picture' => $url]
         ],Response::HTTP_OK);
     }
@@ -2357,7 +2357,7 @@ class WorkshopsController extends Controller
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'success',
+            'message' => 'CNIC Image Uploaded',
             'body' => ['cnic_image' => $url]
         ],Response::HTTP_OK);
     }
