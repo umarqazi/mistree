@@ -272,7 +272,7 @@ class CustomersController extends Controller
             'email' => $request->email,
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new CustomerRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new CustomerRegistrationMail($dataMail))->onQueue('emails'));
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,

@@ -3,6 +3,12 @@
 namespace App\Http\Controllers\CustomerAuth;
 
 use App\Customer;
+use App\Mail\CustomerRegistrationMail;
+use Carbon\Carbon;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Tymon\JWTAuth\Facades\JWTAuth;
 use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -68,6 +74,66 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
         ]);
+    }
+
+    /**
+     * API Resend Verification Email for Customer, on success return Success Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/resendverification",
+     *   summary="Customer Resend Verification Code",
+     *   operationId="resend_verification",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+
+    public function resendVerificationEmail()
+    {
+        $customer   = JWTAuth::authenticate();
+
+        $verification_code  = str_random(30);
+        $code   = DB::table('customer_verifications')->where('cust_id', $customer->id)->first();
+
+        if(!is_null($code))
+        {
+            DB::table('customer_verifications')->where('cust_id', $customer->id)->update(['token' => $verification_code]);
+        }
+        else
+        {
+            DB::table('customer_verifications')->insert(['cust_id'=>$customer->id, 'token'=>$verification_code]);
+        }
+
+        $dataMail = [
+            'subject'   => 'Please verify your email address.',
+            'view'      => 'customer.verify',
+            'name'      => $customer->name,
+            'email'     => $customer->email,
+            'verification_code' => $verification_code,
+        ];
+
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new CustomerRegistrationMail($dataMail))->onQueue('emails'));
+
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Please check your email address: '. $customer->email .' to find the verification code.',
+            'body'          => null
+        ], Response::HTTP_OK);
     }
 
     /**
