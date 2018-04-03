@@ -18,15 +18,16 @@ class AdminsController extends Controller
 
     public function showHome()
     {
-        $customers = Customer::all();
+        $customers     = Customer::all();
         $CustomerCount = count($customers);
 
-        $workshops = Workshop::all();
+        $workshops     = Workshop::all();
         $WorkshopCount = count($workshops);
+        $total_bookings = Booking::all()->count();
 
         $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->count();
 
-        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'BookingsCount' => $bookings_active ]);
+        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'bookings_active' => $bookings_active, 'total_bookings' => $total_bookings ]);
     }
 
     public function index()
