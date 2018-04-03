@@ -32,11 +32,12 @@ class CustomerQueryMail extends Mailable
     public function build()
     {
         $dataMail = $this->dataMail;
+        $customer = $dataMail['customer'];
         return $this->view($dataMail['view'])
-            ->from(Config::get('app.mail_username'), Config::get('app.name'))
+            ->from($customer->email, $customer->name)
             ->subject($dataMail['subject'])
             ->with([
-                'customer' => $dataMail['customer'],
+                'customer' => $customer,
                 'subject' => $dataMail['subject'],
                 'msg' => $dataMail['msg']
             ]);

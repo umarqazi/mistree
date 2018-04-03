@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\WorkshopQueryMail;
+use App\Mail\WorkshopRequestMail;
 use App\WorkshopQuery;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -100,70 +100,70 @@ class WorkshopQueriesController extends Controller
      */
     public function store(Request $request)
     {
-        if( $request->header('Content-Type') == 'application/json'){
-            $workshop = JWTAuth::authenticate();
-            $rules = array(
-                'subject'      => 'required',
-                'message'      => 'required'
-            );
-            $validator = Validator::make($request->all(), $rules);
+        $workshop = JWTAuth::authenticate();
+        $rules = array(
+            'subject'      => 'required',
+            'message'      => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
 
-            if ($validator->fails()) {
-                return response()->json([
-                    'http-status'   => Response::HTTP_OK,
-                    'status'        => false,
-                    'message'       => 'Incomplete Details!',
-                    'body'          => null
-                ],Response::HTTP_OK);
-            }
-            $workshop->queries()->create([
-                'subject'       => $request->subject,
-                'message'       => $request->message,
-                'status'        => 'Open',
-                'is_resolved'   => false
-            ]);
-            $dataMail = [
-                'subject'   => 'Workshop Query - '.$request->subject,
-                'view'      => 'workshop.emails.query',
-                'workshop'  => $workshop,
-                'msg'       => $request->message,
-            ];
-
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
+        if ($validator->fails()) {
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
-                'status'        => true,
-                'message'       => 'Query has been Added.',
+                'status'        => false,
+                'message'       => 'Incomplete Details!',
                 'body'          => null
             ],Response::HTTP_OK);
-        }else{
-            $workshop = Auth::guard('workshop')->user();
-            $rules = array(
-                'subject'      => 'required',
-                'message'      => 'required'
-            );
-            $validator = Validator::make($request->all(), $rules);
+        }
+        $workshop->queries()->create([
+            'subject'       => $request->subject,
+            'message'       => $request->message,
+            'status'        => 'Open',
+            'is_resolved'   => false
+        ]);
+        $dataMail = [
+            'subject'   => 'Workshop Query - '.$request->subject,
+            'view'      => 'workshop.emails.query',
+            'workshop'  => $workshop,
+            'msg'       => $request->message
+        ];
 
-            if ($validator->fails()) {
-                Session::flash('error_message', 'Invalid Details!');
-                return Redirect::to('workshop-queries/create');
-            }
-            $workshop->queries()->create([
-                'subject'       => $request->subject,
-                'message'       => $request->message,
-                'status'        => 'Open',
-                'is_resolved'   => false
-            ]);
-            $dataMail = [
-                'subject'   => 'Workshop Query - '.$request->subject,
-                'view'      => 'workshop.emails.query',
-                'workshop'  => $workshop,
-                'msg'       => $request->message,
-            ];
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopQueryMail($dataMail))->onQueue('emails'));
-            Session::flash('success_message', 'Successfully Submitted the Request!');
+        Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
+        return response()->json([
+            'http-status'   => Response::HTTP_OK,
+            'status'        => true,
+            'message'       => 'Query has been Added.',
+            'body'          => null
+        ],Response::HTTP_OK);
+    }
+    public function storeWeb(Request $request)
+    {
+        $workshop = Auth::guard('workshop')->user();
+        $rules = array(
+            'subject'      => 'required',
+            'message'      => 'required'
+        );
+        $validator = Validator::make($request->all(), $rules);
+
+        if ($validator->fails()) {
+            Session::flash('error_message', 'Invalid Details!');
             return Redirect::to('workshop-queries/create');
         }
+        $workshop->queries()->create([
+            'subject'       => $request->subject,
+            'message'       => $request->message,
+            'status'        => 'Open',
+            'is_resolved'   => false
+        ]);
+        $dataMail = [
+            'subject'   => 'Workshop Query - '.$request->subject,
+            'view'      => 'workshop.emails.query',
+            'workshop'  => $workshop,
+            'msg'       => $request->message
+        ];
+        Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
+        Session::flash('success_message', 'Successfully Submitted the Request!');
+        return Redirect::to('workshop-queries/create');
     }
 
     /**

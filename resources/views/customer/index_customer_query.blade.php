@@ -70,7 +70,6 @@
                                         <form method="POST" id="customer_query" action="{{url('admin/customer-queries/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input class="btn btn-header btn-export" type="submit" value="Delete">
                                         </form>
 
                                         <a class= "mistri-icons ti-eye" href="{{url('admin/customer-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Events\NewWorkshopEvent;
 use App\Mail\WorkshopConfirmationMail;
 use App\Mail\WorkshopRegistrationMail;
 use JWTAuth;
@@ -237,7 +238,7 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -621,7 +622,10 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+
+        //Firing an Event to Generate Notifications
+        event(new NewWorkshopEvent($workshop));
 
         $credentials = [
             'email' => $request->email,
@@ -1405,6 +1409,13 @@ class WorkshopsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Service Ids",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
      *     name="address_block",
      *     in="formData",
      *     description="Workshop Address Block",
@@ -1455,6 +1466,9 @@ class WorkshopsController extends Controller
         }
         if ($request->has('service_name')) {
             $workshops = Workshop::get_workshop_by_service($workshops, $request->service_name);
+        }
+        if ($request->has('service_ids')) {
+            $workshops = Workshop::get_workshop_by_service_ids($workshops, $request->service_ids);
         }
         $workshops          = $workshops->get();
         foreach ($workshops as $key =>$workshop) {
@@ -2231,7 +2245,7 @@ class WorkshopsController extends Controller
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'Images Uploaded Successfully!',
+            'message' => 'Image Uploaded Successfully!',
             'body' => ['image' => $url]
         ],Response::HTTP_OK);
     }
@@ -2292,7 +2306,7 @@ class WorkshopsController extends Controller
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'success',
+            'message' => 'Profile Image Uploaded',
             'body' => ['profile_picture' => $url]
         ],Response::HTTP_OK);
     }
@@ -2353,7 +2367,7 @@ class WorkshopsController extends Controller
         return response()->json([
             'http-status' => Response::HTTP_OK,
             'status' => true,
-            'message' => 'success',
+            'message' => 'CNIC Image Uploaded',
             'body' => ['cnic_image' => $url]
         ],Response::HTTP_OK);
     }
@@ -2582,7 +2596,7 @@ class WorkshopsController extends Controller
             return response()->json([
                 'http-status'   => Response::HTTP_NOT_ACCEPTABLE,
                 'status'        => "NOT_ACCEPTABLE",
-                'errors'        => $validator->messages()
+                'errors'        => $validator->messages()->first()
             ],Response::HTTP_NOT_ACCEPTABLE);
         }
 
@@ -2654,6 +2668,35 @@ class WorkshopsController extends Controller
 
         Session::flash('message', 'Success! Workshop Password Updated');
         return Redirect::to('admin/workshops');
+    }
+
+    public function editProfilePassword(Workshop $workshop)
+    {
+        return View::make('workshop_profile.edit-password')->with('workshop', $workshop);
+    }
+
+    public function updateProfilePassword(Request $request)
+    {
+        $rules = [
+            'password'  => 'required|confirmed|min:6|max:16',
+        ];
+
+        $input = $request->only('password', 'password_confirmation');
+        $validator = Validator::make($input, $rules);
+        if($validator->fails()) {
+            $request->offsetUnset('password');
+            $request->offsetUnset('password_confirmation');
+            return Redirect::back()
+                ->withErrors($validator);
+        }
+
+        // Update workshop Password
+        $workshop = Workshop::find($request->workshop_id);
+        $workshop->password = Hash::make($request->password);
+        $workshop->update();
+
+        Session::flash('message', 'Success! Workshop Password Updated');
+        return Redirect::to('/profile');
     }
 
     public function unlinkImage($url)

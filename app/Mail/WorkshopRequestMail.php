@@ -6,9 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Config;
 
-class WorkshopQueryMail extends Mailable
+class WorkshopRequestMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,11 +31,12 @@ class WorkshopQueryMail extends Mailable
     public function build()
     {
         $dataMail = $this->dataMail;
+        $workshop = $dataMail['workshop'];
         return $this->view($dataMail['view'])
-            ->from(Config::get('app.mail_username'), Config::get('app.name'))
+            ->from($workshop->email, $workshop->name)
             ->subject($dataMail['subject'])
             ->with([
-                'workshop' => $dataMail['workshop'],
+                'workshop' => $workshop,
                 'subject' => $dataMail['subject'],
                 'msg' => $dataMail['msg']
             ]);
