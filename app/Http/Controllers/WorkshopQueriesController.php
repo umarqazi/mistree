@@ -116,7 +116,7 @@ class WorkshopQueriesController extends Controller
                 'body'          => null
             ],Response::HTTP_OK);
         }
-        $workshop->queries()->create([
+        $query  = $workshop->queries()->create([
             'subject'       => $request->subject,
             'message'       => $request->message,
             'status'        => 'Open',
@@ -151,7 +151,7 @@ class WorkshopQueriesController extends Controller
             Session::flash('error_message', 'Invalid Details!');
             return Redirect::to('workshop-queries/create');
         }
-        $workshop->queries()->create([
+        $query  = $workshop->queries()->create([
             'subject'       => $request->subject,
             'message'       => $request->message,
             'status'        => 'Open',
