@@ -1347,7 +1347,7 @@ class WorkshopsController extends Controller
             array_push($customer_ids, $booking->customer->id);
         }
         $customer = array_unique($customer_ids);
-        $customers = Customer::whereIN('id', $customer)->get()->load('cars');
+        $customers = Customer::whereIN('id', $customer)->get()->load('cars','addresses');
         return View::make('workshop.customers', ['customers' => $customers]);
     }
 
