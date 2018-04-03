@@ -100,21 +100,22 @@
 												<tr>
 													<th class="text-center">Workshop ID</th>
 													<th class="text-center">Workshop</th>
+													<th class="text-center">Vehicle No.</th>
 													<th class="text-center">Job Date Time</th>
 													<th class="text-center">Status</th>
 													<th class="text-center">Services</th>
 													<th class="text-center">Estimated Rates</th>
 													<th class="text-center">Request at</th>
+													<th class="text-center">Ratings</th>
 												</tr>
 											</thead>
 						                    <tbody>
 						                    	@if(count($customer->bookings) > 0)
 							                    	@foreach($customer->bookings as $key => $booking)
 								                        <tr> 
-								                        	<td
-																	class="text-center">{{$booking->workshop
-																	->jazzcash_id}}</td>
+								                        	<td class="text-center">{{$booking->workshop->jazzcash_id}}</td>
 								                        	<td class="text-center">{{$booking->workshop->name}}</td>
+															<td class="text-center">{{$booking->vehicle_no  }}</td>
 								                        	<td class="text-center">{{$booking->job_time." ".$booking->job_date }}</td>
 								                        	<td class="text-center">{{$booking->job_status }}</td>
 								                        	<td class="text-center">{{implode(', ',
@@ -122,6 +123,7 @@
 															<td class="text-center">{{$booking->services->pluck
 															('pivot')->pluck('service_rate')->sum()}}</td>
 								                        	<td class="text-center">{{$booking->created_at->format('H:i D M, Y') }}</td>
+															<td class="text-center">{{$booking->billing['ratings']}}</td>
 								                        </tr>        
 							                        @endforeach
 						                        @else
