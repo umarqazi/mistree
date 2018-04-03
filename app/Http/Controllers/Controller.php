@@ -12,7 +12,7 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
  * @SWG\Swagger(
  *   basePath="/",
  *   @SWG\Info(
- *     title="Mistri APIs",
+ *     title="Mystri.pk APIs",
  *     version="1.0.0"
  *   )
  * )
