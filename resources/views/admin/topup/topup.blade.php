@@ -48,7 +48,7 @@
                       </div>
                       <div class="form-group">
                           <label class="control-label">Amount <span class="manadatory">*</span></label>
-                          <input type="text" class="form-control border-input" name="amount">
+                          <input type="number"  max="9999" class="form-control border-input" name="amount">
                           @if ($errors->has('amount'))
                               <span class="help-block">
                                   <strong class="manadatory">{{ $errors->first('amount') }}</strong>
