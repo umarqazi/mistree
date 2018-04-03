@@ -46,7 +46,7 @@
                                 </div>
                                 <div class="col-xs-2 col-xs-offset-1">
                                     <div class="numbers">
-                                        <a href="{{url('/leads')}}"><p>Received</p></a>
+                                        <a href="{{url('/leads')}}"><p>Total</p></a>
                                         {{$leads_count}}
                                     </div>
                                 </div>
