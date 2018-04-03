@@ -75,7 +75,7 @@
 															<td>{{ $adjustments->amount }}</td>
 															<td>{{ $adjustments->unadjusted_balance }}</td>
 															<td>{{ $adjustments->adjusted_balance }}</td>
-															<td>{{ $adjustments->created_at->format('d-m-Y')}}</td>
+															<td>{{ $adjustments->created_at->format('d-M-Y')}}</td>
 															<td>{{ $adjustments->created_at->format('g:i A')}}</td>
 															<td></td>
 														</tr>
