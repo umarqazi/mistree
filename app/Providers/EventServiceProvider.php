@@ -37,6 +37,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NotificationsBeforeBookingEvent' => [
             'App\Listeners\NotificationsBeforeBookingEventListener'
         ],
+        'App\Events\CustomerQueryEvent' => [
+            'App\Listeners\CustomerQueryEventListener'
+        ],
+        'App\Events\WorkshopQueryEvent' => [
+            'App\Listeners\WorkshopQueryEventListener'
+        ],
     ];
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CustomerQuery;
+use App\Events\CustomerQueryEvent;
 use App\Mail\CustomerQueryMail;
 use Carbon\Carbon;
 use Config;
@@ -85,7 +86,7 @@ class CustomerQueriesController extends Controller
                     'body'          => null
                 ],Response::HTTP_OK);
             }
-            $customer->queries()->create([
+            $query = $customer->queries()->create([
                 'subject'       => $request->subject,
                 'message'       => $request->message,
                 'status'        => 'Open',
@@ -98,6 +99,9 @@ class CustomerQueriesController extends Controller
                 'msg'       => $request->message
                 ];
             Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
+
+            // Fire An Event To Generate Notification
+            event(new CustomerQueryEvent($query));
 
             return response()->json([
                 'http-status'   => Response::HTTP_OK,

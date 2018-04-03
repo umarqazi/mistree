@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\WorkshopQueryEvent;
 use App\Mail\WorkshopRequestMail;
 use App\WorkshopQuery;
 use Carbon\Carbon;
@@ -127,7 +128,8 @@ class WorkshopQueriesController extends Controller
             'workshop'  => $workshop,
             'msg'       => $request->message
         ];
-
+        // Fire An Event To Generate Notification
+        event(new WorkshopQueryEvent($query));
         Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
         return response()->json([
             'http-status'   => Response::HTTP_OK,
@@ -161,6 +163,8 @@ class WorkshopQueriesController extends Controller
             'workshop'  => $workshop,
             'msg'       => $request->message
         ];
+        // Fire An Event To Generate Notification
+        event(new WorkshopQueryEvent($query));
         Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
         Session::flash('success_message', 'Successfully Submitted the Request!');
         return Redirect::to('workshop-queries/create');
