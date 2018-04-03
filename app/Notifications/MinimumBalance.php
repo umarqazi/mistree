@@ -44,7 +44,7 @@ class MinimumBalance extends Notification
         return [
             'created_at'        => Carbon::now(),
             'notification_url'  => '/ledger',
-            'msg'               => 'Your Balance has been reached to Limit.Please Recharge.'
+            'msg'               => 'You are running out of balance. Please recharge yout account.'
         ];
     }
 
