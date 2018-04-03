@@ -37,7 +37,8 @@
                                 <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                                     <thead>
                                     <tr role="row">
-                                        <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 150px;">Name</th>
+                                        <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" style="width: 150px;">Name</th>
+                                        <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Area: activate to sort column ascending" style="width: 150px;">Area / Town</th>
                                         <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 156px;">Email</th>
                                         <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Contact No.</th>
                                         <th class="sorting text-center" tabindex="0" aria-controls="jsTable"
@@ -51,6 +52,7 @@
                                     @foreach($customers as $key => $value)
                                         <tr role="row" class="odd">
                                             <td class="text-center">{{ $value->name }}</td>
+                                            <td class="text-center">{{ $value->addresses[0]['town']}}</td>
                                             <td class="text-center">{{ $value->email }}</td>
                                             <td class="text-center">{{ $value->con_number }}</td>
                                             <td class="text-center">{{ $value->bookings->count() }}</td>
