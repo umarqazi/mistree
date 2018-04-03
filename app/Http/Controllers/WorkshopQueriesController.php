@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Events\WorkshopQueryEvent;
-use App\Mail\WorkshopQueryMail;
 use App\Mail\WorkshopRequestMail;
 use App\WorkshopQuery;
 use Carbon\Carbon;
