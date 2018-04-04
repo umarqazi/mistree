@@ -2454,7 +2454,7 @@ class WorkshopsController extends Controller
         }else{
             $balance = 0;
         }
-        if($request->transaction_type == "Debit"){
+        if($request->transaction_type == "Credit"){
             $new_balance = $balance + $request->amount;
         }else{
             $new_balance = $balance - $request->amount;
