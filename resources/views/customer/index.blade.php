@@ -52,7 +52,7 @@
                                     @foreach($customers as $key => $value)
                                         <tr role="row" class="odd">
                                             <td class="text-center">{{ $value->name }}</td>
-                                            @if($value->addresses)
+                                            @if(!empty($value->addresses))
                                                 @foreach($value->addresses as $address)
                                                     <td class="text-center">{{ $address['town']}}</td>
                                                 @endforeach
