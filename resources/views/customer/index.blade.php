@@ -52,13 +52,7 @@
                                     @foreach($customers as $key => $value)
                                         <tr role="row" class="odd">
                                             <td class="text-center">{{ $value->name }}</td>
-                                            @if(!empty($value->addresses))
-                                                @foreach($value->addresses as $address)
-                                                    <td class="text-center">{{ $address['town']}}</td>
-                                                @endforeach
-                                            @else
-                                                <td class="text-center"> - </td>
-                                            @endif
+                                            <td class="text-center">{{ @implode("\n",$value->addresses->pluck('town')->toArray())}}</td>
                                             <td class="text-center">{{ $value->email }}</td>
                                             <td class="text-center">{{ $value->con_number }}</td>
                                             <td class="text-center">{{ $value->bookings->count() }}</td>
