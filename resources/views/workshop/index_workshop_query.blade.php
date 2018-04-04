@@ -61,7 +61,7 @@
                                         @if($value->is_resolved == false)
                                             <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query"><i class="ti-check-box"></i></button>
                                         @endif
-                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Delete Workshop Queries" value="submit" type="submit" form="workshop_delete_query"><i class="ti-close"></i></button>
+
                                     </td>
                                 </tr>
                                 @endforeach
