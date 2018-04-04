@@ -29,9 +29,6 @@ class CustomerQueryEventListener
      */
     public function handle(CustomerQueryEvent $event)
     {
-        echo $event->query;
-        die();
-
         $admins = Admin::all();
         Notification::send($admins, new CustomerQuery($event->query));
     }
