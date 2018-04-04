@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Notifications\WorkshopResetPassword;
+use App\Scopes\OrderBy;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -44,6 +45,18 @@ class Workshop extends Authenticatable
      * @var array
      */
     protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderBy);
+    }
 
     /**
      * Get the phone record associated with the user.
