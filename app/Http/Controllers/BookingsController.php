@@ -6,6 +6,7 @@ use App\Events\JobAcceptedEvent;
 use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Events\SelectAnotherWorkshopEvent;
 use App\Jobs\LeadExpiryEventJob;
 use App\Jobs\NotificationsBeforeJob;
 use App\Jobs\SelectAnotherWorkshopEventJob;
@@ -315,8 +316,9 @@ class BookingsController extends Controller
     public function rejectBooking($booking_id){
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => false, 'job_status' => 
-            'rejected']);
+        $booking  = $workshop->bookings()->where('id', $booking_id)->first();
+        $booking->update(['is_accepted' => false, 'job_status' => 'rejected']);
+        event(new SelectAnotherWorkshopEvent($booking));
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
