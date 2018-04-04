@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Register New Workshop')
+@section('title', 'Registration')
 @section('content_login')
     <div class="wrapper login-signup">
         <div class="main-panel">
