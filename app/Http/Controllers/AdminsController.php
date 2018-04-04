@@ -25,7 +25,7 @@ class AdminsController extends Controller
         $WorkshopCount = count($workshops);
         $total_bookings = Booking::all()->count();
 
-        $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->count();
+        $bookings_active   = Booking::ActiveBookings()->count();
 
         return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'bookings_active' => $bookings_active, 'total_bookings' => $total_bookings ]);
     }
