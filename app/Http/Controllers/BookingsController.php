@@ -807,6 +807,9 @@ class BookingsController extends Controller
       
         switch ($request->list_type) {
 
+        case "active":
+            return View::make('bookings.active')->with('bookings', $bookings_active);
+            break;
         case "pending":
             return View::make('bookings.pending')->with('bookings', $bookings_pending);
             break;
@@ -818,7 +821,7 @@ class BookingsController extends Controller
             break;
         default:
         
-        return View::make('bookings.active')->with('bookings', $bookings_active);
+        return View::make('bookings.index')->with('bookings', $bookings);
 
         }
     }   
