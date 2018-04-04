@@ -26,7 +26,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label class="control-label">Workshop Name <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" name="name" id="wf_name" value="{{ old('name') }}" required oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <input type="text" class="form-control border-input" name="name" id="wf_name" value="{{ old('name') }}" required maxlength="25" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('name'))
                                                     <span class="help-block">

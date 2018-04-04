@@ -67,7 +67,7 @@
                                 <div class="col-xs-8">
                                     <div class="numbers">
                                         <p>ACTIVE BOOKINGS</p>
-                                       {{ $BookingsCount }}
+                                       {{ $bookings_active }}
                                     </div>
                                 </div>
                             </div>
@@ -79,7 +79,32 @@
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card">
+                        <div class="content">
+                            <div class="row">
+                                <div class="col-xs-4">
+                                    <div class="icon-big icon-info text-center">
+                                        <i class="ti-view-list-alt stack-color"></i>
+                                    </div>
+                                </div>
+                                <div class="col-xs-8">
+                                    <div class="numbers">
+                                        <p>TOTAL BOOKINGS</p>
+                                        {{ $total_bookings }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="footer">
+                                <hr />
+                                <div class="stats">
+                                    <a href="{{ url( 'admin/booking/') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
         </div>          
