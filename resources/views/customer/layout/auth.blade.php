@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel Multi Auth Guard') }}</title>
+        <title>{{ env('APP_NAME') }} | @yield('title')</title>
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
@@ -34,8 +34,8 @@
                 </button>
 
                 <!-- Branding Image -->
-                <a class="navbar-brand" href="{{ url('/customer') }}">
-                    {{ config('app.name', 'Laravel Multi Auth Guard') }}: Customer
+                <a class="navbar-brand" href="{{ url('/login') }}">
+                    {{ env('APP_NAME') }}
                 </a>
             </div>
 
@@ -48,7 +48,7 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="nav navbar-nav navbar-right">
                     <!-- Authentication Links -->
-                    @if (Auth::guest())
+                    {{--@if (Auth::guest())
                         <li><a href="{{ url('/customer/login') }}">Login</a></li>
                         <li><a href="{{ url('/customer/register') }}">Register</a></li>
                     @else
@@ -71,7 +71,7 @@
                                 </li>
                             </ul>
                         </li>
-                    @endif
+                    @endif--}}
                 </ul>
             </div>
         </div>

@@ -1,6 +1,7 @@
 @extends('customer.layout.auth')
 
 <!-- Main Content -->
+@section('title','Recover Password')
 @section('content')
 <div class="container">
     <div class="row">
