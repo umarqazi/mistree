@@ -22,7 +22,7 @@ class CustomerQueryEvent
      */
     public function __construct($query)
     {
-        $this->customer = $query;
+        $this->query = $query;
     }
 
     /**
