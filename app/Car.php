@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Scopes\CategoryScope;
+use App\Scopes\OrderBy;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
@@ -44,6 +45,7 @@ class Car extends Model
         parent::boot();
 
         static::addGlobalScope(new CategoryScope);
+        static::addGlobalScope(new OrderBy);
     }
 
     public function customers()

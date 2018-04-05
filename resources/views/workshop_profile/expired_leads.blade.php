@@ -52,7 +52,6 @@
                                         <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
                                         <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
                                         <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Total: activate to sort column ascending" style="width: 54px;">Total</th>
-                                        <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Rating: activate to sort column ascending" style="width: 69px;">Rating</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -64,7 +63,6 @@
                                             <td class="text-center">{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
                                             <td class="text-center">{{$lead->job_time}}</td>
                                             <td class="text-center">{{$lead->billing['amount']}}</td>
-                                            <td class="text-center"><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

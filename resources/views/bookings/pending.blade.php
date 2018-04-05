@@ -66,7 +66,7 @@
                             </thead>
                             <tbody>                            
                                  @foreach($bookings as $booking)                                
-                                    <tr role="row" class="odd">                                    
+                                    <tr role="row" class="odd">
                                         <td class="text-center">{{$booking->job_date}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">{{$booking->customer->name}}</td>

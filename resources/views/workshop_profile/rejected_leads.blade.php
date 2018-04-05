@@ -47,7 +47,7 @@
                     <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">                      
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
-                                <tr role="row">                        
+                                <tr role="row">
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 95px;">Job Date</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
@@ -58,7 +58,7 @@
                             </thead>
                             <tbody>                            
                                 @foreach($rejected_leads as $lead)                                
-                                <tr role="row" class="odd">                                    
+                                <tr role="row" class="odd">
                                     <td class="text-center">{{$lead->job_date}}</td>
                                     <td class="text-center">{{$lead->vehicle_no}}</td>
                                     <td class="text-center">{{$lead->customer->name}}</td>

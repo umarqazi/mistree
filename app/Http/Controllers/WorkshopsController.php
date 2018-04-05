@@ -909,6 +909,11 @@ class WorkshopsController extends Controller
         return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
     }
 
+    public function changePassword()
+    {
+        return View::make('workshop_profile.change-password');
+    }
+
     /**
      * API Password Reset for Workshop, on success return Success Message
      *
@@ -960,7 +965,7 @@ class WorkshopsController extends Controller
     {
         $rules = [
             'prev_password'  => 'required',
-            'password'  => 'required|confirmed|min:6',
+            'password'  => 'required|confirmed|min:6|max:16',
         ];
 
         $input = $request->only('prev_password','password', 'password_confirmation');
@@ -970,22 +975,38 @@ class WorkshopsController extends Controller
             $request->offsetUnset('prev_password');
             $request->offsetUnset('password');
             $request->offsetUnset('password_confirmation');
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => false,
-                'message' => $validator->messages()->first(),
-                'body' => null
-            ],Response::HTTP_OK);
+            if($request->header('Content-Type') == "application/json")
+            {
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => $validator->messages()->first(),
+                    'body' => null
+                ],Response::HTTP_OK);
+            }
+            else
+            {
+                return Redirect::back()
+                    ->withErrors($validator);
+            }
         }
-        else{
-            $workshop   = JWTAuth::authenticate();
+        else
+        {
+            if($request->header('Content-Type') == "application/json")
+            {
+                $workshop   = JWTAuth::authenticate();
+            }
+            else
+            {
+                $workshop   = Auth::guard('workshop')->user();
+            }
 
-            try {
-                Config::set('auth.providers.users.model', \App\Workshop::class);
-                if (!Hash::check($request->prev_password, $workshop->password)) {
-                    $request->offsetUnset('prev_password');
-                    $request->offsetUnset('password');
-                    $request->offsetUnset('password_confirmation');
+            if (!Hash::check($request->prev_password, $workshop->password)) {
+                $request->offsetUnset('prev_password');
+                $request->offsetUnset('password');
+                $request->offsetUnset('password_confirmation');
+                if($request->header('Content-Type') == "application/json")
+                {
                     return response()->json([
                         'http-status' => Response::HTTP_OK,
                         'status' => false,
@@ -993,28 +1014,31 @@ class WorkshopsController extends Controller
                         'body' => null
                     ],Response::HTTP_OK);
                 }
-            } catch (JWTException $e) {
-                // something went wrong whilst attempting to encode the token
-                $request->offsetUnset('prev_password');
-                $request->offsetUnset('password');
-                $request->offsetUnset('password_confirmation');
+                else
+                {
+                    return Redirect::back()
+                        ->withErrors($validator->getMessageBag()->add('prev_password','Your provided password didn\'t match.'));
+                }
+            }
+
+            // all good so Reset Customer's Password
+            $workshop->password = Hash::make($request->password);
+            $workshop->update();
+
+            if($request->header('Content-Type') == "application/json")
+            {
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'Failed to Reset Password, please try again.',
+                    'status' => true,
+                    'message' => 'Success! Your password has been changed',
                     'body' => null
                 ],Response::HTTP_OK);
             }
-            // all good so Reset Customer's Password
-            $workshop->password = Hash::make($request->password);
-            $workshop->save();
-
-            return response()->json([
-                'http-status' => Response::HTTP_OK,
-                'status' => true,
-                'message' => 'success',
-                'body' => [ 'workshop' => $workshop ],
-            ],Response::HTTP_OK);
+            else
+            {
+                Session::flash('message', 'Success! Your password has been changed');
+                return Redirect::to('/profile');
+            }
         }
     }
 
@@ -2455,7 +2479,7 @@ class WorkshopsController extends Controller
         }else{
             $balance = 0;
         }
-        if($request->transaction_type == "Debit"){
+        if($request->transaction_type == "Credit"){
             $new_balance = $balance + $request->amount;
         }else{
             $new_balance = $balance - $request->amount;
@@ -2669,35 +2693,6 @@ class WorkshopsController extends Controller
 
         Session::flash('message', 'Success! Workshop Password Updated');
         return Redirect::to('admin/workshops');
-    }
-
-    public function editProfilePassword(Workshop $workshop)
-    {
-        return View::make('workshop_profile.edit-password')->with('workshop', $workshop);
-    }
-
-    public function updateProfilePassword(Request $request)
-    {
-        $rules = [
-            'password'  => 'required|confirmed|min:6|max:16',
-        ];
-
-        $input = $request->only('password', 'password_confirmation');
-        $validator = Validator::make($input, $rules);
-        if($validator->fails()) {
-            $request->offsetUnset('password');
-            $request->offsetUnset('password_confirmation');
-            return Redirect::back()
-                ->withErrors($validator);
-        }
-
-        // Update workshop Password
-        $workshop = Workshop::find($request->workshop_id);
-        $workshop->password = Hash::make($request->password);
-        $workshop->update();
-
-        Session::flash('message', 'Success! Workshop Password Updated');
-        return Redirect::to('/profile');
     }
 
     public function unlinkImage($url)

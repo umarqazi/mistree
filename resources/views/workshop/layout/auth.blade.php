@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-      <title>@yield('title')</title>
+        <title>{{ env('APP_NAME') }} | @yield('title')</title>
 
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
@@ -35,7 +35,7 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel Multi Auth Guard') }}: Workshop
+                    {{ env('APP_NAME') }}: Workshop Portal
                 </a>
             </div>
 

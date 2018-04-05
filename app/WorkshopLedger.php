@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderBy;
 use App\Scopes\TransactionsScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -24,6 +25,7 @@ class WorkshopLedger extends Model
         parent::boot();
 
         static::addGlobalScope(new TransactionsScope);
+        static::addGlobalScope(new OrderBy);
     }
 
     public function workshop()

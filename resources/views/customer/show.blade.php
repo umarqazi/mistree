@@ -26,9 +26,9 @@
 	                            		@if(count($customer->addresses) > 0)
 		                            		@foreach($customer->addresses as $key => $address)
 		                                		@if(count($customer->addresses) > 1)
-		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                		@else
-		                                			<div class="address">Address: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+		                                			<div class="address">Address: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                		@endif
 		                                	@endforeach
 		                                @endif
@@ -105,7 +105,7 @@
 													<th class="text-center">Job Date Time</th>
 													<th class="text-center">Status</th>
 													<th class="text-center">Services</th>
-													<th class="text-center">Estimated Rates</th>
+													<th class="text-center">Amount Paid</th>
 													<th class="text-center">Request at</th>
 													<th class="text-center">Ratings</th>
 												</tr>
@@ -121,8 +121,7 @@
 								                        	<td class="text-center">{{$booking->job_status }}</td>
 								                        	<td class="text-center">{{implode(', ',
 								                        	$booking->services->pluck('name')->toArray())}}</td>
-															<td class="text-center">{{$booking->services->pluck
-															('pivot')->pluck('service_rate')->sum()}}</td>
+															<td class="text-center">{{$booking->billing['paid_amount']}}</td>
 								                        	<td class="text-center">{{$booking->created_at->format('H:i D M, Y') }}</td>
 															<td class="text-center">{{$booking->billing['ratings']}}</td>
 								                        </tr>        
