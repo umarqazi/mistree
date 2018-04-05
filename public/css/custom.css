@@ -460,3 +460,8 @@ form#bookings-dropdown .submit_button:hover{
 #pictureModal{
     background: rgba(0,0,0,0.4);
 }
+
+.chosen-container-multi .chosen-choices{
+    overflow: auto!important;
+    max-height: 200px!important;
+}
