@@ -2721,21 +2721,21 @@ class WorkshopsController extends Controller
      *     name="landline",
      *     in="formData",
      *     description="Landline Number",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *    @SWG\Parameter(
      *     name="mobile",
      *     in="formData",
      *     description="Mobile Number",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *    @SWG\Parameter(
      *     name="owner_name",
      *     in="formData",
      *     description="Owner Name",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Response(response=200, description="successful operation"),
@@ -2764,11 +2764,19 @@ class WorkshopsController extends Controller
         }
 
         $workshop = JWTAuth::authenticate();
-        $workshop->update([
-            'mobile'        =>          $request->mobile,
-            'landline'      =>          $request->landline,
-            'owner_name'    =>          $request->owner_name
-        ]);
+
+        if($request->has('mobile'))
+        {
+            $workshop->update(['mobile' => $request->mobile]);
+        }
+        if($request->has('landline'))
+        {
+            $workshop->update(['landline' => $request->landline]);
+        }
+        if($request->has('owner_name'))
+        {
+            $workshop->update(['owner_name' => $request->owner_name]);
+        }
 
         return response()->json([
             'http-status' => Response::HTTP_OK,
