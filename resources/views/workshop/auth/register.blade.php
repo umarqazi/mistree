@@ -209,6 +209,8 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <div class="form-group">
+                                                        <a href="{{ url('/login') }}" class="btn
+                                                        btn-header">Cancel</a>
                                                         <a class="btn btn-header btn-next-1">Next</a>
                                                     </div>
                                                 </div>
@@ -298,6 +300,8 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <div class="form-group">
+                                                        <a href="{{ url('/login') }}" class="btn
+                                                        btn-header">Cancel</a>
                                                         <button class="btn btn-header btn-back-1">Back</button>
                                                         <button class="btn btn-header btn-next-2">Next</button>
                                                     </div>

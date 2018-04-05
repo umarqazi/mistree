@@ -30,22 +30,6 @@ if (! function_exists('validate_inputs')) {
             'street'                         => 'sometimes|nullable|string',
             'town'                           => 'sometimes|required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'sometimes|required|regex:/^[\pL\s\-]+$/u',
-
-            'hatchback.*'                    => 'sometimes|required|integer:unique',
-            'hatchback-rates.*'              => 'sometimes|required',
-            'hatchback-times.*'              => 'required',
-
-            'sedan.*'                        => 'sometimes|required|integer:unique',
-            'sedan-rates.*'                  => 'sometimes|required',
-            'sedan-times.*'                  => 'sometimes|required',
-
-            'luxury.*'                       => 'sometimes|required|integer:unique',
-            'luxury-rates.*'                 => 'sometimes|required',
-            'luxury-times.*'                 => 'sometimes|required',
-
-            'suv.*'                          => 'sometimes|required|integer:unique',
-            'suv-rates.*'                    => 'sometimes|required',
-            'suv-times.*'                    => 'sometimes|required'
         ];
 
         $validator = Validator::make($inputs, $rules);

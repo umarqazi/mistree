@@ -105,22 +105,6 @@ class RegisterController extends Controller
             'street'                         => 'nullable|string',
             'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
-
-            'hatchback.*'                    => 'required|integer:unique',
-            'hatchback-rates.*'              => 'required',
-            'hatchback-times.*'              => 'required',
-
-            'sedan.*'                        => 'required|integer:unique',
-            'sedan-rates.*'                  => 'required',
-            'sedan-times.*'                  => 'required',
-
-            'luxury.*'                       => 'required|integer:unique',
-            'luxury-rates.*'                 => 'required',
-            'luxury-times.*'                 => 'required',
-
-            'suv.*'                          => 'required|integer:unique',
-            'suv-rates.*'                    => 'required',
-            'suv-times.*'                    => 'required',
         ]);
     }
 
