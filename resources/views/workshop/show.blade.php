@@ -20,6 +20,12 @@
 									<div class="avtar-block">
 										@include('partials.workshop_profile_info')
 										<div class="dropdown pull-right">
+											@if(!$workshop->is_approved)
+												<a href="{{ url( 'admin/approve-workshop/'.$workshop->id ) }}" class="btn btn-secondary dropdown-toggle pull-right" type="button">
+													Approve
+												</a>
+											@endif
+											<div class="clear10"></div>
 											<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												+ More Options
 											</button>

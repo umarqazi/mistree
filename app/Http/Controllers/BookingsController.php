@@ -6,6 +6,7 @@ use App\Events\JobAcceptedEvent;
 use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Events\SelectAnotherWorkshopEvent;
 use App\Jobs\LeadExpiryEventJob;
 use App\Jobs\NotificationsBeforeJob;
 use App\Jobs\SelectAnotherWorkshopEventJob;
@@ -159,9 +160,9 @@ class BookingsController extends Controller
         event(new NewBookingEvent($booking));
         SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(30));
         LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(25));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(30));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(15));
-        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(10));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(30));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(15));
+        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
 
 //        return
         return response()->json([
@@ -175,7 +176,7 @@ class BookingsController extends Controller
 
     /**
      * @SWG\Patch(
-     *   path="/api/workshop/accept-booking/{booking_id}",
+     *   path="/api/workshop/accept-booking/{booking}",
      *   summary="Accept Booking",
      *   operationId="acception",
      *   produces={"application/json"},
@@ -188,7 +189,7 @@ class BookingsController extends Controller
      *     type="string"
      *   ),
      *   @SWG\Parameter(
-     *     name="booking_id",
+     *     name="booking",
      *     in="path",
      *     description="Booking ID",
      *     required=true,
@@ -200,11 +201,80 @@ class BookingsController extends Controller
      * )
      *
     */
-    public function acceptBooking($booking_id){
-        $workshop_id = JWTAuth::authenticate()->id;
-        $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => true]);
-        $booking = $workshop->bookings()->where('id', $booking_id)->first();
+    public function acceptBooking(Booking $booking){
+        $workshop = JWTAuth::authenticate();
+        if(!is_null($workshop->bookings()->where('id', $booking->id)->first()))
+        {
+            if($workshop->bookings()->acceptedBookings()->count() < 10)
+            {
+                $booking->update(['is_accepted' => true]);
+            }
+            else
+            {
+                if($workshop->balance->balance < $booking->services->pluck('pivot')->sum('lead_charges'))
+                {
+                    return response()->json([
+                        'http-status' => Response::HTTP_OK,
+                        'status' => true,
+                        'message' => 'Not Enough Balance!',
+                        'body' => null
+                    ]);
+                }
+                else
+                {
+                    $booking->update(['is_accepted' => true]);
+                }
+            }
+        }
+        else
+        {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'Invalid operation',
+                'body' => null
+            ],Response::HTTP_OK);
+        }
+
+        $billing = new Billing;
+        $billing->workshop_id                = $workshop->id;
+        $billing->booking_id                 = $booking->id;
+        $billing->amount                     = $booking->services->pluck('pivot')->sum('service_rate');
+        $billing->customer_id                = $booking->customer_id;
+
+        if($workshop->bookings()->acceptedBookings()->count() > 10){
+            $billing->lead_charges           = $booking->services->pluck('pivot')->sum('lead_charges');
+            $billing->is_free                = false;
+            $billing->save();
+
+            $balance = $workshop->balance->balance;
+            $new_balance = $balance - $booking->services->pluck('pivot')->sum('lead_charges');
+            $workshop->balance->update(['balance' => $new_balance]);
+
+            $transaction = new WorkshopLedger;
+            $transaction->workshop_id                   = $workshop->id;
+            $transaction->booking_id                    = $booking->id;
+            $transaction->amount                        = $booking->services->pluck('pivot')->sum('lead_charges');;
+            $transaction->transaction_type              = 'Lead Charges';
+            $transaction->unadjusted_balance            = $balance;
+            $transaction->adjusted_balance              = $new_balance;
+
+            $transaction->save();
+
+//          Fire An Event To Generate A Notification if $new_balance is less than 500
+            if ($new_balance < 150)
+            {
+                event(new MinimumBalanceEvent($workshop));
+            }
+
+        }
+        else
+        {
+            $billing->lead_charges           = 0;
+            $billing->is_free                = true;
+            $billing->save();
+        }
+
 //          Fire An Event To Generate A Notification On Accept Booking
         event(new JobAcceptedEvent($booking));
 
@@ -246,8 +316,9 @@ class BookingsController extends Controller
     public function rejectBooking($booking_id){
         $workshop_id = JWTAuth::authenticate()->id;
         $workshop = Workshop::find($workshop_id);
-        $workshop->bookings()->where('id', $booking_id)->update(['is_accepted' => false, 'job_status' => 
-            'rejected']);
+        $booking  = $workshop->bookings()->where('id', $booking_id)->first();
+        $booking->update(['is_accepted' => false, 'job_status' => 'rejected']);
+        event(new SelectAnotherWorkshopEvent($booking));
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -332,10 +403,9 @@ class BookingsController extends Controller
      * )
      */
     public function completeLead(Request $request){
-        $workshop   = JWTAuth::authenticate();
-        $workshop_id = $workshop->id;
-        $rules = [                        
-            'booking_id'                        => 'required|integer',            
+
+        $rules = [
+            'booking_id'    => 'required|integer',
         ];   
         
         $input = $request->only('booking_id');
@@ -346,13 +416,12 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => false,
                     'message' => $validator->messages()->first(),
-                    'body' => $request->all()
+                    'body' => null
                 ],Response::HTTP_OK);
         }             
 
         $booking = Booking::find($request->booking_id);                                    
-        $bill = $booking->services->pluck('pivot')->sum('service_rate');
-        $lead_charges = $booking->services->pluck('pivot')->sum('lead_charges');
+
         $loyalty_points = $booking->services->pluck('pivot')->sum('loyalty_points');
         
         $booking->job_status = 'completed';
@@ -363,54 +432,15 @@ class BookingsController extends Controller
         $customer->loyalty_points = $loyalty_points + $customer->loyalty_points;        
         $customer->save();
 
-            
-        $billing = new Billing;
-        $billing->workshop_id                = $workshop_id;         
-        $billing->booking_id                 = $request->booking_id;
-        $billing->amount                     = $bill;
-        $billing->customer_id                = $booking->customer_id;
-
-        if($workshop->billings->count()>=10){
-            $billing->lead_charges           = $lead_charges;
-            $billing->is_free                = false;
-            $billing->save();
-
-            $workshop = Workshop::find($workshop_id);
-            $balance = $workshop->balance->balance;        
-            $new_balance = $balance - $lead_charges;
-            $workshop->balance->update(['balance'=>$new_balance]);
-
-            $transaction = new WorkshopLedger;
-            $transaction->workshop_id                   = $workshop_id;         
-            $transaction->booking_id                    = $request->booking_id;         
-            $transaction->amount                        = $lead_charges;         
-            $transaction->transaction_type              = 'Job-Billing';         
-            $transaction->unadjusted_balance            = $balance;         
-            $transaction->adjusted_balance              = $new_balance;
-
-            $transaction->save();
-
-//          Fire An Event To Generate A Notification if $new_balance is less than 500
-            if ($new_balance < 150)
-            {
-                event(new MinimumBalanceEvent($workshop));
-            }
-
-        }else{
-            $billing->lead_charges           = 0;
-            $billing->is_free                = true;           
-            $billing->save();
-        }
-
-//          Fire An Event To Generate A Notification To User About Job Closing
-            event(new JobClosedEvent($booking));
+//       Fire An Event To Generate A Notification To User About Job Closing
+        event(new JobClosedEvent($booking));
 
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Job Completed',
-                    'body' => ['billing'=> $billing]
+                    'body' => ['billing'=> $booking->billing]
                 ],Response::HTTP_OK);
     }
 
@@ -474,17 +504,17 @@ class BookingsController extends Controller
 
     public function workshopRejectedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->RejectedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
+        return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->RejectedBookings()->get(), 'workshop'=>$workshop]);
     }
 
     public function workshopAcceptedLeads(Workshop $workshop){
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->AcceptedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
+        return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->AcceptedBookings()->get(), 'workshop'=>$workshop]);
     }
 
     public function workshopCompletedLeads(Workshop $workshop){        
         $total_earning = $workshop->billings->sum('amount');
-        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->CompletedBookings()->orderBy('created_at')->get(), 'workshop'=>$workshop]);
+        return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->CompletedBookings()->get(), 'workshop'=>$workshop]);
     }    
 
     // Leads
@@ -770,13 +800,16 @@ class BookingsController extends Controller
     public function bookingListings(Request $request){
 
       $bookings          = Booking::all();
-      $bookings_pending  = Booking::PendingBookings()->orderBy('created_at')->get();
-      $bookings_active   = Booking::ActiveBookings()->orderBy('created_at')->get();
-      $bookings_complete = Booking::CompletedBookings()->orderBy('created_at')->get();
-      $bookings_rejected = Booking::RejectedBookings()->orderBy('created_at')->get();
+      $bookings_pending  = Booking::PendingBookings()->get();
+      $bookings_active   = Booking::ActiveBookings()->get();
+      $bookings_complete = Booking::CompletedBookings()->get();
+      $bookings_rejected = Booking::RejectedBookings()->get();
       
         switch ($request->list_type) {
 
+        case "active":
+            return View::make('bookings.active')->with('bookings', $bookings_active);
+            break;
         case "pending":
             return View::make('bookings.pending')->with('bookings', $bookings_pending);
             break;
@@ -788,7 +821,7 @@ class BookingsController extends Controller
             break;
         default:
         
-        return View::make('bookings.active')->with('bookings', $bookings_active);
+        return View::make('bookings.index')->with('bookings', $bookings);
 
         }
     }   

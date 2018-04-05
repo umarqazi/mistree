@@ -37,7 +37,7 @@
                           <select name="workshop_id" class="form-control chosen-select  border-input">
                             <option value="">Select Workshop</option>
                             @foreach($workshops as $workshop)
-                            <option value="{{$workshop->id}}">{{$workshop->name}}</option> 
+                            <option value="{{$workshop->id}}">{{$workshop->name}}@if(!is_null($workshop->jazzcash_id)) {{" - ". $workshop->jazzcash_id }}@endif</option>
                             @endforeach                                 
                           </select>
                           @if ($errors->has('workshop_id'))
@@ -48,7 +48,7 @@
                       </div>
                       <div class="form-group">
                           <label class="control-label">Amount <span class="manadatory">*</span></label>
-                          <input type="text" class="form-control border-input" name="amount">
+                          <input type="number"  max="9999" class="form-control border-input" name="amount">
                           @if ($errors->has('amount'))
                               <span class="help-block">
                                   <strong class="manadatory">{{ $errors->first('amount') }}</strong>

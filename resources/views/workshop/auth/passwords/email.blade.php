@@ -1,5 +1,6 @@
 @extends('workshop.layout.auth')
 
+@section('title','Recover Password')
 <!-- Main Content -->
 @section('content')
 <div class="container">

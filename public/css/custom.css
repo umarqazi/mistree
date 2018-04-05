@@ -453,3 +453,10 @@ form#bookings-dropdown .submit_button:hover{
 .lead-text{
    margin-top: 14px;
 }
+
+.stack-color{
+   color: #e6cb5d;
+}
+#pictureModal{
+    background: rgba(0,0,0,0.4);
+}

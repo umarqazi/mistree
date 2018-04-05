@@ -48,8 +48,8 @@
 												<td>{{ $transaction->amount }}</td>
 												<td>{{ $transaction->unadjusted_balance }}</td>
 												<td>{{ $transaction->adjusted_balance }}</td>
-												<td>{{ $transaction->created_at->format('d-m-Y')}}</td>
-												<td>{{ $transaction->created_at->format('H:i:s')}}</td>
+												<td>{{ $transaction->created_at->format('d-M-Y')}}</td>
+												<td>{{ $transaction->created_at->format('g:i A')}}</td>
 											</tr>
 											@endforeach
 											@if(!is_null($workshop->balance))

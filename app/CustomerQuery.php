@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\OrderBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Carbon\Carbon;
@@ -21,6 +22,18 @@ class CustomerQuery extends Model
     ];
 
     protected $casts = ['is_resolved' => 'boolean'];
+
+    /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new OrderBy);
+    }
 
     public function customer()
     {

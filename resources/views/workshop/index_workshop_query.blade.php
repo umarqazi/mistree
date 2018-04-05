@@ -57,16 +57,11 @@
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
 
-                                        <form method="POST" id="workshop_delete_query" action="{{url('admin/workshop-queries/'. $value->id)}}" accept-charset="UTF-8">
-                                            <input name="_method" type="hidden" value="DELETE">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        </form>
-
                                         <a class= "mistri-icons ti-eye" href="{{url('admin/workshop-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
                                         @if($value->is_resolved == false)
                                             <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query"><i class="ti-check-box"></i></button>
                                         @endif
-                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Delete Workshop Queries" value="submit" type="submit" form="workshop_delete_query"><i class="ti-close"></i></button>
+
                                     </td>
                                 </tr>
                                 @endforeach
