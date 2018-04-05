@@ -25,13 +25,14 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
-                                    '<select name ="hatchback-times[' + params.selected +']" class="form-control' +
+                                    '<select name ="hatchback-times[' + params.selected +']" id="hatchback-times-' + params.selected +'" class="form-control' +
                 ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                 '</div>'
             );
+            $('#hatchback-times-' + params.selected).chosen();
         }
         else if(params.deselected != undefined)
         {
@@ -55,13 +56,14 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
-                                    '<select name ="sedan-times[' + params.selected + ']" class="form-control' +
+                                    '<select name ="sedan-times[' + params.selected + ']" id="sedan-times-' + params.selected +'" class="form-control' +
                 ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                 '</div>'
             );
+            $('#sedan-times-' + params.selected).chosen();
         }
         else if (params.deselected != undefined) {
             $('div.sedan-service-' + $('#sedan option[value="' + params.deselected + '"]').val()).remove();
@@ -84,12 +86,13 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
-                                    '<select name ="luxury-times[' + params.selected +']" class="form-control' + ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
+                                    '<select name ="luxury-times[' + params.selected +']" id="luxury-times-' + params.selected +'" class="form-control' + ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                 '</div>'
             );
+            $('#luxury-times-' + params.selected).chosen();
         }
         else if(params.deselected != undefined)
         {
@@ -113,12 +116,13 @@ $(document).ready(function () {
                             '<div class="col-md-6">' +
                                 '<div class="form-group">' +
                                     '<label class="control-label">Service Time <span class="manadatory">*</span></label>' +
-                                    '<select name ="suv-times[' + params.selected +']" class="form-control' + ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
+                                    '<select name ="suv-times[' + params.selected +']" id="suv-times-' + params.selected +'" class="form-control' + ' chosen-select  border-input"><option value="1.0">1.0 hr</option><option value="1.5">1.5 hr</option><option value="2.0">2.0 hr</option><option value="2.5">2.5 hr</option><option value="3.0">3.0 hr</option><option value="3.5">3.5 hr</option><option value="4.0">4.0 hr</option><option value="4.5">4.5 hr</option><option value="5.0">5.0 hr</option><option value="5.5">5.5 hr</option><option value="6.0">6.0 hr</option><option value="6.5">6.5 hr</option><option value="7.0">7.0 hr</option><option value="7.5">7.5 hr</option><option value="8.0">8.0 hr</option><option value="8.5">8.5 hr</option><option value="9.0">9.0 hr</option><option value="9.5">9.5 hr</option><option value="10">10 hr</option></select> ' +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                 '</div>'
             );
+            $('#suv-times-' + params.selected).chosen();
         }
         else if(params.deselected != undefined)
         {

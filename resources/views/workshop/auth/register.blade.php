@@ -209,6 +209,8 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <div class="form-group">
+                                                        <a href="{{ url('/login') }}" class="btn
+                                                        btn-header">Cancel</a>
                                                         <a class="btn btn-header btn-next-1">Next</a>
                                                     </div>
                                                 </div>
@@ -224,8 +226,9 @@
                                             <div class="row">
                                                 <div class="col-md-6">
                                                     <div class="form-group">
-                                                        <label class="control-label">Shop No.</label>
-                                                        <input type="text" class="form-control border-input" name="shop" value="{{ old('shop') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                        <label class="control-label">Shop No. <span
+                                                                    class="manadatory">*</span></label>
+                                                        <input type="text" class="form-control border-input" name="shop" value="{{ old('shop') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" required>
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('shop'))
                                                             <span class="help-block">
@@ -297,6 +300,8 @@
                                             <div class="row">
                                                 <div class="col-md-12 text-center">
                                                     <div class="form-group">
+                                                        <a href="{{ url('/login') }}" class="btn
+                                                        btn-header">Cancel</a>
                                                         <button class="btn btn-header btn-back-1">Back</button>
                                                         <button class="btn btn-header btn-next-2">Next</button>
                                                     </div>
@@ -325,7 +330,7 @@
                                                                         <h3>Hatchback Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services</label>
                                                                         <select id="hatchback" class="form-control
                                                                 border-input chosen-select" name="hatchback[]" multiple>
                                                                             @foreach ($hatchback as $row)
@@ -394,7 +399,7 @@
                                                                         <h3>Sedan/Saloon Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services</label>
                                                                         <select id="sedan" class="form-control
                                                                 border-input chosen-select" name="sedan[]" multiple>
                                                                             @foreach ($sedan as $row)
@@ -465,7 +470,7 @@
                                                                         <h3>Luxury Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services </label>
                                                                         <select id="luxury" class="form-control
                                                                 border-input chosen-select" name="luxury[]" multiple>
                                                                             @foreach ($luxury as $row)
@@ -537,7 +542,7 @@
                                                                         <h3>SUV/4 &#215 4 Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services</label>
                                                                         <select id="suv" class="form-control
                                                                 border-input chosen-select" name="suv[]" multiple>
                                                                             @foreach ($suv as $row)
@@ -608,7 +613,8 @@
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <input type="checkbox" value="terms" required>
-                                                        <span>I have read and agree to the<a href="/terms"> Terms & Conditions</a></span>
+                                                        <span>I have read and agree to the<a href="/terms" target="_blank">
+                                                                Terms & Conditions</a></span>
                                                     </div>
                                                 </div>
                                             </div>

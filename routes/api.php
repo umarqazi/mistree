@@ -113,5 +113,6 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
         Route::get('get-customers', 'WorkshopsController@getCustomers');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'store']]);
 
+        Route::patch('contact-info', 'WorkshopsController@updateDetails');
     });
 });

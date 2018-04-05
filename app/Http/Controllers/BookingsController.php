@@ -420,7 +420,7 @@ class BookingsController extends Controller
                 ],Response::HTTP_OK);
         }             
 
-        $booking = Booking::find($request->booking_id);                                    
+        $booking = Booking::find($request->booking_id);
 
         $loyalty_points = $booking->services->pluck('pivot')->sum('loyalty_points');
         
@@ -440,7 +440,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Job Completed',
-                    'body' => ['billing'=> $booking->billing]
+                    'body' => ['booking'=> $booking->load('workshop', 'customer', 'billing')]
                 ],Response::HTTP_OK);
     }
 
