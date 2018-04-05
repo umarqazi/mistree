@@ -26,9 +26,9 @@
 	                            		@if(count($customer->addresses) > 0)
 		                            		@foreach($customer->addresses as $key => $address)
 		                                		@if(count($customer->addresses) > 1)
-		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                		@else
-		                                			<div class="address">Address: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+		                                			<div class="address">Address: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                		@endif
 		                                	@endforeach
 		                                @endif
