@@ -221,9 +221,8 @@
                                         <div class="col-md-6">
                                             @php $address = $workshop->address;  @endphp
                                             <div class="form-group">
-                                                <label class="control-label">Shop No</label>
-                                                <input type="text" class="form-control border-input"
-                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <label class="control-label">Shop No <span class="manadatory">*</span></label>
+                                                <input type="text" class="form-control border-input" name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" required>
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                 <span class="help-block">

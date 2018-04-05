@@ -220,14 +220,14 @@
                                         <div class="col-md-6">
                                             @php $address = $workshop->address;  @endphp
                                             <div class="form-group">
-                                                <label class="control-label">Shop No </label>
+                                                <label class="control-label">Shop No <span class="manadatory">*</span></label>
                                                 <input type="text" class="form-control border-input" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);"
-                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif">
+                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif" required>
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                     <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('shop') }}</strong>
-                                        </span>
+                                                        <strong class="manadatory">{{ $errors->first('shop') }}</strong>
+                                                    </span>
                                                 @endif
                                             </div>
                                             <div class="form-group">
