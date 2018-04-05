@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Update Workshop')
+@section('title', 'Update Profile')
 @section('content')
 
     @include('partials.header')
@@ -17,7 +17,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <h4 class="title">Workshop Management - Update Workshop</h4>
-                                        <a class="btn pull-right" href="{{url('/edit-profile-password/'.$workshop->id)}}">Change Password</a>
+                                        <a class="btn pull-right" href="{{url('/change-password/')}}">Change Password</a>
                                     </div>
                                 </div>
                             </div>
