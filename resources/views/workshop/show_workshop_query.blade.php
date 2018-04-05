@@ -14,10 +14,11 @@
 
                       <div class="header">
                           <div class="row">
-                              <div class="col-md-12">
+                              <div class="col-md-10">
                                   <h4 class="title">{{$workshopQuery->subject}}</h4>
                                   <p>Requested by {{$workshopQuery->workshop->name}}</p> 
                               </div>
+                              <div class="col-md-2">@include('partials.backbtn_workshop_query')</div>
                           </div>
                           <div class="row">
                               <div class="col-md-12">

@@ -12,9 +12,10 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Edit Workshop Service</h4>                                
                             </div>
+                            <div class="col-md-2">@include('partials.backbtn_profile')</div>
                             <div class="clear10"></div><div class="clear5"></div>
                             <div class="clear10"></div><div class="clear5"></div>                            
                             <div class="col-md-12">

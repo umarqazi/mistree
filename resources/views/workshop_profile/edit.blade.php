@@ -15,8 +15,12 @@
                             {{ csrf_field() }}
                             <div class="header">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-10">
                                         <h4 class="title">Workshop Management - Update Workshop</h4>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @include('partials.backbtn_workshop')
+                                        <div class="clear5"></div>
                                         <a class="btn pull-right" href="{{url('/edit-profile-password/'.$workshop->id)}}">Change Password</a>
                                     </div>
                                 </div>

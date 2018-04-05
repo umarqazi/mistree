@@ -18,7 +18,10 @@
 							<div class="row">
 								<div class="col-md-12">
 									<div class="avtar-block">
-										@include('partials.workshop_profile_info')
+										<div class="row">
+											<div class="col-md-11">@include('partials.workshop_profile_info')</div>
+											<div class="col-md-1">@include('partials.backbtn_workshop')</div>
+										</div>
 										<div class="dropdown pull-right">
 											@if(!$workshop->is_approved)
 												<a href="{{ url( 'admin/approve-workshop/'.$workshop->id ) }}" class="btn btn-secondary dropdown-toggle pull-right" type="button">

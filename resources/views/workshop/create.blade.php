@@ -12,9 +12,10 @@
                             {!! csrf_field() !!}
                             <div class="header">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-10">
                                         <h4 class="title">Workshop Management - Create New</h4>
                                     </div>
+                                    <div class="col-md-2">@include('partials.backbtn_workshop')</div>
                                 </div>
                             </div>
                             <div class="clear20"></div>

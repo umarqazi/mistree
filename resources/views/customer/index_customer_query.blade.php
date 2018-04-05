@@ -69,7 +69,7 @@
 
                                         <a class= "mistri-icons ti-eye" href="{{url('admin/customer-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
                                         @if(!$value->is_resolved)
-                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Customer Query" value="submit" type="submit" form="resolve_customer_query"><i class="ti-check-box"></i></button>
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Customer Query" value="submit" type="submit" form="resolve_customer_query"><i class="ti-check"></i></button>
                                         @endif
 
                                         <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Delete Customer Query" value="submit" type="submit" form="customer_query"><i class="ti-close"></i></button>

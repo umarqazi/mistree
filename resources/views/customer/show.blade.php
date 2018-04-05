@@ -13,7 +13,7 @@
 
                 	<div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
 
 	                            <div class="avtar-block">
 	                            	@if($customer->profile_pic_url)
@@ -39,6 +39,7 @@
 	                            </div>
 								
                             </div>
+							<div class="col-md-2">@include('partials.backbtn_customer')</div>
                         </div>                                                
                     </div>
 					<div class="content">

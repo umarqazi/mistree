@@ -19,7 +19,9 @@
 								<div class="col-md-12">
 
 									<div class="avtar-block">
-										@include('partials.workshop_profile_info')
+										<div class="row">
+											<div class="col-md-12">@include('partials.workshop_profile_info')</div>
+										</div>
 										<div class="dropdown pull-right">
 											<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												+ More Options

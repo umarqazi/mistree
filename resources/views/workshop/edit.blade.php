@@ -15,10 +15,13 @@
                             {{ csrf_field() }}
                             <div class="header">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-10">
                                         <h4 class="title">Workshop Management - Update Workshop</h4>
-                                        <a class="btn pull-right" href="{{url('admin/edit-workshop-password/'.$workshop->id)}}">Change Password</a>
                                     </div>
+                                    <div class="col-md-2">
+                                        @include('partials.backbtn_workshop_back')
+                                        <div class="clear5"></div>
+                                        <a class="btn pull-right" href="{{url('admin/edit-workshop-password/'.$workshop->id)}}">Change Password</a></div>
                                 </div>
                             </div>
                             <div class="clear20"></div>

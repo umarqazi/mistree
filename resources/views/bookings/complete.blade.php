@@ -11,10 +11,15 @@
                 <div class="card">                    
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Completed Jobs</h4>
                                 <p class="category">List of all completed Jobs.</p>
                             </div>
+                            <div class="col-md-2">
+                                @include('partials.backbtn_bookings')
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-12">
                                 <div class="avtar-block">
                                     <div class="dropdown pull-right">

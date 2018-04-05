@@ -1222,7 +1222,8 @@ class WorkshopsController extends Controller
     public function editWorkshopService($id){
         $services = Service::all();
         $workshop_service = DB::table('workshop_service')->where('id', $id)->first();
-        return View::make('workshop.services.edit')->with('workshop_service', $workshop_service)->with('services',$services);
+        $workshop = Workshop::find($workshop_service->id);
+        return View::make('workshop.services.edit')->with('workshop_service', $workshop_service)->with('workshop', $workshop)->with('services',$services);
 
     }
 
