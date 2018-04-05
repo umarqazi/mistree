@@ -325,7 +325,7 @@
                                                                         <h3>Hatchback Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services</label>
                                                                         <select id="hatchback" class="form-control
                                                                 border-input chosen-select" name="hatchback[]" multiple>
                                                                             @foreach ($hatchback as $row)
@@ -394,7 +394,7 @@
                                                                         <h3>Sedan/Saloon Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services</label>
                                                                         <select id="sedan" class="form-control
                                                                 border-input chosen-select" name="sedan[]" multiple>
                                                                             @foreach ($sedan as $row)
@@ -465,7 +465,7 @@
                                                                         <h3>Luxury Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services </label>
                                                                         <select id="luxury" class="form-control
                                                                 border-input chosen-select" name="luxury[]" multiple>
                                                                             @foreach ($luxury as $row)
@@ -537,7 +537,7 @@
                                                                         <h3>SUV/4 &#215 4 Services</h3>
                                                                     </div>
                                                                     <div class="form-group">
-                                                                        <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                        <label class="control-label">Select Services</label>
                                                                         <select id="suv" class="form-control
                                                                 border-input chosen-select" name="suv[]" multiple>
                                                                             @foreach ($suv as $row)
@@ -608,7 +608,8 @@
                                                 <div class="col-md-12">
                                                     <div class="form-group">
                                                         <input type="checkbox" value="terms" required>
-                                                        <span>I have read and agree to the<a href="/terms"> Terms & Conditions</a></span>
+                                                        <span>I have read and agree to the<a href="/terms" target="_blank">
+                                                                Terms & Conditions</a></span>
                                                     </div>
                                                 </div>
                                             </div>

@@ -265,7 +265,8 @@
                                                 @endif
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label">Town <span class="manadatory"></span></label>
+                                                <label class="control-label">Town <span
+                                                            class="manadatory">*</span></label>
                                                 <input type="text" class="form-control border-input" required name="town" value="@if(!empty($address->town)){{$address->town}}@endif">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('town'))
