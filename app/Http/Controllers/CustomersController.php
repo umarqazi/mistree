@@ -836,7 +836,7 @@ class CustomersController extends Controller
             $address->customer_id   =  $customer->id;
             $address->type          =  $request->type;
             $address->house_no      =  $request->house_no;
-            $address->street_no     =  $request->street;
+            $address->street        =  $request->street;
             $address->block         =  $request->block;
             $address->town          =  $request->town;
             $address->city          =  $request->city;
@@ -959,7 +959,7 @@ class CustomersController extends Controller
             else{
                 $address->type      = $request->type;
                 $address->house_no  = $request->house_no;
-                $address->street_no = $request->street_no;
+                $address->street    = $request->street;
                 $address->block     = $request->block;
                 $address->town      = $request->town;
                 $address->city      = $request->city;
