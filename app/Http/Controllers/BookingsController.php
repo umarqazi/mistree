@@ -797,7 +797,7 @@ class BookingsController extends Controller
         
     }
 
-    public function bookingListings($type){
+    public function bookingListings($type = ""){
 
       $bookings          = Booking::all();
       $bookings_pending  = Booking::PendingBookings()->get();
@@ -818,9 +818,6 @@ class BookingsController extends Controller
             break;
         case "cancelled":
         return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
-            break;
-        case "all":
-            return View::make('bookings.rejected')->with('bookings', $bookings);
             break;
         default:
         return View::make('bookings.index')->with('bookings', $bookings);

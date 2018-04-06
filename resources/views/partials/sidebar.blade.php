@@ -46,8 +46,8 @@
                         <p>Top UP</p>
                     </a>
                 </li>
-                <li @if(Request::is('admin/booking/*') || Request::is('admin/booking/all')) class="active" @endif>
-                    <a href="{{url('admin/booking/all')}}">
+                <li @if(Request::is('admin/booking/*') || Request::is('admin/booking')) class="active" @endif>
+                    <a href="{{url('admin/booking')}}">
                         <i class="ti-agenda"></i>
                         <p>Bookings</p>
                     </a>
