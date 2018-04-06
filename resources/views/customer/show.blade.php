@@ -23,18 +23,14 @@
 	                            	@endif
 	                            	<div class="name-info">
 	                            		<h3 class="title">Customer Name : {{$customer->name}}</h3>
-	                            		@if(count($customer->addresses) > 0)
+	                            		@if(!empty($customer->addresses))
 		                            		@foreach($customer->addresses as $key => $address)
-		                                		@if(count($customer->addresses) > 1)
-		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
-		                                		@else
-		                                			<div class="address">Address: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
-		                                		@endif
+												<div class="address">Address {{ $address->type }}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                	@endforeach
 		                                @endif
 	                                	<div class="phone">Email : {{$customer->email}}</div>
 	                                	<div class="phone">Mobile : {{$customer->con_number}}</div>
-	                                	<div class="phone">Current Loyality Points : {{$customer->loyalty_points}}</div>
+	                                	<div class="phone">Current Loyalty Points : {{$customer->loyalty_points}}</div>
 	                                </div>
 	                            </div>
 								
@@ -122,7 +118,7 @@
 								                        	<td class="text-center">{{implode(', ',
 								                        	$booking->services->pluck('name')->toArray())}}</td>
 															<td class="text-center">{{$booking->billing['paid_amount']}}</td>
-								                        	<td class="text-center">{{$booking->created_at->format('H:i D M, Y') }}</td>
+								                        	<td class="text-center">{{$booking->created_at->format('g:i A D d M, Y') }}</td>
 															<td class="text-center">{{$booking->billing['ratings']}}</td>
 								                        </tr>        
 							                        @endforeach
