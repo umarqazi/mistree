@@ -26,21 +26,9 @@
                                        + More Options
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <form method="POST" id="bookings-dropdown" action="{{ url( 'admin/booking/') }}">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="list_type" value="active">
-                                                <input class="submit_button" type="submit" value="Active Bookings">
-                                            </form>
-                                            <form method="POST" id="bookings-dropdown" action="{{ url( 'admin/booking/')}}">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="list_type" value="cancelled">
-                                                <input class="submit_button" type="submit" value="Rejected Bookings">
-                                            </form>
-                                            <form method="POST" id="bookings-dropdown" action="{{ url( 'admin/booking/')}}">
-                                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                <input type="hidden" name="list_type" value="completed">
-                                                <input class="submit_button" type="submit" value="Completed Bookings">
-                                            </form>
+                                            <a href="/admin/booking/active">Active Bookings</a>
+                                            <a href="/admin/booking/cancelled">Rejected Bookings</a>
+                                            <a href="/admin/booking/completed">Completed Bookings</a>
                                         </div>
                                     </div>
                                 </div>
@@ -57,22 +45,19 @@
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Estimated Rates: activate to sort column ascending" style="width: 156px;">Estimated Rates</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"
-                                        aria-label="Total: activate to sort column ascending" style="width: 54px;">Estimated
-                                        Rates
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>                            
                                  @foreach($bookings as $booking)                                
                                     <tr role="row" class="odd">
-                                        <td class="text-center">{{$booking->job_date}}</td>
+                                        <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">{{$booking->customer->name}}</td>
                                         <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
-                                        <td class="text-center">{{$booking->job_time}}</td>
-                                        <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
+                                        <td class="text-center">{{$booking->services->pluck('pivot')->sum('service_rate')}}</td>
+                                        <td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

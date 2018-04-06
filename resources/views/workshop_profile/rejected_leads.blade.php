@@ -11,18 +11,18 @@
 
                 <div class="header">
                     <div class="row">
-                        <div class="col-md-12">
+                        <div class="col-md-10">
                             <h4 class="title">Rejected Leads</h4>                                
                             <div class="clear20"></div>                                 
-                        </div>                            
+                        </div>
+                        <div class="col-md-2">@include('partials.backbtn_leads')</div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
 
                             <div class="avtar-block">
                                 <div class="row">
-                                    <div class="col-md-11">@include('partials.workshop_profile_info')</div>
-                                    <div class="col-md-1">@include('partials.backbtn_workshop')</div>
+                                    <div class="col-md-12">@include('partials.workshop_profile_info')</div>
                                 </div>
                                 <div class="dropdown pull-right">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -59,11 +59,11 @@
                             <tbody>                            
                                 @foreach($rejected_leads as $lead)                                
                                 <tr role="row" class="odd">
-                                    <td class="text-center">{{$lead->job_date}}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td class="text-center">{{$lead->vehicle_no}}</td>
                                     <td class="text-center">{{$lead->customer->name}}</td>
                                     <td class="text-center">{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
-                                    <td class="text-center">{{$lead->job_time}}</td>
+                                    <td class="text-center">{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
                                     <td class="text-center">{{$lead->billing['amount']}}</td>
                                 </tr>
                                 @endforeach
