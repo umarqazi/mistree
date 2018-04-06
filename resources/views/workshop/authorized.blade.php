@@ -54,11 +54,11 @@
                                     <td class="text-center">{{ $value->name }}</td>
                                     <td class="text-center">{{ $value->owner_name }}</td>
                                     @if($value->address)
-                                    <td class="text-center">{{ $value->address->town }}</td>
+                                    <td class="text-center">@if(!is_null($value->address)){{ $value->address->town }}@endif</td>
                                     @else
                                     <td class="text-center"></td>
                                     @endif
-                                    <td class="text-center">{{ $value->balance['balance'] }}</td>
+                                    <td class="text-center">@if(!empty($value->balance)){{ $value->balance['balance'] }}@endif</td>
                                     @php $leads = $value->bookings->count(); @endphp
                                     <td class="text-center">{{ $leads }}</td>
                                     <td class="text-center">
