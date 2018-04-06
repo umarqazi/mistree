@@ -42,8 +42,8 @@
                                     <td class="text-center"></td>
                                     @endif                                   
                                     <td class="text-center">
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id) }}" class="ti-eye"></a>
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/approve') }}" class="ti-check"></a>
+                                        <a href="{{ URL::to('admin/workshops/' . $value->id) }}" class="ti-eye"></a>
+                                        <a href="{{ URL::to('admin/workshops/' . $value->id . '/approve') }}" class="ti-check"></a>
                                     </td>
                                 </tr>
                                  @endforeach
