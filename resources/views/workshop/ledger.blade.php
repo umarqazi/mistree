@@ -65,7 +65,7 @@
 												<td>{{ $transaction->amount }}</td>
 												<td>{{ $transaction->unadjusted_balance }}</td>
 												<td>{{ $transaction->adjusted_balance }}</td>
-												<td>{{ $transaction->created_at->format('d-m-Y')}}</td>
+												<td>{{ $transaction->created_at->format('d M, Y')}}</td>
 												<td>{{ $transaction->created_at->format('g:i A')}}</td>
 												<td><a class="btn btn-header" onclick="adjustment({{$transaction->id}})
 															">Adjust</a></td>
@@ -78,7 +78,7 @@
 															<td>{{ $adjustments->amount }}</td>
 															<td>{{ $adjustments->unadjusted_balance }}</td>
 															<td>{{ $adjustments->adjusted_balance }}</td>
-															<td>{{ $adjustments->created_at->format('d-M-Y')}}</td>
+															<td>{{ $adjustments->created_at->format('d M, Y')}}</td>
 															<td>{{ $adjustments->created_at->format('g:i A')}}</td>
 															<td></td>
 														</tr>
