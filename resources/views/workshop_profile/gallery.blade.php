@@ -15,12 +15,8 @@
 									<div class="avtar-block">
 										<div class="row">
 											<div class="col-md-11">@include('partials.workshop_profile_info')</div>
-											<div class="col-md-1">@include('partials.backbtn_workshop')</div>
+											<div class="col-md-1">@include('partials.backbtn_profile')</div>
 										</div>
-										<div class="pull-right">
-											<a href="{{url('profile')}}" class="btn btn-header export">Back</a>
-										</div>
-
 									</div>
 
 								</div>
