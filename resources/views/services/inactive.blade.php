@@ -17,14 +17,11 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
-                                <h4 class="title">Services</h4>
+                            <div class="col-md-10">
+                                <h4 class="title">Inactive Services</h4>
                                 <p class="category">List of all inactive services.</p>
                             </div>
-                        </div>
-                        <div class="row">
-                           
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{url('admin/services')}}" class="btn btn-header btn-export">Active Services</a></div>
+                            <div class="col-md-2">@include('partials.backbtn_services')</div>
                         </div>
                         <div class="clear20"></div>
                     </div>

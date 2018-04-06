@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Update Workshop')
+@section('title', 'Update Profile')
 @section('content')
 
     @include('partials.header')
@@ -15,9 +15,13 @@
                             {{ csrf_field() }}
                             <div class="header">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-10">
                                         <h4 class="title">Workshop Management - Update Workshop</h4>
-                                        <a class="btn pull-right" href="{{url('/edit-profile-password/'.$workshop->id)}}">Change Password</a>
+                                    </div>
+                                    <div class="col-md-2">
+                                        @include('partials.backbtn_workshop')
+                                        <div class="clear5"></div>
+                                        <a class="btn pull-right" href="{{url('/change-password/'.$workshop->id)}}">Change Password</a>
                                     </div>
                                 </div>
                             </div>
@@ -221,9 +225,8 @@
                                         <div class="col-md-6">
                                             @php $address = $workshop->address;  @endphp
                                             <div class="form-group">
-                                                <label class="control-label">Shop No</label>
-                                                <input type="text" class="form-control border-input"
-                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <label class="control-label">Shop No <span class="manadatory">*</span></label>
+                                                <input type="text" class="form-control border-input" name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" required>
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                 <span class="help-block">
@@ -265,7 +268,8 @@
                                                 @endif
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label">Town <span class="manadatory"></span></label>
+                                                <label class="control-label">Town <span
+                                                            class="manadatory">*</span></label>
                                                 <input type="text" class="form-control border-input" required name="town" value="@if(!empty($address->town)){{$address->town}}@endif">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('town'))

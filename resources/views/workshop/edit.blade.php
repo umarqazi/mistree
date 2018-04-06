@@ -15,10 +15,13 @@
                             {{ csrf_field() }}
                             <div class="header">
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-10">
                                         <h4 class="title">Workshop Management - Update Workshop</h4>
-                                        <a class="btn pull-right" href="{{url('admin/edit-workshop-password/'.$workshop->id)}}">Change Password</a>
                                     </div>
+                                    <div class="col-md-2">
+                                        @include('partials.backbtn_workshop_back')
+                                        <div class="clear5"></div>
+                                        <a class="btn pull-right" href="{{url('admin/edit-workshop-password/'.$workshop->id)}}">Change Password</a></div>
                                 </div>
                             </div>
                             <div class="clear20"></div>
@@ -220,14 +223,14 @@
                                         <div class="col-md-6">
                                             @php $address = $workshop->address;  @endphp
                                             <div class="form-group">
-                                                <label class="control-label">Shop No </label>
+                                                <label class="control-label">Shop No <span class="manadatory">*</span></label>
                                                 <input type="text" class="form-control border-input" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);"
-                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif">
+                                                       name="shop" value="@if(!empty($address->shop)){{$address->shop}}@endif" required>
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                     <span class="help-block">
-                                            <strong class="manadatory">{{ $errors->first('shop') }}</strong>
-                                        </span>
+                                                        <strong class="manadatory">{{ $errors->first('shop') }}</strong>
+                                                    </span>
                                                 @endif
                                             </div>
                                             <div class="form-group">

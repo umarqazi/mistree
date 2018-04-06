@@ -11,19 +11,13 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Blocked Workshops</h4>
                                 <p class="category">List of all blocked workshops.</p>
                             </div>
+                            <div class="col-md-2">@include('partials.backbtn_workshop')</div>
                         </div>
                         <div class="clear20"></div>
-                        <div class="row">
-                         
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                                <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right"><a href="{{ url('admin/workshops/') }}" class="btn btn-header btn-export">Active Workshops</a></div>
-                            </div>
-                        </div>
                     </div>
                     <div class="clear20"></div>
                     <div class="content table-responsive table-full-width">

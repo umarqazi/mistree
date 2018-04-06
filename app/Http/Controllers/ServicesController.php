@@ -147,7 +147,7 @@ class ServicesController extends Controller
      */
     public function show(Service $service)
     {
-        return view::make('services.child_services')->with('services',$service->children);
+        return view::make('services.child_services')->with('parent_service',$service->name)->with('services',$service->children);
     }
 
     /**

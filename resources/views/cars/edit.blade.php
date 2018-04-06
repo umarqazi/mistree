@@ -11,20 +11,20 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-
                   <form method="POST" action="{{ url('admin/cars/'.$car->id) }}">
                     <input type="hidden"  value="PATCH" name="_method">
                     {!! csrf_field() !!}
                       <div class="header">
                       <div class="row">
-                          <div class="col-md-12">
+                          <div class="col-md-10">
                               <h4 class="title">Cars - Edit Car</h4>
                           </div>
+                          <div class="col-md-2">@include('partials.backbtn_cars')</div>
                       </div>
                       </div>                
                       <div class="content">
                         <div class="row">
-                          <div class="col-md-6">
+                          <div class="col-md-6 col-md-offset-3">
                               <div class="form-group">
                                   <label class="control-label">Type <span class="manadatory">*</span></label>
                                   <select class="form-control border-input" name="type" required >

@@ -11,12 +11,19 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="header">
-                        <div class="row">                            
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="row">
+                                    <div class="col-md-12">@include('partials.backbtn_workshop_back')</div>
+                                </div>
+                            </div>
                             <div class="col-md-12 text-center">
-                            
                                 <div class="work-service-block">
-
-                                <h4 class="title select-service-title">Edit Workshop Service</h4>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <h4 class="title select-service-title">Edit Workshop Service</h4>
+                                        </div>
+                                    </div>
                                 @if ($errors->any())
                                   <div class="row text-center alert alert-danger">
                                     @foreach($errors->all() as $error)

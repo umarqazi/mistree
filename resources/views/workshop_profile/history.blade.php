@@ -14,7 +14,7 @@
                         <div class="col-md-12">
                             <h4 class="title">Lead History</h4>
                             <div class="clear20"></div>                                
-                        </div>                            
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">

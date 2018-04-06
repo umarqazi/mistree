@@ -13,7 +13,7 @@
 
                 	<div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
 
 	                            <div class="avtar-block">
 	                            	@if($customer->profile_pic_url)
@@ -26,9 +26,9 @@
 	                            		@if(count($customer->addresses) > 0)
 		                            		@foreach($customer->addresses as $key => $address)
 		                                		@if(count($customer->addresses) > 1)
-		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                		@else
-		                                			<div class="address">Address: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+		                                			<div class="address">Address: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                		@endif
 		                                	@endforeach
 		                                @endif
@@ -39,6 +39,7 @@
 	                            </div>
 								
                             </div>
+							<div class="col-md-2">@include('partials.backbtn_customer')</div>
                         </div>                                                
                     </div>
 					<div class="content">
@@ -113,7 +114,7 @@
 						                    	@if(count($customer->bookings) > 0)
 							                    	@foreach($customer->bookings as $key => $booking)
 								                        <tr> 
-								                        	<td class="text-center">{{$booking->workshop->jazzcash_id}}</td>
+								                        	<td class="text-center">{{$booking->workshop->workshopId}}</td>
 								                        	<td class="text-center">{{$booking->workshop->name}}</td>
 															<td class="text-center">{{$booking->vehicle_no  }}</td>
 								                        	<td class="text-center">{{$booking->job_time." ".$booking->job_date }}</td>

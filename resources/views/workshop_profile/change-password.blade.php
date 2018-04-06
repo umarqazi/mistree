@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Update Workshop')
+@section('title', 'Change Password')
 @section('content')
 
     @include('partials.header')
@@ -9,15 +9,15 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
-                        <form method="POST" action="{{ url('update-profile-password/')}}">
+                        <form method="POST" action="{{ url('reset-password/')}}">
                             <input type="hidden"  value="PATCH" name="_method">
-                            <input type="hidden"  value="{{$workshop->id}}" name="workshop_id">
                             {{ csrf_field() }}
                             <div class="header">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <h4 class="title">Edit Password</h4>
+                                    <div class="col-md-10">
+                                        <h4 class="title">Change Password</h4>
                                     </div>
+                                    <div class="col-md-2">@include('partials.backbtn_workshop')</div>
                                 </div>
                             </div>
                             <div class="clear20"></div>
@@ -27,6 +27,17 @@
 
                                     <div class="row">
                                         <div class="col-md-6 col-lg-offset-3">
+                                            <div class="form-group">
+                                                <label class="control-label">Old Password</label>
+                                                <input type="password" class="form-control border-input" name="prev_password" required oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <p class="validity-message"></p>
+                                                @if ($errors->has('prev_password'))
+                                                    <span class="help-block">
+                                                        <strong class="manadatory">{{ $errors->first('prev_password') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+
                                             <div class="form-group">
                                                 <label class="control-label">New Password</label>
                                                 <input type="password" class="form-control border-input" name="password" required oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">

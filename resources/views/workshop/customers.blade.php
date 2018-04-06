@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Customers</h4>
                                 <p class="category">List of all customers.</p>
                             </div>
@@ -35,14 +35,14 @@
                             @foreach($customers as $key => $customer)
                             <tr role="row" class="odd">
                                     <td class="text-center">{{$customer->name}}</td>
-                                    <td class="text-center">{{$customer->addresses[0]['town']}}</td>
+                                    <td class="text-center">{{@implode("\n", $customer->addresses->pluck('town')->toArray())}}</td>
                                     <td class="text-center">{{$customer->email}}</td>
                                     <td class="text-center">{{$customer->con_number}}</td>
                                     <td class="text-center">                                        
                                         {{@implode(', ', $customer->cars->pluck('model')->toArray())}}                                        
                                     </td>
                                     <td class="text-center">                                        
-                                        {{@implode(', ', $customer->cars()->pluck('vehicle_no')->toArray())}}                                        
+                                        {{@implode(', ', $customer->cars->pluck('vehicle_no')->toArray())}}
                                     </td> 
                                 </tr>
                             @endforeach    
