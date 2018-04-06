@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @section('title', 'Create New Workshop')
 @section('content')
-   
+
     @include('partials.header')
     <div class="content">
         <div class="container-fluid">
@@ -206,6 +206,7 @@
                                     <div class="row">
                                         <div class="col-md-12 text-center">
                                             <div class="form-group">
+                                                <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                                 <a class="btn btn-header btn-next-1"  >Next</a>
                                             </div>
                                         </div>
@@ -221,8 +222,9 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label class="control-label">Shop No.</label>
-                                                <input type="text" class="form-control border-input" name="shop" value="{{ old('shop') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <label class="control-label">Shop No. <span class="manadatory">*</span></label>
+                                                <input type="text" class="form-control border-input" name="shop"
+                                                       value="{{ old('shop') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" required>
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('shop'))
                                                     <span class="help-block">
@@ -293,6 +295,7 @@
                                     <div class="row">
                                         <div class="col-md-12 text-center">
                                             <div class="form-group">
+                                                <a href="{{ url('admin/workshops') }}" class="btn btn-header">Cancel</a>
                                                 <button class="btn btn-header btn-back-1">Back</button>
                                                 <button class="btn btn-header btn-next-2">Next</button>
                                             </div>

@@ -93,7 +93,7 @@ class WorkshopsController extends Controller
     public function store(Request $request)
     {
         $input = $request->only('name', 'owner_name', 'email', 'password', 'password_confirmation', 'cnic',
-            'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city', 'hatchback', 'hatchback-rates','hatchback-times', 'sedan-rates', 'sedan', 'sedan-times', 'luxury', 'luxury-rates', 'luxury-times', 'suv', 'suv-rates', 'suv-times');
+            'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
         $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             return Redirect::back()
@@ -1365,14 +1365,8 @@ class WorkshopsController extends Controller
     public function show_customers()
     {
         $workshop = Auth::guard('workshop')->user();
-        $bookings = Booking::where('workshop_id', $workshop->id)->get()->load(['customer']);
 
-        $customer_ids  = [];
-        foreach($bookings as $booking){
-            array_push($customer_ids, $booking->customer->id);
-        }
-        $customer = array_unique($customer_ids);
-        $customers = Customer::whereIN('id', $customer)->get()->load('cars','addresses');
+        $customers = Customer::whereIn('id', $workshop->bookings()->pluck('customer_id')->toArray())->get()->load('cars','addresses');
         return View::make('workshop.customers', ['customers' => $customers]);
     }
 
@@ -2245,8 +2239,8 @@ class WorkshopsController extends Controller
         if(!Storage::disk('public')->has($specified_workshop_path.'/images')){
             $path = $workshops_path.$workshop->id.'/images';
             mkdir($path, 0775, true);
-        }            
-        
+        }
+
         $full_path = $workshops_path.$workshop->id.'/images/'.md5(microtime()).".jpg";
         if( (empty($old_url)) && (!empty($image)) ){
             $url = $this->upload_image($image,$workshop_id,$full_path);
@@ -2383,7 +2377,7 @@ class WorkshopsController extends Controller
 
 //      Unlink Image(Remove Previous Image from Directory)
         $this->unlinkImage($workshop->cnic_image);
-        
+
         $full_path = $workshops_path.$workshop->id.'/cnic/'.md5(microtime()).".jpg";
         $url = $this->upload_image($file_data,$workshop->id,$full_path);
         $url = url('/').'/'.$specified_workshop_path.'/cnic/'.basename($url);
@@ -2702,6 +2696,89 @@ class WorkshopsController extends Controller
             $path = str_replace(url('/').'/','',$url);
             unlink($path);
         }
+    }
+
+    /**
+     * @SWG\Patch(
+     *   path="/api/workshop/contact-info",
+     *   summary="Update Workshop Contact Number",
+     *   operationId="Update Contact",
+     *   produces={"application/json"},
+     *   tags={"Workshops"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="landline",
+     *     in="formData",
+     *     description="Landline Number",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="mobile",
+     *     in="formData",
+     *     description="Mobile Number",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="owner_name",
+     *     in="formData",
+     *     description="Owner Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=404, description="not found"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function updateDetails(Request $request)
+    {
+        $rules = [
+            'mobile'                         => 'sometimes|required|regex:/^0?3\d{2}-\d{7}$/u',
+            'landline'                       => 'sometimes|regex:/^\d{10,11}$/u|nullable',
+            'owner_name'                     => 'sometimes|required|regex:/^[\pL\s\-]+$/u'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => null
+            ], Response::HTTP_OK);
+        }
+
+        $workshop = JWTAuth::authenticate();
+
+        if($request->has('mobile'))
+        {
+            $workshop->update(['mobile' => $request->mobile]);
+        }
+        if($request->has('landline'))
+        {
+            $workshop->update(['landline' => $request->landline]);
+        }
+        if($request->has('owner_name'))
+        {
+            $workshop->update(['owner_name' => $request->owner_name]);
+        }
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Successfully Updated',
+            'body' => ['workshop' => $workshop ]
+        ], Response::HTTP_OK);
     }
 }
 
