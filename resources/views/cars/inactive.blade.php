@@ -11,13 +11,11 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
-                                <h4 class="title">Cars</h4>
+                            <div class="col-md-10">
+                                <h4 class="title">Inactive Cars</h4>
                                 <p class="category">List of all inactive cars.</p>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="text-right" style="margin-right: 15px;"><a href="{{ url('admin/cars') }}" class="btn btn-header btn-export">Active Cars</a></div>
+                            <div class="col-md-2">@include('partials.backbtn_cars')</div>
                         </div>
                         <div class="clear20"></div>
                     </div>

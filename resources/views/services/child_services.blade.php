@@ -26,10 +26,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <h4 class="title">Services</h4>
-                                    <p class="category">List of all services.</p>
+                                <div class="col-md-10">
+                                    <h4 class="title">{{$parent_service}} - Services</h4>
+                                    <p class="category">List of all Child services.</p>
                                 </div>
+                                <div class="col-md-2">@include('partials.backbtn_services')</div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 col-sm-offset-6 balance-info">
@@ -71,7 +72,7 @@
                                                     <i class="ti-check"></i>
                                                 @endif
                                             </td>
-                                            <td>
+                                            <td class="text-center">
                                                 <form method="POST" id="child_service_deactivate" action="/admin/services/{{ $value->id }}" accept-charset="UTF-8">
                                                     <input name="_method" type="hidden" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">

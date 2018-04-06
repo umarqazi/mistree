@@ -10,7 +10,7 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Customers</h4>
                                 <p class="category">List of all customers.</p>
                             </div>

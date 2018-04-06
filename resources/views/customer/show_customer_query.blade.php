@@ -11,16 +11,16 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
-                                <h4>Customer Queries</h4>
+                            <div class="col-md-10">
+                                <h4>Customer Query</h4>
                                 <p>Customer Name : {{ $customerQuery->customer->name}}</p>
                                 <p>Mobile : {{$customerQuery->customer->mobile}}</p>
                                 <p>Email : {{$customerQuery->customer->email}}</p>
                                 <p>Date : {{$customerQuery->created_at }}</p>
                             </div>
+                            <div class="col-md-2">@include('partials.backbtn_customer_query')</div>
                         </div>
                         <div class="clear20"></div>
                         <div class="row">

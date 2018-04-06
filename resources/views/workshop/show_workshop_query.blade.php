@@ -14,13 +14,14 @@
 
                       <div class="header">
                           <div class="row">
-                              <div class="col-md-12">
-                                  <h4>Workshop Queries</h4>
+                              <div class="col-md-10">
+                                  <h4>Workshop Query</h4>
                                   <p>Workshop Name : {{ $workshopQuery->workshop->name}}</p>
                                   <p>Mobile : {{$workshopQuery->workshop->mobile}}</p>
                                   <p>Email : {{$workshopQuery->workshop->email}}</p>
                                   <p>Date : {{$workshopQuery->created_at }}</p>
                               </div>
+                              <div class="col-md-2">@include('partials.backbtn_workshop_query')</div>
                           </div>
                           <div class="clear20"></div>
                           <div class="row">
