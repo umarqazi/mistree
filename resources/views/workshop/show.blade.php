@@ -174,7 +174,7 @@
 															</td>
 															<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
 															<td>{{ $spec->pivot->service_rate }}</td>
-															<td>{{ $spec->pivot->service_time }}</td>
+															<td>{{$spec->pivot->service_time}}</td>
 															<td>
 																<a href="{{url('admin/edit-workshop-service/'.$spec->pivot->id)}}" class="mistri-icons ti-pencil-alt"></a>
 																<a href="{{ url('admin/delete-workshop-service/'. $workshop->id.'/'.$spec->pivot->service_id) }}" class="mistri-icons ti-close"></a>

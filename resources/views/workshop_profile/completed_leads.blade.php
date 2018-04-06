@@ -62,7 +62,7 @@
                                     <td class="text-center">{{$lead->vehicle_no}}</td>
                                     <td class="text-center">{{$lead->customer->name}}</td>
                                     <td class="text-center">{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
-                                    <td class="text-center">{{$lead->job_time}}</td>
+                                    <td class="text-center">{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
                                     <td class="text-center">{{$lead->billing['amount']}}</td>
                                     <td class="text-center"><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
                                 </tr>
