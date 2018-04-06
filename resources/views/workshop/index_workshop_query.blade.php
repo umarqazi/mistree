@@ -59,9 +59,8 @@
 
                                         <a class= "mistri-icons ti-eye" href="{{url('admin/workshop-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
                                         @if($value->is_resolved == false)
-                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query"><i class="ti-check-box"></i></button>
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query"><i class="ti-check"></i></i></button>
                                         @endif
-
                                     </td>
                                 </tr>
                                 @endforeach

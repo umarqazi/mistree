@@ -57,13 +57,13 @@
                             <tbody>                            
                                 @foreach($bookings as $booking)                                
                                 <tr role="row" class="odd">                                    
-                                    <td class="text-center">{{$booking->job_date}}</td>
+                                    <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                     <td class="text-center">{{$booking->vehicle_no}}</td>
                                     <td class="text-center">{{$booking->customer->name}}</td>
                                     <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
                                     <td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
                                     <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
-                                    <td class="text-center"><i class="ti-star"></i> {{$booking->billing['ratings']}}</td>
+                                    <td class="text-center">@if(!is_null($booking->billing['ratings'])){{@intval($booking->billing['ratings'])}}<i class="ti-star"></i>@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>

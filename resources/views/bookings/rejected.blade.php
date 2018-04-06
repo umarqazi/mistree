@@ -58,7 +58,7 @@
                             <tbody>                            
                                 @foreach($bookings as $booking)                                
                                     <tr role="row" class="odd">
-                                        <td class="text-center">{{$booking->job_date}}</td>
+                                        <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">{{$booking->customer->name}}</td>
                                         <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>

@@ -15,6 +15,11 @@
                                 <p class="category">List of all active Bookings.</p>
                              </div>
                             <div class="col-md-2">
+                                @include('partials.backbtn_bookings')
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2 col-md-offset-10">
                                 <div class="dropdown pull-right booking-types">
                                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         + More Options
@@ -48,7 +53,7 @@
                             <tbody>                            
                                 @foreach($bookings as $booking)                                
                                     <tr role="row" class="odd">                                    
-                                        <td class="text-center">{{$booking->job_date}}</td>
+                                        <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">{{$booking->customer->name}}</td>
                                         <td class="text-center">{{$booking->job_status}}</td>

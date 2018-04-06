@@ -47,22 +47,17 @@
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Estimated Rates: activate to sort column ascending" style="width: 156px;">Estimated Rates</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"
-                                        aria-label="Total: activate to sort column ascending" style="width: 54px;">Estimated
-                                        Rates
-                                    </th>
                                 </tr>
                             </thead>
                             <tbody>                            
                                  @foreach($bookings as $booking)                                
                                     <tr role="row" class="odd">
-                                        <td class="text-center">{{$booking->job_date}}</td>
+                                        <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">{{$booking->customer->name}}</td>
                                         <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
-                                        <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
+                                        <td class="text-center">{{$booking->services->pluck('pivot')->sum('service_rate')}}</td>
                                         <td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
-                                        <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
