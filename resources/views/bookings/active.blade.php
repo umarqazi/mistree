@@ -20,22 +20,9 @@
                                         + More Options
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <form method="POST" id="bookings-dropdown" action="{{ url(
-                                            'admin/booking/') }}">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="list_type" value="pending">
-                                            <input class="submit_button" type="submit" value="Pending Bookings">
-                                        </form>
-                                        <form method="POST" action="{{ url( 'admin/booking/') }}" id="bookings-dropdown">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="list_type" value="cancelled">
-                                            <input class="submit_button" type="submit" value="Rejected Bookings">
-                                        </form>
-                                        <form method="POST" action="{{ url( 'admin/booking/') }}" id = "bookings-dropdown">
-                                            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <input type="hidden" name="list_type" value="completed">
-                                            <input class="submit_button" type="submit" value="Completed Bookings">
-                                        </form>
+                                        <a href="/admin/booking/pending">Pending Bookings</a>
+                                        <a href="/admin/booking/cancelled">Rejected Bookings</a>
+                                        <a href="/admin/booking/completed">Completed Bookings</a>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +54,7 @@
                                         <td class="text-center">{{$booking->job_status}}</td>
                                         <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
                                         <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
-                                        <td class="text-center">{{$booking->job_time}}</td>
+                                        <td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

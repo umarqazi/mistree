@@ -23,27 +23,10 @@
                                                 + More Options
                                             </button>
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                <form method="POST" id="bookings-dropdown" action="{{ url(
-                                                'admin/booking/') }}">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="hidden" name="list_type" value="active">
-                                                    <input class="submit_button" type="submit" value="Active Bookings">
-                                                </form>
-                                                <form method="POST" id="bookings-dropdown" action="{{ url(
-                                            'admin/booking/') }}">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="hidden" name="list_type" value="pending">
-                                                    <input class="submit_button" type="submit" value="Pending Bookings">
-                                                </form>
-                                                <form method="POST" action="{{ url( 'admin/booking/') }}" id="bookings-dropdown">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="hidden" name="list_type" value="cancelled">
-                                                    <input class="submit_button" type="submit" value="Rejected Bookings">
-                                                </form>
-                                                <form method="POST" action="{{ url( 'admin/booking/') }}" id = "bookings-dropdown">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                                    <input type="hidden" name="list_type" value="completed">
-                                                    <input class="submit_button" type="submit" value="Completed Bookings">
+                                                <a href="/admin/booking/active">Active Bookings</a>
+                                                <a href="/admin/booking/pending">Pending Bookings</a>
+                                                <a href="/admin/booking/cancelled">Rejected Bookings</a>
+                                                <a href="/admin/booking/completed">Completed Bookings</a>
                                                 </form>
                                             </div>
                                         </div>
@@ -78,7 +61,7 @@
                                             <td>{{$booking->job_status}}</td>
                                             <td>{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
                                             <td>{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
-                                            <td>{{$booking->job_time}}</td>
+                                            <td>{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
                                         </tr>
                                     @endforeach
                                     </tbody>
