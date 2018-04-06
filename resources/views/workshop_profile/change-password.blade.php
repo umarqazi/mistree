@@ -17,7 +17,7 @@
                                     <div class="col-md-10">
                                         <h4 class="title">Change Password</h4>
                                     </div>
-                                    <div class="col-md-2">@include('partials.backbtn_workshop')</div>
+                                    <div class="col-md-2">@include('partials.backbtn_profile')</div>
                                 </div>
                             </div>
                             <div class="clear20"></div>
