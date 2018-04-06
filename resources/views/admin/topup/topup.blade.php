@@ -1,5 +1,5 @@
 @extends('layouts.master')
-@section('title', 'Dashboard')
+@section('title', 'Topup')
 @section('content')
 @include('partials.header')
 <div class="content">
@@ -87,23 +87,5 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @include('partials.footer')
 @endsection
