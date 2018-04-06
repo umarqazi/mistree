@@ -21,7 +21,7 @@
                                     <div class="col-md-2">
                                         @include('partials.backbtn_workshop')
                                         <div class="clear5"></div>
-                                        <a class="btn pull-right" href="{{url('/change-password/'.$workshop->id)}}">Change Password</a>
+                                        <a class="btn pull-right" href="{{url('/change-password/')}}">Change Password</a>
                                     </div>
                                 </div>
                             </div>

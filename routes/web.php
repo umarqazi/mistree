@@ -61,7 +61,6 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('change-password/', 'WorkshopsController@changePassword');
         Route::patch('reset-password/', 'WorkshopsController@passwordReset');
         Route::patch('profileServiceUpdate', 'WorkshopsController@updateProfileService');
-        Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'create']]);
