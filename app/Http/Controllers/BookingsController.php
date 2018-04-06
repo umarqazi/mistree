@@ -797,7 +797,7 @@ class BookingsController extends Controller
         
     }
 
-    public function bookingListings(Request $request){
+    public function bookingListings($type = ""){
 
       $bookings          = Booking::all();
       $bookings_pending  = Booking::PendingBookings()->get();
@@ -805,7 +805,7 @@ class BookingsController extends Controller
       $bookings_complete = Booking::CompletedBookings()->get();
       $bookings_rejected = Booking::RejectedBookings()->get();
       
-        switch ($request->list_type) {
+        switch ($type) {
 
         case "active":
             return View::make('bookings.active')->with('bookings', $bookings_active);
@@ -820,7 +820,6 @@ class BookingsController extends Controller
         return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
             break;
         default:
-        
         return View::make('bookings.index')->with('bookings', $bookings);
 
         }
