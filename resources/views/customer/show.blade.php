@@ -114,7 +114,7 @@
 						                    	@if(count($customer->bookings) > 0)
 							                    	@foreach($customer->bookings as $key => $booking)
 								                        <tr> 
-								                        	<td class="text-center">{{$booking->workshop->jazzcash_id}}</td>
+								                        	<td class="text-center">{{$booking->workshop->workshopId}}</td>
 								                        	<td class="text-center">{{$booking->workshop->name}}</td>
 															<td class="text-center">{{$booking->vehicle_no  }}</td>
 								                        	<td class="text-center">{{$booking->job_time." ".$booking->job_date }}</td>

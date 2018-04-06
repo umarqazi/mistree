@@ -27,8 +27,8 @@
         @if(!is_null($workshop->balance))
             <div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
         @endif
-        @if(!is_null($workshop->jazzcash_id))
-            <div>Workshop ID : {{$workshop->jazzcash_id}}</div>
+        @if(!is_null($workshop->workshopId))
+            <div>Workshop ID : {{$workshop->workshopId}}</div>
         @endif
         @php
             $url = explode('/',url()->current() );

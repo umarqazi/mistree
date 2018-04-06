@@ -117,10 +117,10 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         if(env('APP_ENV') == "production"){
-            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
-            $jazz_cash = (int)$client->GetWorkShopId()->GetWorkShopIdResult;
+            $client     = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $workshopId = (int)$client->GetWorkShopId()->GetWorkShopIdResult;
         }else{
-            $jazz_cash = null;
+            $workshopId = null;
         }
         $workshop = Workshop::create([
             'name'          => $data['name'],
@@ -134,7 +134,7 @@ class RegisterController extends Controller
             'open_time'     => $data['open_time'],
             'close_time'    => $data['close_time'],
             'is_approved'   => false,
-            'jazzcash_id'   => $jazz_cash
+            'workshopId'    => $workshopId
 
         ]);
 
