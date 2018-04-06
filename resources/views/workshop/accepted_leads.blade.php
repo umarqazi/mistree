@@ -50,7 +50,7 @@
                             <tbody>                            
                                 @foreach($leads as $lead)                                
                                 <tr role="row" class="odd">                                    
-                                    <td class="text-center">{{$lead->job_date}}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td class="text-center">{{$lead->vehicle_no}}</td>
                                     <td class="text-center">{{$lead->customer->name}}</td>
                                     <td class="text-center">{{$lead->customer->con_number}}</td>

@@ -58,13 +58,13 @@
                             <tbody>                            
                                 @foreach($completed_leads as $lead)                                
                                 <tr role="row" class="odd">                                    
-                                    <td class="text-center">{{$lead->job_date}}</td>
+                                    <td class="text-center">{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td class="text-center">{{$lead->vehicle_no}}</td>
                                     <td class="text-center">{{$lead->customer->name}}</td>
                                     <td class="text-center">{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
                                     <td class="text-center">{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
                                     <td class="text-center">{{$lead->billing['amount']}}</td>
-                                    <td class="text-center"><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
+                                    <td class="text-center">@if(!is_null($lead->billing['ratings'])){{@intval($lead->billing['ratings'])}}<i class="ti-star"></i>@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>
