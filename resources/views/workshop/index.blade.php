@@ -62,7 +62,7 @@
                                     <tbody>
                                     @foreach($workshops as $key => $value)
                                         <tr role="row" class="odd">
-                                            <td class="text-center">{{ $value->jazzcash_id }}</td>
+                                            <td class="text-center">{{ $value->workshopId }}</td>
                                             <td class="text-center">{{ $value->name }}</td>
                                             <td class="text-center">{{ $value->owner_name }}</td>
                                             @if($value->address)

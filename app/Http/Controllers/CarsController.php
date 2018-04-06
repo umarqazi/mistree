@@ -324,7 +324,7 @@ class CarsController extends Controller
         $customer   = JWTAuth::authenticate();
         $rules = array(
             'car_id'        => 'required_without:model,make',
-            'vehicle_no'    => 'required|unique:car_customer,vehicle_no,NULL,id,removed_at,NULL|regex:/^(AJK[A-Z]?|[A-Z]{2}[A-Z]{0,1})-(|[\d]{2}[A-B]?-)(0?[1-9]\d{2}|0{0,2}[1-9]\d{1}|0{0,3}[1-9]|[1-9]\d{0,3})$/u',
+            'vehicle_no'    => ['required','unique:car_customer,vehicle_no,NULL,id,removed_at,NULL','regex:/^(AJK[A-Z]?|[A-Z]{2}[A-Z]{0,1})-(|[\d]{2}[A-B]?-)(0?[1-9]\d{2}|0{0,2}[1-9]\d{1}|0{0,3}[1-9]|[1-9]\d{0,3})$/'],
             'millage'       => 'required|numeric',
             'year'          => 'required|numeric',
             'type'          => 'required_without:car_id|in:'.$types,

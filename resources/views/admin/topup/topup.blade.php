@@ -45,7 +45,7 @@
                                             <select name="workshop_id" class="form-control chosen-select  border-input">
                                                 <option value="">Select Workshop</option>
                                                 @foreach($workshops as $workshop)
-                                                    <option value="{{$workshop->id}}">{{$workshop->name}}@if(!is_null($workshop->jazzcash_id)) {{" - ". $workshop->jazzcash_id }}@endif</option>
+                                                    <option value="{{$workshop->id}}">{{$workshop->name}}@if(!is_null($workshop->workshopId)) {{" - ". $workshop->workshopId }}@endif</option>
                                                 @endforeach
                                             </select>
                                             @if ($errors->has('workshop_id'))

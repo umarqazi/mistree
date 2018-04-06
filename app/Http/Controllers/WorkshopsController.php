@@ -102,10 +102,10 @@ class WorkshopsController extends Controller
         }
 
         if(env('APP_ENV') == "production"){
-            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
-            $jazz_cash = $client->GetWorkShopId()->GetWorkShopIdResult;
+            $client     = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $workshopId = (int)$client->GetWorkShopId()->GetWorkShopIdResult;
         }else{
-            $jazz_cash = null;
+            $workshopId = null;
         }
         //Insert Workshop data from request
         $workshop = Workshop::create([
@@ -120,7 +120,7 @@ class WorkshopsController extends Controller
             'open_time'     => $request->open_time,
             'close_time'    => $request->close_time,
             'is_approved'   => true,
-            'jazzcash_id'   => $jazz_cash
+            'workshopId'   => $workshopId
         ]);
 
         //Insert Address data from request
@@ -573,27 +573,27 @@ class WorkshopsController extends Controller
         }
 
         if(env('APP_ENV') == "production"){
-            $client = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
-            $jazz_cash = $client->GetWorkShopId()->GetWorkShopIdResult;
+            $client     = new SoapClient('http://58.27.201.81:8090/WS_CarMaintenancePayment.asmx?wsdl');
+            $workshopId = $client->GetWorkShopId()->GetWorkShopIdResult;
         }else{
-            $jazz_cash = null;
+            $workshopId = null;
         }
 
         //Insert Workshop data from request 
         $workshop = Workshop::create([
-            'name' => $request->name,
-            'owner_name' => $request->owner_name ,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'cnic' => $request->cnic,
-            'mobile' => $request->mobile,
-            'landline' => $request->landline,
-            'type' => $request->type,
-            'slots' => $request->team_slots,
-            'open_time' => $request->open_time,
-            'close_time' => $request->close_time,
-            'is_approved' => 0,
-            'jazzcash_id' => $jazz_cash
+            'name'          => $request->name,
+            'owner_name'    => $request->owner_name ,
+            'email'         => $request->email,
+            'password'      => Hash::make($request->password),
+            'cnic'          => $request->cnic,
+            'mobile'        => $request->mobile,
+            'landline'      => $request->landline,
+            'type'          => $request->type,
+            'slots'         => $request->team_slots,
+            'open_time'     => $request->open_time,
+            'close_time'    => $request->close_time,
+            'is_approved'   => 0,
+            'workshopId'    => $workshopId
         ]);
 
         //By Default Inserting Workshop Balance 2000
@@ -2619,7 +2619,7 @@ class WorkshopsController extends Controller
             ],Response::HTTP_NOT_ACCEPTABLE);
         }
 
-        $workshop = Workshop::where('jazzcash_id',$request->customerId)->first();
+        $workshop = Workshop::where('workshopId',$request->customerId)->first();
         if(is_null($workshop))
         {
             return response()->json([
