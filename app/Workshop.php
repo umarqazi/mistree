@@ -46,6 +46,11 @@ class Workshop extends Authenticatable
      */
     protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
 
+    /**
+     * The attributes that should be appended by default.
+     *
+     * @var array
+     */
     protected $appends  = ['rating'];
 
     /**
