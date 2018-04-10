@@ -1252,6 +1252,77 @@ class CustomersController extends Controller
         ],Response::HTTP_OK);
     }
 
+    /**
+     * @SWG\Patch(
+     *   path="/api/customer/contact-info",
+     *   summary="Update Customer's Contact Number",
+     *   operationId="update_contact_info",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="name",
+     *     in="formData",
+     *     description="Customer's Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *    @SWG\Parameter(
+     *     name="mobile",
+     *     in="formData",
+     *     description="Mobile Number",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="success"),
+     *   @SWG\Response(response=401, description="unauthorized"),
+     *   @SWG\Response(response=404, description="not found"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function updateDetails(Request $request)
+    {
+        $rules = [
+            'mobile'    => 'sometimes|required|regex:/^0?3\d{2}-\d{7}$/u',
+            'name'      => 'sometimes|required|regex:/^[\pL\s\-]+$/u'
+        ];
+
+        $validator = Validator::make($request->all(), $rules);
+        if($validator->fails()) {
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validator->messages()->first(),
+                'body' => null
+            ], Response::HTTP_OK);
+        }
+
+        $customer = JWTAuth::authenticate();
+
+        if($request->has('mobile'))
+        {
+            $customer->update(['con_number' => $request->mobile]);
+        }
+        if($request->has('name'))
+        {
+            $customer->update(['name' => $request->name]);
+        }
+
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Successfully Updated',
+            'body' => ['customer' => $customer ]
+        ], Response::HTTP_OK);
+    }
+
     public function upload_image($file_data , $customer_id, $full_path){
         $file   = fopen($full_path, "wb");
         fwrite($file, base64_decode($file_data));
