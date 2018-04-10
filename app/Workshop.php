@@ -46,6 +46,8 @@ class Workshop extends Authenticatable
      */
     protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
 
+    protected $appends  = ['rating'];
+
     /**
      * The "booting" method of the model.
      *
@@ -103,6 +105,11 @@ class Workshop extends Authenticatable
     public function transactions()
     {
         return $this->hasMany('App\WorkshopLedger');
+    }
+
+    public function getRatingAttribute()
+    {
+        return round($this->billings()->avg('ratings'));
     }
 
     //    Returns sum of the workshop
