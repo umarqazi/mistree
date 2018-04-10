@@ -1,5 +1,5 @@
 <div class="profile-info">
-    <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px">
+    <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px" onclick="imagezoom(this)">
     <div class="name-info">
         <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
         <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
@@ -27,8 +27,8 @@
         @if(!is_null($workshop->balance))
             <div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
         @endif
-        @if(!is_null($workshop->jazzcash_id))
-            <div>Workshop ID : {{$workshop->jazzcash_id}}</div>
+        @if(!is_null($workshop->workshopId))
+            <div>Workshop ID : {{$workshop->workshopId}}</div>
         @endif
         @php
             $url = explode('/',url()->current() );

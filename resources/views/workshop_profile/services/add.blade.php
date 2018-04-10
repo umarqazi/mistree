@@ -16,10 +16,11 @@
                     <div class="card">
                         <div class="header">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-md-10">
                                     <h4 class="title">{{$workshop->name}}</h4>
                                     <p>Add Services</p>
                                 </div>
+                                <div class="col-md-2">@include('partials.backbtn_profile')</div>
                             </div>
                         </div>
                         <form method="POST" action="{{ url('profile/store-profile-service/') }}">

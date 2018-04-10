@@ -11,19 +11,13 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Blocked Workshops</h4>
                                 <p class="category">List of all blocked workshops.</p>
                             </div>
+                            <div class="col-md-2">@include('partials.backbtn_workshop')</div>
                         </div>
                         <div class="clear20"></div>
-                        <div class="row">
-                         
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                                <div class="clear10"></div><div class="clear5"></div>
-                                <div class="text-right"><a href="{{ url('admin/workshops/') }}" class="btn btn-header btn-export">Active Workshops</a></div>
-                            </div>
-                        </div>
                     </div>
                     <div class="clear20"></div>
                     <div class="content table-responsive table-full-width">
@@ -44,25 +38,25 @@
                             <tbody>
                                 @foreach($workshops as $key => $value)    
                                 <tr role="row" class="odd">
-                                    <td class="sorting_1">{{ $value->id }}</td>
-                                    <td>{{ $value->name }}</td>
-                                    <td>{{ $value->owner_name }}</td>
+                                    <td class="text-center">{{ $value->id }}</td>
+                                    <td class="text-center">{{ $value->name }}</td>
+                                    <td class="text-center">{{ $value->owner_name }}</td>
                                     @if($value->address)
-                                    <td>{{ $value->address->town }}</td>
+                                    <td class="text-center">{{ $value->address->town }}</td>
                                     @else
-                                    <td></td>
+                                    <td class="text-center"></td>
                                     @endif
-                                    <td>{{23*($key+1) }}</td>
-                                    <td>{{ 2*($key+1) }}</td>
-                                    <td>
+                                    <td class="text-center">@if(!empty($value->balance)){{ $value->balance['balance'] }}@endif</td>
+                                    <td class="text-center">{{ $value->bookings->count() }}</td>
+                                    <td class="text-center">
                                         @if($value->is_approved == 0)
                                             Not Approved
                                         @else
                                             Approved
                                         @endif</a> 
                                     </td>                                   
-                                    <td>
-                                    <a href="{{ URL::to('admin/workshops/' . $value->id . '/unblock') }}" data-toggle="tooltip" data-placement="top" title="Unblock" class=" mistri-icons ti-hand-stop"></a>
+                                    <td class="text-center">
+                                        <a href="{{ URL::to('admin/workshops/' . $value->id . '/unblock') }}" data-toggle="tooltip" data-placement="top" title="Unblock" class=" mistri-icons ti-hand-stop"></a>
                                     </td>
                                 </tr>
                                  @endforeach

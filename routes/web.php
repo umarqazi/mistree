@@ -58,10 +58,9 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
         Route::post('/get-category-services','WorkshopsController@getCategoryServices');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
-        Route::get('edit-profile-password/{workshop}', 'WorkshopsController@editProfilePassword');
-        Route::patch('update-profile-password/', 'WorkshopsController@updateProfilePassword');
+        Route::get('change-password/', 'WorkshopsController@changePassword');
+        Route::patch('reset-password/', 'WorkshopsController@passwordReset');
         Route::patch('profileServiceUpdate', 'WorkshopsController@updateProfileService');
-        Route::get('/profile', 'WorkshopsController@workshop_profile');
         
         Route::get('profile/delete-profile-service/{workshop}/{service}', 'WorkshopsController@deleteProfileService');
         Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'create']]);
@@ -144,8 +143,8 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');
 
-        Route::get('/booking', 'BookingsController@bookingListings');
-        Route::post('/booking/', 'BookingsController@bookingListings');
+//        Route::get('/booking/', 'BookingsController@bookingListings');
+        Route::get('/booking/{type?}', 'BookingsController@bookingListings');
         
         
         Route::get('/authorized-workshops', 'WorkshopsController@authorized');

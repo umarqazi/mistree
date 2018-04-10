@@ -15,7 +15,10 @@
                             <div class="col-md-12">
 
                                 <div class="avtar-block">
-                                    @include('partials.workshop_profile_info')
+                                    <div class="row">
+                                        <div class="col-md-11">@include('partials.workshop_profile_info')</div>
+                                        <div class="col-md-1">@include('partials.backbtn_workshop_back')</div>
+                                    </div>
                                     <div class="dropdown pull-right">
                                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                        + More Options
@@ -49,13 +52,13 @@
                             <tbody>                            
                                 @foreach($leads as $lead)                                
                                 <tr role="row" class="odd">                                    
-                                    <td>{{$lead->job_date}}</td>
+                                    <td>{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
-                                    <td>{{$lead->job_time}}</td>
+                                    <td>{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
                                     <td>{{$lead->billing['amount']}}</td>
-                                    <td><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
+                                    <td>@if(!is_null($lead->billing['ratings'])){{@intval($lead->billing['ratings'])}}<i class="ti-star"></i>@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>

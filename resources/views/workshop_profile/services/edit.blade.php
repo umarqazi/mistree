@@ -12,12 +12,13 @@
                 <div class="card">
                     <div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Edit Workshop Service</h4>                                
                             </div>
+                            <div class="col-md-2">@include('partials.backbtn_profile')</div>
                             <div class="clear10"></div><div class="clear5"></div>
                             <div class="clear10"></div><div class="clear5"></div>                            
-                            <div class="col-md-12">
+                            <div class="col-md-6 col-md-offset-3">
                                 @if ($errors->any())
                                   <div class="row text-center alert alert-danger">
                                     @foreach($errors->all() as $error)
@@ -32,7 +33,7 @@
                                     <input type="hidden" value="{{$workshop_service->service_id}}" name="service_id">
                                     <input type="hidden" value="{{$workshop_service->id}}" name="workshop_service_id">
                                     {{ csrf_field() }}
-                                        <div class="col-sm-4">
+                                        <div class="col-md-12">
                                             <div class="child-box-wrap">
                                                 <div class="row">
                                                     <div class="col-md-12">

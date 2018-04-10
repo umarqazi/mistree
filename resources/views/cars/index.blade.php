@@ -14,23 +14,25 @@
                             </div>
                         @endif
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Cars</h4>
                                 <p class="category">List of all active cars.</p>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                                <div class="dropdown pull-right">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                   + More Options
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a href="{{ url('admin/cars/create') }}" class="dropdown-buttons">Add New Car</a>
-                                        <a href="{{url('admin/inactive-cars')}}" class="dropdown-buttons">Inactive Cars</a>    
-                                        <a href="{{url('admin/unpublished/cars')}}" class="dropdown-buttons">Unpublished Cars</a>
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-sm-6 col-sm-offset-6 balance-info">
+                                        <div class="dropdown pull-right">
+                                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                + More Options
+                                            </button>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                <a href="{{ url('admin/cars/create') }}" class="dropdown-buttons">Add New Car</a>
+                                                <a href="{{url('admin/inactive-cars')}}" class="dropdown-buttons">Inactive Cars</a>
+                                                <a href="{{url('admin/unpublished/cars')}}" class="dropdown-buttons">Unpublished Cars</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>                            
+                                </div>
                             </div>
                         </div>
                         <div class="clear20"></div>
@@ -54,12 +56,12 @@
                                     <td class="text-center">@if(!is_null($value->category)){{ $value->category->name }}@endif</td>
                                     <td class="text-center">
 
-                                        <form method="POST" id="cars_deactivate_form" action="cars/{{ $value->id }}" accept-charset="UTF-8">
+                                        <form method="POST" id="cars_deactivate_form_{{ $value->id }}" action="cars/{{ $value->id }}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="DELETE">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
                                         <a href="{{url('admin/cars/'. $value->id.'/edit')}}" data-toggle="tooltip" data-placement="top" title="Edit" class="mistri-icons ti-pencil-alt"></a>
-                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="cars_deactivate_form"><i class="ti-power-off"></i></button>
+                                        <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="cars_deactivate_form_{{ $value->id }}"><i class="ti-power-off"></i></button>
                                     </td>
                                 </tr>
                                  @endforeach

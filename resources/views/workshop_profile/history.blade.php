@@ -14,7 +14,7 @@
                         <div class="col-md-12">
                             <h4 class="title">Lead History</h4>
                             <div class="clear20"></div>                                
-                        </div>                            
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
@@ -58,14 +58,14 @@
                             <tbody>                            
                                 @foreach($bookings as $lead)                                
                                 <tr role="row" class="odd">                                    
-                                    <td>{{$lead->job_date }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>
                                     <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
-                                    <td>{{$lead->job_time}}</td>
+                                    <td>{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
                                     <td>{{$lead->job_status}}</td>
                                     <td>{{$lead->billing['amount']}}</td>
-                                    <td><i class="ti-star"></i> {{$lead->billing['ratings']}}</td>
+                                    <td>@if(!is_null($lead->billing['ratings'])){{@intval($lead->billing['ratings'])}}<i class="ti-star"></i>@endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>

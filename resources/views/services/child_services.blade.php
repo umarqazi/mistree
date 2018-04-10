@@ -26,10 +26,11 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-12">
-                                    <h4 class="title">Services</h4>
-                                    <p class="category">List of all services.</p>
+                                <div class="col-md-10">
+                                    <h4 class="title">{{$parent_service}} - Services</h4>
+                                    <p class="category">List of all Child services.</p>
                                 </div>
+                                <div class="col-md-2">@include('partials.backbtn_services')</div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6 col-sm-offset-6 balance-info">
@@ -71,14 +72,14 @@
                                                     <i class="ti-check"></i>
                                                 @endif
                                             </td>
-                                            <td>
-                                                <form method="POST" id="child_service_deactivate" action="/admin/services/{{ $value->id }}" accept-charset="UTF-8">
+                                            <td class="text-center">
+                                                <form method="POST" id="child_service_deactivate_{{ $value->id }}" action="/admin/services/{{ $value->id }}" accept-charset="UTF-8">
                                                     <input name="_method" type="hidden" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 </form>
 
                                                 <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="mistri-icons ti-pencil-alt"></a>
-                                                <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="child_service_deactivate"><i class="ti-power-off"></i></button>
+                                                <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="child_service_deactivate_{{ $value->id }}"><i class="ti-power-off"></i></button>
                                             @if(!$value->children->isEmpty())
                                                     <a href="{{ URL::to('admin/services/'.$value->id
                                                     ) }}" class="btn btn-header">View Child

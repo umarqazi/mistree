@@ -58,12 +58,12 @@
                                             <td class="text-center">{{ $value->bookings->count() }}</td>
                                             <td class="text-center">{{ $value->loyalty_points }}</td>
                                             <td class="text-center">
-                                                <form method="POST" id="customer_block_form" action="customers/{{ $value->id }}" accept-charset="UTF-8">
+                                                <form method="POST" id="customer_block_form_{{ $value->id }}" action="customers/{{ $value->id }}" accept-charset="UTF-8">
                                                     <input name="_method" type="hidden" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                 </form>
                                                 <a class= "mistri-icons ti-eye" href="{{url('admin/customers/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
-                                                <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="customer_block_form"><i class="ti-hand-stop"></i></button>
+                                                <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Block" value="submit" type="submit" form="customer_block_form_{{ $value->id }}"><i class="ti-hand-stop"></i></button>
                                             </td>
                                         </tr>
                                     @endforeach

@@ -26,24 +26,22 @@
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
                                 <h4 class="title">Services</h4>
                                 <p class="category">List of all services.</p>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-sm-6 col-sm-offset-6 balance-info">
-                                <div class="clear10"></div>
-                                <div class="dropdown pull-right">
-                                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                   + More Options
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <a href="{{url('admin/services/create')}}" class="dropdown-buttons">Add New Service</a>
-                                        <a href="{{url('admin/service/inactive')}}" class="dropdown-buttons">Inactive Services</a>
+                            <div class="col-md-2"><div class="col-sm-6 col-sm-offset-6 balance-info">
+                                    <div class="clear10"></div>
+                                    <div class="dropdown pull-right">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            + More Options
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a href="{{url('admin/services/create')}}" class="dropdown-buttons">Add New Service</a>
+                                            <a href="{{url('admin/service/inactive')}}" class="dropdown-buttons">Inactive Services</a>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
+                                </div></div>
                         </div>
                         <div class="clear20"></div>
                     </div>
@@ -77,12 +75,12 @@
                                     @endif
                                 </td>
                                 <td class="text-center">
-                                    <form id="deactivate_service_form" method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
+                                    <form id="deactivate_service_form_{{ $value->id }}" method="POST" action="services/{{ $value->id }}" accept-charset="UTF-8">
                                         <input name="_method" type="hidden" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                     </form>
                                     <a href="{{ URL::to('admin/services/' . $value->id . '/edit') }}" class="mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit"></a>
-                                    <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="deactivate_service_form"><i class="ti-power-off"></i></button>
+                                    <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Deactivate" value="submit" type="submit" form="deactivate_service_form_{{ $value->id }}"><i class="ti-power-off"></i></button>
                                     @if(!$value->children->isEmpty())
                                         <a href="{{ URL::to('admin/services/'.$value->id) }}"
                                            class="mistri-icons ti-eye" data-toggle="tooltip" data-placement="top" title="View Child Services"></a>

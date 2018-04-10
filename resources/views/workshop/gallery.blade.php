@@ -15,11 +15,10 @@
 					        <div class="col-md-12">
 
 					            <div class="avtar-block">
-									@include('partials.workshop_profile_info')
-				                    <div class="pull-right">
-				                    	<a href="{{url('admin/workshops/'.$workshop->id.'/')}}" class="btn btn-header export">Back</a>				
-				                    </div>
-					                
+									<div class="row">
+										<div class="col-md-11">@include('partials.workshop_profile_info')</div>
+										<div class="col-md-1">@include('partials.backbtn_workshop_back')</div>
+									</div>
 					            </div>
 								
 					        </div>
@@ -36,7 +35,7 @@
 									<ul class="profile-listing">
 										@foreach($workshop->images as $img)
 											<li>
-												<img src="{{$img->url}}" alt="workshop_images" width="200px" height="150px">
+												<img src="{{$img->url}}" alt="workshop_images" width="200px" height="150px" onclick="imagezoom(this)">
 											</li>
 										@endforeach
 									</ul>
@@ -48,7 +47,7 @@
 								</div>
 								@if(!empty($workshop->cnic_image))
 								<div class="cnic-image">
-									<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image" width="200px">
+									<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image" width="200px" onclick="imagezoom(this)">
 								</div>
 								@else
 									<h3>No CNIC Image Found</h3>
@@ -62,5 +61,27 @@
 	</div>
 </div>
 
+{{--image modal--}}
+<!-- Modal -->
+<div id="pictureModal" class="modal fade" role="dialog">
+	<div class="modal-dialog">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+			</div>
+			<div class="modal-body text-center">
+				<img src="" id="imagesrc" width="500px" height="350px">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<script type="text/javascript" src="{{ url('js/image-zoom.js') }}"></script>
 @include('partials.footer')
 @endsection

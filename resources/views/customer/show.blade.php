@@ -13,7 +13,7 @@
 
                 	<div class="header">
                         <div class="row">
-                            <div class="col-md-12">
+                            <div class="col-md-10">
 
 	                            <div class="avtar-block">
 	                            	@if($customer->profile_pic_url)
@@ -23,22 +23,19 @@
 	                            	@endif
 	                            	<div class="name-info">
 	                            		<h3 class="title">Customer Name : {{$customer->name}}</h3>
-	                            		@if(count($customer->addresses) > 0)
+	                            		@if(!empty($customer->addresses))
 		                            		@foreach($customer->addresses as $key => $address)
-		                                		@if(count($customer->addresses) > 1)
-		                                			<div class="address">Address {{$key + 1}}: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
-		                                		@else
-		                                			<div class="address">Address: {{$address->house_no.', '.$address->street_no.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
-		                                		@endif
+												<div class="address">Address {{ $address->type }}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
 		                                	@endforeach
 		                                @endif
 	                                	<div class="phone">Email : {{$customer->email}}</div>
 	                                	<div class="phone">Mobile : {{$customer->con_number}}</div>
-	                                	<div class="phone">Current Loyality Points : {{$customer->loyalty_points}}</div>
+	                                	<div class="phone">Current Loyalty Points : {{$customer->loyalty_points}}</div>
 	                                </div>
 	                            </div>
 								
                             </div>
+							<div class="col-md-2">@include('partials.backbtn_customer')</div>
                         </div>                                                
                     </div>
 					<div class="content">
@@ -104,7 +101,7 @@
 													<th class="text-center">Job Date Time</th>
 													<th class="text-center">Status</th>
 													<th class="text-center">Services</th>
-													<th class="text-center">Estimated Rates</th>
+													<th class="text-center">Amount Paid</th>
 													<th class="text-center">Request at</th>
 													<th class="text-center">Ratings</th>
 												</tr>
@@ -113,16 +110,15 @@
 						                    	@if(count($customer->bookings) > 0)
 							                    	@foreach($customer->bookings as $key => $booking)
 								                        <tr> 
-								                        	<td class="text-center">{{$booking->workshop->jazzcash_id}}</td>
+								                        	<td class="text-center">{{$booking->workshop->workshopId}}</td>
 								                        	<td class="text-center">{{$booking->workshop->name}}</td>
 															<td class="text-center">{{$booking->vehicle_no  }}</td>
-								                        	<td class="text-center">{{$booking->job_time." ".$booking->job_date }}</td>
+								                        	<td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')." ". \Carbon\Carbon::parse($booking->job_date)->format('D d M, Y') }}</td>
 								                        	<td class="text-center">{{$booking->job_status }}</td>
 								                        	<td class="text-center">{{implode(', ',
 								                        	$booking->services->pluck('name')->toArray())}}</td>
-															<td class="text-center">{{$booking->services->pluck
-															('pivot')->pluck('service_rate')->sum()}}</td>
-								                        	<td class="text-center">{{$booking->created_at->format('H:i D M, Y') }}</td>
+															<td class="text-center">{{$booking->billing['paid_amount']}}</td>
+								                        	<td class="text-center">{{$booking->created_at->format('g:i A D d M, Y') }}</td>
 															<td class="text-center">{{$booking->billing['ratings']}}</td>
 								                        </tr>        
 							                        @endforeach

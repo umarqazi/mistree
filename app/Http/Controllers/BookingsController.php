@@ -160,9 +160,9 @@ class BookingsController extends Controller
         event(new NewBookingEvent($booking));
         SelectAnotherWorkshopEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(30));
         LeadExpiryEventJob::dispatch($booking)->delay(Carbon::now()->addMinutes(25));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(30));
-        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_time)->subMinutes(15));
-        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_time)->subMinutes(10));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(30));
+        NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(15));
+        NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
 
 //        return
         return response()->json([
@@ -420,7 +420,7 @@ class BookingsController extends Controller
                 ],Response::HTTP_OK);
         }             
 
-        $booking = Booking::find($request->booking_id);                                    
+        $booking = Booking::find($request->booking_id);
 
         $loyalty_points = $booking->services->pluck('pivot')->sum('loyalty_points');
         
@@ -440,7 +440,7 @@ class BookingsController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Job Completed',
-                    'body' => ['billing'=> $booking->billing]
+                    'body' => ['booking'=> $booking->load('workshop', 'customer', 'billing')]
                 ],Response::HTTP_OK);
     }
 
@@ -797,7 +797,7 @@ class BookingsController extends Controller
         
     }
 
-    public function bookingListings(Request $request){
+    public function bookingListings($type = ""){
 
       $bookings          = Booking::all();
       $bookings_pending  = Booking::PendingBookings()->get();
@@ -805,8 +805,11 @@ class BookingsController extends Controller
       $bookings_complete = Booking::CompletedBookings()->get();
       $bookings_rejected = Booking::RejectedBookings()->get();
       
-        switch ($request->list_type) {
+        switch ($type) {
 
+        case "active":
+            return View::make('bookings.active')->with('bookings', $bookings_active);
+            break;
         case "pending":
             return View::make('bookings.pending')->with('bookings', $bookings_pending);
             break;
@@ -817,8 +820,7 @@ class BookingsController extends Controller
         return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
             break;
         default:
-        
-        return View::make('bookings.active')->with('bookings', $bookings_active);
+        return View::make('bookings.index')->with('bookings', $bookings);
 
         }
     }   

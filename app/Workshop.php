@@ -20,7 +20,7 @@ class Workshop extends Authenticatable
      */
     protected $fillable = [
         'name', 'owner_name', 'email', 'password', 'cnic', 'cnic_image', 'mobile', 'landline', 'type', 'profile_pic',
-        'open_time', 'close_time', 'is_approved', 'is_verified', 'jazzcash_id','fcm_token'
+        'open_time', 'close_time', 'is_approved', 'is_verified', 'workshopId','fcm_token'
     ];
 
     /**
@@ -47,7 +47,7 @@ class Workshop extends Authenticatable
     protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
 
     /**
-     * The attributes that should be appended to default collection of model.
+     * The attributes that should be appended by default.
      *
      * @var array
      */
@@ -110,6 +110,11 @@ class Workshop extends Authenticatable
     public function transactions()
     {
         return $this->hasMany('App\WorkshopLedger');
+    }
+
+    public function getRatingAttribute()
+    {
+        return round($this->billings()->avg('ratings'), 1);
     }
 
     //    Returns sum of the workshop

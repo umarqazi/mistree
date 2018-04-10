@@ -16,7 +16,10 @@
 					        <div class="col-md-12">
 
 					            <div class="avtar-block">
-									@include('partials.workshop_profile_info')
+									<div class="row">
+										<div class="col-md-11">@include('partials.workshop_profile_info')</div>
+										<div class="col-md-1">@include('partials.backbtn_workshop_back')</div>
+									</div>
 					                <div class="dropdown pull-right">
 					                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					                   + More Options
@@ -62,7 +65,7 @@
 												<td>{{ $transaction->amount }}</td>
 												<td>{{ $transaction->unadjusted_balance }}</td>
 												<td>{{ $transaction->adjusted_balance }}</td>
-												<td>{{ $transaction->created_at->format('d-m-Y')}}</td>
+												<td>{{ $transaction->created_at->format('d M, Y')}}</td>
 												<td>{{ $transaction->created_at->format('g:i A')}}</td>
 												<td><a class="btn btn-header" onclick="adjustment({{$transaction->id}})
 															">Adjust</a></td>
@@ -75,7 +78,7 @@
 															<td>{{ $adjustments->amount }}</td>
 															<td>{{ $adjustments->unadjusted_balance }}</td>
 															<td>{{ $adjustments->adjusted_balance }}</td>
-															<td>{{ $adjustments->created_at->format('d-M-Y')}}</td>
+															<td>{{ $adjustments->created_at->format('d M, Y')}}</td>
 															<td>{{ $adjustments->created_at->format('g:i A')}}</td>
 															<td></td>
 														</tr>
