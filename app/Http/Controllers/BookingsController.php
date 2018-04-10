@@ -656,7 +656,8 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer')->orderBy('created_at', 'desc')->get();
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer', 'billing')->orderBy
+        ('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
