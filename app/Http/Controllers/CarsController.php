@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Scopes\OrderBy;
 use JWTAuth;
 use Hash, DB, Config, Mail, View, Session;
 use Illuminate\Support\Facades\Redirect;
@@ -42,7 +43,7 @@ class CarsController extends Controller
     public function index(Request $request)
     {
         // get all the nerds ->toJson()
-        $cars = Car::where('is_published',true)->orderBy('created_at', 'desc')->get();
+        $cars = Car::where('is_published',true)->withoutGlobalScope(OrderBy::class)->orderBy('make')->get();
         if( $request->header('Content-Type') == 'application/json'){
             return response()->json([
                 'http-status' => Response::HTTP_OK,

@@ -114,7 +114,7 @@ class Workshop extends Authenticatable
 
     public function getRatingAttribute()
     {
-        return round($this->billings()->avg('ratings'));
+        return round($this->billings()->avg('ratings'), 1);
     }
 
     //    Returns sum of the workshop
