@@ -656,7 +656,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer', 'billing')->orderBy
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer', 'billing', 'customer_address')->orderBy
         ('created_at', 'desc')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
@@ -853,7 +853,7 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = $workshop->bookings()->PendingBookings()->orderBy('created_at', 'desc')->with('services','customer')->get();
+        $pending_leads = $workshop->bookings()->PendingBookings()->orderBy('created_at', 'desc')->with('services','customer','customer_address')->get();
 
         if(count($pending_leads) > 0){
             return response()->json([
