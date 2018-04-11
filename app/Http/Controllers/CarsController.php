@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
+use App\Notifications\UnpublishedCars;
 use App\Scopes\OrderBy;
+use Illuminate\Support\Facades\Notification;
 use JWTAuth;
 use Hash, DB, Config, Mail, View, Session;
 use Illuminate\Support\Facades\Redirect;
@@ -353,6 +356,9 @@ class CarsController extends Controller
             $car->category()->associate(Category::find($request->type));
 
             $car->save();
+
+            $admins = Admin::all();
+            Notification::send($admins, new UnpublishedCars($car));
         }
 
         $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'year' => $request->year));
