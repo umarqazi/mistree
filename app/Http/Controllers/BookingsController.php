@@ -262,7 +262,7 @@ class BookingsController extends Controller
             $transaction->save();
 
 //          Fire An Event To Generate A Notification if $new_balance is less than 500
-            if ($new_balance < 150)
+            if ($new_balance < 30)
             {
                 event(new MinimumBalanceEvent($workshop));
             }
@@ -656,7 +656,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer', 'billing', 'customer_address')->get();
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer', 'billing', 'address')->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -852,7 +852,7 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = $workshop->bookings()->PendingBookings()->with('services','customer','customer_address')->get();
+        $pending_leads = $workshop->bookings()->PendingBookings()->with('services','customer','address')->get();
 
         if(count($pending_leads) > 0){
             return response()->json([

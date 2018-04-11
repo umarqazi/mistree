@@ -54,7 +54,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="control-label">Lead Charges <span class="manadatory">*</span></label>
+                                            <label class="control-label">Lead Charges PKR <span
+                                                        class="manadatory">*</span></label>
                                             <input type="text" class="form-control border-input" value="{{ $service->lead_charges }}" name="lead-charges" required>
                                             @if ($errors->has('lead-charges'))
                                                 <span class="help-block">

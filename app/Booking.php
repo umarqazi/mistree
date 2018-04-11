@@ -44,9 +44,9 @@ class Booking extends Model
         return $this->belongsTo('App\Customer');
     }
 
-    public function customer_address()
+    public function address()
     {
-        return $this->hasOne('App\CustomerAddress');
+        return $this->belongsTo('App\CustomerAddress', 'customer_address_id');
     }
 
     public function services()

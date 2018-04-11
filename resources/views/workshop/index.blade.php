@@ -70,7 +70,7 @@
                                             @else
                                                 <td class="text-center"></td>
                                             @endif
-                                            <td class="text-center">@if(!empty($value->balance)){{ $value->balance['balance'] }}@endif</td>
+                                            <td class="text-center">@if(!empty($value->balance)){{$value->balance['balance'] }} PKR @endif</td>
                                             @php $leads = $value->bookings->count(); @endphp
                                             <td class="text-center">{{ $leads }}</td>
                                             <td class="text-center">

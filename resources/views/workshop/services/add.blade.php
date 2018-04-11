@@ -73,7 +73,8 @@
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-6">
-                                                    <label class="control-label">Service Rate <span class="manadatory">*</span></label>
+                                                    <label class="control-label">Service Rate PKR <span
+                                                                class="manadatory">*</span></label>
                                                     <input type="number" class="form-control border-input" name="service_rate" Required max="99999" >
                                                     @if ($errors->has('service_rate'))
                                                         <span class="help-block">

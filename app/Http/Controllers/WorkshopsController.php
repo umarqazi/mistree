@@ -339,7 +339,6 @@ class WorkshopsController extends Controller
 
         $workshop->name             = Input::get('name');
         $workshop->owner_name       = Input::get('owner_name');
-        $workshop->cnic             = Input::get('cnic');
         $workshop->mobile           = Input::get('mobile');
         $workshop->landline         = Input::get('landline');
         $workshop->type             = Input::get('type');
@@ -1763,7 +1762,8 @@ class WorkshopsController extends Controller
 
     public function update_profile(Request $request, $id)
     {
-        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'shop', 'building', 'block', 'street', 'town', 'city');
+        $input = $request->only('name', 'owner_name', 'mobile', 'landline','open_time', 'close_time', 'type',
+            'shop', 'building', 'block', 'street', 'town', 'city');
         $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             $request->offsetUnset('password');
@@ -1815,7 +1815,6 @@ class WorkshopsController extends Controller
 
         $workshop->name             = Input::get('name');
         $workshop->owner_name       = Input::get('owner_name');
-        $workshop->cnic             = Input::get('cnic');
         $workshop->mobile           = Input::get('mobile');
         $workshop->landline         = Input::get('landline');
         $workshop->type             = Input::get('type');
