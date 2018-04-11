@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Customer;
+use App\Events\InformApprovalEvent;
 use App\Events\NewWorkshopEvent;
 use App\Mail\WorkshopConfirmationMail;
 use App\Mail\WorkshopRegistrationMail;
@@ -1053,6 +1054,7 @@ class WorkshopsController extends Controller
         $workshop = Workshop::find($id);
         $workshop->is_approved       = true;
         $workshop->save();
+        event(new InformApprovalEvent($workshop));
         $dataMail = [
             'subject' => 'Conragulations! Your workshop has been approved by Admin.',
             'view' => 'workshop.emails.confirmationEmail',
