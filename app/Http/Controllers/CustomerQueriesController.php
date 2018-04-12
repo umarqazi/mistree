@@ -101,7 +101,7 @@ class CustomerQueriesController extends Controller
 
             // Fire An Event To Generate Notification
             event(new CustomerQueryEvent($query));
-            Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new CustomerQueryMail($dataMail))->onQueue('emails'));
+            Mail::to(Config::get('app.mail_username'))->send(new CustomerQueryMail($dataMail));
 
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
