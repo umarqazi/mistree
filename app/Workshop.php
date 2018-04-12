@@ -117,6 +117,11 @@ class Workshop extends Authenticatable
         return round($this->billings()->avg('ratings'), 1);
     }
 
+    public function scopeApproved()
+    {
+        $this->where('is_approved', true);
+    }
+
     //    Returns sum of the workshop
     public function sumOfServiceRates($workshop)
     {
@@ -175,11 +180,21 @@ class Workshop extends Authenticatable
     }
     public static function get_workshop_by_customer_addresses($workshops, $customer_addresses)
     {
-            return $workshops->whereHas('address', function ($query) use ($customer_addresses){
-                return $query->whereIn( 'town', $customer_addresses->pluck('town')->toArray())->whereIn('city', $customer_addresses->pluck('city')->toArray());
-            });
+         return $workshops->where(function ($query) use ($customer_addresses){
+            foreach ($customer_addresses as $key => $addr){
+                if($key == 0){
+                    $query = $query->whereHas('address', function ($qry) use ($addr){
+                        return $qry->where( 'town', 'LIKE', $addr->town)->where('city', 'LIKE', $addr->city);
+                    });
+                }else{
+                    $query = $query->orWhereHas('address', function ($qry) use ($addr){
+                        return $qry->where( 'town', 'LIKE', $addr->town)->where('city', 'LIKE', $addr->city);
+                    });
+                }
+            }
+            return $query;
+         });
     }
-
     public static function workshops_with_balance($workshops)
     {
         $workshops = $workshops->whereHas('balance', function($query) {

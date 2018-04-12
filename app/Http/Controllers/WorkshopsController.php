@@ -1466,8 +1466,8 @@ class WorkshopsController extends Controller
         $customer       = JWTAuth::authenticate();
         $customer_addresses = $customer->addresses;
         $workshops      = Workshop::where('is_verified', true)
-            ->where('is_approved', true)
-            ->with('address');
+            ->approved()
+            ->with('address', 'balance');
 
         $workshops      = Workshop::workshops_with_balance($workshops);
         if ($request->has('name')) {
@@ -1494,8 +1494,9 @@ class WorkshopsController extends Controller
         if ($request->has('service_ids')) {
             $workshops = Workshop::get_workshop_by_service_ids($workshops, $request->service_ids);
         }
+        $workshops1 = $workshops;
         $workshops_with_out_address = $workshops->get()->sortByDesc('rating');
-        $workshops     = Workshop::get_workshop_by_customer_addresses($workshops, $customer_addresses);
+        $workshops     = Workshop::get_workshop_by_customer_addresses( $workshops1, $customer_addresses);
         $workshops_with_address     = $workshops->get()->sortByDesc('rating');
         $workshops     = $workshops_with_address->merge($workshops_with_out_address);
 
