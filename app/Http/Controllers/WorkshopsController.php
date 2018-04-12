@@ -1463,12 +1463,13 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {
-        $customer = JWTAuth::authenticate();
+        $customer       = JWTAuth::authenticate();
         $customer_addresses = $customer->addresses;
         $workshops      = Workshop::where('is_verified', true)
             ->where('is_approved', true)
             ->with('address');
-        $workshops  = Workshop::workshops_with_balance($workshops, 30);
+
+        $workshops      = Workshop::workshops_with_balance($workshops);
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
@@ -1493,21 +1494,21 @@ class WorkshopsController extends Controller
         if ($request->has('service_ids')) {
             $workshops = Workshop::get_workshop_by_service_ids($workshops, $request->service_ids);
         }
-        $workshops_with_out_address = $workshops->get();
-        $workshops = Workshop::get_workshop_by_customer_addresses($workshops, $customer_addresses);
-        $workshops_with_address     = $workshops->get();
-        $workshops = $workshops_with_address->merge($workshops_with_out_address);
+        $workshops_with_out_address = $workshops->get()->sortByDesc('rating');
+        $workshops     = Workshop::get_workshop_by_customer_addresses($workshops, $customer_addresses);
+        $workshops_with_address     = $workshops->get()->sortByDesc('rating');
+        $workshops     = $workshops_with_address->merge($workshops_with_out_address);
 
-        foreach ($workshops as $key =>$workshop) {
+        foreach ($workshops as $key => $workshop) {
             $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
-
+        $wrkshps = ['workshops' => $workshops];
         if(count($workshops)){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => '',
-                'body' => ['workshops' => $workshops],
+                'body' => $wrkshps,
             ],Response::HTTP_OK);
         }else{
             return response()->json([

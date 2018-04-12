@@ -175,28 +175,15 @@ class Workshop extends Authenticatable
     }
     public static function get_workshop_by_customer_addresses($workshops, $customer_addresses)
     {
-        foreach ($customer_addresses as $key => $customer_address){
-            $customer_address_town  = $customer_address->town;
-            $customer_address_city  = $customer_address->city;
-            if($key == 0){
-                $workshops = $workshops->whereHas('address', function($query) use ($customer_address_town, $customer_address_city) {
-                    return $query->where('town', 'LIKE', '%'.$customer_address_town.'%')->where('city', 'LIKE', '%'.$customer_address_city.'%');
-                });
-            }
-            else{
-                $workshops = $workshops->orWhereHas('address', function($query) use ($customer_address_town, $customer_address_city) {
-                    return $query->where('town', 'LIKE', '%'.$customer_address_town.'%')->where('city', 'LIKE', '%'.$customer_address_city.'%');
-                });
-            }
-        }
-        return $workshops;
+            return $workshops->whereHas('address', function ($query) use ($customer_addresses){
+                return $query->whereIn( 'town', $customer_addresses->pluck('town')->toArray())->whereIn('city', $customer_addresses->pluck('city')->toArray());
+            });
     }
 
-    public static function workshops_with_balance($workshops, $value)
+    public static function workshops_with_balance($workshops)
     {
-        $workshops = $workshops->whereHas('balance', function($query) use ( $value) {
-            $query->where('balance', '>', $value);
-            return $query;
+        $workshops = $workshops->whereHas('balance', function($query) {
+            return $query->where('balance', '>', 30);
         });
         return $workshops;
     }
