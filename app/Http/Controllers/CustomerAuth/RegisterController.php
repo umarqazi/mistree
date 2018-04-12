@@ -126,7 +126,7 @@ class RegisterController extends Controller
             'verification_code' => $verification_code,
         ];
 
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new CustomerRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->send(new CustomerRegistrationMail($dataMail));
 
         return response()->json([
             'http-status'   => Response::HTTP_OK,

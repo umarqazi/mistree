@@ -239,7 +239,7 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->send(new WorkshopRegistrationMail($dataMail));
         if(Auth::guard('admin')->user())
         {
             return Redirect::to('admin/workshops')->with('message', 'Success! Workshop Created.');
@@ -622,7 +622,7 @@ class WorkshopsController extends Controller
             'email' => $request->email,
             'verification_code' => $verification_code,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(2), (new WorkshopRegistrationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->send(new WorkshopRegistrationMail($dataMail));
 
         //Firing an Event to Generate Notifications
         event(new NewWorkshopEvent($workshop));
@@ -1060,7 +1060,7 @@ class WorkshopsController extends Controller
             'name' => $workshop->name,
             'email' => $workshop->email,
         ];
-        Mail::to($dataMail['email'], $dataMail['name'])->later(Carbon::now()->addMinutes(5), (new WorkshopConfirmationMail($dataMail))->onQueue('emails'));
+        Mail::to($dataMail['email'], $dataMail['name'])->send(new WorkshopConfirmationMail($dataMail));
         return Redirect::to('admin/workshops');
     }
 
@@ -1992,7 +1992,7 @@ class WorkshopsController extends Controller
 
         $transaction->save();
 
-        Session::flash('message', 'Rs '.$request->amount .' has been topped up to '.$workshop->name);
+        Session::flash('message', 'PKR '.$request->amount .' has been topped up to '.$workshop->name);
         return Redirect::to('admin/top-up');
     }
 
@@ -2018,7 +2018,9 @@ class WorkshopsController extends Controller
         if(count($leads)){
             $customer_ids  = [];
             foreach($leads as $lead){
-                array_push($customer_ids, $lead->customer->id);
+                if(!is_null($lead->customer)){
+                    array_push($customer_ids, $lead->customer->id);
+                }
             }
             $customer_ids = array_unique($customer_ids);
             $leads_count     = count($leads);
