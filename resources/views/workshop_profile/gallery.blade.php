@@ -61,47 +61,9 @@
 		</div>
 	</div>
 
+	@include('partials.image-zoom');
 	@include('partials.footer')
 
 
 @endsection
-
-
-<div class="modal fade gallery-modal" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				{{--<h4 class="modal-title" id="image-gallery-title"></h4>--}}
-				<button type="button" class="close close2" data-dismiss="modal" style="position: relative; top: -7px;">
-					<span aria-hidden="true">×</span><span class="sr-only">Close</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<img id="image-gallery-image" class="img-responsive" src="">
-			</div>
-		</div>
-	</div>
-</div>
-
-{{--image modal--}}
-<!-- Modal -->
-<div id="pictureModal" class="modal fade" role="dialog">
-	<div class="modal-dialog">
-
-		<!-- Modal content-->
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">&times;</button>
-			</div>
-			<div class="modal-body text-center">
-				<img src="" id="imagesrc" width="500px" height="350px">
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>
-		</div>
-
-	</div>
-</div>
-
 <script type="text/javascript" src="{{ url('js/image-zoom.js') }}"></script>
