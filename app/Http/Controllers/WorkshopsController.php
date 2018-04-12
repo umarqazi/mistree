@@ -1503,13 +1503,12 @@ class WorkshopsController extends Controller
         foreach ($workshops as $key => $workshop) {
             $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
-        $wrkshps = ['workshops' => $workshops];
         if(count($workshops)){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
                 'status' => true,
                 'message' => '',
-                'body' => $wrkshps,
+                'body' => ['workshops' => $workshops],
             ],Response::HTTP_OK);
         }else{
             return response()->json([
