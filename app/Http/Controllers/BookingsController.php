@@ -6,10 +6,13 @@ use App\Events\JobAcceptedEvent;
 use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Events\RateNotificationEvent;
 use App\Events\SelectAnotherWorkshopEvent;
+use App\Jobs\CompleteTheLeadJob;
 use App\Jobs\LeadExpiryEventJob;
 use App\Jobs\NotificationsBeforeJob;
 use App\Jobs\SelectAnotherWorkshopEventJob;
+use App\Notifications\CompleteTheLead;
 use Carbon\Carbon;
 use App\Notifications\JobClosed;
 use JWTAuth;
@@ -163,13 +166,15 @@ class BookingsController extends Controller
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(30));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(15));
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
+        CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addHours($booking->services->pluck('pivot')->sum('service_time')));
+
 
 //        return
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking created',
-                    'body' => ['booking' => $booking ]
+                    'body' => ['booking' => $booking],
                 ],Response::HTTP_OK);
 
 	}
@@ -262,7 +267,7 @@ class BookingsController extends Controller
             $transaction->save();
 
 //          Fire An Event To Generate A Notification if $new_balance is less than 500
-            if ($new_balance < 150)
+            if ($new_balance < 30)
             {
                 event(new MinimumBalanceEvent($workshop));
             }
@@ -434,6 +439,7 @@ class BookingsController extends Controller
 
 //       Fire An Event To Generate A Notification To User About Job Closing
         event(new JobClosedEvent($booking));
+        event(new RateNotificationEvent($booking));
 
 
         return response()->json([
@@ -547,12 +553,13 @@ class BookingsController extends Controller
         $completed_leads = $workshop->bookings()->CompletedBookings()->get()->count();
         $rejected_leads  = $workshop->bookings()->RejectedBookings()->get()->count();
         $received_leads  = $workshop->bookings()->count();
+        $expired_leads   = $workshop->bookings()->ExpiredBookings()->get()->count();
         $balance = $workshop->balance->balance;
         $matured_revenue = $workshop->billings->sum('amount');
         $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
-        $completed_leads,
-        'received_leads' =>
-            $received_leads, 'balance' => $balance, 'matured_revenue' => $matured_revenue ];
+        $completed_leads, 'received_leads' => $received_leads, 'expired_leads' => $expired_leads ,'balance' =>
+            $balance, 'matured_revenue' =>
+        $matured_revenue ];
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -656,7 +663,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = $workshop->bookings()->AcceptedBookings()->with('services', 'customer')->orderBy('created_at', 'desc')->get();
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -715,7 +722,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = $workshop->bookings()->RejectedBookings()->with('services')->orderBy('created_at', 'desc')->get();
+        $rejected_leads = $workshop->bookings()->RejectedBookings()->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -771,7 +778,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $completed_leads = $workshop->bookings()->CompletedBookings()->with('services')->orderBy('created_at', 'desc')->get();
+        $completed_leads = $workshop->bookings()->CompletedBookings()->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -797,30 +804,87 @@ class BookingsController extends Controller
         
     }
 
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/leads/expired",
+     *   summary="Expired Leads",
+     *   operationId="get",
+     *   produces={"application/json"},
+     *   tags={"Bookings"},
+     *    @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=406, description="not acceptable"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Getting Expired Leads for Workshop.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function expiredLeads(Request $request){
+        if($request->header('content-type') == 'application/json'){
+            $workshop = JWTAuth::authenticate();
+        }else{
+            $workshop = Auth::guard('workshop')->user();
+        }
+        $total_earning = $workshop->billings->sum('amount');
+        $expired_leads = $workshop->bookings()->ExpiredBookings()->get();
+
+        if( $request->header('Content-Type') == 'application/json')
+        {
+            if(count($expired_leads) == 0){
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'No Expired Leads Found',
+                    'body' => null
+                ],Response::HTTP_OK);
+            }else{
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'Expired Leads',
+                    'body' => ['expired_leads' => $expired_leads]
+                ],Response::HTTP_OK);
+            }
+        }
+        else{
+            return View::make('workshop_profile.expired_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'expired_leads' => $expired_leads]);
+        }
+    }
+
     public function bookingListings($type = ""){
 
-      $bookings          = Booking::all();
-      $bookings_pending  = Booking::PendingBookings()->get();
-      $bookings_active   = Booking::ActiveBookings()->get();
-      $bookings_complete = Booking::CompletedBookings()->get();
-      $bookings_rejected = Booking::RejectedBookings()->get();
-      
+        $bookings          = Booking::all();
+        $bookings_pending  = Booking::PendingBookings()->get();
+        $bookings_active   = Booking::ActiveBookings()->get();
+        $bookings_complete = Booking::CompletedBookings()->get();
+        $bookings_rejected = Booking::RejectedBookings()->get();
+
         switch ($type) {
 
-        case "active":
-            return View::make('bookings.active')->with('bookings', $bookings_active);
-            break;
-        case "pending":
-            return View::make('bookings.pending')->with('bookings', $bookings_pending);
-            break;
-        case "completed":
-            return View::make('bookings.complete')->with('bookings', $bookings_complete);
-            break;
-        case "cancelled":
-        return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
-            break;
-        default:
-        return View::make('bookings.index')->with('bookings', $bookings);
+            case "active":
+                return View::make('bookings.active')->with('bookings', $bookings_active);
+                break;
+            case "pending":
+                return View::make('bookings.pending')->with('bookings', $bookings_pending);
+                break;
+            case "completed":
+                return View::make('bookings.complete')->with('bookings', $bookings_complete);
+                break;
+            case "cancelled":
+                return View::make('bookings.rejected')->with('bookings', $bookings_rejected);
+                break;
+            default:
+                return View::make('bookings.index')->with('bookings', $bookings);
 
         }
     }   
@@ -852,7 +916,7 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = $workshop->bookings()->PendingBookings()->orderBy('created_at', 'desc')->with('services','customer')->get();
+        $pending_leads = $workshop->bookings()->PendingBookings()->get();
 
         if(count($pending_leads) > 0){
             return response()->json([
@@ -947,7 +1011,7 @@ class BookingsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Bookings',
-            'body' => ['booking' => $booking->load('services','workshop','billing')]
+            'body' => ['booking' => $booking]
         ],Response::HTTP_OK);
 
     }
@@ -1029,15 +1093,6 @@ class BookingsController extends Controller
             'message' => 'Lead In Progress',
             'body' => ['lead' => $lead->load('services','customer','billing')]
         ],Response::HTTP_OK);
-
-    }
-
-    public function expiredLeads(){
-        $workshop = Auth::guard('workshop')->user();
-        $total_earning = $workshop->billings->sum('amount');
-        $expired_leads = $workshop->bookings()->ExpiredBookings()->with('services')->orderBy('created_at', 'desc')->get();
-
-        return View::make('workshop_profile.expired_leads', ['workshop'=>$workshop,'balance'=>$workshop->balance,'total_earning'=>$total_earning, 'expired_leads' => $expired_leads]);
 
     }
 

@@ -173,7 +173,7 @@
 																@if($spec->is_doorstep){{ " at doorstep" }}@endif
 															</td>
 															<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
-															<td>{{ $spec->pivot->service_rate }}</td>
+															<td>{{ $spec->pivot->service_rate }} PKR</td>
 															<td>{{$spec->pivot->service_time}}</td>
 															<td>
 																<a href="{{url('admin/edit-workshop-service/'.$spec->pivot->id)}}" class="mistri-icons ti-pencil-alt"></a>

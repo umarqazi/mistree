@@ -42,7 +42,7 @@ $factory->define(App\CustomerAddress::class, function(Faker\Generator $faker){
     return [
         'type'          => $faker->randomElement(['Office', 'Residence']),
         'house_no'      => $faker->buildingNumber,
-        'street_no'     => random_int(1, 16),
+        'street'        => random_int(1, 16),
         'block'         => ucwords($faker->randomLetter),
         'town'          => $faker->randomElement(['Johar', 'Muslim', 'Faisal', 'Model', 'Bahria', 'Nishtar']).' Town',
         'city'          => 'Lahore',

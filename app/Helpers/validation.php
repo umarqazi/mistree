@@ -15,7 +15,7 @@ if (! function_exists('validate_inputs')) {
             'password_confirmation'          => 'sometimes|required',
             'cnic'                           => 'sometimes|required|regex:/^\d{5}-\d{7}-\d{1}$/u',
             'mobile'                         => 'sometimes|required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'sometimes|regex:/^\d{10,11}$/u|nullable',
+            'landline'                       => 'sometimes|regex:/^\d{7,14}$/u|nullable',
             'open_time'                      => 'sometimes|required',
             'close_time'                     => 'sometimes|required',
             'type'                           => 'sometimes|required|in:Authorized,Unauthorized',

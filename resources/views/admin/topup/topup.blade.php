@@ -55,7 +55,8 @@
                                             @endif
                                         </div>
                                         <div class="form-group">
-                                            <label class="control-label">Amount <span class="manadatory">*</span></label>
+                                            <label class="control-label">Amount PKR <span
+                                                        class="manadatory">*</span></label>
                                             <input type="number"  max="9999" class="form-control border-input" name="amount">
                                             @if ($errors->has('amount'))
                                                 <span class="help-block">

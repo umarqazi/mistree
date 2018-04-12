@@ -4,12 +4,12 @@
 
 @include('partials.header')
 
-    
-<div class="content">           
+
+<div class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">                    
+                <div class="card">
                     <div class="header">
                         <div class="row">
                             <div class="col-md-12">
@@ -30,16 +30,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                
+
                             </div>
-                        </div>                                                
+                        </div>
                     </div>
-                    
+
                     <div class="content table-responsive table-full-width">
-                        <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">                      
+                        <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
-                                <tr role="row">                        
+                                <tr role="row">
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 95px;">Job Date</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
@@ -49,9 +49,9 @@
                                     <th class="sorting" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Rating: activate to sort column ascending" style="width: 69px;">Rating</th>
                                 </tr>
                             </thead>
-                            <tbody>                            
-                                @foreach($leads as $lead)                                
-                                <tr role="row" class="odd">                                    
+                            <tbody>
+                                @foreach($leads as $lead)
+                                <tr role="row" class="odd">
                                     <td>{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td>{{$lead->vehicle_no}}</td>
                                     <td>{{$lead->customer->name}}</td>

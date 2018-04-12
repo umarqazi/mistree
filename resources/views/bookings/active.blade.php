@@ -38,27 +38,29 @@
                         <div id="jsTable_wrapper" class="dataTables_wrapper no-footer">                      
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info">
                             <thead>
-                                <tr role="row">                        
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 95px;">Job Date</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending" style="width: 107px;">Vehicle No.</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Customer Name</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"
-                                        aria-label="Customer Name: activate to sort column ascending" style="width: 153px;">Status</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Services Booked</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1"
-                                        aria-label="Services Booked: activate to sort column ascending" style="width: 156px;">Estiamted Rates</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending" style="width: 114px;">Job Time</th>
+                                <tr role="row">
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending">Workshop ID</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending">Workshop Name</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending">Job Date</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Vehicle No.: activate to sort column ascending">Vehicle No.</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending">Customer Name</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Name: activate to sort column ascending">Status</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending">Services Booked</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Services Booked: activate to sort column ascending">Estiamted Rates</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Time: activate to sort column ascending">Job Time</th>
                                 </tr>
                             </thead>
                             <tbody>                            
                                 @foreach($bookings as $booking)                                
-                                    <tr role="row" class="odd">                                    
+                                    <tr role="row" class="odd">
+                                        <td class="text-center">{{ $booking->workshop->workshopId}}</td>
+                                        <td class="text-center">{{ $booking->workshop->name }}</td>
                                         <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">{{$booking->customer->name}}</td>
                                         <td class="text-center">{{$booking->job_status}}</td>
                                         <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
-                                        <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}</td>
+                                        <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}} PKR</td>
                                         <td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
                                     </tr>
                                 @endforeach

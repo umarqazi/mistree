@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Admin;
+use App\Notifications\UnpublishedCars;
+use App\Scopes\OrderBy;
+use Illuminate\Support\Facades\Notification;
 use JWTAuth;
 use Hash, DB, Config, Mail, View, Session;
 use Illuminate\Support\Facades\Redirect;
@@ -42,7 +46,7 @@ class CarsController extends Controller
     public function index(Request $request)
     {
         // get all the nerds ->toJson()
-        $cars = Car::where('is_published',true)->orderBy('created_at', 'desc')->get();
+        $cars = Car::where('is_published',true)->withoutGlobalScope(OrderBy::class)->orderBy('make')->get();
         if( $request->header('Content-Type') == 'application/json'){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
@@ -352,6 +356,9 @@ class CarsController extends Controller
             $car->category()->associate(Category::find($request->type));
 
             $car->save();
+
+            $admins = Admin::all();
+            Notification::send($admins, new UnpublishedCars($car));
         }
 
         $customer->cars()->attach($car, array('millage' => $request->millage, 'vehicle_no' => $request->vehicle_no, 'insurance' => $request->insurance, 'year' => $request->year));

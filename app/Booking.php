@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Scopes\BookingScope;
 use App\Scopes\OrderBy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
@@ -32,6 +33,7 @@ class Booking extends Model
         parent::boot();
 
         static::addGlobalScope(new OrderBy);
+        static::addGlobalScope(new BookingScope);
     }
 
     public function workshop()
@@ -44,9 +46,9 @@ class Booking extends Model
         return $this->belongsTo('App\Customer');
     }
 
-    public function customer_address()
+    public function address()
     {
-        return $this->hasOne('App\CustomerAddress');
+        return $this->belongsTo('App\CustomerAddress', 'customer_address_id');
     }
 
     public function services()
@@ -101,5 +103,4 @@ class Booking extends Model
     {
         return $query->where('job_status', '=', 'expired')->where('is_accepted', false);
     }
-
 }

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Scopes\CategoryScope;
+use App\Scopes\ServicesScope;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
@@ -44,6 +45,7 @@ class Service extends Model
         parent::boot();
 
         static::addGlobalScope(new CategoryScope);
+        static::addGlobalScope(new ServicesScope);
     }
 
     public function workshops()

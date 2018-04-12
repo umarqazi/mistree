@@ -74,19 +74,6 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label class="control-label">CNIC Number <span class="manadatory">*</span></label>
-                                                <input type="text" data-inputmask="'mask': '99999-9999999-9'" placeholder="XXXXX-XXXXXXX-X" class="form-control border-input" name="cnic" pattern="^\d{5}-\d{7}-\d{1}$" title="13 Digits required" value="{{$workshop->cnic}}" oninvalid="this.setCustomValidity('13 Digits required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
-                                                <p class="validity-message"></p>
-                                                @if ($errors->has('cnic'))
-                                                    <span class="help-block">
-                                        <strong class="manadatory">{{ $errors->first('cnic') }}</strong>
-                                    </span>
-                                                @endif
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-6">
-                                            <div class="form-group">
                                                 <label class="control-label">Team Slots / Hour</label>
                                                 <select name="team_slot" class="form-control border-input" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                     <option value="">Please Select</option>
@@ -103,6 +90,9 @@
                                                 </select>
                                                 <p class="validity-message"></p>
                                             </div>
+                                        </div>
+
+                                        <div class="col-md-6">
 
                                             <div class="form-group">
                                                 <label class="control-label">Opening <span class="manadatory">*</span></label>

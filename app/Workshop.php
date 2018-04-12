@@ -4,6 +4,7 @@ namespace App;
 
 use App\Notifications\WorkshopResetPassword;
 use App\Scopes\OrderBy;
+use App\Scopes\WorkshopScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,6 +47,11 @@ class Workshop extends Authenticatable
      */
     protected $casts = ['is_approved' => 'boolean', 'is_verified' => 'boolean'];
 
+    /**
+     * The attributes that should be appended by default.
+     *
+     * @var array
+     */
     protected $appends  = ['rating'];
 
     /**
@@ -58,6 +64,7 @@ class Workshop extends Authenticatable
         parent::boot();
 
         static::addGlobalScope(new OrderBy);
+        static::addGlobalScope(new WorkshopScope);
     }
 
     /**
@@ -109,7 +116,7 @@ class Workshop extends Authenticatable
 
     public function getRatingAttribute()
     {
-        return round($this->billings()->avg('ratings'));
+        return round($this->billings()->avg('ratings'), 1);
     }
 
     //    Returns sum of the workshop

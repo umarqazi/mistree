@@ -25,7 +25,7 @@
         @endif
         <div class="phone">Mobile : {{$workshop->mobile}}</div>
         @if(!is_null($workshop->balance))
-            <div class="phone">Current Balance : {{$workshop->balance->balance}}</div>
+            <div class="phone">Current Balance : {{$workshop->balance->balance}} PKR</div>
         @endif
         @if(!is_null($workshop->workshopId))
             <div>Workshop ID : {{$workshop->workshopId}}</div>
@@ -42,14 +42,14 @@
                 </div>
             @endif
             @if( $url[3] == "leads")
-                <div>Total Earnings : {{$total_earning}}</div>
+                <div>Total Earnings : {{$total_earning}} PKR</div>
             @endif
         @endif
 
         @if(Auth::guard('admin')->check())
             @if(sizeof($url) > 6)
                 @if($url[6] == "history")
-                    <div>Total Earnings : {{$total_earning}}</div>
+                    <div>Total Earnings : {{$total_earning}} PKR</div>
                 @endif
             @endif
         @endif
