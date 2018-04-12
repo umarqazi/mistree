@@ -33,14 +33,11 @@ class CompleteLeadEventListener
     public function handle(CompleteLeadEvent $event)
     {
         $booking = $event->booking;
-        $notification = new CompleteTheLead($booking);
-        Notification::send($booking->customer, $notification);
-
-        if ($booking->customer->fcm_token) {
+        if ($booking->workshop->fcm_token) {
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60 * 20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Complete The Lead');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Complete The Lead');
             $notificationBuilder->setBody('Please complete your lead with "' . $booking->customer->name . '"')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
@@ -50,7 +47,7 @@ class CompleteLeadEventListener
             $notification = $notificationBuilder->build();
             $data = $dataBuilder->build();
 
-            $token = $booking->customer->fcm_token;
+            $token = $booking->workshop->fcm_token;
 
             $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
         }

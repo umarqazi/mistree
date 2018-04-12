@@ -38,7 +38,7 @@ class JobClosedEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Booking Completed');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Booking Completed');
             $notificationBuilder->setBody('Your booking has been marked as completed by "'.$booking->workshop->name.'".')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();

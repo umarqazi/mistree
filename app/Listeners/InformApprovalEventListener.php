@@ -40,7 +40,7 @@ class InformApprovalEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60 * 20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Congratulations');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Congratulations');
             $notificationBuilder->setBody('Congratulations! Your workshop has been approved.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();

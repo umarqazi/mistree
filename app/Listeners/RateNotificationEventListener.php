@@ -35,7 +35,7 @@ class RateNotificationEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60 * 20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Rate & Reviews');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Rate & Reviews');
             $notificationBuilder->setBody('Please rate and review your experience with "' . $booking->workshop->name . '".')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();

@@ -37,7 +37,7 @@ class MinimumBalanceEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Balance Update');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Balance Update');
             $notificationBuilder->setBody('You are running out of balance. Please recharge your account.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
