@@ -245,6 +245,7 @@ class BookingsController extends Controller
         $billing->workshop_id                = $workshop->id;
         $billing->booking_id                 = $booking->id;
         $billing->amount                     = $booking->services->pluck('pivot')->sum('service_rate');
+        $billing->paid_amount                = 0.00;
         $billing->customer_id                = $booking->customer_id;
 
         if($workshop->bookings()->acceptedBookings()->count() > 10){
