@@ -165,4 +165,33 @@ class CustomerQueriesController extends Controller
         Session::flash('success_message', 'Successfully updated the Status!');
         return Redirect::to('admin/customer-queries/');
     }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/customer/queries",
+     *   summary="Customer Queries",
+     *   operationId="Customer Query Listing",
+     *   tags={"Queries"},
+     *   consumes={"application/json"},
+     *   produces={"application/json"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     */
+    public function customerQueries(){
+        $customer   = JWTAuth::authenticate();
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'Customer Queries',
+            'body' => ['queries' => $customer->queries ]
+        ],Response::HTTP_OK);
+    }
 }
