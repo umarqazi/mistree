@@ -4,6 +4,7 @@ namespace App;
 
 use App\Notifications\WorkshopResetPassword;
 use App\Scopes\OrderBy;
+use App\Scopes\WorkshopScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -63,6 +64,7 @@ class Workshop extends Authenticatable
         parent::boot();
 
         static::addGlobalScope(new OrderBy);
+        static::addGlobalScope(new WorkshopScope);
     }
 
     /**

@@ -1094,7 +1094,7 @@ class WorkshopsController extends Controller
         ],Response::HTTP_OK);
     }
     /**
-     * @SWG\Put(
+     * @SWG\Patch(
      *   path="/api/workshop/profile/",
      *   summary="Update Workshop Details",
      *   operationId="update",
@@ -1111,28 +1111,21 @@ class WorkshopsController extends Controller
      *     name="name",
      *     in="formData",
      *     description="Name of Workshop",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="owner_name",
      *     in="formData",
      *     description="Owner Name",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="cnic",
-     *     in="formData",
-     *     description="CNIC Number",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="mobile",
      *     in="formData",
      *     description="Workshop Mobile Number",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
@@ -1146,7 +1139,7 @@ class WorkshopsController extends Controller
      *     name="type",
      *     in="formData",
      *     description="Workshop Type",
-     *     required=true,
+     *     required=false,
      *     type="string",
      *     enum={"Authorized", "Unauthorized"}
      *   ),
@@ -1161,34 +1154,20 @@ class WorkshopsController extends Controller
      *     name="open_time",
      *     in="formData",
      *     description="Workshop Opening Time",
-     *     required=true,
+     *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="close_time",
      *     in="formData",
      *     description="Workshop Closing Time",
-     *     required=true,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="profile_pic",
-     *     in="formData",
-     *     description="Workshop Profile Image",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="cnic_image",
-     *     in="formData",
-     *     description="Workshop CNIC Image",
      *     required=false,
      *     type="string"
      *   ),
      *   @SWG\Parameter(
      *     name="_method",
      *     in="formData",
-     *     description="Always give PUT",
+     *     description="Always give Patch",
      *     required=true,
      *     type="string"
      *   ),
@@ -1208,7 +1187,7 @@ class WorkshopsController extends Controller
      */
     public function profileUpdate(Request $request)
     {
-        $input = $request->only('name', 'owner_name', 'cnic', 'mobile', 'landline','open_time', 'close_time', 'type', 'team_slots');
+        $input = $request->all();
         $validator = validate_inputs($request, $input);
         if($validator->fails()) {
             return response()->json([
@@ -1219,22 +1198,44 @@ class WorkshopsController extends Controller
             ],Response::HTTP_OK);
         }
         $workshop = JWTAuth::authenticate();
-        $workshop->name             = $request->name;
-        $workshop->owner_name       = $request->owner_name;
-        $workshop->cnic             = $request->cnic;
-        $workshop->slots            = $request->team_slots;
-        $workshop->mobile           = $request->mobile;
-        $workshop->landline         = $request->landline;
-        $workshop->open_time        = $request->open_time;
-        $workshop->close_time       = $request->close_time;
-        $workshop->type             = $request->type;
+
+        if($request->has('name')){
+            $workshop->name             = $request->name;
+        }
+
+        if($request->has('owner_name')){
+            $workshop->owner_name       = $request->owner_name;
+        }
+
+        if($request->has('team_slots')){
+            $workshop->slots            = $request->team_slots;
+        }
+
+        if($request->has('mobile')){
+            $workshop->mobile           = $request->mobile;
+        }
+
+        if($request->has('landline')){
+            $workshop->landline         = $request->landline;
+        }
+
+        if($request->has('open_time')){
+            $workshop->open_time        = $request->open_time;
+        }
+        if($request->has('close_time')){
+            $workshop->close_time       = $request->close_time;
+        }
+
+        if($request->has('type')) {
+            $workshop->type = $request->type;
+        }
         $workshop->save();
 
         return response([
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Details Updated!',
-            'body' => null
+            'body' => $workshop
         ],Response::HTTP_OK);
     }
 
