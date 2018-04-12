@@ -1468,7 +1468,7 @@ class WorkshopsController extends Controller
         $workshops      = Workshop::where('is_verified', true)
             ->where('is_approved', true)
             ->with('address');
-        $workshops      = $workshops  = Workshop::workshops_with_balance($workshops, 30);
+        $workshops  = Workshop::workshops_with_balance($workshops, 30);
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
