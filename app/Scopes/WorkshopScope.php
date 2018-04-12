@@ -18,6 +18,6 @@ class WorkshopScope implements Scope
 
     public function apply(Builder $builder, Model $model)
     {
-        $builder->with('images','address');
+        $builder->with('images','address','services');
     }
 }

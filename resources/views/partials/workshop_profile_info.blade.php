@@ -30,6 +30,7 @@
         @if(!is_null($workshop->workshopId))
             <div>Workshop ID : {{$workshop->workshopId}}</div>
         @endif
+        <div>Rating : {{$workshop->rating}} <i class="ti-star"></i></div>
         @php
             $url = explode('/',url()->current() );
         @endphp
