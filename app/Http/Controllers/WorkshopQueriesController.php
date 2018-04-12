@@ -130,7 +130,7 @@ class WorkshopQueriesController extends Controller
         ];
         // Fire An Event To Generate Notification
         event(new WorkshopQueryEvent($query));
-        Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
+        Mail::to(Config::get('app.mail_username'))->send(new WorkshopRequestMail($dataMail));
         return response()->json([
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
@@ -165,7 +165,7 @@ class WorkshopQueriesController extends Controller
         ];
         // Fire An Event To Generate Notification
         event(new WorkshopQueryEvent($query));
-        Mail::to(Config::get('app.mail_username'))->later(Carbon::now()->addMinutes(1), (new WorkshopRequestMail($dataMail))->onQueue('emails'));
+        Mail::to(Config::get('app.mail_username'))->send(new WorkshopRequestMail($dataMail));
         Session::flash('success_message', 'Successfully Submitted the Request!');
         return Redirect::to('workshop-queries/create');
     }

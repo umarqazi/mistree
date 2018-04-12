@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'customercare@mystri.pk'),
-        'name' => env('MAIL_FROM_NAME', 'Mystri.pk'),
+        'name' => env('MAIL_FROM_NAME', env('APP_NAME')),
     ],
 
     /*
