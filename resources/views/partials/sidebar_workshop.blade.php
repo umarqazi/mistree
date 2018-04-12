@@ -45,11 +45,17 @@
                         <p>Notifications</p>
                     </a>
                 </li>
-                <li {{{ (Request::is('workshop-queries/create') ? 'class=active' : '') }}}>
-                    <a href="{{url('/workshop-queries/create/')}}">
+
+                <li  @if(Request::is('queries') || Request::is('workshop-queries/create'))   class="active" @endif >
+                    <a href="" class="query_links">
                         <i class="ti-help-alt"></i>
-                        <p>Request</p>
+                        <p>Requests</p>
+                        <i class="ti-angle-down"></i>
                     </a>
+                    <ul class="subnav @if(Request::is('queries') || Request::is('workshop-queries/create') ) show_ul @endif">
+                        <li @if(Request::is('workshop-queries/create'))   class="active" @endif ><a href="{{url('/workshop-queries/create/')}}">New Request</a></li>
+                        <li @if(Request::is('queries')) class="active" @endif ><a href="{{url('/queries')}}">View Requests</a></li>
+                    </ul>
                 </li>
                 <li>
                     <a href="{{ url('/logout') }}"

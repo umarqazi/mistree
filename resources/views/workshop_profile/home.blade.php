@@ -9,21 +9,16 @@
                     <div class="card">
                         <div class="content">
                             <div class="row">
-                                <div class="col-xs-2">
-                                    <div class="icon-big icon-success text-center">
-                                        <i class="ti-money"></i>
-                                    </div>
-                                </div>
-                                <div class="col-xs-5">
+                                <div class="col-xs-6">
                                     <div class="numbers">
                                         <p><a href="{{url('/leads')}}">Revenue</a></p>
-                                        {{$revenue}}
+                                        PKR {{$revenue}}
                                     </div>
                                 </div>
-                                <div class="col-xs-5">
+                                <div class="col-xs-6">
                                     <div class="numbers">
                                         <p><a href="{{url('/ledger')}}">Balance</a></p>
-                                        {{$balance}}
+                                        PKR {{$balance}}
                                     </div>
                                 </div>
                             </div>

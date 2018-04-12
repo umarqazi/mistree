@@ -168,7 +168,7 @@
 														@endif
 													</td>
 													<td>@if(!is_null($spec->category)){{ $spec->category->name}}@endif</td>
-													<td>{{ $spec->pivot->service_rate }}</td>
+													<td>{{ $spec->pivot->service_rate }} PKR </td>
 													<td>{{ $spec->pivot->service_time.' hr' }} </td>
 													<td class="text-center">
 														<a href="{{url('profile/edit-profile-service/'.$spec->pivot->id)}}" class="mistri-icons ti-pencil-alt" data-toggle="tooltip" data-placement="top" title="Edit"></a>
