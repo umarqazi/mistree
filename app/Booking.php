@@ -102,4 +102,9 @@ class Booking extends Model
         return $query->where('job_status', '=', 'expired')->where('is_accepted', false);
     }
 
+    public function scopeRelations($query)
+    {
+        return $query->with('customer', 'workshop', 'services', 'address');
+    }
+
 }

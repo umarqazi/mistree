@@ -82,7 +82,7 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('resendverification', 'WorkshopAuth\RegisterController@resendVerificationEmail');
 		Route::post('completeprofile', 'WorkshopsController@completeprofileinfo');
 		Route::get('profile', 'WorkshopsController@getWorkshop');
-		Route::put('profile', 'WorkshopsController@profileUpdate');
+		Route::patch('profile', 'WorkshopsController@profileUpdate');
 		Route::post('service', 'WorkshopsController@insertService');
 		Route::patch('service', 'WorkshopsController@updateService');
 		Route::delete('service','WorkshopsController@unassignService');
@@ -103,9 +103,10 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 		Route::get('history','BookingsController@leadsHistory');
 		Route::get('leads/lead-info/{lead}', 'BookingsController@getWorkshopLead');
 		Route::get('leads/accepted','BookingsController@acceptedLeads');
-		Route::get('leads/rejected','BookingsController@rejectedLeads');
-		Route::get('leads/completed','BookingsController@completedLeads');
-		Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
+        Route::get('leads/rejected','BookingsController@rejectedLeads');
+        Route::get('leads/completed','BookingsController@completedLeads');
+        Route::get('leads/expired','BookingsController@expiredLeads');
+        Route::patch('lead/{booking_id}/enter-millage', 'BookingsController@insertMillage');
 		Route::get('leads/pending', 'BookingsController@pendingLeads');
 
 //		Route For Workshop Password Reset
