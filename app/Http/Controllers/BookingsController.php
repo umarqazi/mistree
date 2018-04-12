@@ -657,7 +657,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $accepted_leads = $workshop->bookings()->AcceptedBookings()->Relations()->get();
+        $accepted_leads = $workshop->bookings()->AcceptedBookings()->get();
         $total_earning = $workshop->billings->sum('amount');
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
@@ -716,7 +716,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $total_earning = $workshop->billings->sum('amount');
-        $rejected_leads = $workshop->bookings()->RejectedBookings()->Relations()->get();
+        $rejected_leads = $workshop->bookings()->RejectedBookings()->get();
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($rejected_leads) == 0){
@@ -772,7 +772,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $completed_leads = $workshop->bookings()->CompletedBookings()->Relations()->get();
+        $completed_leads = $workshop->bookings()->CompletedBookings()->get();
         $total_earning = $workshop->billings->sum('amount');
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -830,7 +830,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $total_earning = $workshop->billings->sum('amount');
-        $expired_leads = $workshop->bookings()->ExpiredBookings()->Relations()->get();
+        $expired_leads = $workshop->bookings()->ExpiredBookings()->get();
 
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -910,7 +910,7 @@ class BookingsController extends Controller
      */
     public function pendingLeads(Request $request){
         $workshop = JWTAuth::authenticate();
-        $pending_leads = $workshop->bookings()->PendingBookings()->with('services','customer','address')->get();
+        $pending_leads = $workshop->bookings()->PendingBookings()->get();
 
         if(count($pending_leads) > 0){
             return response()->json([
@@ -1005,7 +1005,7 @@ class BookingsController extends Controller
             'http-status' => Response::HTTP_OK,
             'status' => true,
             'message' => 'Bookings',
-            'body' => ['booking' => $booking->load('services','workshop','billing')]
+            'body' => ['booking' => $booking]
         ],Response::HTTP_OK);
 
     }
