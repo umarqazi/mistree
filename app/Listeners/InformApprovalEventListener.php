@@ -44,7 +44,7 @@ class InformApprovalEventListener
             $notificationBuilder->setBody('Congratulations! Your workshop has been approved.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['workshop_id' => $workshop->id]);
+            $dataBuilder->addData(['workshop' => $workshop]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();

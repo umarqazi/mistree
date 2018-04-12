@@ -44,7 +44,7 @@ class SelectAnotherWorkshopEventListener
             $notificationBuilder->setBody('Please select another workshop, "'.$booking->workshop->name.'" has not accepted your booking request.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking_id' => $booking->id]);
+            $dataBuilder->addData(['booking' => $booking]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
