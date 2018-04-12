@@ -260,8 +260,45 @@ class WorkshopsController extends Controller
     {
         // get the workshop
         $workshop = Workshop::find($id);
+        $leads           = $workshop->bookings;
+        $completed_leads = $workshop->bookings()->completedbookings()->get();
+        $accepted_leads  = $workshop->bookings()->acceptedbookings()->get();
+        $expired_leads   = $workshop->bookings()->expiredbookings()->get();
+        $rejected_leads   = $workshop->bookings()->rejectedbookings()->get();
+        $total_revenue   = $workshop->billings()->pluck('amount')->sum();
+        $current_balance = $workshop->balance->balance;
+
+        if(count($leads)){
+            $customers = $workshop->bookings()->pluck('customer_id')->toArray();
+            $customers = array_unique($customers);
+            $leads_count     = count($leads);
+            $customer_count  = count($customers);
+        }
+        else{
+            $leads_count     = 0;
+            $customer_count  = 0;
+        }
+        if(count($completed_leads)){
+            $completed_leads = count($completed_leads);
+        }
+        else{
+            $completed_leads = 0;
+        }
+        if(count($accepted_leads)){
+            $accepted_leads  = count($accepted_leads);
+        }else{
+            $accepted_leads  = 0;
+        }
+        if(count($expired_leads)){
+            $expired_leads  = count($expired_leads);
+        }else{
+            $expired_leads  = 0;
+        }
+
         // show the view and pass the workshop to it
-        return View::make('workshop.show', ['workshop' => $workshop]);
+        return View::make('workshop.show', ['workshop' => $workshop, 'leads_count' => $leads_count, 'accepted_leads'=>
+            $accepted_leads, 'rejected_leads'=> $rejected_leads , 'completed_leads'=> $completed_leads,
+            'customer_count'=> $customer_count, 'revenue' => $total_revenue, 'balance' => $current_balance ,'expired_leads'=> $expired_leads]);
     }
 
     /**
@@ -1587,7 +1624,7 @@ class WorkshopsController extends Controller
             'http-status'   => Response::HTTP_OK,
             'status'        => true,
             'message'       => 'Workshop Service Added!!',
-            'body'          => ['workshop' => $workshop]
+            'body'          => ['workshop' => JWTAuth::authenticate()]
         ],Response::HTTP_OK);
     }
     /**
