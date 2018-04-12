@@ -54,10 +54,10 @@
                                 <tr role="row" class="odd">
                                     <td>{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td>{{$lead->vehicle_no}}</td>
-                                    <td>{{$lead->customer->name}}</td>
-                                    <td>{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
+                                    <td>@if(!is_null($lead->customer)){{$lead->customer->name}} @endif</td>
+                                    <td>@if(count($lead->services)){{@implode(', ', $lead->services->pluck('name')->toArray())}} @endif</td>
                                     <td>{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
-                                    <td>{{$lead->billing['amount']}}</td>
+                                    <td>@if(!is_null($lead->billing)){{$lead->billing['amount']}} PKR @endif</td>
                                     <td>@if(!is_null($lead->billing['ratings'])){{@intval($lead->billing['ratings'])}}<i class="ti-star"></i>@endif</td>
                                 </tr>
                                 @endforeach

@@ -1992,7 +1992,7 @@ class WorkshopsController extends Controller
 
         $transaction->save();
 
-        Session::flash('message', 'Rs '.$request->amount .' has been topped up to '.$workshop->name);
+        Session::flash('message', 'PKR '.$request->amount .' has been topped up to '.$workshop->name);
         return Redirect::to('admin/top-up');
     }
 
@@ -2018,7 +2018,9 @@ class WorkshopsController extends Controller
         if(count($leads)){
             $customer_ids  = [];
             foreach($leads as $lead){
-                array_push($customer_ids, $lead->customer->id);
+                if(!is_null($lead->customer)){
+                    array_push($customer_ids, $lead->customer->id);
+                }
             }
             $customer_ids = array_unique($customer_ids);
             $leads_count     = count($leads);

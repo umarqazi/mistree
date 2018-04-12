@@ -115,10 +115,8 @@
 															<td class="text-center">{{$booking->vehicle_no  }}</td>
 								                        	<td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')." ". \Carbon\Carbon::parse($booking->job_date)->format('D d M, Y') }}</td>
 								                        	<td class="text-center">{{$booking->job_status }}</td>
-								                        	<td class="text-center">{{implode(', ',
-								                        	$booking->services->pluck('name')->toArray())}}</td>
-															<td class="text-center">{{$booking->billing['paid_amount
-															']}} PKR</td>
+								                        	<td class="text-center">{{implode(', ',$booking->services->pluck('name')->toArray())}}</td>
+															<td class="text-center">{{$booking->billing['paid_amount']}} PKR</td>
 								                        	<td class="text-center">{{$booking->created_at->format('g:i A D d M, Y') }}</td>
 															<td class="text-center">{{$booking->billing['ratings']}}</td>
 								                        </tr>        

@@ -47,9 +47,9 @@
 											@foreach($workshop->transactions as $transaction)
 											<tr>
 												<td>{{ $transaction->transaction_type }}</td>
-												<td>{{ $transaction->amount }}</td>
-												<td>{{ $transaction->unadjusted_balance }}</td>
-												<td>{{ $transaction->adjusted_balance }}</td>
+												<td>{{ $transaction->amount }} PKR</td>
+												<td>{{ $transaction->unadjusted_balance }} PKR</td>
+												<td>{{ $transaction->adjusted_balance }} PKR</td>
 												<td>{{ $transaction->created_at->format('d-M-Y')}}</td>
 												<td>{{ $transaction->created_at->format('g:i A')}}</td>
 											</tr>
@@ -61,7 +61,7 @@
 												<td></td>
 												<td></td>
 												<td>Total Balance</td>
-												<td>{{ $workshop->balance->balance }}</td>
+												<td>{{ $workshop->balance->balance }} PKR</td>
 											</tr>
 											@endif
 										</tbody>

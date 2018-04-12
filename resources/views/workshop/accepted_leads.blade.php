@@ -52,11 +52,11 @@
                                 <tr role="row" class="odd">                                    
                                     <td class="text-center">{{ \Carbon\Carbon::parse($lead->job_date)->format('d M, Y') }}</td>
                                     <td class="text-center">{{$lead->vehicle_no}}</td>
-                                    <td class="text-center">{{$lead->customer->name}}</td>
-                                    <td class="text-center">{{$lead->customer->con_number}}</td>
-                                    <td class="text-center">{{@implode(', ', $lead->services->pluck('name')->toArray())}}</td>
+                                    <td class="text-center">@if(!is_null($lead->customer)){{$lead->customer->name}} @endif</td>
+                                    <td class="text-center">@if(!is_null($lead->customer)){{$lead->customer->con_number}}@endif</td>
+                                    <td class="text-center">@if(count($lead->services)){{@implode(', ', $lead->services->pluck('name')->toArray())}} @endif</td>
                                     <td class="text-center">{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
-                                    <td class="text-center">{{$lead->billing['amount']}}</td>
+                                    <td class="text-center">@if(!is_null($lead->billing)){{$lead->billing['amount']}} PKR @endif</td>
                                 </tr>
                                 @endforeach
                             </tbody>
