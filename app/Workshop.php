@@ -119,6 +119,11 @@ class Workshop extends Authenticatable
         return round($this->billings()->avg('ratings'), 1);
     }
 
+    public function scopeApproved()
+    {
+        $this->where('is_approved', true);
+    }
+
     //    Returns sum of the workshop
     public function sumOfServiceRates($workshop)
     {
@@ -156,7 +161,7 @@ class Workshop extends Authenticatable
                 if($key == 0)
                     $query->where('services.id', '=', $service_id);
                 else
-                    $query->orwhere('services.id', '=', $service_id);
+                    $query->orWhere('services.id', '=', $service_id);
             }
             return $query;
         }]);
@@ -172,6 +177,30 @@ class Workshop extends Authenticatable
         $workshops = $workshops->whereHas('address', function($query) use ($key, $value) {
             $query->where($key, 'LIKE', '%'.$value.'%');
             return $query;
+        });
+        return $workshops;
+    }
+    public static function get_workshop_by_customer_addresses($workshops, $customer_addresses)
+    {
+         return $workshops->where(function ($query) use ($customer_addresses){
+            foreach ($customer_addresses as $key => $addr){
+                if($key == 0){
+                    $query = $query->whereHas('address', function ($qry) use ($addr){
+                        return $qry->where( 'town', 'LIKE', $addr->town)->where('city', 'LIKE', $addr->city);
+                    });
+                }else{
+                    $query = $query->orWhereHas('address', function ($qry) use ($addr){
+                        return $qry->where( 'town', 'LIKE', $addr->town)->where('city', 'LIKE', $addr->city);
+                    });
+                }
+            }
+            return $query;
+         });
+    }
+    public static function workshops_with_balance($workshops)
+    {
+        $workshops = $workshops->whereHas('balance', function($query) {
+            return $query->where('balance', '>', 30);
         });
         return $workshops;
     }

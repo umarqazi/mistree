@@ -41,7 +41,7 @@ class CompleteLeadEventListener
             $notificationBuilder->setBody('Please complete your lead with "' . $booking->customer->name . '"')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking_id' => $booking->id]);
+            $dataBuilder->addData(['booking' => $booking]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();

@@ -6,7 +6,6 @@ use App\Events\JobAcceptedEvent;
 use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
-use App\Events\RateNotificationEvent;
 use App\Events\SelectAnotherWorkshopEvent;
 use App\Jobs\CompleteTheLeadJob;
 use App\Jobs\LeadExpiryEventJob;
@@ -439,7 +438,6 @@ class BookingsController extends Controller
 
 //       Fire An Event To Generate A Notification To User About Job Closing
         event(new JobClosedEvent($booking));
-        event(new RateNotificationEvent($booking));
 
 
         return response()->json([

@@ -39,10 +39,10 @@ class JobClosedEventListener
             $optionBuilder->setTimeToLive(60*20);
 
             $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Booking Completed');
-            $notificationBuilder->setBody('Your booking has been marked as completed by "'.$booking->workshop->name.'".')->setSound('default');
+            $notificationBuilder->setBody('Your booking has been marked as completed by "'.$booking->workshop->name.'". Please rate and review your experience.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking_id' => $booking->id, 'status' => 2]);
+            $dataBuilder->addData(['booking' => $booking, 'status' => 2]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();

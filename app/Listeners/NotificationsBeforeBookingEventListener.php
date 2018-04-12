@@ -46,7 +46,7 @@ class NotificationsBeforeBookingEventListener
                 $notificationBuilder->setBody('You have '.$booking_time_diff.' Minutes in your booking to start.')->setSound('default');
 
                 $dataBuilder = new PayloadDataBuilder();
-                $dataBuilder->addData(['booking_id' => $booking->id]);
+                $dataBuilder->addData(['booking' => $booking]);
 
                 $option = $optionBuilder->build();
                 $notification = $notificationBuilder->build();
