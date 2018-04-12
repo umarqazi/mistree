@@ -18,6 +18,8 @@ class WorkshopScope implements Scope
 
     public function apply(Builder $builder, Model $model)
     {
-        $builder->with('images','address','services');
+        $builder->with(['images','address','services', 'billings' => function($query){
+            $query->orderBy('ratings', 'DESC')->take(5);
+        }]);
     }
 }
