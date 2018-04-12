@@ -134,7 +134,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Landline Number <span class="manadatory"></span></label>
-                                                <input type="text" class="form-control border-input" name="landline" pattern="(^$|\d{10,11})" value="{{$workshop->landline}}" oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" name="landline"
+                                                       pattern="(^$|\d{7,14})" value="{{$workshop->landline}}"
+                                                       oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
@@ -311,7 +313,7 @@
 
     </div>
     <script type="text/javascript" src="{{ url('js/workshop-profile.js') }}"></script>
-    <script type="text/javascript" src="{{ url('js/workshop-profile-edit.js') }}"></script>
+    <script type="text/javascript" src="{{ url('js/admin-workshop-profile-edit.js') }}"></script>
     <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/3/jquery.inputmask.bundle.js"></script>
     @include('partials.footer')
 @endsection

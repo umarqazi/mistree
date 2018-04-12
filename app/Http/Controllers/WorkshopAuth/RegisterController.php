@@ -90,7 +90,7 @@ class RegisterController extends Controller
             'password_confirmation'          => 'required',
             'cnic'                           => 'required|regex:/^\d{5}-\d{7}-\d{1}$/u',
             'mobile'                         => 'required|regex:/^0?3\d{2}-\d{7}$/u',
-            'landline'                       => 'regex:/^\d{10,11}$/u|nullable',
+            'landline'                       => 'regex:/^\d{7,14}$/u|nullable',
             'open_time'                      => 'required',
             'close_time'                     => 'required',
             'type'                           => 'required|in:Authorized,Unauthorized',

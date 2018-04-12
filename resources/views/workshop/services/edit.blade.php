@@ -55,8 +55,9 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <label class="control-label">Service Rate</label>
-                                                        <input type="number" class="form-control border-input" name="service_rate" value="{{$workshop_service->service_rate}}" Required max="99999">
+                                                        <label class="control-label">Service Rate PKR
+                                                            <span class="manadatory">*</span></label>
+                                                        <input type="number" class="form-control border-input" name="service_rate" value="{{$workshop_service->service_rate}}" Required max="99999" required>
                                                     </div>
                                                     <div class="col-md-6">
                                                         <label class="control-label">Enter Time</label>

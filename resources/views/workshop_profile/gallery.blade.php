@@ -33,7 +33,8 @@
 										<ul class="profile-listing">
 											@foreach($workshop->images as $img)
 												<li>
-													<img src="{{$img->url}}" alt="workshop_images" width="200px" height="150px">
+													<img src="{{$img->url}}" alt="workshop_images" width="200px"
+														 height="150px" onclick="imagezoom(this)">
 												</li>
 											@endforeach
 										</ul>
@@ -46,7 +47,7 @@
 									@if(!empty($workshop->cnic_image))
 										<div class="cnic-image">
 											<img src="{{$workshop->cnic_image}}" alt="workshop_cnic_image"
-												 width="200px">
+												 width="200px" onclick="imagezoom(this)">
 										</div>
 									@else
 										<h3>No CNIC Image Found</h3>
@@ -60,24 +61,9 @@
 		</div>
 	</div>
 
+	@include('partials.image-zoom');
 	@include('partials.footer')
 
 
 @endsection
-
-
-<div class="modal fade gallery-modal" id="image-gallery" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				{{--<h4 class="modal-title" id="image-gallery-title"></h4>--}}
-				<button type="button" class="close close2" data-dismiss="modal" style="position: relative; top: -7px;">
-					<span aria-hidden="true">×</span><span class="sr-only">Close</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<img id="image-gallery-image" class="img-responsive" src="">
-			</div>
-		</div>
-	</div>
-</div>
+<script type="text/javascript" src="{{ url('js/image-zoom.js') }}"></script>

@@ -52,7 +52,8 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="control-label">Lead Charges <span class="manadatory">*</span></label>
+                                            <label class="control-label">Lead Charges PKR <span
+                                                        class="manadatory">*</span></label>
                                             <input type="text" class="form-control border-input" required name="lead-charges" value="{{ old('lead-charges',0) }}">
                                             @if ($errors->has('lead-charges'))
                                                 <span class="help-block">

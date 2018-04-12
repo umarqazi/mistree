@@ -33,6 +33,6 @@ class CustomerAddress extends Model
 
     public function booking()
     {
-        return $this->belongsTo('App\Booking');
+        return $this->hasOne('App\Booking');
     }
 }

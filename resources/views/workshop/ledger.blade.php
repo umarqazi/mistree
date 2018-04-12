@@ -62,9 +62,9 @@
 											@foreach($workshop->transactions as $transaction)
 											<tr>
 												<td>{{ $transaction->transaction_type }}</td>
-												<td>{{ $transaction->amount }}</td>
-												<td>{{ $transaction->unadjusted_balance }}</td>
-												<td>{{ $transaction->adjusted_balance }}</td>
+												<td>{{ $transaction->amount }} PKR</td>
+												<td>{{ $transaction->unadjusted_balance }} PKR</td>
+												<td>{{ $transaction->adjusted_balance }} PKR</td>
 												<td>{{ $transaction->created_at->format('d M, Y')}}</td>
 												<td>{{ $transaction->created_at->format('g:i A')}}</td>
 												<td><a class="btn btn-header" onclick="adjustment({{$transaction->id}})
@@ -75,9 +75,9 @@
 														<tr class="danger">
 															<td class="text-right">{{ $adjustments->transaction_type
 															}}</td>
-															<td>{{ $adjustments->amount }}</td>
-															<td>{{ $adjustments->unadjusted_balance }}</td>
-															<td>{{ $adjustments->adjusted_balance }}</td>
+															<td>{{ $adjustments->amount }} PKR</td>
+															<td>{{ $adjustments->unadjusted_balance }} PKR</td>
+															<td>{{ $adjustments->adjusted_balance }} PKR</td>
 															<td>{{ $adjustments->created_at->format('d M, Y')}}</td>
 															<td>{{ $adjustments->created_at->format('g:i A')}}</td>
 															<td></td>
@@ -93,7 +93,7 @@
 												<td></td>
 												<td></td>
 												<td>Total Balance</td>
-												<td>{{ $workshop->balance->balance }}</td>
+												<td>{{ $workshop->balance->balance }} PKR</td>
 											</tr>
 											@endif
 										</tbody>

@@ -7,15 +7,14 @@ $(document).ready(function () {
       var email         = $("[name='email']")[0].checkValidity();
       var owner_name    = $("[name='owner_name']")[0].checkValidity();
       var type          = $("[name='type']")[0].checkValidity();
-      var cnic          = $("[name='cnic']")[0].checkValidity();
-      var mobile        = $("[name='mobile']")[0].checkValidity(); 
+      var mobile        = $("[name='mobile']")[0].checkValidity();
       var landline      = $("[name='landline']")[0].checkValidity();
       var team_slot     = $("[name='team_slot']")[0].checkValidity();
       var open_time     = $("[name='open_time']")[0].checkValidity();
-      var close_time    = $("[name='close_time']")[0].checkValidity(); 
+      var close_time    = $("[name='close_time']")[0].checkValidity();
     //  var cnic_image    = $("[name='cnic_image']")[0].checkValidity();
 
-      if((name && email && owner_name && type && cnic  && mobile && landline && team_slot && open_time && close_time  ) == false )
+      if((name && email && owner_name && type  && mobile && landline && team_slot && open_time && close_time  ) == false )
         {
             $('.cn-section-1').show();
             $('.cn-section-2').hide();
@@ -27,11 +26,11 @@ $(document).ready(function () {
             $('.cn-section-1').hide();
             $('.cn-section-2').show();
             $('.cn-section-3').hide();
-        } 
+        }
 
-        }); 
+        });
 
-    $(".btn-next-2").click(function(event){  
+    $(".btn-next-2").click(function(event){
       var shop          = $("[name='shop']")[0].checkValidity();
       var building      = $("[name='building']")[0].checkValidity();
       var owner_name    = $("[name='owner_name']")[0].checkValidity();
