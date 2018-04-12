@@ -166,7 +166,7 @@ class BookingsController extends Controller
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(30));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(15));
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
-        CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addSeconds($booking->services->pluck('pivot')->sum('service_time')));
+        CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addHours($booking->services->pluck('pivot')->sum('service_time')));
 
 
 //        return
