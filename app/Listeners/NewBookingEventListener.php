@@ -46,7 +46,7 @@ class NewBookingEventListener
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder('Mystri - Booking');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Booking');
             $notificationBuilder->setBody('You have a new lead from "'.$booking->customer->name.'".')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();

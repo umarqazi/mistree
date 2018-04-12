@@ -42,7 +42,7 @@ class NotificationsBeforeBookingEventListener
             if($booking->customer->fcm_token ){
                 $optionBuilder = new OptionsBuilder();
                 $optionBuilder->setTimeToLive(60*20);
-                $notificationBuilder = new PayloadNotificationBuilder('Mystri - Booking at '.Carbon::parse($booking->job_time)->format('g:i A'));
+                $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Booking at '.Carbon::parse($booking->job_time)->format('g:i A'));
                 $notificationBuilder->setBody('You have '.$booking_time_diff.' Minutes in your booking to start.')->setSound('default');
 
                 $dataBuilder = new PayloadDataBuilder();

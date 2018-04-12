@@ -6,10 +6,13 @@ use App\Events\JobAcceptedEvent;
 use App\Events\JobClosedEvent;
 use App\Events\MinimumBalanceEvent;
 use App\Events\NewBookingEvent;
+use App\Events\RateNotificationEvent;
 use App\Events\SelectAnotherWorkshopEvent;
+use App\Jobs\CompleteTheLeadJob;
 use App\Jobs\LeadExpiryEventJob;
 use App\Jobs\NotificationsBeforeJob;
 use App\Jobs\SelectAnotherWorkshopEventJob;
+use App\Notifications\CompleteTheLead;
 use Carbon\Carbon;
 use App\Notifications\JobClosed;
 use JWTAuth;
@@ -163,13 +166,15 @@ class BookingsController extends Controller
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(30));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(15));
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
+        CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addHours($booking->services->pluck('pivot')->sum('service_time')));
+
 
 //        return
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => 'Booking created',
-                    'body' => ['booking' => $booking ]
+                    'body' => ['booking' => $booking],
                 ],Response::HTTP_OK);
 
 	}
@@ -434,6 +439,7 @@ class BookingsController extends Controller
 
 //       Fire An Event To Generate A Notification To User About Job Closing
         event(new JobClosedEvent($booking));
+        event(new RateNotificationEvent($booking));
 
 
         return response()->json([
