@@ -16,7 +16,7 @@
                             <div class="col-md-10">
                                 <h4>Customer Query</h4>
                                 <p>Customer Name : {{ $customerQuery->customer->name}}</p>
-                                <p>Mobile : {{$customerQuery->customer->mobile}}</p>
+                                <p>Mobile : {{$customerQuery->customer->con_number}}</p>
                                 <p>Email : {{$customerQuery->customer->email}}</p>
                                 <p>Date : {{$customerQuery->created_at }}</p>
                             </div>
