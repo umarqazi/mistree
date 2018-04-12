@@ -154,7 +154,7 @@ class Workshop extends Authenticatable
                 if($key == 0)
                     $query->where('services.id', '=', $service_id);
                 else
-                    $query->orwhere('services.id', '=', $service_id);
+                    $query->orWhere('services.id', '=', $service_id);
             }
             return $query;
         }]);
@@ -169,6 +169,33 @@ class Workshop extends Authenticatable
     {
         $workshops = $workshops->whereHas('address', function($query) use ($key, $value) {
             $query->where($key, 'LIKE', '%'.$value.'%');
+            return $query;
+        });
+        return $workshops;
+    }
+    public static function get_workshop_by_customer_addresses($workshops, $customer_addresses)
+    {
+        foreach ($customer_addresses as $key => $customer_address){
+            $customer_address_town  = $customer_address->town;
+            $customer_address_city  = $customer_address->city;
+            if($key == 0){
+                $workshops = $workshops->whereHas('address', function($query) use ($customer_address_town, $customer_address_city) {
+                    return $query->where('town', 'LIKE', '%'.$customer_address_town.'%')->where('city', 'LIKE', '%'.$customer_address_city.'%');
+                });
+            }
+            else{
+                $workshops = $workshops->orWhereHas('address', function($query) use ($customer_address_town, $customer_address_city) {
+                    return $query->where('town', 'LIKE', '%'.$customer_address_town.'%')->where('city', 'LIKE', '%'.$customer_address_city.'%');
+                });
+            }
+        }
+        return $workshops;
+    }
+
+    public static function workshops_with_balance($workshops, $value)
+    {
+        $workshops = $workshops->whereHas('balance', function($query) use ( $value) {
+            $query->where('balance', '>', '%'.$value.'%');
             return $query;
         });
         return $workshops;

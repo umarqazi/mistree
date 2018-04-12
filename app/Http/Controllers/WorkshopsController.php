@@ -1463,9 +1463,12 @@ class WorkshopsController extends Controller
      */
     public function searchWorkshop(Request $request)
     {
+        $customer = JWTAuth::authenticate();
+        $customer_addresses = $customer->addresses;
         $workshops      = Workshop::where('is_verified', true)
             ->where('is_approved', true)
             ->with('address');
+        $workshops      = $workshops  = Workshop::workshops_with_balance($workshops, 30);
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
@@ -1490,10 +1493,15 @@ class WorkshopsController extends Controller
         if ($request->has('service_ids')) {
             $workshops = Workshop::get_workshop_by_service_ids($workshops, $request->service_ids);
         }
-        $workshops          = $workshops->get();
+        $workshops_with_out_address = $workshops->get();
+        $workshops = Workshop::get_workshop_by_customer_addresses($workshops, $customer_addresses);
+        $workshops_with_address     = $workshops->get();
+        $workshops = $workshops_with_address->merge($workshops_with_out_address);
+
         foreach ($workshops as $key =>$workshop) {
             $workshops[$key]->est_rates = $workshop->sumOfServiceRates($workshop);
         }
+
         if(count($workshops)){
             return response()->json([
                 'http-status' => Response::HTTP_OK,
