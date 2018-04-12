@@ -41,7 +41,7 @@ class MinimumBalanceEventListener
             $notificationBuilder->setBody('You are running out of balance. Please recharge your account.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['workshop_id' => $event->workshop->id]);
+            $dataBuilder->addData(['workshop' => $event->workshop]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
