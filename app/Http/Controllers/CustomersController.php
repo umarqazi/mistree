@@ -812,8 +812,6 @@ class CustomersController extends Controller
         $rules = array(
             'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'street'        => 'required',
-            'block'         => 'required',
             'town'          => 'required|regex:/^[\pL\s\-]+$/u',
             'city'          => 'required|regex:/^[\pL\s\-]+$/u'
         );
@@ -928,8 +926,6 @@ class CustomersController extends Controller
             'id'            => 'required',
             'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'street'        => 'required',
-            'block'         => 'required',
             'town'          => 'required|regex:/^[\pL\s\-]+$/u',
             'city'          => 'required|regex:/^[\pL\s\-]+$/u'
         );
