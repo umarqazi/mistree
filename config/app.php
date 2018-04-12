@@ -239,5 +239,5 @@ return [
 
     ],
 
-    'mail_username' => env('MAIL_USERNAME'),
+    'mail_username' => env('MAIL_USERNAME', 'customercare@mystri.pk'),
 ];

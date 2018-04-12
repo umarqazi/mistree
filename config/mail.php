@@ -84,7 +84,7 @@ return [
     |
     */
 
-    'username' => env('MAIL_USERNAME'),
+    'username' => env('MAIL_USERNAME', 'customercare@mystri.pk'),
 
     'password' => env('MAIL_PASSWORD'),
 
