@@ -223,4 +223,43 @@ class WorkshopQueriesController extends Controller
         Session::flash('success_message', 'Successfully updated the Status!');
         return Redirect::to('admin/workshop-queries');
     }
+
+    /**
+     * @SWG\Get(
+     *   path="/api/workshop/queries",
+     *   summary="Workshop Queries",
+     *   operationId="Workshop Query Listing",
+     *   tags={"Queries"},
+     *   consumes={"application/json"},
+     *   produces={"application/json"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+     public function workshopQueries(Request $request){
+         if($request->header('Content-Type') == 'application/json'){
+             $workshop   = JWTAuth::authenticate();
+             return response()->json([
+                 'http-status' => Response::HTTP_OK,
+                 'status' => true,
+                 'message' => 'Workshop Queries',
+                 'body' => ['queries' => $workshop->queries ]
+             ],Response::HTTP_OK);
+         }else{
+             $workshop   = Auth::guard('workshop')->user();
+             return view::make('workshop_profile.queries')->with('workshop', $workshop)->with('queries',
+                 $workshop->queries);
+         }
+     }
 }

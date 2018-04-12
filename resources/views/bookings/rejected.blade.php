@@ -57,14 +57,14 @@
                             <tbody>                            
                                 @foreach($bookings as $booking)                                
                                     <tr role="row" class="odd">
-                                        <td class="text-center">{{ $booking->workshop->workshopId}}</td>
-                                        <td class="text-center">{{ $booking->workshop->name }}</td>
+                                        <td class="text-center">@if(!is_null($booking->workshop)){{ $booking->workshop->workshopId}} @endif</td>
+                                        <td class="text-center">@if(!is_null($booking->workshop)){{ $booking->workshop->name }} @endif</td>
                                         <td class="text-center">{{\Carbon\Carbon::parse( $booking->job_date)->format('d M, Y')}}</td>
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
-                                        <td class="text-center">{{$booking->customer->name}}</td>
-                                        <td class="text-center">{{@implode(', ', $booking->services->pluck('name')->toArray())}}</td>
+                                        <td class="text-center">@if(!is_null($booking->customer)){{$booking->customer->name}} @endif</td>
+                                        <td class="text-center">@if(count($booking->services)){{@implode(', ',$booking->services->pluck('name')->toArray())}} @endif</td>
                                         <td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')}}</td>
-                                        <td class="text-center">{{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}} PKR</td>
+                                        <td class="text-center">@if(count($booking->services)){{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}} PKR @endif</td>
                                     </tr>
                                 @endforeach
                             </tbody>

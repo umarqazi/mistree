@@ -59,6 +59,7 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::put('edit-customer-address', 'CustomersController@editCustomerAddress');
 		Route::delete('delete-customer-address', 'CustomersController@deleteCustomerAddress');
 		Route::resource('customer-queries', 'CustomerQueriesController', ['only' => ['store']]);
+        Route::get('queries', 'CustomerQueriesController@customerQueries');
 		Route::patch('update-profile-image','CustomersController@updateProfileImage');
 
 		Route::patch('contact-info', 'CustomersController@updateDetails');
@@ -114,8 +115,8 @@ Route::group(['middleware' => 'conf_guard:Workshop'], function(){
 //		Route For Workshop Support Query
 //      Route For Workshop Customers
 		Route::get('get-customers', 'WorkshopsController@getCustomers');
-		Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'store']]);
-
+		Route::resource('workshop-queries', 'WorkshopQueriesController', ['only' => [ 'store', 'index']]);
+        Route::get('queries', 'WorkshopQueriesController@workshopQueries');
 		Route::patch('contact-info', 'WorkshopsController@updateDetails');
 	});
 });
