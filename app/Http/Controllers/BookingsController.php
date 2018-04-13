@@ -503,22 +503,22 @@ class BookingsController extends Controller
     }
 
     public function workshopHistory(Workshop $workshop){        
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         return view::make('workshop.history',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings, 'workshop'=>$workshop]);
     }
 
     public function workshopRejectedLeads(Workshop $workshop){        
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         return view::make('workshop.rejected_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->RejectedBookings()->get(), 'workshop'=>$workshop]);
     }
 
     public function workshopAcceptedLeads(Workshop $workshop){
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         return view::make('workshop.accepted_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->AcceptedBookings()->get(), 'workshop'=>$workshop]);
     }
 
     public function workshopCompletedLeads(Workshop $workshop){        
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         return view::make('workshop.completed_leads',['balance'=>$workshop->balance, 'total_earning' => $total_earning, 'leads' => $workshop->bookings()->CompletedBookings()->get(), 'workshop'=>$workshop]);
     }    
 
@@ -554,11 +554,10 @@ class BookingsController extends Controller
         $received_leads  = $workshop->bookings()->count();
         $expired_leads   = $workshop->bookings()->ExpiredBookings()->get()->count();
         $balance = $workshop->balance->balance;
-        $matured_revenue = $workshop->billings()->sum('amount');
+        $matured_revenue = $workshop->revenue;
         $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
         $completed_leads, 'received_leads' => $received_leads, 'expired_leads' => $expired_leads ,'balance' =>
-            $balance, 'matured_revenue' =>
-        $matured_revenue ];
+            $balance, 'matured_revenue' => $matured_revenue ];
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
@@ -600,7 +599,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }        
         if($workshop->billings != null){            
-            $total_earning = $workshop->billings->sum('amount');
+            $total_earning = $workshop->revenue;
         }else{
             $total_earning = null;
         }
@@ -663,7 +662,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $accepted_leads = $workshop->bookings()->AcceptedBookings()->get();
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         // check request Type
          if( $request->header('Content-Type') == 'application/json')
          {
@@ -720,7 +719,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         $rejected_leads = $workshop->bookings()->RejectedBookings()->get();
         if( $request->header('Content-Type') == 'application/json')
         {
@@ -778,7 +777,7 @@ class BookingsController extends Controller
             $workshop = Auth::guard('workshop')->user();
         }
         $completed_leads = $workshop->bookings()->CompletedBookings()->get();
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         if( $request->header('Content-Type') == 'application/json')
         {
             if(count($completed_leads) == 0){
@@ -834,7 +833,7 @@ class BookingsController extends Controller
         }else{
             $workshop = Auth::guard('workshop')->user();
         }
-        $total_earning = $workshop->billings->sum('amount');
+        $total_earning = $workshop->revenue;
         $expired_leads = $workshop->bookings()->ExpiredBookings()->get();
 
         if( $request->header('Content-Type') == 'application/json')
