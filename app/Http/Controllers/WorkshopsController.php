@@ -264,8 +264,8 @@ class WorkshopsController extends Controller
         $completed_leads = $workshop->bookings()->completedbookings()->get();
         $accepted_leads  = $workshop->bookings()->acceptedbookings()->get();
         $expired_leads   = $workshop->bookings()->expiredbookings()->get();
-        $rejected_leads   = $workshop->bookings()->rejectedbookings()->get();
-        $total_revenue   = $workshop->billings()->pluck('amount')->sum();
+        $rejected_leads  = $workshop->bookings()->rejectedbookings()->get();
+        $total_revenue   = $workshop->billings()->sum('amount');
         $current_balance = $workshop->balance->balance;
 
         if(count($leads)){
