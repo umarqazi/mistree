@@ -265,7 +265,7 @@ class WorkshopsController extends Controller
         $accepted_leads  = $workshop->bookings()->acceptedbookings()->get();
         $expired_leads   = $workshop->bookings()->expiredbookings()->get();
         $rejected_leads  = $workshop->bookings()->rejectedbookings()->get();
-        $total_revenue   = $workshop->billings()->sum('amount');
+        $total_revenue   = $workshop->revenue;
         $current_balance = $workshop->balance->balance;
 
         if(count($leads)){
@@ -2057,7 +2057,7 @@ class WorkshopsController extends Controller
         $expired_leads   = Booking::where('workshop_id', $workshop->id)->where('job_status','expired')->get();
 
         $rejected_leads  = Booking::where('workshop_id', $workshop->id)->where('is_accepted',0)->get();
-        $total_revenue   = $workshop->billings()->pluck('amount')->sum();
+        $total_revenue   = $workshop->revenue;
         $current_balance = $workshop->balance->balance;
 
 
