@@ -49,7 +49,7 @@ class LeadExpiryEventListener
             $notificationBuilder->setBody('Lead from "'.$booking->customer->name.'" will expire in 5 minutes.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking' => $booking]);
+            $dataBuilder->addData(['booking_id' => $booking->id]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
