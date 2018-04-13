@@ -44,7 +44,7 @@ class JobAcceptedEventListener
             $notificationBuilder->setBody('Your booking request has been accepted by "'.$booking->workshop->name.'".')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking' => $booking]);
+            $dataBuilder->addData(['booking_id' => $booking->id]);
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
             $data = $dataBuilder->build();
