@@ -554,7 +554,7 @@ class BookingsController extends Controller
         $received_leads  = $workshop->bookings()->count();
         $expired_leads   = $workshop->bookings()->ExpiredBookings()->get()->count();
         $balance = $workshop->balance->balance;
-        $matured_revenue = $workshop->billings->sum('amount');
+        $matured_revenue = $workshop->billings()->sum('amount');
         $leads = ['accepted_leads' => $accepted_leads, 'rejected_leads'=> $rejected_leads, 'completed_leads' =>
         $completed_leads, 'received_leads' => $received_leads, 'expired_leads' => $expired_leads ,'balance' =>
             $balance, 'matured_revenue' =>
@@ -784,7 +784,7 @@ class BookingsController extends Controller
             if(count($completed_leads) == 0){
                 return response()->json([
                             'http-status' => Response::HTTP_OK,
-                            'status' => true,
+                            'status' => false,
                             'message' => 'No Completed Leads Found',
                             'body' => null
                         ],Response::HTTP_OK);            
