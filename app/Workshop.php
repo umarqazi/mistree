@@ -52,7 +52,7 @@ class Workshop extends Authenticatable
      *
      * @var array
      */
-    protected $appends  = ['rating'];
+    protected $appends  = ['rating', 'revenue'];
 
     /**
      * The "booting" method of the model.
@@ -117,6 +117,13 @@ class Workshop extends Authenticatable
     public function getRatingAttribute()
     {
         return round($this->billings()->avg('ratings'), 1);
+    }
+
+    public function getRevenueAttribute()
+    {
+        return $this->billings()->whereHas('booking',function($query){
+            return $query->where('job_status', 'LIKE', 'completed');
+        })->sum('amount');
     }
 
     public function scopeApproved()
