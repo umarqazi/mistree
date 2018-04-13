@@ -42,7 +42,7 @@ class JobClosedEventListener
             $notificationBuilder->setBody('Your booking has been marked as completed by "'.$booking->workshop->name.'". Please rate and review your experience.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking' => $booking, 'status' => 2]);
+            $dataBuilder->addData(['booking_id' => $booking->id, 'status' => 2]);
 
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
