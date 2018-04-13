@@ -727,7 +727,7 @@ class BookingsController extends Controller
             if(count($rejected_leads) == 0){
                 return response()->json([
                             'http-status' => Response::HTTP_OK,
-                            'status' => true,
+                            'status' => false,
                             'message' => 'No rejected Leads Found',
                             'body' => null
                         ],Response::HTTP_OK);            
