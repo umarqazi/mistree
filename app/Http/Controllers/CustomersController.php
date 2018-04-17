@@ -327,6 +327,23 @@ class CustomersController extends Controller
             'password' => $request->password,
         ];
 
+        $rules  = [
+            'email' => 'exists:customers'
+        ];
+
+        $validation = Validator::make($request->only('email'), $rules);
+
+        if($validation->fails()){
+            $request->offsetUnset('password');
+
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => false,
+                'message' => $validation->messages()->first(),
+                'body' => $request->all()
+            ], Response::HTTP_OK);
+        }
+
         try {
 
             Config::set('auth.providers.users.model', \App\Customer::class);
@@ -340,7 +357,7 @@ class CustomersController extends Controller
                     'body' => $request->all()
                 ],Response::HTTP_OK);
             }
-            } catch (JWTException $e) {
+        } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             $request->offsetUnset('password');
 
@@ -350,15 +367,22 @@ class CustomersController extends Controller
                 'message' => 'Failed to login, please try again.',
                 'body' => $request->all()
             ],Response::HTTP_OK);
-            }
+        }
         // all good so return the token
         $customer = Auth::user();
+
+        if(!is_null($customer->jwt_token))
+        {
+            JWTAuth::invalidate($customer->jwt_token);
+        }
 
         if($request->has('fcm_token')){
             /* Update Customer FCM Token */
             $customer->fcm_token = $request->fcm_token;
-            $customer->update();
         }
+
+        $customer->jwt_token    = $token;
+        $customer->update();
 
         return response()->json([
             'http-status' => Response::HTTP_OK,
