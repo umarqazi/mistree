@@ -14,10 +14,10 @@ class AddColumnJwtTokenToCustomersWorkshopsTables extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table){
-            $table->string('jwt_token', 256)->nullable();
+            $table->string('jwt_token', 1024)->nullable();
         });
         Schema::table('workshops', function (Blueprint $table){
-            $table->string('jwt_token', 256)->nullable();
+            $table->string('jwt_token', 1024)->nullable();
         });
     }
 
