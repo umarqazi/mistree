@@ -21,7 +21,7 @@ class Workshop extends Authenticatable
      */
     protected $fillable = [
         'name', 'owner_name', 'email', 'password', 'cnic', 'cnic_image', 'mobile', 'landline', 'type', 'profile_pic',
-        'open_time', 'close_time', 'is_approved', 'is_verified', 'workshopId','fcm_token'
+        'open_time', 'close_time', 'is_approved', 'is_verified', 'workshopId','fcm_token', 'jwt_token'
     ];
 
     /**
