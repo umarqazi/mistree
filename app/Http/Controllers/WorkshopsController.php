@@ -768,11 +768,19 @@ class WorkshopsController extends Controller
         }
         $workshop = Auth::user();
 
+        if(!is_null($workshop->jwt_token))
+        {
+            JWTAuth::invalidate($workshop->jwt_token);
+        }
+
         /* Update Customer FCM Token */
         if($request->has('fcm_token')){
             $workshop->fcm_token = $request->fcm_token;
-            $workshop->update();
         }
+
+        $workshop->jwt_token    = $token;
+        $workshop->update();
+
         $request->offsetUnset('password');
 
         if( ( ! $workshop->is_approved ) ){
