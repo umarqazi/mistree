@@ -270,8 +270,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Town <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" required
-                                                       name="town" value="@if(!empty($address->town)){{$address->town}}@endif" oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                <input type="text" class="form-control border-input" required name="town" value="@if(!empty($address->town)){{$address->town}}@endif" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('town'))
                                                     <span class="help-block">

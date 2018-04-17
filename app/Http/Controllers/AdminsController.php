@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Customer;
 use App\Workshop;
 use App\Booking;
+use App\WorkshopLedger;
+use App\Billing;
 
 
 class AdminsController extends Controller
@@ -26,8 +28,9 @@ class AdminsController extends Controller
         $total_bookings = Booking::all()->count();
 
         $bookings_active   = Booking::ActiveBookings()->count();
-
-        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'bookings_active' => $bookings_active, 'total_bookings' => $total_bookings ]);
+        $total_jazzcash = WorkshopLedger::where('transaction_type','Top-Up')->get()->sum('amount');
+        $total_matured_revenue = Booking::completedbookings()->get()->pluck('billing')->sum('lead_charges');
+        return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'bookings_active' => $bookings_active, 'total_bookings' => $total_bookings, 'total_jazzcash' => $total_jazzcash, 'total_matured_revenue' => $total_matured_revenue ]);
     }
 
     public function index()

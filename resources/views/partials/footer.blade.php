@@ -1,13 +1,8 @@
 <footer class="footer">
         <div class="container-fluid">
-<!--             <nav class="pull-left">
-                <ul>
-                    <li><a href="http://www.creative-tim.com">SiteName</a></li>
-                    <li><a href="#">Blog</a></li>
-                </ul>
-            </nav> -->
+
             <div class="copyright pull-right">
-                &copy; <script>document.write(new Date().getFullYear())</script>, Mystri By Wateen.
+                &copy; <script>document.write(new Date().getFullYear())</script>, Powered By Mystri.
             </div>
         </div>
     </footer>

@@ -12,6 +12,9 @@
                 @if($address->building)
                     {{$address->building.', ' }}
                 @endif
+                @if($address->street)
+                    {{$address->street.', ' }}
+                @endif
                 @if($address->block)
                     {{$address->block.', '}}
                 @endif
