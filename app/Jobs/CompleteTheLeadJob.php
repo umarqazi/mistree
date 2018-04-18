@@ -3,7 +3,6 @@
 namespace App\Jobs;
 
 use App\Events\CompleteLeadEvent;
-use App\Events\CompleteTheLeadEvent;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;

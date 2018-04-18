@@ -34,7 +34,7 @@ class NotificationsBeforeJob implements ShouldQueue
      */
     public function handle()
     {
-        if( $this->booking->is_accepted == true){
+        if( $this->booking->is_accepted == true && $this->booking->job_status == "open"){
             event(new NotificationsBeforeBookingEvent($this->booking, $this->user));
         }
     }
