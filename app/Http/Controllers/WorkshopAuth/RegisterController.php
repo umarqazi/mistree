@@ -103,7 +103,7 @@ class RegisterController extends Controller
             'building'                       => 'string|nullable',
             'block'                          => 'string|nullable',
             'street'                         => 'nullable|string',
-            'town'                           => 'required|regex:/^[\pL\s\-]+$/u',
+            'town'                           => 'required|string',
             'city'                           => 'required|regex:/^[\pL\s\-]+$/u',
         ]);
     }

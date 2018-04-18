@@ -30,13 +30,13 @@
 														<div class="row">
 															<div class="col-xs-6">
 																<div class="numbers">
-																	<p><a href="{{url('/leads')}}">Revenue</a></p>
+																	<p><a href="{{url('admin/workshop/'.$workshop->id.'/history')}}">Revenue</a></p>
 																	PKR {{$revenue}}
 																</div>
 															</div>
 															<div class="col-xs-6">
 																<div class="numbers">
-																	<p><a href="{{url('/ledger')}}">Balance</a></p>
+																	<p><a href="{{url('admin/workshop/'.$workshop->id.'/ledger')}}">Balance</a></p>
 																	PKR {{$balance}}
 																</div>
 															</div>
