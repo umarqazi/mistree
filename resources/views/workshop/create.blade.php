@@ -273,7 +273,7 @@
 
                                             <div class="form-group">
                                                 <label class="control-label">Town <span class="manadatory">*</span></label>
-                                                <input type="text" class="form-control border-input" required name="town" required  value="{{ old('town') }}"  oninvalid="this.setCustomValidity('Required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
+                                                <input type="text" class="form-control border-input" required name="town" required  value="{{ old('town') }}" pattern="^[a-zA-Z\s\/\-\d]+$" oninvalid="this.setCustomValidity('Invalid Characters')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);" >
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('town'))
                                                     <span class="help-block">
@@ -326,7 +326,7 @@
                                                                 <h3>Hatchback Services</h3>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                <label class="control-label">Select Services</label>
                                                                 <select id="hatchback" class="form-control border-input chosen-select" name="hatchback[]" multiple>
                                                                     @foreach ($hatchback as $row)
                                                                         <option value="{{$row->id}}" @if(!empty(old
@@ -390,7 +390,7 @@
                                                                 <h3>Sedan/Saloon Services</h3>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                <label class="control-label">Select Services </label>
                                                                 <select id="sedan" class="form-control border-input chosen-select" name="sedan[]" multiple>
                                                                     @foreach ($sedan as $row)
                                                                         <option value="{{$row->id}}" @if(!empty(old
@@ -459,7 +459,7 @@
                                                                 <h3>Luxury Services</h3>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                <label class="control-label">Select Services</label>
                                                                 <select id="luxury" class="form-control border-input chosen-select" name="luxury[]" multiple>
                                                                     @foreach ($luxury as $row)
                                                                         <option value="{{$row->id}}" @if(!empty(old
@@ -527,7 +527,7 @@
                                                                 <h3>SUV/4 &#215 4 Services</h3>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="control-label">Select Services <span class="manadatory">*</span></label>
+                                                                <label class="control-label">Select Services</label>
                                                                 <select id="suv" class="form-control
                                                                 border-input chosen-select" name="suv[]" multiple>
                                                                     @foreach ($suv as $row)

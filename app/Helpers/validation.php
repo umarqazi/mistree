@@ -28,7 +28,7 @@ if (! function_exists('validate_inputs')) {
             'building'                       => 'sometimes|string|nullable',
             'block'                          => 'sometimes|string|nullable',
             'street'                         => 'sometimes|nullable|string',
-            'town'                           => 'sometimes|required|regex:/^[\pL\s\-]+$/u',
+            'town'                           => 'sometimes|required|string',
             'city'                           => 'sometimes|required|regex:/^[\pL\s\-]+$/u',
         ];
 
