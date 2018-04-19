@@ -110,8 +110,8 @@
 						                    	@if(count($customer->bookings) > 0)
 							                    	@foreach($customer->bookings as $key => $booking)
 								                        <tr> 
-								                        	<td class="text-center">{{$booking->workshop->workshopId}}</td>
-								                        	<td class="text-center">{{$booking->workshop->name}}</td>
+								                        	<td class="text-center">@if(!is_null($booking->workshop)){{$booking->workshop->workshopId}}@endif</td>
+								                        	<td class="text-center">@if(!is_null($booking->workshop)){{$booking->workshop->name}}@endif</td>
 															<td class="text-center">{{$booking->vehicle_no  }}</td>
 								                        	<td class="text-center">{{\Carbon\Carbon::parse($booking->job_time)->format('g:i A')." ". \Carbon\Carbon::parse($booking->job_date)->format('D d M, Y') }}</td>
 								                        	<td class="text-center">{{$booking->job_status }}</td>
