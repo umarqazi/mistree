@@ -143,7 +143,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'workshop.guest'], function (
 
         Route::get('/top-up', 'WorkshopsController@topup');
         Route::post('/update-balance', 'WorkshopsController@topupBalance');
-        
+
         Route::get('/booking/{type?}', 'BookingsController@bookingListings');
         Route::get('/total-revenue', 'BookingsController@totalRevenue');
         Route::get('all-workshops/top-up', 'WorkshopsController@topupDetails');
