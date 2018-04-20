@@ -106,6 +106,6 @@ class Booking extends Model
 
     public function scopeAcceptedCompletedBookings($query)
     {
-        return $query->where('is_accepted', true)->where('job_status', '=' , 'completed')->orwhere('job_status', '=' , 'accepted');
+        return $query->where('is_accepted', true)->where('job_status', '=', 'completed')->orwhere('job_status', '=', 'accepted');
     }
 }

@@ -885,7 +885,12 @@ class BookingsController extends Controller
                 return View::make('bookings.index')->with('bookings', $bookings);
 
         }
-    }   
+    }
+
+    public function totalRevenue(){
+        $bookings = Booking::acceptedcompletedbookings()->get();
+        return View::make('bookings.accepted_completed')->with('bookings', $bookings);
+    }
 
      /**
      * @SWG\Get(
