@@ -2838,6 +2838,11 @@ class WorkshopsController extends Controller
             'body' => ['workshop' => $workshop ]
         ], Response::HTTP_OK);
     }
+
+    public function topupDetails(){
+        $transactions = WorkshopLedger::where('transaction_type','Top-Up')->get()->load('workshop');
+        return View::make('admin.topup.topup_details')->with('transactions', $transactions);
+    }
 }
 
 
