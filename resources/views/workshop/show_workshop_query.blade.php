@@ -16,9 +16,10 @@
                           <div class="row">
                               <div class="col-md-10">
                                   <h4>Workshop Query</h4>
-                                  <p>Workshop Name : {{ $workshopQuery->workshop->name}}</p>
-                                  <p>Mobile : {{$workshopQuery->workshop->mobile}}</p>
-                                  <p>Email : {{$workshopQuery->workshop->email}}</p>
+                                  <p>Workshop Name : @if(!is_null($workshopQuery->workshop)){{ $workshopQuery->workshop->name}}@endif</p>
+                                  <p>Workshop ID : @if(!is_null($workshopQuery->workshop)){{ $workshopQuery->workshop->workshopId}}@endif</p>
+                                  <p>Mobile : @if(!is_null($workshopQuery->workshop)){{$workshopQuery->workshop->mobile}}@endif</p>
+                                  <p>Email :@if(!is_null($workshopQuery->workshop)) {{$workshopQuery->workshop->email}}@endif</p>
                                   <p>Date : {{$workshopQuery->created_at }}</p>
                               </div>
                               <div class="col-md-2">@include('partials.backbtn_workshop_query')</div>
