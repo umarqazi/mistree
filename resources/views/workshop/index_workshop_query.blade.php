@@ -4,7 +4,7 @@
 
 @include('partials.header')
 
-<div class="content">           
+<div class="content">
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -41,7 +41,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($workshopQueries as $key => $value)    
+                                @foreach($workshopQueries as $key => $value)
                                 <tr role="row" class="odd">
                                     <td class="text-center">@if(!is_null($value->workshop)){{ $value->workshop->workshopId }}@endif</td>
                                     <td class="text-center">{{ $value->subject }}</td>
@@ -50,14 +50,14 @@
                                     <td class="text-center">@if($value->is_resolved){{ $value->updated_at}}@endif</td>
                                     <td class="text-center">@if($value->is_resolved)<i class="ti-check"></i>@else Open @endif</td>
                                     <td class="text-center">
-                                        <form method="POST" id="workshop_resolve_query" action="{{url('admin/resolve-workshop-query/'. $value->id)}}" accept-charset="UTF-8">
+                                        <form method="POST" id="workshop_resolve_query_{{ $value->id }}" action="{{url('admin/resolve-workshop-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
 
                                         <a class= "mistri-icons ti-eye" href="{{url('admin/workshop-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
                                         @if($value->is_resolved == false)
-                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query"><i class="ti-check"></i></i></button>
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Workshop Queries" value="submit" type="submit" form="workshop_resolve_query_{{ $value->id }}"><i class="ti-check"></i></i></button>
                                         @endif
                                     </td>
                                 </tr>

@@ -2,18 +2,19 @@
 
 namespace App\Listeners;
 
-use App\Booking;
-use App\Events\JobAcceptedEvent;
-use App\Notifications\JobAccepted;
+use App\WorkshopQuery;
+use App\Events\WorkshopQueryResolveEvent;
+use App\Notifications\WorkshopQueryResolved;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Notification;
 use LaravelFCM\Facades\FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
-use Notification;
 
-class JobAcceptedEventListener
+
+class WorkshopQueryResolveEventListener
 {
     /**
      * Create the event listener.
@@ -28,27 +29,27 @@ class JobAcceptedEventListener
     /**
      * Handle the event.
      *
-     * @param  JobAcceptedEvent  $event
+     * @param  WorkshopQueryResolveEvent  $event
      * @return void
      */
-    public function handle(JobAcceptedEvent $event)
+    public function handle(WorkshopQueryResolveEvent $event)
     {
-        $booking = $event->booking;
-        Notification::send($booking->customer, new JobAccepted($booking));
+        $query = $event->query;
+        Notification::send($query->workshop , new WorkshopQueryResolved($event->query));
 
-        if($booking->customer->fcm_token){
+        if($query->workshop->fcm_token){
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Booking Accepted');
-            $notificationBuilder->setBody('Your booking request has been accepted by "'.$booking->workshop->name.'".')->setSound('default');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Query Resolved');
+            $notificationBuilder->setBody('Your query "'.$query->subject.'" has been resolved by Admin.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking_id' => $booking->id, 'message' => 'Your booking request has been accepted by "'.$booking->workshop->name.'".']);
+            $dataBuilder->addData(['query_id' => $query->id, 'status' => 3 ]);
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
             $data = $dataBuilder->build();
-            $token = $booking->customer->fcm_token;
+            $token = $query->workshop->fcm_token;
 
             $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
         }

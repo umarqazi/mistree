@@ -40,7 +40,7 @@
                                                         {{$notification -> data['msg']}}
                                                     </div>
                                                     <div class="text-left notification_date">
-                                                        {{$notification->created_at->format('d-m-Y h:i')}}
+                                                        {{$notification->created_at->format('d-m-Y g:i A')}}
                                                     </div>
                                                 </div>
                                             </a>
@@ -63,6 +63,9 @@
                                                     @elseif(snake_case(class_basename($notification->type )) == 'minimum_balance')
                                                         <img src="{{URL::to('/img/warning.png')}}">
 
+                                                    @elseif(snake_case(class_basename($notification->type )) == 'workshop_query_resolved')
+                                                        <img src="{{URL::to('/img/resolve.png')}}">
+
                                                     @else
                                                         <img src="{{URL::to('/img/Dummy-image.jpg')}}">
                                                     @endif
@@ -72,7 +75,7 @@
                                                         {{$notification -> data['msg']}}
                                                     </div>
                                                     <div class="text-left notification_date">
-                                                        {{$notification->created_at->format('d-m-Y h:i')}}
+                                                        {{$notification->created_at->format('d-m-Y g:i A')}}
                                                     </div>
                                                 </div>
                                             </a>

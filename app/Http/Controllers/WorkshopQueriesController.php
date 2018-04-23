@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\WorkshopQueryEvent;
+use App\Events\WorkshopQueryResolveEvent;
 use App\Mail\WorkshopRequestMail;
 use App\WorkshopQuery;
 use Carbon\Carbon;
@@ -219,6 +220,9 @@ class WorkshopQueriesController extends Controller
         $workshopQuery->status      = 'Closed';
         $workshopQuery->is_resolved = true;
         $workshopQuery->save();
+
+        event(new WorkshopQueryResolveEvent($workshopQuery));
+      
         Session::flash('success_message', 'Successfully updated the Status!');
         return Redirect::to('admin/workshop-queries');
     }

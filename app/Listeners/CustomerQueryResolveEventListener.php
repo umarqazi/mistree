@@ -2,18 +2,17 @@
 
 namespace App\Listeners;
 
-use App\Booking;
-use App\Events\JobAcceptedEvent;
-use App\Notifications\JobAccepted;
+use App\CustomerQuery;
+use App\Events\CustomerQueryResolveEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use LaravelFCM\Facades\FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
-use Notification;
 
-class JobAcceptedEventListener
+
+class CustomerQueryResolveEventListener
 {
     /**
      * Create the event listener.
@@ -28,27 +27,25 @@ class JobAcceptedEventListener
     /**
      * Handle the event.
      *
-     * @param  JobAcceptedEvent  $event
+     * @param  CustomerQueryResolveEvent  $event
      * @return void
      */
-    public function handle(JobAcceptedEvent $event)
+    public function handle(CustomerQueryResolveEvent $event)
     {
-        $booking = $event->booking;
-        Notification::send($booking->customer, new JobAccepted($booking));
-
-        if($booking->customer->fcm_token){
+        $query = $event->query;
+        if($query->customer->fcm_token){
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
-            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Booking Accepted');
-            $notificationBuilder->setBody('Your booking request has been accepted by "'.$booking->workshop->name.'".')->setSound('default');
+            $notificationBuilder = new PayloadNotificationBuilder(env('APP_NAME').' - Query Resolved');
+            $notificationBuilder->setBody('Your query "'.$query->subject.'" has been resolved by Admin.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['booking_id' => $booking->id, 'message' => 'Your booking request has been accepted by "'.$booking->workshop->name.'".']);
+            $dataBuilder->addData(['query_id' => $query->id, 'status' => 3 ]);
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
             $data = $dataBuilder->build();
-            $token = $booking->customer->fcm_token;
+            $token = $query->customer->fcm_token;
 
             $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
         }
