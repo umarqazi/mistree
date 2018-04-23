@@ -29,7 +29,7 @@ class AdminsController extends Controller
 
         $bookings_active   = Booking::ActiveBookings()->count();
         $total_jazzcash = WorkshopLedger::where('transaction_type','Top-Up')->get()->sum('amount');
-        $total_matured_revenue = Booking::where('is_accepted',true)->get()->pluck('billing')->sum('lead_charges');
+        $total_matured_revenue = Booking::acceptedCompletedBookings()->get()->pluck('billing')->sum('lead_charges');
         return view('admin.home')->with(['CustomerCount' => $CustomerCount,'WorkshopCount' => $WorkshopCount, 'bookings_active' => $bookings_active, 'total_bookings' => $total_bookings, 'total_jazzcash' => $total_jazzcash, 'total_matured_revenue' => $total_matured_revenue ]);
     }
 

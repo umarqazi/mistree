@@ -74,7 +74,7 @@
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="{{ url( 'admin/booking/') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{ url( 'admin/booking/active') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>
@@ -116,7 +116,7 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="numbers">
-                                        <p>TOTAL JAZZCASH</p>
+                                        <p>TOTAL TOP-UP</p>
                                         PKR {{ $total_jazzcash }}
                                     </div>
                                 </div>
@@ -124,6 +124,7 @@
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
+                                    <a href="{{ url( 'admin/all-workshops/top-up') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>
@@ -140,7 +141,7 @@
                                 </div>
                                 <div class="col-xs-8">
                                     <div class="numbers">
-                                        <p>TOTAL MATURED REVENUE</p>
+                                        <p>MYSTRI REVENUE</p>
                                         PKR {{ $total_matured_revenue }}
                                     </div>
                                 </div>
@@ -148,7 +149,7 @@
                             <div class="footer">
                                 <hr />
                                 <div class="stats">
-                                    <a href="{{ url( 'admin/booking/completed') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
+                                    <a href="{{ url( 'admin/total-revenue') }}"><i class="ti-angle-right"></i> VIEW DETAILS</a>
                                 </div>
                             </div>
                         </div>

@@ -222,7 +222,7 @@ class WorkshopQueriesController extends Controller
         $workshopQuery->save();
 
         event(new WorkshopQueryResolveEvent($workshopQuery));
-
+      
         Session::flash('success_message', 'Successfully updated the Status!');
         return Redirect::to('admin/workshop-queries');
     }
