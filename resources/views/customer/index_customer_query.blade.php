@@ -41,26 +41,26 @@
                         <table class="table table-striped dataTable no-footer" id="jsTable" role="grid" aria-describedby="jsTable_info" style="padding: 10px;">
                             <thead>
                                 <tr role="row">
-                                    <th class="sorting_asc text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending">ID</th>
-                                    <th class="text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Subject</th>
+                                    <th class="sorting_asc text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-sort="ascending">Email</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Customer Name</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Customer Number</th>
+                                    <th class="text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Subject</th>
                                     <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Recieved at</th>
-                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Resolved</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Resolved at</th>
+                                    <th class="sorting text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Status</th>
                                     <th class="text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($customerQueries as $key => $value)    
                                 <tr role="row" class="odd">
-                                    <td class="text-center sorting_1">{{ $key + 1 }}</td>
+                                    <td class="text-center sorting_1">@if(!is_null($value->customer)){{ $value->customer->email }}@endif</td>
+                                    <td class="text-center">@if(!is_null($value->customer)){{ $value->customer->name }}@endif</td>
+                                    <td class="text-center">@if(!is_null($value->customer)){{ $value->customer->con_number }}@endif</td>
                                     <td class="text-center">{{ $value->subject }}</td>
-                                    <td class="text-center">{{ $value->customer->name }}</td>
                                     <td class="text-center">{{ $value->created_at }}</td>
-                                    <td class="text-center">
-                                        @if($value->is_resolved)
-                                        <i class="ti-check"></i>
-                                        @endif
-                                    </td>
+                                    <td class="text-center">@if($value->is_resolved){{ $value->updated_at }}@endif</td>
+                                    <td class="text-center">@if($value->is_resolved)<i class="ti-check"></i>@else Open @endif</td>
                                     <td class="text-center">
                                         <form method="POST" id="resolve_customer_query" action="{{url('admin/resolve-customer-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">

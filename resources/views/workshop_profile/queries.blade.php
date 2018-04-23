@@ -23,6 +23,7 @@
                                     <thead>
                                     <tr role="row">
                                         <th class="sorting  text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Email: activate to sort column ascending" >Received at</th>
+                                        <th class="sorting  text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Customer Email: activate to sort column ascending" >Resolved at</th>
                                         <th class="sorting  text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending" >Subject</th>
                                         <th class="sorting  text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Area: activate to sort column ascending" >Message</th>
                                         <th class="sorting  text-center" tabindex="0" aria-controls="jsTable" rowspan="1" colspan="1" aria-label="Contact: activate to sort column ascending" >Status</th>
@@ -32,9 +33,10 @@
                                     @foreach($queries as $key => $query)
                                         <tr role="row" class="odd">
                                             <td class="text-center">{{$query->created_at}}</td>
+                                            <td class="text-center">@if($query->is_resolved){{$query->updated_at}}@endif</td>
                                             <td class="text-center">{{$query->subject}}</td>
                                             <td class="text-center">{{substr($query->message , 0, 200)}}</td>
-                                            <td class="text-center">{{$query->status}}</td>
+                                            <td class="text-center">@if($query->is_resolved)<i class="ti-check"></i>@else Open @endif</td>
                                         </tr>
                                     @endforeach
                                     </tbody>

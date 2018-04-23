@@ -219,7 +219,6 @@ class WorkshopQueriesController extends Controller
         $workshopQuery->status      = 'Closed';
         $workshopQuery->is_resolved = true;
         $workshopQuery->save();
-
         Session::flash('success_message', 'Successfully updated the Status!');
         return Redirect::to('admin/workshop-queries');
     }

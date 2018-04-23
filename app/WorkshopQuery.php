@@ -42,11 +42,11 @@ class WorkshopQuery extends Model
 
     public function getCreatedAtAttribute($date)
 	{
-	    return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d M, Y');
+	    return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d M, Y g:i A');
 	}
 
 	public function getUpdatedAtAttribute($date)
 	{
-	    return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d M, Y');
+	    return Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d M, Y g:i A');
 	}
 }
