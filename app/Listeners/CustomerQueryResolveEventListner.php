@@ -41,7 +41,7 @@ class CustomerQueryResolveEventListner
             $notificationBuilder->setBody('Your query "'.$query->subject.'" has been resolved by Admin.')->setSound('default');
 
             $dataBuilder = new PayloadDataBuilder();
-            $dataBuilder->addData(['query_id' => $query->id ]);
+            $dataBuilder->addData(['query_id' => $query->id, 'status' => 3 ]);
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
             $data = $dataBuilder->build();
