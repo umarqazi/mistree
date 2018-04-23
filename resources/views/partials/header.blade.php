@@ -63,6 +63,9 @@
                                                     @elseif(snake_case(class_basename($notification->type )) == 'minimum_balance')
                                                         <img src="{{URL::to('/img/warning.png')}}">
 
+                                                    @elseif(snake_case(class_basename($notification->type )) == 'workshop_query_resolved')
+                                                        <img src="{{URL::to('/img/resolve.png')}}">
+
                                                     @else
                                                         <img src="{{URL::to('/img/Dummy-image.jpg')}}">
                                                     @endif

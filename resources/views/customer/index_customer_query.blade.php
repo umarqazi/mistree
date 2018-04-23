@@ -62,14 +62,14 @@
                                         @endif
                                     </td>
                                     <td class="text-center">
-                                        <form method="POST" id="resolve_customer_query" action="{{url('admin/resolve-customer-query/'. $value->id)}}" accept-charset="UTF-8">
+                                        <form method="POST" id="resolve_customer_query_{{ $value->id }}" action="{{url('admin/resolve-customer-query/'. $value->id)}}" accept-charset="UTF-8">
                                             <input name="_method" type="hidden" value="PUT">
                                             <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                         </form>
 
                                         <a class= "mistri-icons ti-eye" href="{{url('admin/customer-queries/'. $value->id)}}" data-toggle="tooltip" data-placement="top" title="View"></a>
                                         @if(!$value->is_resolved)
-                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Customer Query" value="submit" type="submit" form="resolve_customer_query"><i class="ti-check"></i></button>
+                                            <button class="mistri-icons block_button" data-toggle="tooltip" data-placement="top" title="Resolve Customer Query" value="submit" type="submit" form="resolve_customer_query_{{ $value->id }}"><i class="ti-check"></i></button>
                                         @endif
 
                                     </td>

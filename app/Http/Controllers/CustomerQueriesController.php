@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\CustomerQuery;
+use App\Events\CustomerQueryResolveEvent;
 use App\Events\CustomerQueryEvent;
+use App\Listeners\CustomerQueryResolveEventListner;
 use App\Mail\CustomerQueryMail;
 use Carbon\Carbon;
 use Config;
@@ -161,6 +163,8 @@ class CustomerQueriesController extends Controller
         $customerQuery->status      = 'Closed';
         $customerQuery->is_resolved = true;
         $customerQuery->save();
+
+        event(new CustomerQueryResolveEvent($customerQuery));
 
         Session::flash('success_message', 'Successfully updated the Status!');
         return Redirect::to('admin/customer-queries/');

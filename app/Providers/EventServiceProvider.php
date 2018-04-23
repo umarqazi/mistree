@@ -52,6 +52,12 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\CompleteLeadEvent' => [
             'App\Listeners\CompleteLeadEventListener'
         ],
+        'App\Events\WorkshopQueryResolveEvent' => [
+            'App\Listeners\WorkshopQueryResolveEventListner'
+        ],
+        'App\Events\CustomerQueryResolveEvent' => [
+            'App\Listeners\CustomerQueryResolveEventListner'
+        ],
     ];
 
     /**
