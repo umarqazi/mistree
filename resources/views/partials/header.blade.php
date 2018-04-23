@@ -40,7 +40,7 @@
                                                         {{$notification -> data['msg']}}
                                                     </div>
                                                     <div class="text-left notification_date">
-                                                        {{$notification->created_at->format('d-m-Y h:i')}}
+                                                        {{$notification->created_at->format('d-m-Y g:i A')}}
                                                     </div>
                                                 </div>
                                             </a>
@@ -75,7 +75,7 @@
                                                         {{$notification -> data['msg']}}
                                                     </div>
                                                     <div class="text-left notification_date">
-                                                        {{$notification->created_at->format('d-m-Y h:i')}}
+                                                        {{$notification->created_at->format('d-m-Y g:i A')}}
                                                     </div>
                                                 </div>
                                             </a>
