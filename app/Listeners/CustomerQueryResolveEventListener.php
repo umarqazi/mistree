@@ -2,19 +2,17 @@
 
 namespace App\Listeners;
 
-use App\WorkshopQuery;
-use App\Events\WorkshopQueryResolveEvent;
-use App\Notifications\WorkshopQueryResolved;
+use App\CustomerQuery;
+use App\Events\CustomerQueryResolveEvent;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Notification;
 use LaravelFCM\Facades\FCM;
 use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 
 
-class WorkshopQueryResolveEventListner
+class CustomerQueryResolveEventListener
 {
     /**
      * Create the event listener.
@@ -29,15 +27,13 @@ class WorkshopQueryResolveEventListner
     /**
      * Handle the event.
      *
-     * @param  WorkshopQueryResolveEvent  $event
+     * @param  CustomerQueryResolveEvent  $event
      * @return void
      */
-    public function handle(WorkshopQueryResolveEvent $event)
+    public function handle(CustomerQueryResolveEvent $event)
     {
         $query = $event->query;
-        Notification::send($query->workshop , new WorkshopQueryResolved($event->query));
-
-        if($query->workshop->fcm_token){
+        if($query->customer->fcm_token){
             $optionBuilder = new OptionsBuilder();
             $optionBuilder->setTimeToLive(60*20);
 
@@ -49,7 +45,7 @@ class WorkshopQueryResolveEventListner
             $option = $optionBuilder->build();
             $notification = $notificationBuilder->build();
             $data = $dataBuilder->build();
-            $token = $query->workshop->fcm_token;
+            $token = $query->customer->fcm_token;
 
             $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
         }

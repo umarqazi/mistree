@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\CustomerQuery;
 use App\Events\CustomerQueryResolveEvent;
 use App\Events\CustomerQueryEvent;
-use App\Listeners\CustomerQueryResolveEventListner;
 use App\Mail\CustomerQueryMail;
 use Carbon\Carbon;
 use Config;

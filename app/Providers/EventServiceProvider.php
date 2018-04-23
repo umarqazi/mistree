@@ -50,10 +50,10 @@ class EventServiceProvider extends ServiceProvider
             'App\Listeners\CompleteLeadEventListener'
         ],
         'App\Events\WorkshopQueryResolveEvent' => [
-            'App\Listeners\WorkshopQueryResolveEventListner'
+            'App\Listeners\WorkshopQueryResolveEventListener'
         ],
         'App\Events\CustomerQueryResolveEvent' => [
-            'App\Listeners\CustomerQueryResolveEventListner'
+            'App\Listeners\CustomerQueryResolveEventListener'
         ],
     ];
 
