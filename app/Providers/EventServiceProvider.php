@@ -43,9 +43,6 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\WorkshopQueryEvent' => [
             'App\Listeners\WorkshopQueryEventListener'
         ],
-        'App\Events\RateNotificationEvent' => [
-            'App\Listeners\RateNotificationEventListener'
-        ],
         'App\Events\InformApprovalEvent' => [
             'App\Listeners\InformApprovalEventListener'
         ],
