@@ -167,12 +167,10 @@ class BookingsController extends Controller
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
         CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addHours($booking->services->pluck('pivot')->sum('service_time')));
 
-
-//        return
         return response()->json([
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
-                    'message' => 'Booking created',
+                    'message' => 'Booking Created',
                     'body' => ['booking' => $booking],
                 ],Response::HTTP_OK);
 
@@ -888,7 +886,7 @@ class BookingsController extends Controller
     }
 
     public function totalRevenue(){
-        $bookings = Booking::acceptedcompletedbookings()->get();
+        $bookings = Booking::acceptedCompletedBookings()->get();
         return View::make('bookings.accepted_completed')->with('bookings', $bookings);
     }
 
