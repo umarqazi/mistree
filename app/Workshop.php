@@ -207,7 +207,7 @@ class Workshop extends Authenticatable
     public static function workshops_with_balance($workshops)
     {
         $workshops = $workshops->whereHas('balance', function($query) {
-            return $query->where('balance', '>', 30);
+            return $query->where('balance', '>=', 30);
         });
         return $workshops;
     }
