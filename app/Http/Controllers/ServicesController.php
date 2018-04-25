@@ -40,27 +40,15 @@ class ServicesController extends Controller
     {        
         // get all the services
 
-        $services = Service::parentLevel()->get();
+        $services = Service::parentLevel()->orderBy('created_at', 'desc')->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
-            if(!empty($services))
-            {
-                return response()->json([
-                    'http-status'   => Response::HTTP_OK,
-                    'status'        => true,
-                    'message'       => 'all services',
-                    'body'          => [ 'services' => $services->load('services') ]
-                ],Response::HTTP_OK);
-            }
-            else
-            {
-                return response()->json([
-                    'http-status'   => Response::HTTP_OK,
-                    'status'        => true,
-                    'message'       => 'Sorry! No Services found',
-                    'body'          => [ 'services'  => $services ]
-                ], Response::HTTP_OK);
-            }
+            return response()->json([
+                'http-status' => Response::HTTP_OK,
+                'status' => true,
+                'message' => 'all services',
+                'body' => [ 'services' => $services->load('services') ]
+            ],Response::HTTP_OK);
         }
         else{
         // load the view and pass the services
@@ -309,29 +297,16 @@ class ServicesController extends Controller
         // get all the services
         $service_ids = $request->service_ids;
         if(count($service_ids)>0){
-            $services = Service::whereNotIn('id',$service_ids)->get();
+            $services = Service::orderBy('created_at')->whereNotIn('id',$service_ids)->get();
         }else{
-            $services = Service::all();
-        }
-
-        if(!empty($services))
-        {
-            return response()->json([
-                'http-status'   => Response::HTTP_OK,
-                'status'        => true,
-                'message'       => 'all services',
-                'body'          => [ 'services' => $services ]
-            ],Response::HTTP_OK);
-        }
-        else
-        {
-            return response()->json([
-                'http-status'   => Response::HTTP_OK,
-                'status'        => true,
-                'message'       => 'No more services available',
-                'body'          => [ 'services'  => $services ]
-            ], Response::HTTP_OK);
-        }
+            $services = Service::orderBy('created_at')->get();
+        }        
+        return response()->json([
+            'http-status' => Response::HTTP_OK,
+            'status' => true,
+            'message' => 'all services',
+            'body' => [ 'services' => $services ]
+        ],Response::HTTP_OK);        
     }
 
     /**
