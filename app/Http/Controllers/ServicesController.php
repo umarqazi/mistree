@@ -43,7 +43,7 @@ class ServicesController extends Controller
         $services = Service::parentLevel()->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
-            if(!empty($services))
+            if(count($services) > 0)
             {
                 return response()->json([
                     'http-status'   => Response::HTTP_OK,
@@ -314,7 +314,7 @@ class ServicesController extends Controller
             $services = Service::all();
         }
 
-        if(!empty($services))
+        if(count($services) > 0)
         {
             return response()->json([
                 'http-status'   => Response::HTTP_OK,
