@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card">
+                    <div class="card custom-card dashboard-block">
                         <div class="content">
                             <div class="row">
                                 <div class="col-xs-4">
@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card">
+                    <div class="card custom-card dashboard-block">
                         <div class="content">
                             <div class="row">
                                 <div class="col-xs-4">
@@ -56,7 +56,7 @@
                     </div>
                 </div>                
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card">
+                    <div class="card custom-card dashboard-block">
                         <div class="content">
                             <div class="row">
                                 <div class="col-xs-4">
@@ -81,7 +81,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card">
+                    <div class="card custom-card dashboard-block">
                         <div class="content">
                             <div class="row">
                                 <div class="col-xs-4">
@@ -106,7 +106,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card">
+                    <div class="card custom-card dashboard-block">
                         <div class="content">
                             <div class="row">
                                 <div class="col-xs-4">
@@ -131,7 +131,7 @@
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card">
+                    <div class="card custom-card dashboard-block">
                         <div class="content">
                             <div class="row">
                                 <div class="col-xs-4">

@@ -78,8 +78,8 @@
 .card .header{padding: 0px;}
 .card{padding: 15px;}
 
-.card .no-footer{
-    margin-top: 30px;
+#dropdownMenuButton{
+    margin: 15px 0px;
 }
 
 .card .content{padding: 0px;}
@@ -126,7 +126,7 @@
 .dataTables_filter {margin-right: 20px; margin-bottom: 10px;}
 
 .dataTables_filter input, #jsTable_length select {
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
     padding-left: 30px;
     background-color: #fffcf5;
     border-radius: 4px;
@@ -160,7 +160,7 @@ table.dataTable.no-footer {border-bottom: 1px solid #ccc;}
 /*.content {clear: both; display: table; width: 100%; width: 100%;}*/
 
 form {display: table; width: 100%; clear: both;}
-form .form-group {margin-bottom: 0px;} 
+form .form-group {margin-bottom: 0px;}
 .chosen-choices {
     border: 1px solid #CCC5B9 !important;
     background-color: #fffcf5 !important;
@@ -220,7 +220,7 @@ form .form-group {margin-bottom: 0px;}
     border: 1px solid #CCC5B9 !important;
     background-color: #fffcf5 !important;
     padding: 10px;
-    display: table;    
+    display: table;
     margin-bottom: 10px;
 }
 .btn-reg{border-radius: 5px !important;}
@@ -262,7 +262,7 @@ form .form-group {margin-bottom: 0px;}
 .avtar-block img{
     display: inline-block;
     vertical-align: middle;
-    width: auto;
+    max-width: 170px;
 }
 
 .avtar-block .name-info{
@@ -345,7 +345,7 @@ form .form-group {margin-bottom: 0px;}
     text-align: center;
 }
 .register-form{
-    margin-bottom: 50px; 
+    margin-bottom: 50px;
     margin-top: 50px;
 }
 .reg-logo{
@@ -398,8 +398,8 @@ height: 100%;width:50px;border-radius: 100%;margin: 0 auto !important;}
     padding-bottom: 5px;
 }
 
-.chosen-single{   
-     
+.chosen-single{
+
     padding: 7px 18px !important ;
     height: 40px !important;
 
@@ -463,4 +463,74 @@ form#bookings-dropdown .submit_button:hover{
 .chosen-container-multi .chosen-choices{
     overflow: auto!important;
     max-height: 200px!important;
+}
+
+.main-panel > .content{
+    padding: 30px 0px;
+}
+
+.custom-card{
+    margin-bottom: 30px;
+}
+
+.dashboard-block{
+    min-height: 156px;
+}
+
+
+
+
+
+
+
+@media only screen and (max-width: 1199px) {
+
+}
+
+@media only screen and (max-width: 1024px) {
+
+}
+
+@media only screen and (max-width: 991px) {
+
+}
+
+@media only screen and (max-width: 767px) {
+    .card .numbers{
+        text-align: center;
+        font-size:1.5em;
+    }
+
+    .avtar-block img{
+        display: block;
+        max-width: 100%;
+        margin: 0 auto;
+    }
+
+    .avtar-block .name-info{
+        padding: 20px 0px;
+        display: block;
+        text-align: center;
+    }
+
+    .back-btn{
+        text-align: center;
+    }
+
+    .back-btn .pull-right{
+        float: inherit !important;
+    }
+
+    .login-signup .main-panel .content{
+        padding:10px 0px;
+    }
+
+    .btn-login{
+        margin-top: 15px;
+    }
+
+}
+
+@media only screen and (max-width: 575px) {
+
 }
