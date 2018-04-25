@@ -39,7 +39,6 @@ class ServicesController extends Controller
     public function index(Request $request)
     {        
         // get all the services
-
         $services = Service::parentLevel()->get();
         $reqFrom = $request->header('Content-Type');
         if( $reqFrom == 'application/json'){
@@ -62,7 +61,8 @@ class ServicesController extends Controller
                 ], Response::HTTP_OK);
             }
         }
-        else{
+        else
+        {
         // load the view and pass the services
         return View::make('services.index')
             ->with('services', $services);
