@@ -10,7 +10,7 @@ if (! function_exists('validate_inputs')) {
         $rules = [
             'name'                           => 'sometimes|required|string',
             'owner_name'                     => 'sometimes|required|regex:/^[\pL\s\-]+$/u',
-            'email'                          => 'sometimes|required|email|unique:workshops',
+            'email'                          => $request->has('id')?'sometimes|required|email|unique:workshops,email,'.$request->id:'sometimes|required|email|unique:workshops',
             'password'                       => 'sometimes|required|confirmed|min:6|max:16',
             'password_confirmation'          => 'sometimes|required',
             'cnic'                           => 'sometimes|required|regex:/^\d{5}-\d{7}-\d{1}$/u',
