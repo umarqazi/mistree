@@ -38,7 +38,7 @@
                             <tbody>
                                 @foreach($workshops as $key => $value)    
                                 <tr role="row" class="odd">
-                                    <td class="text-center">{{ $value->id }}</td>
+                                    <td class="text-center">@if(!empty($value->workshopId)){{ $value->workshopId }}@endif</td>
                                     <td class="text-center">{{ $value->name }}</td>
                                     <td class="text-center">{{ $value->owner_name }}</td>
                                     @if($value->address)
