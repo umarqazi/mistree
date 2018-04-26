@@ -61,12 +61,22 @@
                                                     <option value="Authorized" @if($workshop->type == "Authorized") {{"selected"}} @endif >Authorized</option>
                                                     <option value="Unauthorized" @if($workshop->type == "Unauthorized") {{"selected"}} @endif >Unauthorized</option>
                                                 </select>
+                                                @if($errors->has('type'))
+                                                    <span class="help-block">
+                                                        <strong class="manadatory">{{ $errors->first('type') }}</strong>
+                                                    </span>
+                                                @endif
                                                 <p class="validity-message"></p>
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="control-label">Enter Email <span class="manadatory">*</span></label>
-                                                <input type="email" class="form-control border-input" name="email" value="{{$workshop->email}}" readonly>
+                                                <input type="email" class="form-control border-input" name="email" value="{{$workshop->email}}">
+                                                @if($errors->has('email'))
+                                                    <span class="help-block">
+                                                        <strong class="manadatory">{{ $errors->first('email') }}</strong>
+                                                    </span>
+                                                @endif
                                                 <p class="validity-message"></p>
                                             </div>
 
