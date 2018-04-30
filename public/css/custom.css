@@ -477,6 +477,10 @@ form#bookings-dropdown .submit_button:hover{
     min-height: 156px;
 }
 
+.approve-button{
+    margin : 15px 0px 15px 3px;
+}
+
 
 
 

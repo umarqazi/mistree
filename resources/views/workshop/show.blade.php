@@ -122,7 +122,7 @@
 
 							<div class="dropdown pull-right">
 								@if(!$workshop->is_approved)
-									<a href="{{ url( 'admin/approve-workshop/'.$workshop->id ) }}" class="btn btn-secondary dropdown-toggle pull-right" type="button">
+									<a href="{{ url( 'admin/approve-workshop/'.$workshop->id ) }}" class="btn btn-secondary dropdown-toggle pull-right approve-button" type="button">
 										Approve
 									</a>
 								@endif
