@@ -4,26 +4,8 @@
         <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
         <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
         @if(!is_null($workshop->address))
-            @php $address = $workshop->address @endphp
             <div class="address">
-                @if($address->shop)
-                    {{$address->shop.', ' }}
-                @endif
-                @if($address->building)
-                    {{$address->building.', ' }}
-                @endif
-                @if($address->street)
-                    {{$address->street.', ' }}
-                @endif
-                @if($address->block)
-                    {{$address->block.', '}}
-                @endif
-                @if($address->town)
-                    {{$address->town.', '}}
-                @endif
-                @if($address->city)
-                    {{$address->city}}
-                @endif
+                {{ workshopAddressGenerator($workshop->address) }}
             </div>
         @endif
         <div class="phone">Mobile : {{$workshop->mobile}}</div>

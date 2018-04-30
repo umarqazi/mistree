@@ -29,7 +29,8 @@
             "App\\": "app/"
         },
         "files": [
-            "app/Helpers/validation.php"
+            "app/Helpers/validation.php",
+            "app/Helpers/addresses.php"
         ]
     },
     "autoload-dev": {
