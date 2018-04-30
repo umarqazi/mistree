@@ -18,6 +18,6 @@ if( !function_exists('customerAddressGenerator') )
 {
     function customerAddressGenerator($address)
     {
-        return implode(', ', array_filter(array_except($address->toArray(),['id', 'customer_id', 'geo_cord', 'deleted_at', 'created_at', 'updated_at'])));
+        return implode(', ', array_filter(array_except($address->toArray(),['id', 'customer_id', 'type', 'geo_cord', 'deleted_at', 'created_at', 'updated_at'])));
     }
 }
