@@ -22,6 +22,7 @@ Route::group(['middleware'	=> 'conf_guard:admin'], function(){
 Route::group(['middleware' => 'conf_guard:Customer'], function(){
 	Route::group(['middleware' => ['jwt.auth']], function(){
 		Route::get('cars', 'CarsController@index');
+		Route::post('service-against-car-id', 'ServicesController@serviceAgainstCarId');
 	});
 });
 
@@ -43,7 +44,6 @@ Route::group(['middleware' => 'conf_guard:Customer'], function(){
 		Route::patch('car', 'CarsController@unassignCar');
 		Route::post('search-workshop', 'WorkshopsController@searchWorkshop');
 		Route::post('search-service', 'ServicesController@searchService');
-		Route::post('service-against-car-id', 'ServicesController@serviceAgainstCarId');
 		Route::post('create-booking','BookingsController@createBooking');
 		Route::get('bookings', 'BookingsController@customerBookings');
 		Route::get('bookings/{booking}', 'BookingsController@getCustomerBooking');
