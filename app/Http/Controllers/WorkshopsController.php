@@ -1513,11 +1513,8 @@ class WorkshopsController extends Controller
     {
         $customer       = JWTAuth::authenticate();
         $customer_addresses = $customer->addresses;
-        $workshops      = Workshop::where('is_verified', true)
-            ->approved()
-            ->with('address', 'balance');
+        $workshops      = Workshop::where('is_verified', true)->where('is_approved', true)->with('address', 'balance');
 
-        $workshops      = Workshop::workshops_with_balance($workshops);
         if ($request->has('name')) {
             $workshops  = $workshops->where('name', 'LIKE', '%'.$request->name.'%');
         }
