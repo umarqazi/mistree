@@ -25,7 +25,7 @@
 											<h3 class="title">Customer Name : {{$customer->name}}</h3>
 											@if(!empty($customer->addresses))
 												@foreach($customer->addresses as $key => $address)
-													<div class="address">Address {{ $address->type }}: {{$address->house_no.', '.$address->street.', '.$address->block.', '.$address->town.', '.$address->city}}</div>
+													<div class="address">Address {{ $address->type }}: {{ customerAddressGenerator($address) }}</div>
 												@endforeach
 											@endif
 											<div class="phone">Email : {{$customer->email}}</div>
