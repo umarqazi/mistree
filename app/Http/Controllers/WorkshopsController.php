@@ -32,6 +32,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Mail\Message;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class WorkshopsController extends Controller
 {
@@ -772,7 +773,13 @@ class WorkshopsController extends Controller
 
         if(!is_null($workshop->jwt_token))
         {
-            JWTAuth::invalidate($workshop->jwt_token);
+            try{
+                JWTAuth::invalidate($workshop->jwt_token);
+            }
+            catch (JWTException $exception)
+            {
+                // do nothing, exception is just what we want to do.
+            }
         }
 
         /* Update Customer FCM Token */
