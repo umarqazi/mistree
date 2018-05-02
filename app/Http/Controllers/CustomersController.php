@@ -1355,4 +1355,110 @@ class CustomersController extends Controller
         fclose($file);
         return $full_path;
     }
+
+    /**
+     * Searching a workshop.
+     *
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/search-workshop",
+     *   summary="Search Workshop",
+     *   operationId="searchByWorkshop",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="name",
+     *     in="formData",
+     *     description="Workshop Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="type",
+     *     in="formData",
+     *     description="Workshop Type",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="booking_time",
+     *     in="formData",
+     *     description="Booking Time",
+     *     required=false,
+     *     type="string"
+     *  ),
+     *   @SWG\Parameter(
+     *     name="service_name",
+     *     in="formData",
+     *     description="Service Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Service Ids",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_block",
+     *     in="formData",
+     *     description="Workshop Address Block",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_town",
+     *     in="formData",
+     *     description="Workshop Address Town",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="address_city",
+     *     in="formData",
+     *     description="Workshop Address City",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function searchWorkshops(Request $request){
+        $workshops = Workshop::WithoutGlobalScopes()->where('is_verified',true)->where('is_approved', true);
+        $workshops = $workshops->where(function ($query){
+            $query->whereHas('balance', function($minimumbalance){
+                $minimumbalance->where('balance', '>=', 30);
+            })->has('acceptedBookings', '>=', 10)->orHas('acceptedBookings', '<', 10);
+        });
+
+        $namedworkshops = $workshops;
+        $townworkshops = $workshops;
+        $cityworkshops = $workshops;
+
+        if ($request->has('name')) {
+            $namedworkshops     = $namedworkshops->where('name', 'LIKE', '%'.$request->name.'%');
+            foreach (explode(" ", $request->name) as $name)
+            {
+                $townworkshops->orWhereHas('address', function($address) use ($name){
+                    return $address->where('town', 'LIKE', '%'. $name .'%')->orWhere('city', 'LIKE', '%'. $name. '%');
+                });
+            }
+        }
+
+        return response(['workshops' => $townworkshops->get()->load(['balance', 'address'])]);
+    }
+
+
 }

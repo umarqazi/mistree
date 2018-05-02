@@ -131,6 +131,11 @@ class Workshop extends Authenticatable
         $this->where('is_approved', true);
     }
 
+    public function acceptedBookings()
+    {
+        return $this->hasMany('App\Booking')->where('is_accepted', true);
+    }
+
     //    Returns sum of the workshop
     public function sumOfServiceRates($workshop)
     {
@@ -222,6 +227,11 @@ class Workshop extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new WorkshopResetPassword($token));
+    }
+
+    public function unverifiedUsersCount()
+    {
+        return $this->users()->where('verified', 0)->count()->get();
     }
 }
 
