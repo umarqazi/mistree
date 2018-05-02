@@ -22,6 +22,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Mail\Message;
+use Tymon\JWTAuth\Exceptions\JWTException;
 
 class CustomersController extends Controller
 {
@@ -373,7 +374,13 @@ class CustomersController extends Controller
 
         if(!is_null($customer->jwt_token))
         {
-            JWTAuth::invalidate($customer->jwt_token);
+            try{
+                JWTAuth::invalidate($customer->jwt_token);
+            }
+            catch (JWTException $exception)
+            {
+                // do nothing, exception is just what we want to do.
+            }
         }
 
         if($request->has('fcm_token')){
