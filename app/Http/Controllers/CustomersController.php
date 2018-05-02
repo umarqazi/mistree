@@ -535,12 +535,11 @@ class CustomersController extends Controller
                 return View::make('customer.thankyou')->with('message', 'Account already verified.');
             }
             $customer->update(['is_verified' => 1]);
-            DB::table('customer_verifications')->where('token',$verification_code)->delete();
 
             return View::make('customer.thankyou')->with('message', 'Thank You For Verifying Your Email.');
         }
 
-        return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
+        return View::make('customer.thankyou')->with('message', 'Verification code is either invalid or expired.');
     }
 
     /**
