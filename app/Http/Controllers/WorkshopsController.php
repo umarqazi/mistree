@@ -948,12 +948,11 @@ class WorkshopsController extends Controller
             }
 
             $workshop->update(['is_verified' => 1]);
-            DB::table('workshop_verifications')->where('token',$verification_code)->delete();
 
             return View::make('workshop.thankyou')->with('message', 'Thank You For Verifying Your Email.');
         }
 
-        return View::make('workshop.thankyou')->with('message', 'Verification code is invalid.');
+        return View::make('workshop.thankyou')->with('message', 'Verification code is either invalid or expired.');
     }
 
     public function changePassword()
