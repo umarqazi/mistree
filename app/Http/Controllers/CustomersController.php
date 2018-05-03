@@ -842,8 +842,8 @@ class CustomersController extends Controller
         $rules = array(
             'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
+            'town'          => 'required|string',
+            'city'          => 'required|string'
         );
         $validator = Validator::make($request->all(), $rules);
 
@@ -956,8 +956,8 @@ class CustomersController extends Controller
             'id'            => 'required',
             'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
+            'town'          => 'required|string',
+            'city'          => 'required|string'
         );
         $validator = Validator::make($request->all(), $rules);
 
