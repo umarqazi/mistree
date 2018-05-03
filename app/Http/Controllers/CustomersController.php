@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomerAddress;
 use App\Mail\CustomerRegistrationMail;
+use App\Scopes\WorkshopScope;
 use Carbon\Carbon;
 use JWTAuth;
 use Session;
@@ -1409,55 +1410,42 @@ class CustomersController extends Controller
      *     required=false,
      *     type="string"
      *   ),
-     *   @SWG\Parameter(
-     *     name="address_block",
-     *     in="formData",
-     *     description="Workshop Address Block",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_town",
-     *     in="formData",
-     *     description="Workshop Address Town",
-     *     required=false,
-     *     type="string"
-     *   ),
-     *   @SWG\Parameter(
-     *     name="address_city",
-     *     in="formData",
-     *     description="Workshop Address City",
-     *     required=false,
-     *     type="string"
-     *   ),
      *   @SWG\Response(response=200, description="successful operation"),
      *   @SWG\Response(response=500, description="internal server error")
      * )
      *
      */
     public function searchWorkshops(Request $request){
-        $workshops = Workshop::WithoutGlobalScopes()->where('is_verified',true)->where('is_approved', true);
-        $workshops = $workshops->where(function ($query){
-            $query->whereHas('balance', function($minimumbalance){
-                $minimumbalance->where('balance', '>=', 30);
-            })->has('acceptedBookings', '>=', 10)->orHas('acceptedBookings', '<', 10);
-        });
-
-        $namedworkshops = $workshops;
-        $townworkshops = $workshops;
-        $cityworkshops = $workshops;
 
         if ($request->has('name')) {
-            $namedworkshops     = $namedworkshops->where('name', 'LIKE', '%'.$request->name.'%');
-            foreach (explode(" ", $request->name) as $name)
-            {
-                $townworkshops->orWhereHas('address', function($address) use ($name){
-                    return $address->where('town', 'LIKE', '%'. $name .'%')->orWhere('city', 'LIKE', '%'. $name. '%');
-                });
-            }
+            $namedworkshops     = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->namedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
+            $addressworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->addressedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
+
+            $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
+            $allWorkshops = $allWorkshops->merge($namedworkshops);
+            $allWorkshops = $allWorkshops->merge($addressworkshops);
         }
 
-        return response(['workshops' => $townworkshops->get()->load(['balance', 'address'])]);
+        if($request->has('service_ids')){
+            $serviceworkshops  = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->serviceWorkshops($request->service_ids)->withoutGlobalScopes();
+            $customeraddresses = JWTAuth::authenticate()->addresses;
+            $customeraddressesworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->customerAddressWorkshops($customeraddresses)->withoutGlobalScopes()->get()->sortByDesc('rating');
+
+            $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
+            $allWorkshops = $allWorkshops->merge($serviceworkshops);
+            $allWorkshops = $allWorkshops->merge($customeraddressesworkshops);
+        }
+
+        if($request->has('type')){
+            $typeworkshops  = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->ofTypeWorkshops($request->type)->withoutGlobalScopes();
+        }
+
+        if($request->has('booking_time')){
+            $bookingtimeworkshops = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->bookingTimeWorkshops($request->booking_time)->withoutGlobalScopes();
+        }
+//        return response(['workshops' => $serviceworkshops->toSql()]);
+        return response(['workshops' => $bookingtimeworkshops->get()->sortByDesc('rating')]);
+
     }
 
 
