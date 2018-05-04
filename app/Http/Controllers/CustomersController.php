@@ -226,7 +226,7 @@ class CustomersController extends Controller
             'name'          => 'required',
             'email'         => 'required|email|unique:customers',
             'password'      => 'required|confirmed|min:6',
-            'con_number'    => 'required',
+            'con_number'    => 'required|regex:/^0?3\d{2}-\d{7}$/u',
         ];
         $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
         $validator = Validator::make($input, $rules);
