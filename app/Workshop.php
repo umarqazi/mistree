@@ -31,7 +31,7 @@ class Workshop extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     /**
@@ -125,6 +125,11 @@ class Workshop extends Authenticatable
         return $this->billings()->whereHas('booking',function($query){
             return $query->where('job_status', 'LIKE', 'completed');
         })->sum('amount');
+    }
+
+    public function getEstRatesAttribute()
+    {
+        return $this->services->pluck('pivot')->sum('service_rate');
     }
 
     public function scopeApproved()
@@ -273,20 +278,16 @@ class Workshop extends Authenticatable
             foreach ($customeraddresses as $key => $addr){
                 if($key == 0){
                     $query = $query->whereHas('address', function ($qry) use ($addr){
-                        return $qry->where( 'town', 'LIKE', $addr->town)->where('city', 'LIKE', $addr->city);
+                        return $qry->where( 'town', 'LIKE', '%'.$addr->town.'%')->where('city', 'LIKE', '%'.$addr->city.'%');
                     });
                 }else{
                     $query = $query->orWhereHas('address', function ($qry) use ($addr){
-                        return $qry->where( 'town', 'LIKE', $addr->town)->where('city', 'LIKE', $addr->city);
+                        return $qry->where( 'town', 'LIKE', '%'.$addr->town.'%')->where('city', 'LIKE', '%'.$addr->city.'%');
                     });
                 }
             }
             return $query;
         });
-    }
-
-    public function scopeSumOfAllServices($query) {
-        return $query->pluck('service_rate')->sum();
     }
 
     public function scopeServiceWorkshops($query, $services){
@@ -307,11 +308,5 @@ class Workshop extends Authenticatable
     public function scopeBookingTimeWorkshops($query, $time){
         return $query->where('open_time','<=', $time)->where( 'close_time', '>=', $time);
     }
-
-//$workshops = Workshop::WithoutGlobalScopes()->approvedWorkshops()->minimumBalance()->acceptedBookings();
-
-
-
-
 }
 

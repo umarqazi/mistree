@@ -1416,37 +1416,73 @@ class CustomersController extends Controller
      *
      */
     public function searchWorkshops(Request $request){
-
+        $workshops = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
         if ($request->has('name')) {
-            $namedworkshops     = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->namedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
+            $namedworkshops     = $workshops->namedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
             $addressworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->addressedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
             $allWorkshops = $allWorkshops->merge($namedworkshops);
             $allWorkshops = $allWorkshops->merge($addressworkshops);
+
+            if(count($allWorkshops)){
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => '',
+                    'body' => ['workshops' => $allWorkshops->load('address')]
+                ], Response::HTTP_OK);
+            }else{
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'No workshops found.',
+                    'body' => null
+                ], Response::HTTP_OK);
+            }
         }
 
-        if($request->has('service_ids')){
-            $serviceworkshops  = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->serviceWorkshops($request->service_ids)->withoutGlobalScopes();
+        if($request->has('service_ids') || $request->has('type') || $request->has('booking_time')){
+
+            if($request->has('service_ids')){
+                $workshops  = $workshops->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
+                    return $query->whereIn('services.id', json_decode($request->service_ids));
+                }]);
+            }
+
+            if($request->has('type')){
+                $workshops  = $workshops->ofTypeWorkshops($request->type);
+            }
+
+            if($request->has('booking_time')){
+                $workshops  = $workshops->bookingTimeWorkshops($request->booking_time);
+            }
+
             $customeraddresses = JWTAuth::authenticate()->addresses;
-            $customeraddressesworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->customerAddressWorkshops($customeraddresses)->withoutGlobalScopes()->get()->sortByDesc('rating');
+            $workshopswithoutaddress = $workshops->withoutGlobalScopes()->get()->sortByDesc('rating');
+            $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->withoutGlobalScopes()->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
-            $allWorkshops = $allWorkshops->merge($serviceworkshops);
-            $allWorkshops = $allWorkshops->merge($customeraddressesworkshops);
-        }
+            $allWorkshops = $allWorkshops->merge($workshopswithaddress);
+            $allWorkshops = $allWorkshops->merge($workshopswithoutaddress);
 
-        if($request->has('type')){
-            $typeworkshops  = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->ofTypeWorkshops($request->type)->withoutGlobalScopes();
-        }
+            $allWorkshops->each->append('est_rates');
 
-        if($request->has('booking_time')){
-            $bookingtimeworkshops = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->bookingTimeWorkshops($request->booking_time)->withoutGlobalScopes();
+            if(count($allWorkshops)){
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => '',
+                    'body' => ['workshops' => $allWorkshops->load('address')]
+                ], Response::HTTP_OK);
+            }else{
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => 'No workshops found.',
+                    'body' => null
+                ], Response::HTTP_OK);
+            }
         }
-//        return response(['workshops' => $serviceworkshops->toSql()]);
-        return response(['workshops' => $bookingtimeworkshops->get()->sortByDesc('rating')]);
-
     }
-
-
 }
