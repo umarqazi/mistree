@@ -1435,7 +1435,7 @@ class CustomersController extends Controller
             }else{
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
-                    'status' => true,
+                    'status' => false,
                     'message' => 'No workshops found.',
                     'body' => null
                 ], Response::HTTP_OK);
