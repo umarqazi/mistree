@@ -1418,8 +1418,8 @@ class CustomersController extends Controller
     public function searchWorkshops(Request $request){
         $workshops = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
         if ($request->has('name')) {
-            $namedworkshops     = $workshops->namedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
-            $addressworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->addressedWorkshops($request->name)->withoutGlobalScopes()->get()->sortByDesc('rating');
+            $namedworkshops     = $workshops->namedWorkshops($request->name)->get()->sortByDesc('rating');
+            $addressworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->addressedWorkshops($request->name)->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
             $allWorkshops = $allWorkshops->merge($namedworkshops);
@@ -1430,7 +1430,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => '',
-                    'body' => ['workshops' => $allWorkshops->load('address')]
+                    'body' => ['workshops' => $allWorkshops]
                 ], Response::HTTP_OK);
             }else{
                 return response()->json([
@@ -1461,9 +1461,9 @@ class CustomersController extends Controller
             $customeraddresses = JWTAuth::authenticate()->addresses;
             $workshopswithaddress = [];
             if(count($customeraddresses)){
-                $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->withoutGlobalScopes()->get()->sortByDesc('rating');
+                $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->get()->sortByDesc('rating');
             }
-            $workshopswithoutaddress = $workshops->withoutGlobalScopes()->get()->sortByDesc('rating');
+            $workshopswithoutaddress = $workshops->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
             $allWorkshops = $allWorkshops->merge($workshopswithaddress);
@@ -1476,7 +1476,7 @@ class CustomersController extends Controller
                     'http-status' => Response::HTTP_OK,
                     'status' => true,
                     'message' => '',
-                    'body' => ['workshops' => $allWorkshops->load('address')]
+                    'body' => ['workshops' => $allWorkshops]
                 ], Response::HTTP_OK);
             }else{
                 return response()->json([
