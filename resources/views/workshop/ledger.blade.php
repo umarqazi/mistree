@@ -25,7 +25,7 @@
 					                   + More Options
 					                    </button>
 					                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-					                    	<a href="{{url('admin/workshops/'.$workshop->id.'/')}}" class="dropdown-buttons">Workshop Detials</a>
+					                    	<a href="{{url('admin/workshops/'.$workshop->id.'/')}}" class="dropdown-buttons">Workshop Details</a>
 					                        <a href="{{url('admin/workshop/'.$workshop->id.'/gallery')}}" class="dropdown-buttons">View Gallery</a>
 					                    	<a href="{{url('admin/workshops/'.$workshop->id.'/edit')}}" class="dropdown-buttons">Edit Workshop</a>
 					                    	<a href="{{ url('admin/add-workshop-service/'.$workshop->id) }}" class="dropdown-buttons">Add Services</a>

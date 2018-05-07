@@ -227,7 +227,7 @@ class CustomersController extends Controller
             'name'          => 'required',
             'email'         => 'required|email|unique:customers',
             'password'      => 'required|confirmed|min:6',
-            'con_number'    => 'required',
+            'con_number'    => 'required|regex:/^0?3\d{2}-\d{7}$/u',
         ];
         $input = $request->only('name', 'email', 'password', 'password_confirmation', 'con_number');
         $validator = Validator::make($input, $rules);
@@ -843,8 +843,8 @@ class CustomersController extends Controller
         $rules = array(
             'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
+            'town'          => 'required|string',
+            'city'          => 'required|string'
         );
         $validator = Validator::make($request->all(), $rules);
 
@@ -957,8 +957,8 @@ class CustomersController extends Controller
             'id'            => 'required',
             'type'          => 'required|in:Office,Residence',
             'house_no'      => 'required',
-            'town'          => 'required|regex:/^[\pL\s\-]+$/u',
-            'city'          => 'required|regex:/^[\pL\s\-]+$/u'
+            'town'          => 'required|string',
+            'city'          => 'required|string'
         );
         $validator = Validator::make($request->all(), $rules);
 
