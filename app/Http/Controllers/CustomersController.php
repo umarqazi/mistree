@@ -1459,8 +1459,11 @@ class CustomersController extends Controller
             }
 
             $customeraddresses = JWTAuth::authenticate()->addresses;
+            $workshopswithaddress = [];
+            if(count($customeraddresses)){
+                $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->withoutGlobalScopes()->get()->sortByDesc('rating');
+            }
             $workshopswithoutaddress = $workshops->withoutGlobalScopes()->get()->sortByDesc('rating');
-            $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->withoutGlobalScopes()->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
             $allWorkshops = $allWorkshops->merge($workshopswithaddress);
