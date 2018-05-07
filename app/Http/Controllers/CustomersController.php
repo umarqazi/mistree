@@ -1443,19 +1443,24 @@ class CustomersController extends Controller
         }
 
         if($request->has('service_ids') || $request->has('type') || $request->has('booking_time')){
-
+            $workshopswithoutaddress = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
             if($request->has('service_ids')){
                 $workshops  = $workshops->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
+                    return $query->whereIn('services.id', json_decode($request->service_ids));
+                }]);
+                $workshopswithoutaddress = $workshopswithoutaddress->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
                     return $query->whereIn('services.id', json_decode($request->service_ids));
                 }]);
             }
 
             if($request->has('type')){
                 $workshops  = $workshops->ofTypeWorkshops($request->type);
+                $workshopswithoutaddress  = $workshopswithoutaddress->ofTypeWorkshops($request->type);
             }
 
             if($request->has('booking_time')){
                 $workshops  = $workshops->bookingTimeWorkshops($request->booking_time);
+                $workshopswithoutaddress  = $workshopswithoutaddress->bookingTimeWorkshops($request->booking_time);
             }
 
             $customeraddresses = JWTAuth::authenticate()->addresses;
@@ -1463,7 +1468,7 @@ class CustomersController extends Controller
             if(count($customeraddresses)){
                 $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->get()->sortByDesc('rating');
             }
-            $workshopswithoutaddress = $workshops->get()->sortByDesc('rating');
+            $workshopswithoutaddress = $workshopswithoutaddress->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
             $allWorkshops = $allWorkshops->merge($workshopswithaddress);
