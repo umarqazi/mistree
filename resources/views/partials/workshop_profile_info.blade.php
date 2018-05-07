@@ -1,5 +1,9 @@
 <div class="profile-info">
-    <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px" onclick="imagezoom(this)">
+    @if($workshop->profile_pic)
+        <img src="{{$workshop->profile_pic}}" class="img-shadow" width="200px" height="150px" onclick="imagezoom(this)">
+    @else
+        <img src="{{url('img/thumbnail.png')}}" class="img-shadow" width="200px" height="150px" onclick="imagezoom(this)">
+    @endif
     <div class="name-info">
         <h4 class="title">Workshop Name : {{$workshop->name}}</h4>
         <h5 class="title">Owner Name : {{$workshop->owner_name}}</h5>
