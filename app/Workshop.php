@@ -8,6 +8,7 @@ use App\Scopes\WorkshopScope;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Builder;
 use DB;
 
 class Workshop extends Authenticatable
@@ -30,7 +31,7 @@ class Workshop extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token'
     ];
 
     /**
@@ -126,9 +127,19 @@ class Workshop extends Authenticatable
         })->sum('amount');
     }
 
+    public function getEstRatesAttribute()
+    {
+        return $this->services->pluck('pivot')->sum('service_rate');
+    }
+
     public function scopeApproved()
     {
         $this->where('is_approved', true);
+    }
+
+    public function acceptedBookings()
+    {
+        return $this->hasMany('App\Booking')->where('is_accepted', true);
     }
 
     //    Returns sum of the workshop
@@ -222,6 +233,80 @@ class Workshop extends Authenticatable
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new WorkshopResetPassword($token));
+    }
+
+    public function unverifiedUsersCount()
+    {
+        return $this->users()->where('verified', 0)->count()->get();
+    }
+
+    public static function leastWorkshopsRequirement(){
+        $workshops = Workshop::WithoutGlobalScopes()->where('is_verified',true)->where('is_approved', true)->where(function ($query){
+            $query->whereHas('balance', function($minimumbalance){
+                $minimumbalance->where('balance', '>=', 30);
+            })->has('acceptedBookings', '>=', 10)->orHas('acceptedBookings', '<', 10);
+        });
+    }
+
+    public function scopeApprovedAndVerifiedWorkshops($query){
+        return $query->where('is_verified',true)->where('is_approved', true);
+    }
+
+    public function scopeMinimumBalance($query){
+        return $query->whereHas('balance', function ($minimumbalance) {
+                $minimumbalance->where('balance', '>=', 30);
+            })->has('acceptedBookings', '>=', 10)->orHas('acceptedBookings', '<', 10);
+    }
+
+    public function scopeNamedWorkshops($query, $workshopname){
+        return $query->where('name', 'LIKE', '%'.$workshopname.'%');
+    }
+
+    public function scopeAddressedWorkshops($query, $workshopname){
+        return $query->where(function($query) use ($workshopname){
+            foreach (explode(" ", $workshopname) as $name)
+            {
+                $query->orWhereHas('address', function($address) use ($name){
+                    return $address->where('town', 'LIKE', '%'. $name .'%')->orWhere('city', 'LIKE', '%'. $name. '%');
+                });
+            }
+        });
+    }
+
+    public function scopeCustomerAddressWorkshops($query, $customeraddresses){
+        $query->where(function ($query) use ($customeraddresses){
+            foreach ($customeraddresses as $key => $addr){
+                if($key == 0){
+                    $query = $query->whereHas('address', function ($qry) use ($addr){
+                        return $qry->where( 'town', 'LIKE', '%'.$addr->town.'%')->where('city', 'LIKE', '%'.$addr->city.'%');
+                    });
+                }else{
+                    $query = $query->orWhereHas('address', function ($qry) use ($addr){
+                        return $qry->where( 'town', 'LIKE', '%'.$addr->town.'%')->where('city', 'LIKE', '%'.$addr->city.'%');
+                    });
+                }
+            }
+            return $query;
+        });
+    }
+
+    public function scopeServiceWorkshops($query, $services){
+        $services   = json_decode($services);
+        foreach ($services as $service)
+        {
+            $query->whereHas('services' , function($query) use ($service){
+                $query->where('services.id', $service);
+            });
+        }
+        return $query;
+    }
+
+    public function scopeOfTypeWorkshops($query, $type){
+        return $query->where('type','LIKE', $type);
+    }
+
+    public function scopeBookingTimeWorkshops($query, $time){
+        return $query->where('open_time','<=', $time)->where( 'close_time', '>=', $time);
     }
 }
 

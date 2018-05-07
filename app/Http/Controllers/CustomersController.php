@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CustomerAddress;
 use App\Mail\CustomerRegistrationMail;
+use App\Scopes\WorkshopScope;
 use Carbon\Carbon;
 use JWTAuth;
 use Session;
@@ -1354,5 +1355,142 @@ class CustomersController extends Controller
         fwrite($file, base64_decode($file_data));
         fclose($file);
         return $full_path;
+    }
+
+    /**
+     * Searching a workshop.
+     *
+     */
+    /**
+     * @SWG\Post(
+     *   path="/api/customer/search-workshop",
+     *   summary="Search Workshop",
+     *   operationId="searchByWorkshop",
+     *   produces={"application/json"},
+     *   tags={"Customers"},
+     *   @SWG\Parameter(
+     *     name="Authorization",
+     *     in="header",
+     *     description="Token",
+     *     required=true,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="name",
+     *     in="formData",
+     *     description="Workshop Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="type",
+     *     in="formData",
+     *     description="Workshop Type",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="booking_time",
+     *     in="formData",
+     *     description="Booking Time",
+     *     required=false,
+     *     type="string"
+     *  ),
+     *   @SWG\Parameter(
+     *     name="service_name",
+     *     in="formData",
+     *     description="Service Name",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Parameter(
+     *     name="service_ids",
+     *     in="formData",
+     *     description="Service Ids",
+     *     required=false,
+     *     type="string"
+     *   ),
+     *   @SWG\Response(response=200, description="successful operation"),
+     *   @SWG\Response(response=500, description="internal server error")
+     * )
+     *
+     */
+    public function searchWorkshops(Request $request){
+        $workshops = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
+        if ($request->has('name')) {
+            $namedworkshops     = $workshops->namedWorkshops($request->name)->get()->sortByDesc('rating');
+            $addressworkshops   = Workshop::approvedAndVerifiedWorkshops()->minimumBalance()->addressedWorkshops($request->name)->get()->sortByDesc('rating');
+
+            $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
+            $allWorkshops = $allWorkshops->merge($namedworkshops);
+            $allWorkshops = $allWorkshops->merge($addressworkshops);
+
+            if(count($allWorkshops)){
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => '',
+                    'body' => ['workshops' => $allWorkshops]
+                ], Response::HTTP_OK);
+            }else{
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'No workshops found.',
+                    'body' => null
+                ], Response::HTTP_OK);
+            }
+        }
+
+        if($request->has('service_ids') || $request->has('type') || $request->has('booking_time')){
+            $workshopswithoutaddress = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
+            if($request->has('service_ids')){
+                $workshops  = $workshops->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
+                    return $query->whereIn('services.id', json_decode($request->service_ids));
+                }]);
+                $workshopswithoutaddress = $workshopswithoutaddress->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
+                    return $query->whereIn('services.id', json_decode($request->service_ids));
+                }]);
+            }
+
+            if($request->has('type')){
+                $workshops  = $workshops->ofTypeWorkshops($request->type);
+                $workshopswithoutaddress  = $workshopswithoutaddress->ofTypeWorkshops($request->type);
+            }
+
+            if($request->has('booking_time')){
+                $workshops  = $workshops->bookingTimeWorkshops($request->booking_time);
+                $workshopswithoutaddress  = $workshopswithoutaddress->bookingTimeWorkshops($request->booking_time);
+            }
+
+            $customeraddresses = JWTAuth::authenticate()->addresses;
+            $workshopswithaddress = [];
+            if(count($customeraddresses)){
+                $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->get()->sortByDesc('rating');
+            }
+            $workshopswithoutaddress = $workshopswithoutaddress->get()->sortByDesc('rating');
+
+            $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
+            $allWorkshops = $allWorkshops->merge($workshopswithaddress);
+            $allWorkshops = $allWorkshops->merge($workshopswithoutaddress);
+
+            $allWorkshops->each->append('est_rates');
+
+            if(count($allWorkshops)){
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => true,
+                    'message' => '',
+                    'body' => ['workshops' => $allWorkshops]
+                ], Response::HTTP_OK);
+            }else{
+                return response()->json([
+                    'http-status' => Response::HTTP_OK,
+                    'status' => false,
+                    'message' => 'No workshops found.',
+                    'body' => null
+                ], Response::HTTP_OK);
+            }
+        }
     }
 }
