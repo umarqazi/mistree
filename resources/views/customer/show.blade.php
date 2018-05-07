@@ -19,7 +19,7 @@
 										@if($customer->profile_pic_url)
 											<img src="{{$customer->profile_pic_url}}" class="img-shadow" height="200px">
 										@else
-											<img src="{{asset('img/default_profile.png')}}" class="img-shadow" height="200px">
+											<img src="{{url('img/thumbnail.png')}}" class="img-shadow" width="200px" height="150px" onclick="imagezoom(this)">
 										@endif
 										<div class="name-info">
 											<h3 class="title">Customer Name : {{$customer->name}}</h3>
