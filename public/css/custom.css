@@ -481,6 +481,10 @@ form#bookings-dropdown .submit_button:hover{
     margin : 15px 0px 15px 3px;
 }
 
+.table.dataTable{
+    min-width: 700px !important;
+}
+
 
 
 
@@ -496,7 +500,14 @@ form#bookings-dropdown .submit_button:hover{
 }
 
 @media only screen and (max-width: 991px) {
+    .dataTables_wrapper{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 
+    .footer .copyright{
+        margin: 15px 3px 0px 3px !important;
+    }
 }
 
 @media only screen and (max-width: 767px) {
@@ -533,8 +544,17 @@ form#bookings-dropdown .submit_button:hover{
         margin-top: 15px;
     }
 
+    .dataTables_wrapper .dataTables_paginate{
+        margin-bottom: 15px;
+    }
+
 }
 
-@media only screen and (max-width: 575px) {
+@media only screen and (max-width: 640px) {
+    #jsTable_wrapper #jsTable_length{
+        margin-left: 0;
+        margin-top: 15px;
+    }
+
 
 }
