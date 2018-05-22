@@ -32,7 +32,6 @@
     <link href="{{asset('css/themify-icons.css')}}" rel="stylesheet">
     <link href="{{asset('css/custom.css')}}" rel="stylesheet">
     <link href="{{asset('css/responsive.css')}}" rel="stylesheet">
-    <!-- <link href="{{asset('css/responsive.css')}}" rel="stylesheet"> -->
 
     <!-- Datatables -->
     <link href="{{asset('css/dataTables.min.css')}}" rel="stylesheet" />
@@ -74,21 +73,5 @@
     <script src="{{asset('js/custom.js')}}"></script>
     <script src="{{asset('js/dataTables.min.js')}}"></script>
 
-	<!-- <script type="text/javascript">
-    	$(document).ready(function(){
-
-        	demo.initChartist();
-
-        	$.notify({
-            	icon: 'ti-gift',
-            	message: "Welcome to <b> My Mistri</b> - some welcome message goes here."
-
-            },{
-                type: 'success',
-                timer: 4000
-            });
-
-    	});
-	</script> -->
 </body>
 </html>
