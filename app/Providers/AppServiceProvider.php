@@ -4,11 +4,7 @@ namespace App\Providers;
 
 use App\Service;
 use App\WorkshopImages;
-use App\Workshop;
-use App\Booking;
 use App\Observers\ServiceObserver;
-use App\Observers\WorkshopObserver;
-use App\Observers\BookingObserver;
 use App\Observers\WorkshopImagesObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
