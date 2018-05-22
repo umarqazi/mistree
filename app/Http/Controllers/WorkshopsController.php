@@ -58,6 +58,10 @@ class WorkshopsController extends Controller
         $this->auth = app('auth')->guard('workshop');
     }
 
+    public function frontPage(){
+        return View::make('landing_page.index');
+    }
+
     /**
      * Display a listing of the workshop.
      *
