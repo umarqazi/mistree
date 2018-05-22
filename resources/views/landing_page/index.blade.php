@@ -22,7 +22,7 @@
                 <div class="row">
                     <div class="col-md-12 col-xs-12">
                         <div class="logo float-left navbar-header">
-                            <a class="navbar-brand" href="index.html"><img src="{{asset('img/landing-page-images/logo/logo.png')}}" alt=""></a>
+                            <a class="navbar-brand" href="/"><img src="{{asset('img/landing-page-images/logo/logo.png')}}" alt=""></a>
                             <button class="navbar-toggle collapsed" data-toggle="collapse" data-target="#main-menu-2">
                                 <i class="fa fa-bars menu-open"></i>
                                 <i class="fa fa-times menu-close"></i>
