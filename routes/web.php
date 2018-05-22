@@ -26,9 +26,6 @@ Route::group(['prefix' => 'customer'], function () {
 // ========= Worshop Routes Start ==================================================
 Route::group(['middleware' => 'admin.guest'], function (){
 
-//    Route::get('/', function(){
-//        return redirect()->route('home');
-//    });
     Route::get('/', 'WorkshopsController@frontPage');
     Route::get('/login', 'WorkshopAuth\LoginController@showLoginForm')->name('login');
     Route::post('/login', 'WorkshopAuth\LoginController@login');
