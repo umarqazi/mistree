@@ -11,9 +11,7 @@ use App\Jobs\CompleteTheLeadJob;
 use App\Jobs\LeadExpiryEventJob;
 use App\Jobs\NotificationsBeforeJob;
 use App\Jobs\SelectAnotherWorkshopEventJob;
-use App\Notifications\CompleteTheLead;
 use Carbon\Carbon;
-use App\Notifications\JobClosed;
 use JWTAuth;
 use DB, Config, Mail, View;
 use Illuminate\Http\Request;
@@ -22,9 +20,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Workshop;
-use App\Service;
 use App\Billing;
-use App\WorkshopAddress;
 use App\WorkshopLedger;
 use App\Customer;
 use App\Booking;
@@ -165,7 +161,6 @@ class BookingsController extends Controller
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(30));
         NotificationsBeforeJob::dispatch($booking, "customer")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(15));
         NotificationsBeforeJob::dispatch($booking, "workshop")->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->subMinutes(10));
-        CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addHours($booking->services->pluck('pivot')->sum('service_time')));
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
@@ -280,6 +275,7 @@ class BookingsController extends Controller
 
 //          Fire An Event To Generate A Notification On Accept Booking
         event(new JobAcceptedEvent($booking));
+        CompleteTheLeadJob::dispatch($booking)->delay(Carbon::parse($booking->job_date. " " .$booking->job_time)->addHours($booking->services->pluck('pivot')->sum('service_time')));
 
         return response()->json([
                     'http-status' => Response::HTTP_OK,
