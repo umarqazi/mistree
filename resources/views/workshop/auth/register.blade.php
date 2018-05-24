@@ -122,7 +122,8 @@
 
                                                     <div class="form-group">
                                                         <label class="control-label">Landline Number</label>
-                                                        <input type="text" class="form-control border-input" pattern="(^$|\d{7,14})" title="7 or 14 Digit number required"  name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('7 or 14 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                        <input type="text" class="form-control border-input" pattern="(^$|\d{7,14})" title="7 to 14 Digit number
+                                                               required"  name="landline" value="{{ old('landline') }}" oninvalid="this.setCustomValidity('7 or 14 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                         <p class="validity-message"></p>
                                                         @if ($errors->has('landline'))
                                                             <span class="help-block">

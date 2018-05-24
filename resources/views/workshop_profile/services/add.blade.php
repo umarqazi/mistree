@@ -138,7 +138,7 @@
         $.ajax({
             type : 'post',
             url : '{{ url('get-category-services') }}',
-            data : {workshop : workshop, category : id},
+            data : {workshop : workshop, category : id, _token : '{{ csrf_token() }}' },
             dataType: "json",
             success : function (response){
                 $.each(response, function(i, service) {

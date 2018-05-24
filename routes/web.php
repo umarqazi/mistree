@@ -10,7 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::post('profile/store-profile-service', 'WorkshopsController@storeProfileService');
+
 // ========= Customer Routes Start ==================================================
 Route::group(['prefix' => 'customer'], function () {
     Route::post('/password/email', 'CustomerAuth\ForgotPasswordController@sendResetLinkEmail')->name('password.request');
@@ -54,6 +54,7 @@ Route::group(['middleware' => 'admin.guest'], function (){
         Route::get('/ledger', 'WorkshopsController@getLedger');
 
         Route::get('profile/add-profile-service/{workshop}', 'WorkshopsController@addProfileService');
+        Route::post('profile/store-profile-service', 'WorkshopsController@storeProfileService');
         Route::post('/get-category-services','WorkshopsController@getCategoryServices');
         Route::get('profile/edit-profile-service/{id}', 'WorkshopsController@editProfileService');
         Route::get('change-password/', 'WorkshopsController@changePassword');
