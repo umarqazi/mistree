@@ -140,7 +140,7 @@
             $.ajax({
                 type : 'post',
                 url : '{{ url('admin/get-category-services') }}',
-                data : {workshop : workshop, category : id},
+                data : {workshop : workshop, category : id, _token : '{{ csrf_token() }}'},
                 dataType: "json",
                 success : function (response){
                     $.each(response, function(i, service) {
