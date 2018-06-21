@@ -1502,7 +1502,7 @@ class CustomersController extends Controller
                 return response()->json([
                     'http-status'   => Response::HTTP_OK,
                     'status'        => false,
-                    'message'       => 'No workshops found.',
+                    'message'       => 'No workshop open at this time slot please change your time slot.',
                     'body'          => null
                 ], Response::HTTP_OK);
             }
