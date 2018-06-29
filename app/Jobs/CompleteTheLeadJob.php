@@ -32,7 +32,7 @@ class CompleteTheLeadJob implements ShouldQueue
      */
     public function handle()
     {
-        if($this->booking->job_status != 'completed'){
+        if($this->booking->job_status != 'completed' && $this->booking->is_accepted == true){
             event(new CompleteLeadEvent($this->booking));
         }
     }

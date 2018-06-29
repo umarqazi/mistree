@@ -17,7 +17,7 @@ class SecureRequest
     {
         if( ! $request->secure() && app()->environment() == "production")
         {
-            return redirect()->secure($request->getRequestUri());
+            return redirect($request->getRequestUri(),301, [], true);
         }
         return $next($request);
     }

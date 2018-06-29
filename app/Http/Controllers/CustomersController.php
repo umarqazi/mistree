@@ -1427,25 +1427,29 @@ class CustomersController extends Controller
 
             if(count($allWorkshops)){
                 return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => '',
-                    'body' => ['workshops' => $allWorkshops]
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => true,
+                    'message'       => '',
+                    'body'          => ['workshops' => $allWorkshops]
                 ], Response::HTTP_OK);
             }else{
                 return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'No workshops found.',
-                    'body' => null
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => false,
+                    'message'       => 'No workshops found.',
+                    'body'          => null
                 ], Response::HTTP_OK);
             }
         }
 
         if($request->has('service_ids') || $request->has('type') || $request->has('booking_time')){
             $workshopswithoutaddress = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
+            $withoutTime    = Workshop::approvedAndVerifiedWorkshops()->minimumBalance();
             if($request->has('service_ids')){
                 $workshops  = $workshops->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
+                    return $query->whereIn('services.id', json_decode($request->service_ids));
+                }]);
+                $withoutTime = $withoutTime->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
                     return $query->whereIn('services.id', json_decode($request->service_ids));
                 }]);
                 $workshopswithoutaddress = $workshopswithoutaddress->serviceWorkshops($request->service_ids)->with(['services' => function($query) use ($request){
@@ -1455,6 +1459,7 @@ class CustomersController extends Controller
 
             if($request->has('type')){
                 $workshops  = $workshops->ofTypeWorkshops($request->type);
+                $withoutTime  = $withoutTime->ofTypeWorkshops($request->type);
                 $workshopswithoutaddress  = $workshopswithoutaddress->ofTypeWorkshops($request->type);
             }
 
@@ -1468,6 +1473,7 @@ class CustomersController extends Controller
             if(count($customeraddresses)){
                 $workshopswithaddress = $workshops->customerAddressWorkshops($customeraddresses)->get()->sortByDesc('rating');
             }
+            $withoutTime = $withoutTime->get();
             $workshopswithoutaddress = $workshopswithoutaddress->get()->sortByDesc('rating');
 
             $allWorkshops = new \Illuminate\Database\Eloquent\Collection; //Create empty collection which we know has the merge() method
@@ -1478,17 +1484,26 @@ class CustomersController extends Controller
 
             if(count($allWorkshops)){
                 return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => true,
-                    'message' => '',
-                    'body' => ['workshops' => $allWorkshops]
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => true,
+                    'message'       => '',
+                    'body'          => ['workshops' => $allWorkshops]
                 ], Response::HTTP_OK);
             }else{
+                if(count($withoutTime) > 0)
+                {
+                    return response()->json([
+                        'http-status'   => Response::HTTP_OK,
+                        'status'        => false,
+                        'message'       => 'No workshop open at this time slot, Please change your time slot',
+                        'body'          => null
+                    ], Response::HTTP_OK);
+                }
                 return response()->json([
-                    'http-status' => Response::HTTP_OK,
-                    'status' => false,
-                    'message' => 'No workshops found.',
-                    'body' => null
+                    'http-status'   => Response::HTTP_OK,
+                    'status'        => false,
+                    'message'       => 'No workshop open at this time slot please change your time slot.',
+                    'body'          => null
                 ], Response::HTTP_OK);
             }
         }

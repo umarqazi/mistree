@@ -146,7 +146,7 @@
                                                 <label class="control-label">Landline Number <span class="manadatory"></span></label>
                                                 <input type="text" class="form-control border-input" name="landline"
                                                        pattern="(^$|\d{7,14})" value="{{$workshop->landline}}"
-                                                       oninvalid="this.setCustomValidity('10 or 11 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
+                                                       oninvalid="this.setCustomValidity('7 to 14 Digit number required')" oninput="setCustomValidity('')" onfocusout="workshopCustomValidation(this);">
                                                 <p class="validity-message"></p>
                                                 @if ($errors->has('landline'))
                                                     <span class="help-block">
