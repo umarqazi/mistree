@@ -81,7 +81,7 @@ class Booking extends Model
 
     public function scopeActiveBookings($query)
     {
-        return $query->where('job_status', '=', 'accepted');
+        return $query->where('job_status', '=', 'open')->where('is_accepted', true);
     }
 
     public function scopeCompletedBookings($query)
