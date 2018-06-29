@@ -58,7 +58,7 @@
                                         <td class="text-center">{{$booking->vehicle_no}}</td>
                                         <td class="text-center">@if(!is_null($booking->customer)){{$booking->customer->name}} @endif</td>
                                         <td class="text-center">
-                                        @if($booking->job_status=='open' && $booking->is_accepted==true) Active @else{{$booking->job_status}} @endif
+                                        @if($booking->job_status=='open' && $booking->is_accepted==true) Accepted @else{{$booking->job_status}} @endif
                                         </td>
                                         <td class="text-center">@if(count($booking->services)){{@implode(', ', $booking->services->pluck('name')->toArray())}}@endif</td>
                                         <td class="text-center">@if(count($booking->services)){{$booking->services->pluck('pivot')->pluck('service_rate')->sum()}}PKR @endif</td>
