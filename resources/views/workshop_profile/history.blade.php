@@ -63,7 +63,7 @@
                                     <td>@if(!is_null($lead->customer)){{$lead->customer->name}} @endif</td>
                                     <td>@if(count($lead->services)){{@implode(', ', $lead->services->pluck('name')->toArray())}} @endif</td>
                                     <td>{{\Carbon\Carbon::parse($lead->job_time)->format('g:i A')}}</td>
-                                    <td>@if($lead->job_status=='open' && $lead->is_accepted==true) Accepted @else{{$lead->job_status}} @endif</td>
+                                    <td>@if($lead->job_status=='open' && $lead->is_accepted==true) accepted @else{{$lead->job_status}} @endif</td>
                                     <td>@if(!is_null($lead->billing)){{$lead->billing['amount']}} PKR @endif</td>
                                     <td>@if(!is_null($lead->billing['ratings'])){{@intval($lead->billing['ratings'])}}<i class="ti-star"></i>@endif</td>
                                 </tr>
