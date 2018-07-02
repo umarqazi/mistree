@@ -1180,6 +1180,8 @@ class BookingsController extends Controller
                 $billing->paid_amount   = $request->paid_amount;
                 $billing->save();
                 $billing->booking->services;
+                
+                $booking = Booking::where('id',$billing->booking_id)->update(['job_status' => "closed"]);
 
                 return response()->json([
                     'http-status' => Response::HTTP_OK,
